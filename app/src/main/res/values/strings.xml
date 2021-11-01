@@ -21,4 +21,12 @@
 
     <string name="menu_main_settings">Settings</string>
     <string name="menu_main_login_or_sign_up">Login / Sign Up</string>
+
+
+    <!-- drawer -->
+
+    <string name="drawer_main_startpoll">Start Poll</string>
+    <string name="drawer_main_enterpoll">Enter Poll</string>
+    <string name="drawer_main_recentpolls">Recent Polls</string>
+    <string name="drawer_main_Account">Account</string>
 </resources>
