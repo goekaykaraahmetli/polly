@@ -27,8 +27,10 @@
 
     <!-- drawer -->
 
-    <string name="drawer_main_startpoll">Start Poll</string>
-    <string name="drawer_main_enterpoll">Enter Poll</string>
-    <string name="drawer_main_recentpolls">Recent Polls</string>
-    <string name="drawer_main_Account">Account</string>
+
+    <!--to toggle the open close button
+        of the navigation drawer-->
+    <string name="nav_open">Open</string>
+    <string name="nav_close">Close</string>
+
 </resources>
