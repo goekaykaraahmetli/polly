@@ -17,8 +17,6 @@
     <string name="activity_sign_up_button_sign_up">Sign up</string>
     <string name="activity_sign_up_accept_terms_of_service">I have read the terms of service and I do accept them.</string>
 
-    <string name="test">test</string>
-
     <!-- menu -->
 
     <string name="menu_main_settings">Settings</string>
