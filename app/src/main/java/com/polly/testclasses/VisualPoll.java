@@ -23,10 +23,10 @@ public class VisualPoll extends AppCompatActivity {
         PieChart pieChart = (PieChart) findViewById(R.id.pieChart);
         ArrayList<PieEntry> visitors = new ArrayList<>();
         visitors.add(new PieEntry(10, "Option1"));
-        visitors.add(new PieEntry(20, "Option1"));
-        visitors.add(new PieEntry(30, "Option1"));
-        visitors.add(new PieEntry(40, "Option1"));
-        visitors.add(new PieEntry(50, "Option1"));
+        visitors.add(new PieEntry(20, "Option2"));
+        visitors.add(new PieEntry(30, "Option3"));
+        visitors.add(new PieEntry(40, "Option4"));
+        visitors.add(new PieEntry(50, "Option5"));
 
         PieDataSet pieDataSet = new PieDataSet(visitors, "Visitors");
         pieDataSet.setColors(ColorTemplate.COLORFUL_COLORS);

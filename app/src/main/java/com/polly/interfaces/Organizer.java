@@ -8,7 +8,6 @@ public class Organizer {
     private static final SocketHandler socketHandler;
     static {
         socketHandler = createSocketHandler();
-
     }
 
     private static SocketHandler createSocketHandler(){
