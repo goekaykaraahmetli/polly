@@ -10,13 +10,13 @@ import androidx.fragment.app.Fragment;
 
 import com.polly.R;
 
-public class StartpollFragment extends Fragment {
+public class EnterpollFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater,
                              @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_startpoll, container, false);
+        return inflater.inflate(R.layout.activity_enter_poll, container, false);
     }
 
 }

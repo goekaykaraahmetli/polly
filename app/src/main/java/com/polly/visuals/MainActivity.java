@@ -61,6 +61,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             case R.id.nav_startpoll:
                 getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new StartpollFragment()).commit();
                 break;
+            case R.id.nav_enterpoll:
+                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new EnterpollFragment()).commit();
+                break;
+            case R.id.nav_recentpolls:
+                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new RecentFragment()).commit();
+                break;
         }
         drawerLayout.closeDrawer(GravityCompat.START);
         return true;
