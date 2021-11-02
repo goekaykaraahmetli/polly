@@ -29,7 +29,7 @@ public class SocketHandler {
         });
     }
 
-    public void connect(String ip, int port) throws IOException{
+    public void connect(String ip, int port) throws IOException {
         AtomicBoolean connecting = new AtomicBoolean(true);
         new Thread(() -> {
             try {
