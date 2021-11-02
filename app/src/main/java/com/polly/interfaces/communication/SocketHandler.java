@@ -6,7 +6,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 public class SocketHandler {
     private Socket socket;
-    private DataStreamManager dataStreamManager;
     private InputHandler inputHandler;
     private OutputHandler outputHandler;
 
@@ -52,7 +51,7 @@ public class SocketHandler {
             throw new IOException("could not connect to the given server!");
         }
 
-        dataStreamManager = new DataStreamManager(socket.getInputStream(), socket.getOutputStream());
+        DataStreamManager dataStreamManager = new DataStreamManager(socket.getInputStream(), socket.getOutputStream());
 
         inputHandler = new InputHandler(dataStreamManager);
         outputHandler = new OutputHandler(dataStreamManager);
