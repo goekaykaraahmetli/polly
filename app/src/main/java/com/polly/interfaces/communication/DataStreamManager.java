@@ -11,7 +11,7 @@ import java.io.OutputStream;
 import java.util.HashMap;
 import java.util.Map;
 
-public class DataStreamManager {
+class DataStreamManager {
 	private final DataInputStream input;
 	private final DataOutputStream output;
 

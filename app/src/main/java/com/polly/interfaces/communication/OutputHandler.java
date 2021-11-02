@@ -2,7 +2,7 @@ package com.polly.interfaces.communication;
 
 import java.io.IOException;
 
-public class OutputHandler {
+class OutputHandler {
     private DataStreamManager dataStreamManager;
 
     public OutputHandler(DataStreamManager dataStreamManager){

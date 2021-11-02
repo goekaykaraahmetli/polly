@@ -2,7 +2,7 @@ package com.polly.interfaces.communication;
 
 import java.io.IOException;
 
-public class InputHandler extends Thread{
+class InputHandler extends Thread{
     private boolean running = false;
     private DataStreamManager dataStreamManager;
 

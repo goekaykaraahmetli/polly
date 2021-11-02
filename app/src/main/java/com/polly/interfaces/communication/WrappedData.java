@@ -3,7 +3,7 @@ package com.polly.interfaces.communication;
 import java.util.ArrayList;
 import java.util.List;
 
-public class WrappedData {
+class WrappedData {
     private final Class dataType;
     private final Object data;
     private final List<Class> generics;
