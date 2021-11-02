@@ -11,7 +11,7 @@
         android:theme="@style/Theme.Polly">
 
         <activity
-            android:name=".MainActivity"
+            android:name=".visuals.MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

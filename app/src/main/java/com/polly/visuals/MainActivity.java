@@ -1,4 +1,4 @@
-package com.polly;
+package com.polly.visuals;
 
 import android.os.Bundle;
 import android.view.Menu;
@@ -10,14 +10,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
-import android.os.Bundle;
-import android.view.MenuItem;
-import android.view.View;
-
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.FragmentTransaction;
-
 import com.google.android.material.navigation.NavigationView;
+import com.polly.R;
 
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
@@ -44,10 +38,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         //NAVIGATION DRAWER
         NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+        /**
         if (savedInstanceState == null) {
           getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new AccountFragment()).commit();
         navigationView.setCheckedItem(R.id.nav_account);
-        }
+        }*/
 
 
         // to make the Navigation drawer icon always appear on the action bar
@@ -95,7 +90,4 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 return super.onOptionsItemSelected(item);
         }
     }
-
-
-
 }
