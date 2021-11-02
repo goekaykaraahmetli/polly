@@ -14,7 +14,7 @@ public class StartpollFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater,
                              @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_startpoll, container, false);
+        return inflater.inflate(R.layout.activity_create_poll, container, false);
     }
 
 }
