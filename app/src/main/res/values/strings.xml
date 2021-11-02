@@ -17,10 +17,19 @@
     <string name="activity_sign_up_button_sign_up">Sign up</string>
     <string name="activity_sign_up_accept_terms_of_service">I have read the terms of service and I do accept them.</string>
 
-
-
     <!-- menu -->
 
     <string name="menu_main_settings">Settings</string>
     <string name="menu_main_login_or_sign_up">Login / Sign Up</string>
+
+
+    <!-- drawer -->
+
+
+    <!--to toggle the open close button
+        of the navigation drawer-->
+    <string name="nav_open">Open</string>
+    <string name="nav_close">Close</string>
+
+
 </resources>
