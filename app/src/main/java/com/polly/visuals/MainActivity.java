@@ -12,7 +12,14 @@ import androidx.drawerlayout.widget.DrawerLayout;
 
 import com.google.android.material.navigation.NavigationView;
 import com.polly.R;
+import com.polly.interfaces.Organizer;
+import com.polly.interfaces.communication.SocketHandler;
+import com.polly.testclasses.DoppelInteger;
+import com.polly.testclasses.Poll;
 import com.polly.testclasses.VisualPoll;
+
+import java.util.HashMap;
+import java.util.Map;
 
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
@@ -25,6 +32,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        write();
 
         // drawer layout instance to toggle the menu icon to open
         // drawer and back button to close drawer
@@ -96,5 +104,26 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    private static void write(){
+        /**
+        SocketHandler sh = Organizer.getSocketHandler();
+
+        Integer integer = new Integer(5);
+        sh.writeOutput(integer);
+
+
+        Map<String, Integer> map = new HashMap<>();
+        map.put("option1", 1);
+        map.put("option2", 2);
+        map.put("option3", 3);
+        map.put("option4", 4);
+        map.put("option5", 5);
+        Poll poll = new Poll(map);
+        sh.writeOutput(poll);
+
+        sh.writeOutput(new DoppelInteger(5,1));
+         */
     }
 }

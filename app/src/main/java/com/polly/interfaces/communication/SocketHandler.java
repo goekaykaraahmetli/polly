@@ -36,11 +36,6 @@ public class SocketHandler {
                 socket = new Socket(ip, port);
             } catch (IOException e) {
                 e.printStackTrace();
-                try{
-                    socket.close();
-                } catch (IOException ex) {
-                    ex.printStackTrace();
-                }
             }
             connecting.set(false);
         }).start();
