@@ -8,7 +8,7 @@
     android:paddingTop="20dp"
     android:paddingRight="20dp"
     android:paddingBottom="20dp"
-    tools:context="visuals.LoginFragment">
+    tools:context=".LoginFragment">
 
     <EditText
         android:id="@+id/activity_login_edittext_username"
@@ -42,12 +42,12 @@
         android:id="@+id/activity_login_button_login"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="50dp"
+        android:layout_marginTop="100dp"
         android:width="200dp"
         android:enabled="false"
         android:text="@string/activity_login_button_login"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintHorizontal_bias="0.502"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/activity_login_edittext_password" />
 

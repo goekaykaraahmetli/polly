@@ -1,5 +1,6 @@
 package com.polly.visuals;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -11,12 +12,9 @@ import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
 import com.google.android.material.navigation.NavigationView;
+import com.polly.LoginFragment;
 import com.polly.R;
-import com.polly.interfaces.Organizer;
-import com.polly.interfaces.communication.SocketHandler;
-import com.polly.testclasses.DoppelInteger;
-import com.polly.testclasses.Poll;
-import com.polly.testclasses.VisualPoll;
+import com.polly.utils.Poll;
 
 import java.util.HashMap;
 import java.util.Map;

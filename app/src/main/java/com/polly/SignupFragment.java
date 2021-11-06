@@ -1,4 +1,4 @@
-package com.polly.visuals;
+package com.polly;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -16,7 +16,9 @@ public class SignupFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater,
                              @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_login, container, false);
+        //TODO
+        //getActivity().finish();
+        return inflater.inflate(R.layout.fragment_sign_up, container, false);
     }
 
 }

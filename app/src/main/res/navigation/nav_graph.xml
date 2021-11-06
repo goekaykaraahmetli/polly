@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/firstFragment">
+    app:startDestination="@id/loginFragment">
 
     <fragment
         android:id="@+id/firstFragment"
@@ -13,6 +13,9 @@
         <action
             android:id="@+id/action_firstFragment_to_secondFragment"
             app:destination="@id/secondFragment" />
+        <action
+            android:id="@+id/action_firstFragment_to_accountFragment"
+            app:destination="@id/accountFragment" />
     </fragment>
     <fragment
         android:id="@+id/secondFragment"
@@ -23,4 +26,20 @@
             android:id="@+id/action_secondFragment_to_firstFragment"
             app:destination="@id/firstFragment" />
     </fragment>
+    <fragment
+        android:id="@+id/accountFragment"
+        android:name="com.polly.visuals.AccountFragment"
+        android:label="AccountFragment" />
+    <fragment
+        android:id="@+id/loginFragment"
+        android:name="com.polly.LoginFragment"
+        android:label="LoginFragment" >
+        <action
+            android:id="@+id/action_loginFragment_to_signupFragment"
+            app:destination="@id/signupFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/signupFragment"
+        android:name="com.polly.SignupFragment"
+        android:label="SignupFragment" />
 </navigation>

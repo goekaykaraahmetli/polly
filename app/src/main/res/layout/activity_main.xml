@@ -5,8 +5,7 @@
     android:id="@+id/my_drawer_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".visuals.MainActivity2"
-    tools:ignore="HardcodedText">
+    tools:context=".visuals.MainActivity2">
 
     <LinearLayout
         android:layout_width="match_parent"
