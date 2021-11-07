@@ -49,6 +49,7 @@ public class SocketHandler {
         DataStreamManager dataStreamManager = new DataStreamManager(socket.getInputStream(), socket.getOutputStream());
 
         inputHandler = new InputHandler(dataStreamManager);
+        inputHandler.start();
         outputHandler = new OutputHandler(dataStreamManager);
     }
 }

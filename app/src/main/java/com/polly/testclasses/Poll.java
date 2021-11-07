@@ -3,17 +3,26 @@ package com.polly.testclasses;
 import java.util.Map;
 
 public class Poll {
-    private Map<String, Integer> poll;
+    private final Map<String, Integer> poll;
+    private String name;
 
-    public Poll(Map<String, Integer> poll){
+
+    public Poll(String name, Map<String, Integer> poll) {
+        this.name = name;
         this.poll = poll;
     }
 
-    public Map<String, Integer> getPoll(){
+    public void printPoll() {
+        for(String option : poll.keySet()) {
+            System.out.println(option + " got " + poll.get(option) +" votes!");
+        }
+    }
+
+    public Map<String, Integer> getPoll() {
         return poll;
     }
 
-    public void updatePoll(Poll poll){
-        this.poll = poll.getPoll();
+    public String getName() {
+        return name;
     }
 }

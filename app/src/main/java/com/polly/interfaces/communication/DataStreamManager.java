@@ -2,6 +2,8 @@ package com.polly.interfaces.communication;
 
 import com.polly.testclasses.DoppelInteger;
 import com.polly.testclasses.Poll;
+import com.polly.utils.commands.Command;
+import com.polly.utils.commands.CommandCreator;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -11,7 +13,7 @@ import java.io.OutputStream;
 import java.util.HashMap;
 import java.util.Map;
 
-class DataStreamManager {
+public class DataStreamManager {
 	private final DataInputStream input;
 	private final DataOutputStream output;
 
@@ -122,6 +124,9 @@ class DataStreamManager {
 		if(dataType.equals(Poll.class)){
 			return new WrappedData(Poll.class, readPoll());
 		}
+		if(dataType.equals(Command.class)){
+			return new WrappedData(Command.class, readCommand());
+		}
 		
 		
 		// if(dataType.equals(String.class)){
@@ -171,12 +176,22 @@ class DataStreamManager {
 	}
 
 	private Poll readPoll() throws IOException {
+		String name = readString();
 		Map<String, Integer> map = new HashMap<>();
 		int size = readInteger();
 		for(int i = 0;i<size;i++){
 			map.put(readString(), readInteger());
 		}
-		return new Poll(map);
+		return new Poll(name, map);
+	}
+
+	private Command readCommand() throws IOException {
+		String commandName = readString();
+		String[] params = new String[readInteger()];
+		for(int i = 0;i< params.length;i++){
+			params[i] = readString();
+		}
+		return new Command(commandName, params);
 	}
 
 	public void writeOutput(WrappedData wrappedData) throws IOException {
@@ -209,6 +224,8 @@ class DataStreamManager {
 			writeDoppelInteger((DoppelInteger) data);
 		} else if(dataType.equals(Poll.class)){
 			writePoll((Poll) data);
+		} else if(dataType.equals(Command.class)){
+			writeCommand((Command) data);
 		}
 		// default data type (String):
 		//else if (dataType.equals(String.class)){
@@ -259,10 +276,20 @@ class DataStreamManager {
 	}
 
 	private void writePoll(Poll data) throws IOException {
+		writeString(data.getName());
 		writeInteger(data.getPoll().size());
 		for(String pollOption : data.getPoll().keySet()){
 			writeString(pollOption);
 			writeInteger(data.getPoll().get(pollOption));
+		}
+	}
+
+	private void writeCommand(Command data) throws IOException {
+		writeString(data.getCommandName());
+		writeInteger(data.getParams().length);
+		String[] params = data.getParams();
+		for(int i = 0;i < params.length;i++){
+			writeString(params[i]);
 		}
 	}
 }

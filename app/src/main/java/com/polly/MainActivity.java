@@ -13,15 +13,19 @@ import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
 import com.google.android.material.navigation.NavigationView;
+import com.polly.interfaces.Organizer;
 import com.polly.utils.Poll;
+import com.polly.utils.commands.Command;
+import com.polly.utils.commands.CommandCreator;
 import com.polly.visuals.AccountFragment;
 import com.polly.visuals.EnterpollFragment;
 import com.polly.visuals.PollActivity;
 import com.polly.visuals.RecentFragment;
-import com.polly.visuals.SettingsFragment;
 import com.polly.visuals.StartpollFragment;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
@@ -32,6 +36,39 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        //CommandCreator.createPollCommand(CommandCreator.PollCommandActions.CREATE, "testPoll");
+        List<String> pollOptions = new ArrayList<>();
+        pollOptions.add("Fichte");
+        pollOptions.add("Buche");
+        pollOptions.add("Eiche");
+        pollOptions.add("Esche");
+        String[] pollOptionsArray = listToArray(pollOptions);
+
+        Command command = CommandCreator.createPollCommand(CommandCreator.PollCommandActions.CREATE, "Bäume", pollOptions);
+
+        List<String> fichte = new ArrayList<>();
+        fichte.add("Fichte");
+        Command command2 = CommandCreator.createPollCommand(CommandCreator.PollCommandActions.VOTE, "Bäume", "Fichte");
+
+        Command command3 = CommandCreator.createPollCommand(CommandCreator.PollCommandActions.LOAD, "Bäume");
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try{
+                    Thread.sleep(500);
+                    Organizer.getSocketHandler().writeOutput(new Integer(123));
+                    Thread.sleep(500);
+                    Organizer.getSocketHandler().writeOutput(command);
+                    Thread.sleep(500);
+                    Organizer.getSocketHandler().writeOutput(command2);
+                    Thread.sleep(500);
+                    Organizer.getSocketHandler().writeOutput(command3);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        }).start();
 
         drawerLayout = findViewById(R.id.my_drawer_layout);
         actionBarDrawerToggle = new ActionBarDrawerToggle(this, drawerLayout, R.string.nav_open, R.string.nav_close);
@@ -106,5 +143,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         Poll.setCurrentPoll(new Poll("Bäume",map));
         Intent intent = new Intent(this, PollActivity.class);
         startActivity(intent);
+    }
+
+
+    private String[] listToArray(List<String> list){
+        String[] tArray = new String[list.size()];
+        for(int i = 0;i< tArray.length;i++){
+            tArray[i] = list.get(i);
+        }
+        return tArray;
     }
 }

@@ -1,5 +1,7 @@
 package com.polly.interfaces.communication;
 
+import com.polly.testclasses.Poll;
+
 import java.io.IOException;
 
 class InputHandler extends Thread{
@@ -12,6 +14,13 @@ class InputHandler extends Thread{
 
     private void handleInput(WrappedData wrappedData){
         //TODO handle input
+        if(wrappedData.getDataType().equals(Poll.class)){
+            Poll poll = (Poll) wrappedData.getData();
+            poll.printPoll();
+        }
+
+        System.out.println("received other than Poll!");
+        System.out.println(wrappedData.toString());
     }
 
     @Override
