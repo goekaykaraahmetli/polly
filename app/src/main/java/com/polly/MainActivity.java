@@ -14,7 +14,8 @@ import androidx.drawerlayout.widget.DrawerLayout;
 
 import com.google.android.material.navigation.NavigationView;
 import com.polly.interfaces.Organizer;
-import com.polly.utils.Poll;
+import com.polly.testclasses.ActivityHandler;
+import com.polly.testclasses.Poll;
 import com.polly.utils.commands.Command;
 import com.polly.utils.commands.CommandCreator;
 import com.polly.visuals.AccountFragment;
@@ -37,6 +38,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        ActivityHandler.setMainActivity(this);
+
         //CommandCreator.createPollCommand(CommandCreator.PollCommandActions.CREATE, "testPoll");
         List<String> pollOptions = new ArrayList<>();
         pollOptions.add("Fichte");
@@ -49,21 +52,26 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         List<String> fichte = new ArrayList<>();
         fichte.add("Fichte");
-        Command command2 = CommandCreator.createPollCommand(CommandCreator.PollCommandActions.VOTE, "Bäume", "Fichte");
+        Command command2 = CommandCreator.createPollCommand(CommandCreator.PollCommandActions.VOTE, "Bäume", "Eiche");
 
         Command command3 = CommandCreator.createPollCommand(CommandCreator.PollCommandActions.LOAD, "Bäume");
+
         new Thread(new Runnable() {
             @Override
             public void run() {
                 try{
                     Thread.sleep(500);
                     Organizer.getSocketHandler().writeOutput(new Integer(123));
-                    Thread.sleep(500);
                     Organizer.getSocketHandler().writeOutput(command);
-                    Thread.sleep(500);
                     Organizer.getSocketHandler().writeOutput(command2);
-                    Thread.sleep(500);
                     Organizer.getSocketHandler().writeOutput(command3);
+                    Organizer.getSocketHandler().writeOutput(new String("asd"));
+                    Organizer.getSocketHandler().writeOutput(new String("235"));
+                    Organizer.getSocketHandler().writeOutput(new String("a23456sd"));
+                    Organizer.getSocketHandler().writeOutput(new Integer(124));
+                    Organizer.getSocketHandler().writeOutput(new Integer(346));
+                    Organizer.getSocketHandler().writeOutput(new Integer(1243624));
+                    Organizer.getSocketHandler().writeOutput(new Integer(3146));
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
@@ -140,11 +148,19 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         map.put("Fichte", 10);
         map.put("Buche", 12);
         map.put("Eiche", 24);
-        Poll.setCurrentPoll(new Poll("Bäume",map));
+        Poll poll = new Poll("Baume", map);
         Intent intent = new Intent(this, PollActivity.class);
         startActivity(intent);
     }
 
+
+    public void testPoll(Poll poll){
+        Intent intent = new Intent(this, PollActivity.class);
+        Bundle bundle = new Bundle();
+        bundle.putSerializable("Poll", poll);
+        intent.putExtras(bundle);
+        startActivity(intent);
+    }
 
     private String[] listToArray(List<String> list){
         String[] tArray = new String[list.size()];

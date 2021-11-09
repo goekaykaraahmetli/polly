@@ -3,7 +3,6 @@ package com.polly.interfaces.communication;
 import com.polly.testclasses.DoppelInteger;
 import com.polly.testclasses.Poll;
 import com.polly.utils.commands.Command;
-import com.polly.utils.commands.CommandCreator;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
