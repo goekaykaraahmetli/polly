@@ -1,4 +1,4 @@
-package com.polly;
+package com.polly.visuals;
 
 import android.os.Bundle;
 import android.view.Menu;
@@ -9,10 +9,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.material.navigation.NavigationView;
-import com.polly.visuals.AccountFragment;
-import com.polly.visuals.EnterpollFragment;
-import com.polly.visuals.SettingsFragment;
-import com.polly.visuals.StartpollFragment;
+import com.polly.R;
 
 public class LoginActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 

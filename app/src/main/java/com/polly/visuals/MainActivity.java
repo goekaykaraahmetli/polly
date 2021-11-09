@@ -1,4 +1,4 @@
-package com.polly;
+package com.polly.visuals;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -14,11 +14,7 @@ import androidx.drawerlayout.widget.DrawerLayout;
 
 import com.budiyev.android.codescanner.CodeScanner;
 import com.google.android.material.navigation.NavigationView;
-import com.polly.visuals.AccountFragment;
-import com.polly.visuals.EnterpollFragment;
-import com.polly.visuals.RecentFragment;
-import com.polly.visuals.SettingsFragment;
-import com.polly.visuals.StartpollFragment;
+import com.polly.R;
 
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {

@@ -1,6 +1,6 @@
 package com.polly.testclasses;
 
-import com.polly.MainActivity;
+import com.polly.visuals.MainActivity;
 
 public class ActivityHandler {
     private static MainActivity mainActivity;

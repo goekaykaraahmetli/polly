@@ -6,33 +6,8 @@
     app:startDestination="@id/loginFragment">
 
     <fragment
-        android:id="@+id/firstFragment"
-        android:name="com.polly.FirstFragment"
-        android:label="fragment_first"
-        tools:layout="@layout/fragment_first" >
-        <action
-            android:id="@+id/action_firstFragment_to_secondFragment"
-            app:destination="@id/secondFragment" />
-        <action
-            android:id="@+id/action_firstFragment_to_accountFragment"
-            app:destination="@id/accountFragment" />
-    </fragment>
-    <fragment
-        android:id="@+id/secondFragment"
-        android:name="com.polly.SecondFragment"
-        android:label="fragment_second"
-        tools:layout="@layout/fragment_second" >
-        <action
-            android:id="@+id/action_secondFragment_to_firstFragment"
-            app:destination="@id/firstFragment" />
-    </fragment>
-    <fragment
-        android:id="@+id/accountFragment"
-        android:name="com.polly.visuals.AccountFragment"
-        android:label="AccountFragment" />
-    <fragment
         android:id="@+id/loginFragment"
-        android:name="com.polly.LoginFragment"
+        android:name="com.polly.visuals.LoginFragment"
         android:label="LoginFragment" >
         <action
             android:id="@+id/action_loginFragment_to_signupFragment"
@@ -40,6 +15,6 @@
     </fragment>
     <fragment
         android:id="@+id/signupFragment"
-        android:name="com.polly.SignupFragment"
+        android:name="com.polly.visuals.SignupFragment"
         android:label="SignupFragment" />
 </navigation>

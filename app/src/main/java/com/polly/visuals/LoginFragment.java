@@ -1,4 +1,4 @@
-package com.polly;
+package com.polly.visuals;
 
 import android.os.Bundle;
 import android.view.KeyEvent;
@@ -10,6 +10,8 @@ import android.widget.EditText;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
+
+import com.polly.R;
 
 public class LoginFragment extends Fragment {
 
