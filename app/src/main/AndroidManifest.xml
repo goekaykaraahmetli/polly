@@ -12,7 +12,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Polly" >
         <activity
-            android:name="LoginActivity"
+            android:name=".visuals.LoginActivity"
             android:exported="false"
             android:label="@string/title_activity_login" />
         <activity
@@ -20,7 +20,7 @@
             android:exported="false"
             android:label="PollActivity" />
         <activity
-            android:name=".MainActivity"
+            android:name=".visuals.MainActivity"
             android:exported="true" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

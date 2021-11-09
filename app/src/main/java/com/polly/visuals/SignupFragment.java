@@ -1,4 +1,4 @@
-package com.polly;
+package com.polly.visuals;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
