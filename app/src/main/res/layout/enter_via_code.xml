@@ -7,8 +7,8 @@
 
     <TextView
         android:id="@+id/entercode"
-        android:layout_width="262dp"
-        android:layout_height="20dp"
+        android:layout_width="280dp"
+        android:layout_height="18dp"
         android:text="Enter A 6 Figure Polly Code To Join A Poll"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -16,7 +16,7 @@
         app:layout_constraintHorizontal_bias="0.496"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.248" />
+        app:layout_constraintVertical_bias="0.251" />
 
     <EditText
         android:id="@+id/polly_code"
