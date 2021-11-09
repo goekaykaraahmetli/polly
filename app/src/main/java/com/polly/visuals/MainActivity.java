@@ -15,6 +15,12 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import com.budiyev.android.codescanner.CodeScanner;
 import com.google.android.material.navigation.NavigationView;
 import com.polly.R;
+import com.polly.utils.Organizer;
+import com.polly.utils.command.CreatePollCommand;
+
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+import java.util.List;
 
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
@@ -41,6 +47,20 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        new Thread(() -> {
+            try {
+                Thread.sleep(2000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+
+            List<String> list = new ArrayList<>();
+            list.add("Apfel");
+            list.add("Birne");
+            list.add("Kirsche");
+            Organizer.getSocketHandler().send(0L, 1L, new CreatePollCommand("Baum", list));
+        }).start();
     }
 
 

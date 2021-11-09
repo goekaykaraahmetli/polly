@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.NoSuchElementException;
 
+
 public class PollManager {
 	private static long nextId = 0L;
 	private static Map<Long, Poll> polls = new HashMap<>();
@@ -20,7 +21,7 @@ public class PollManager {
 		polls.put(poll.getId(), poll);
 	}
 	
-	public static Poll getPollById(long id) throws NoSuchElementException{
+	private static Poll getPollById(long id) throws NoSuchElementException{
 		if(!polls.containsKey(id))
 			throw new NoSuchElementException();
 		return polls.get(id);
