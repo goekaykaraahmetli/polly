@@ -59,7 +59,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             list.add("Apfel");
             list.add("Birne");
             list.add("Kirsche");
-            Organizer.getSocketHandler().send(0L, 1L, new CreatePollCommand("Baum", list));
+            //Organizer.getSocketHandler().send(0L, 1L, new CreatePollCommand("Baum", list));
         }).start();
     }
 

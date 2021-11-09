@@ -17,6 +17,7 @@ import com.polly.R;
 import com.polly.utils.EnterViaCodeFragmentCommunicator;
 import com.polly.utils.Message;
 import com.polly.utils.Organizer;
+import com.polly.utils.command.ErrorCommand;
 import com.polly.utils.command.LoadPollCommand;
 import com.polly.utils.command.VotePollCommand;
 import com.polly.utils.communicator.Communicator;
@@ -50,6 +51,7 @@ public class EnterViaCodeFragment extends Fragment {
                     Toast.makeText(getActivity(), "Code has the right format. Your code is: " + code, Toast.LENGTH_SHORT).show();
                 // open PollActivity
                 //TODO HARDCODED
+                /**
                 for(int i = 0;i<123; i++){
                     while(!Organizer.getSocketHandler().send(0L, 1L, new VotePollCommand(0L, "Apfel"))){
 
@@ -65,6 +67,7 @@ public class EnterViaCodeFragment extends Fragment {
 
                     }
                 }
+                */
 
                 Poll poll = null;
                 try {
@@ -73,6 +76,10 @@ public class EnterViaCodeFragment extends Fragment {
                     intent.putExtra("Poll", poll);
                     startActivity(intent);
                 } catch (InterruptedException e) {
+                    Toast.makeText(getActivity(), "Something went wrong, please try again!", Toast.LENGTH_LONG).show();
+                    e.printStackTrace();
+                } catch (IllegalStateException e){
+                    Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_LONG).show();
                     e.printStackTrace();
                 }
 
@@ -82,10 +89,14 @@ public class EnterViaCodeFragment extends Fragment {
         return root;
     }
 
-    private Poll loadPoll(long id) throws InterruptedException{
+    private Poll loadPoll(long id) throws InterruptedException, IllegalStateException{
         EnterViaCodeFragmentCommunicator communicator = new EnterViaCodeFragmentCommunicator();
         Organizer.getSocketHandler().send(communicator.getCommunicationId(), 1L, new LoadPollCommand(id));
 
-        return (Poll) communicator.getInput().getData();
+        Message message = communicator.getInput();
+        if(message.getDataType().equals(ErrorCommand.class))
+            throw new IllegalStateException((String) message.getData());
+
+        return (Poll) message.getData();
     }
 }
