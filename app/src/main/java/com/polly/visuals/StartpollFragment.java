@@ -33,7 +33,7 @@ public class StartpollFragment extends Fragment {
         b3.setLayoutParams(params);
         ((RelativeLayout) view.findViewById(R.id.startpoll_relativeLayout)).addView(b3);
 
-       b4.setOnClickListener(ButtonPress);
+        b4.setOnClickListener(ButtonPress);
 
 
 

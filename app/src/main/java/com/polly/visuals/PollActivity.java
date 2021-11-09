@@ -12,23 +12,28 @@ import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
 import com.github.mikephil.charting.utils.ColorTemplate;
 import com.polly.R;
-import com.polly.utils.Poll;
+import com.polly.testclasses.Poll;
 
 import java.util.ArrayList;
 
 public class PollActivity extends AppCompatActivity {
+    private PieChart pieChart;
     private Poll poll;
-
-    public PollActivity(){
-        super();
-        this.poll = Poll.getCurrentPoll();
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_bar);
-        PieChart pieChart = (PieChart) findViewById(R.id.pieChart);
+        pieChart = (PieChart) findViewById(R.id.pieChart);
+
+        if(getIntent().hasExtra("Poll") == true){
+            Bundle bundle = getIntent().getExtras();
+            this.poll = (Poll) bundle.getSerializable("Poll");
+            showPoll();
+        }
+    }
+
+    public void showPoll(){
         ArrayList<PieEntry> options = new ArrayList<>();
         for(String option : poll.getPoll().keySet()){
             options.add(new PieEntry(poll.getPoll().get(option), option));
@@ -46,7 +51,7 @@ public class PollActivity extends AppCompatActivity {
         description.setText(poll.getDescription());
         pieChart.setDescription(description);
         pieChart.getDescription().setEnabled(poll.getDescription() != "");
-        pieChart.setCenterText(poll.getTitle());
+        pieChart.setCenterText(poll.getName());
 
         pieChart.setUsePercentValues(true);
         pieChart.animate();

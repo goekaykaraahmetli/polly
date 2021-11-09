@@ -11,13 +11,14 @@ public class SocketHandler {
 
     public SocketHandler(String ip, int port) throws IOException {
         connect(ip, port);
+        inputHandler.start();
+        outputHandler.start();
     }
 
     public <T> void writeOutput(T data){
         WrappedData wrappedData = new WrappedData(data.getClass(), data);
         outputHandler.writeOutput(wrappedData);
     }
-
 
     public void close(){
         new Thread(() -> {
@@ -27,6 +28,8 @@ public class SocketHandler {
                 e.printStackTrace();
             }
         });
+        inputHandler.stopHandler();
+        outputHandler.stopHandler();
     }
 
     public void connect(String ip, int port) throws IOException {
@@ -49,7 +52,6 @@ public class SocketHandler {
         DataStreamManager dataStreamManager = new DataStreamManager(socket.getInputStream(), socket.getOutputStream());
 
         inputHandler = new InputHandler(dataStreamManager);
-        inputHandler.start();
         outputHandler = new OutputHandler(dataStreamManager);
     }
 }
