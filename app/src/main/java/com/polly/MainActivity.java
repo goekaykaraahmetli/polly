@@ -20,7 +20,6 @@ import com.budiyev.android.codescanner.DecodeCallback;
 import com.google.android.material.navigation.NavigationView;
 import com.google.zxing.Result;
 import com.polly.interfaces.Organizer;
-import com.polly.utils.Poll;
 import com.polly.utils.commands.Command;
 import com.polly.utils.commands.CommandCreator;
 import com.polly.visuals.AccountFragment;
@@ -160,7 +159,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         map.put("Fichte", 10);
         map.put("Buche", 12);
         map.put("Eiche", 24);
-        Poll.setCurrentPoll(new Poll("Bäume",map));
+        //Poll.setCurrentPoll(new Poll("Bäume",map));
         Intent intent = new Intent(this, PollActivity.class);
         startActivity(intent);
     }
