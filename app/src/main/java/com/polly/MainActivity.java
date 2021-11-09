@@ -4,6 +4,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -12,10 +14,13 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
+import com.budiyev.android.codescanner.CodeScanner;
+import com.budiyev.android.codescanner.CodeScannerView;
+import com.budiyev.android.codescanner.DecodeCallback;
 import com.google.android.material.navigation.NavigationView;
+import com.google.zxing.Result;
 import com.polly.interfaces.Organizer;
-import com.polly.testclasses.ActivityHandler;
-import com.polly.testclasses.Poll;
+import com.polly.utils.Poll;
 import com.polly.utils.commands.Command;
 import com.polly.utils.commands.CommandCreator;
 import com.polly.visuals.AccountFragment;
@@ -29,16 +34,21 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     private DrawerLayout drawerLayout;
     private ActionBarDrawerToggle actionBarDrawerToggle;
+    private CodeScanner mCodeScanner;
+
+
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        ActivityHandler.setMainActivity(this);
+
+
 
         //CommandCreator.createPollCommand(CommandCreator.PollCommandActions.CREATE, "testPoll");
         List<String> pollOptions = new ArrayList<>();
@@ -52,32 +62,28 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         List<String> fichte = new ArrayList<>();
         fichte.add("Fichte");
-        Command command2 = CommandCreator.createPollCommand(CommandCreator.PollCommandActions.VOTE, "Bäume", "Eiche");
+        Command command2 = CommandCreator.createPollCommand(CommandCreator.PollCommandActions.VOTE, "Bäume", "Fichte");
 
         Command command3 = CommandCreator.createPollCommand(CommandCreator.PollCommandActions.LOAD, "Bäume");
-
+/**
         new Thread(new Runnable() {
             @Override
             public void run() {
                 try{
                     Thread.sleep(500);
                     Organizer.getSocketHandler().writeOutput(new Integer(123));
+                    Thread.sleep(500);
                     Organizer.getSocketHandler().writeOutput(command);
+                    Thread.sleep(500);
                     Organizer.getSocketHandler().writeOutput(command2);
+                    Thread.sleep(500);
                     Organizer.getSocketHandler().writeOutput(command3);
-                    Organizer.getSocketHandler().writeOutput(new String("asd"));
-                    Organizer.getSocketHandler().writeOutput(new String("235"));
-                    Organizer.getSocketHandler().writeOutput(new String("a23456sd"));
-                    Organizer.getSocketHandler().writeOutput(new Integer(124));
-                    Organizer.getSocketHandler().writeOutput(new Integer(346));
-                    Organizer.getSocketHandler().writeOutput(new Integer(1243624));
-                    Organizer.getSocketHandler().writeOutput(new Integer(3146));
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
             }
         }).start();
-
+**/
         drawerLayout = findViewById(R.id.my_drawer_layout);
         actionBarDrawerToggle = new ActionBarDrawerToggle(this, drawerLayout, R.string.nav_open, R.string.nav_close);
 
@@ -90,7 +96,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+
+
     }
+
+
+
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
@@ -148,19 +160,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         map.put("Fichte", 10);
         map.put("Buche", 12);
         map.put("Eiche", 24);
-        Poll poll = new Poll("Baume", map);
+        Poll.setCurrentPoll(new Poll("Bäume",map));
         Intent intent = new Intent(this, PollActivity.class);
         startActivity(intent);
     }
 
-
-    public void testPoll(Poll poll){
-        Intent intent = new Intent(this, PollActivity.class);
-        Bundle bundle = new Bundle();
-        bundle.putSerializable("Poll", poll);
-        intent.putExtras(bundle);
-        startActivity(intent);
-    }
 
     private String[] listToArray(List<String> list){
         String[] tArray = new String[list.size()];
