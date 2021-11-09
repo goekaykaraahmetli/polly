@@ -9,6 +9,7 @@ import android.widget.RelativeLayout;
 
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 
 import com.polly.R;
 
@@ -32,11 +33,21 @@ public class StartpollFragment extends Fragment {
         b3.setLayoutParams(params);
         ((RelativeLayout) view.findViewById(R.id.startpoll_relativeLayout)).addView(b3);
 
-
+        b4.setOnClickListener(ButtonPress);
 
 
 
         return view;
     }
+    private final View.OnClickListener ButtonPress = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            CreatePollFragment createPollFragment = new CreatePollFragment();
+            FragmentTransaction transaction1 = getFragmentManager().beginTransaction();
+            transaction1.replace(R.id.fragment_container, createPollFragment);
+            transaction1.addToBackStack(null);
+            transaction1.commit();
+        }
+    };
 
 }
