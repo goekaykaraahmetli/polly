@@ -63,7 +63,7 @@ class DataStreamManager {
 		else if (dataType.equals(Short.class))
 			data = readShort();
 		// complex types:
-		
+
 		
 		// default type:
 		else
@@ -107,7 +107,7 @@ class DataStreamManager {
 	private String readString() throws IOException {
 		return input.readUTF();
 	}
-	
+
 	
 	public void send(Message message) throws IOException{
 		Class<?> dataType = message.getDataType();
@@ -136,7 +136,7 @@ class DataStreamManager {
 		else if (dataType.equals(Short.class))
 			writeShort((short) data);
 		// complex types:
-		
+
 		
 		// default type:
 		else
@@ -178,4 +178,6 @@ class DataStreamManager {
 	private void writeString(String data) throws IOException {
 		output.writeUTF(data);
 	}
+
+
 }
