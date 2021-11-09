@@ -15,8 +15,6 @@ import androidx.fragment.app.Fragment;
 
 import com.polly.R;
 
-import java.security.cert.CertPathBuilderSpi;
-
 public class CreatePollFragment extends Fragment {
     @Nullable
     @Override
