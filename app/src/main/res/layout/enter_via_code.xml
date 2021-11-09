@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/entercode"
+        android:layout_width="262dp"
+        android:layout_height="20dp"
+        android:text="Enter A 6 Figure Polly Code To Join A Poll"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.496"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.248" />
+
+    <EditText
+        android:id="@+id/polly_code"
+        android:layout_width="75dp"
+        android:layout_height="wrap_content"
+        android:digits="123456789"
+        android:gravity="center"
+        android:inputType="text"
+        android:maxLength="6"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/entercode"
+        app:layout_constraintVertical_bias="0.097" />
+
+    <Button
+        android:id="@+id/enterpollbtn"
+        android:layout_width="100dp"
+        android:layout_height="60dp"
+        android:text="Enter Poll"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.503"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/polly_code"
+        app:layout_constraintVertical_bias="0.094" />
+</androidx.constraintlayout.widget.ConstraintLayout>

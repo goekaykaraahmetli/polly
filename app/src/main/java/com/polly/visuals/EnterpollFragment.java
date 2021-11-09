@@ -13,7 +13,8 @@ import androidx.fragment.app.FragmentTransaction;
 
 import com.polly.R;
 
-public class EnterpollFragment extends Fragment implements View.OnClickListener{
+public class EnterpollFragment extends Fragment {
+
 
     @Nullable
     @Override
@@ -22,20 +23,37 @@ public class EnterpollFragment extends Fragment implements View.OnClickListener{
                              @Nullable Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.activity_enter_poll, container, false);
 
+
         ImageButton codeScannerButton = (ImageButton) root.findViewById(R.id.codeScannerButton);
-        codeScannerButton.setOnClickListener(this);
-        return root;
+        ImageButton enterViaCodeButton = (ImageButton) root.findViewById(R.id.enterViaCodeButton);
+        enterViaCodeButton.setOnClickListener(mListener);
+        codeScannerButton.setOnClickListener(mListener);
+
+         return root;
+
     }
 
-    @Override
-    public void onClick(View v) {
-        switch(v.getId()) {
-            case R.id.codeScannerButton:
-                CodeScannerFragment scannerFragment = new CodeScannerFragment();
-                FragmentTransaction transaction = getFragmentManager().beginTransaction();
-                transaction.replace(R.id.fragment_container, scannerFragment);
-                transaction.addToBackStack(null);
-                transaction.commit();
+    private final View.OnClickListener mListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            switch(v.getId()) {
+                case R.id.codeScannerButton:
+                    CodeScannerFragment scannerFragment = new CodeScannerFragment();
+                    FragmentTransaction transaction = getFragmentManager().beginTransaction();
+                    transaction.replace(R.id.fragment_container, scannerFragment);
+                    transaction.addToBackStack(null);
+                    transaction.commit();
+                    break;
+                case R.id.enterViaCodeButton:
+                    EnterViaCodeFragment enterViaCodeFragment = new EnterViaCodeFragment();
+                    FragmentTransaction transaction1 = getFragmentManager().beginTransaction();
+                    transaction1.replace(R.id.fragment_container, enterViaCodeFragment);
+                    transaction1.addToBackStack(null);
+                    transaction1.commit();
+                    break;
+            }
         }
-    }
+    };
+
+
 }

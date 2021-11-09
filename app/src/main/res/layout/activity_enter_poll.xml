@@ -20,14 +20,14 @@
         app:layout_constraintVertical_bias="0.137" />
 
     <ImageButton
-        android:id="@+id/imageButton9"
+        android:id="@+id/enterViaCodeButton"
         android:layout_width="165dp"
         android:layout_height="165dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.335"
+        app:layout_constraintTop_toBottomOf="@+id/textView3"
+        app:layout_constraintVertical_bias="0.13"
         app:srcCompat="@drawable/bycodere" />
 
     <ImageButton
@@ -37,8 +37,8 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.736"
+        app:layout_constraintTop_toBottomOf="@+id/enterViaCodeButton"
+        app:layout_constraintVertical_bias="0.298"
         app:srcCompat="@drawable/qrcode" />
 
     <TextView
@@ -46,11 +46,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Enter Via Code"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/codeScannerButton"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.525" />
+        app:layout_constraintTop_toBottomOf="@+id/enterViaCodeButton"
+        app:layout_constraintVertical_bias="0.07" />
 
     <TextView
         android:id="@+id/textView6"
@@ -60,7 +60,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.842" />
+        app:layout_constraintTop_toBottomOf="@+id/codeScannerButton"
+        app:layout_constraintVertical_bias="0.069" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
