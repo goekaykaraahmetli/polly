@@ -21,7 +21,7 @@ class InputHandler extends Thread{
         //TODO handle input
         if(wrappedData.getDataType().equals(Poll.class)){
             Poll poll = (Poll) wrappedData.getData();
-            ActivityHandler.getMainActivity().testPoll(poll);
+            //ActivityHandler.getMainActivity().testPoll(poll);
             return;
 
             //poll.printPoll();
