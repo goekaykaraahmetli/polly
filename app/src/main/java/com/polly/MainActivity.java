@@ -4,6 +4,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -12,7 +14,11 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
+import com.budiyev.android.codescanner.CodeScanner;
+import com.budiyev.android.codescanner.CodeScannerView;
+import com.budiyev.android.codescanner.DecodeCallback;
 import com.google.android.material.navigation.NavigationView;
+import com.google.zxing.Result;
 import com.polly.interfaces.Organizer;
 import com.polly.utils.Poll;
 import com.polly.utils.commands.Command;
@@ -28,14 +34,21 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     private DrawerLayout drawerLayout;
     private ActionBarDrawerToggle actionBarDrawerToggle;
+    private CodeScanner mCodeScanner;
+
+
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+
+
 
         //CommandCreator.createPollCommand(CommandCreator.PollCommandActions.CREATE, "testPoll");
         List<String> pollOptions = new ArrayList<>();
@@ -52,6 +65,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         Command command2 = CommandCreator.createPollCommand(CommandCreator.PollCommandActions.VOTE, "Bäume", "Fichte");
 
         Command command3 = CommandCreator.createPollCommand(CommandCreator.PollCommandActions.LOAD, "Bäume");
+/**
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -69,7 +83,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 }
             }
         }).start();
-
+**/
         drawerLayout = findViewById(R.id.my_drawer_layout);
         actionBarDrawerToggle = new ActionBarDrawerToggle(this, drawerLayout, R.string.nav_open, R.string.nav_close);
 
@@ -82,7 +96,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+
+
     }
+
+
+
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
