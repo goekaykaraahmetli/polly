@@ -98,7 +98,7 @@
         android:id="@+id/password_strength"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Not Even Close"
+        android:text="Not Even Close \n (Your password needs at least 6 digits, a uppercase letter, a number and a special character)"
         app:layout_constraintBottom_toTopOf="@+id/activity_sign_up_edittext_password_confirm"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

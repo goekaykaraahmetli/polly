@@ -19,8 +19,6 @@ public class AccountFragment extends Fragment {
                              @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_account, container, false);
         TextView emailInfo = (TextView) view.findViewById(R.id.email_info);
-        SignupFragment signupFragment = (SignupFragment) getFragmentManager().findFragmentById(signup);
-        emailInfo.setText("Email: \n" + signupFragment.email_global );
         return view;
     }
 
