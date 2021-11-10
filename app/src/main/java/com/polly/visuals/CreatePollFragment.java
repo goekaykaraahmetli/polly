@@ -108,7 +108,7 @@ public class CreatePollFragment extends Fragment {
                             addOption.setY(addOption.getY()-150);
                             optionCounter--;
                             yheight -= 150;
-
+                            addOption.setVisibility(View.VISIBLE);
                         }
                     });
                     if(optionCounter == 8){
