@@ -1,5 +1,6 @@
 package com.polly.visuals;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.view.LayoutInflater;
@@ -13,6 +14,18 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.polly.R;
+import com.polly.utils.EnterViaCodeFragmentCommunicator;
+import com.polly.utils.Message;
+import com.polly.utils.Organizer;
+import com.polly.utils.command.ErrorCommand;
+import com.polly.utils.command.LoadPollCommand;
+import com.polly.utils.command.VotePollCommand;
+import com.polly.utils.communicator.Communicator;
+import com.polly.utils.communicator.CommunicatorManager;
+import com.polly.utils.poll.Poll;
+
+import java.util.HashMap;
+import java.util.Map;
 
 
 public class EnterViaCodeFragment extends Fragment {
@@ -36,8 +49,54 @@ public class EnterViaCodeFragment extends Fragment {
                     Toast.makeText(getActivity(), "The entered code has the wrong size. Try again", Toast.LENGTH_LONG).show();
                 else
                     Toast.makeText(getActivity(), "Code has the right format. Your code is: " + code, Toast.LENGTH_SHORT).show();
+                // open PollActivity
+                //TODO HARDCODED
+                /**
+                for(int i = 0;i<123; i++){
+                    while(!Organizer.getSocketHandler().send(0L, 1L, new VotePollCommand(0L, "Apfel"))){
+
+                    }
+                }
+                for(int i = 0;i<32; i++){
+                    while(!Organizer.getSocketHandler().send(0L, 1L, new VotePollCommand(0L, "Kirsche"))){
+
+                    }
+                }
+                for(int i = 0;i<24; i++){
+                    while(!Organizer.getSocketHandler().send(0L, 1L, new VotePollCommand(0L, "Birne"))){
+
+                    }
+                }
+                */
+
+                Poll poll = null;
+                try {
+                    poll = loadPoll(0L);
+                    Intent intent = new Intent(getActivity(), PollActivity.class);
+                    intent.putExtra("Poll", poll);
+                    startActivity(intent);
+                } catch (InterruptedException e) {
+                    Toast.makeText(getActivity(), "Something went wrong, please try again!", Toast.LENGTH_LONG).show();
+                    e.printStackTrace();
+                } catch (IllegalStateException e){
+                    Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_LONG).show();
+                    e.printStackTrace();
+                }
+
+
             }
         });
         return root;
+    }
+
+    private Poll loadPoll(long id) throws InterruptedException, IllegalStateException{
+        EnterViaCodeFragmentCommunicator communicator = new EnterViaCodeFragmentCommunicator();
+        Organizer.getSocketHandler().send(communicator.getCommunicationId(), 1L, new LoadPollCommand(id));
+
+        Message message = communicator.getInput();
+        if(message.getDataType().equals(ErrorCommand.class))
+            throw new IllegalStateException((String) message.getData());
+
+        return (Poll) message.getData();
     }
 }

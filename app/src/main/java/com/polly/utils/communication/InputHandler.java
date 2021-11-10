@@ -16,6 +16,9 @@ class InputHandler extends DataStreamHandler{
 	protected void handleDataStream() {
 		try {
 			Message message = dataStreamManager.receive();
+			System.out.println("received input");
+			System.out.println("receiver: " + message.getReceiver());
+
 			CommunicatorManager.getCommunicatorById(message.getReceiver()).addInput(message);
 		} catch (NoSuchElementException | ClassNotFoundException | IOException e) {
 			// TODO Auto-generated catch block
