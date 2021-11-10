@@ -24,7 +24,7 @@ public class StartpollFragment extends Fragment {
         //Button b2 = (Button) view.findViewById(R.id.activity_create_poll_button1);
         Button b4 = (Button) view.findViewById(R.id.button4);
 
-        /**
+/**
         Button b3 = new Button(getContext());
         b3.setVisibility(View.VISIBLE);
         b3.setText("asd");
@@ -34,8 +34,8 @@ public class StartpollFragment extends Fragment {
         params.setMargins(10,10,10,10);
         b3.setLayoutParams(params);
 
-        ((RelativeLayout) view.findViewById(R.id.startpoll_relativeLayout)).addView(b3);
-        **/
+        ((RelativeLayout) view.findViewById(R.id.startpoll_relativeLayout)).addView(b3);**/
+
 
         b4.setOnClickListener(ButtonPress);
 

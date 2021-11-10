@@ -2,21 +2,22 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/createPoll_constraintLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
 
     <Button
         android:id="@+id/createPollBtn"
-        android:layout_width="100dp"
-        android:layout_height="60dp"
+        android:layout_width="384dp"
+        android:layout_height="57dp"
         android:text="Create Poll"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintHorizontal_bias="0.592"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/PollName"
-        app:layout_constraintVertical_bias="0.819" />
+        app:layout_constraintVertical_bias="0.955" />
 
     <EditText
         android:id="@+id/PollName"
@@ -34,4 +35,50 @@
         app:layout_constraintHorizontal_bias="0.45"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <EditText
+        android:id="@+id/option1"
+        android:layout_width="191dp"
+        android:layout_height="48dp"
+        android:layout_marginTop="160dp"
+        android:autofillHints="@string/activity_sign_up_username"
+        android:gravity="center"
+        android:hint="Option 1"
+        android:inputType="text"
+        android:maxLength="20"
+        android:minHeight="48dp"
+        android:selectAllOnFocus="true"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.061"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <EditText
+        android:id="@+id/option2"
+        android:layout_width="191dp"
+        android:layout_height="47dp"
+        android:layout_marginTop="216dp"
+        android:autofillHints="@string/activity_sign_up_username"
+        android:gravity="center"
+        android:hint="Option 2"
+        android:inputType="text"
+        android:maxLength="20"
+        android:minHeight="48dp"
+        android:selectAllOnFocus="true"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.061"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/addOption"
+        android:layout_width="165dp"
+        android:layout_height="39dp"
+        android:text="Add option"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.479"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/PollName"
+        app:layout_constraintVertical_bias="0.3" />
 </androidx.constraintlayout.widget.ConstraintLayout>

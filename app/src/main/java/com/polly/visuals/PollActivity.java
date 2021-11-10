@@ -12,7 +12,7 @@ import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
 import com.github.mikephil.charting.utils.ColorTemplate;
 import com.polly.R;
-import com.polly.testclasses.Poll;
+import com.polly.utils.poll.Poll;
 
 import java.util.ArrayList;
 
@@ -27,16 +27,15 @@ public class PollActivity extends AppCompatActivity {
         pieChart = (PieChart) findViewById(R.id.pieChart);
 
         if(getIntent().hasExtra("Poll") == true){
-            Bundle bundle = getIntent().getExtras();
-            this.poll = (Poll) bundle.getSerializable("Poll");
+            this.poll = (Poll) getIntent().getSerializableExtra("Poll");
             showPoll();
         }
     }
 
     public void showPoll(){
         ArrayList<PieEntry> options = new ArrayList<>();
-        for(String option : poll.getPoll().keySet()){
-            options.add(new PieEntry(poll.getPoll().get(option), option));
+        for(String option : poll.getData().keySet()){
+            options.add(new PieEntry(poll.getData().get(option), option));
         }
 
         PieDataSet pieDataSet = new PieDataSet(options, "");
