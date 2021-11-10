@@ -43,13 +43,14 @@
         android:id="@+id/activity_sign_up_edittext_password_confirm"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="48dp"
         android:autofillHints="@string/activity_sign_up_password_confirm"
         android:hint="@string/activity_sign_up_password_confirm"
         android:inputType="textPassword"
         android:minHeight="48dp"
         android:selectAllOnFocus="true"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.4"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/activity_sign_up_edittext_password"
         tools:ignore="TextContrastCheck" />
@@ -58,14 +59,14 @@
         android:id="@+id/activity_sign_up_edittext_email"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="20dp"
         android:autofillHints="@string/activity_sign_up_email"
         android:hint="@string/activity_sign_up_email"
         android:inputType="textEmailAddress"
         android:minHeight="48dp"
         android:selectAllOnFocus="true"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.525"
+        app:layout_constraintHorizontal_bias="0.4"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/activity_sign_up_edittext_password_confirm" />
 
@@ -92,5 +93,15 @@
         app:layout_constraintHorizontal_bias="0.512"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/activity_sign_up_edittext_email" />
+
+    <TextView
+        android:id="@+id/password_strength"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Not Even Close"
+        app:layout_constraintBottom_toTopOf="@+id/activity_sign_up_edittext_password_confirm"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/activity_sign_up_edittext_password" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
