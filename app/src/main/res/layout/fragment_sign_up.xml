@@ -9,6 +9,7 @@
     android:paddingRight="20dp"
     android:paddingBottom="20dp">
 
+
     <EditText
         android:id="@+id/activity_sign_up_edittext_username"
         android:layout_width="0dp"
@@ -37,8 +38,8 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.525"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/activity_sign_up_edittext_username" />
-
+        app:layout_constraintTop_toBottomOf="@+id/activity_sign_up_edittext_username"
+        />
     <EditText
         android:id="@+id/activity_sign_up_edittext_password_confirm"
         android:layout_width="0dp"
@@ -87,10 +88,10 @@
         android:id="@+id/activity_sign_up_checkbox_accept_terms_of_service"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="36dp"
+        android:layout_marginTop="64dp"
         android:text="@string/activity_sign_up_accept_terms_of_service"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.512"
+        app:layout_constraintHorizontal_bias="0.545"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/activity_sign_up_edittext_email" />
 
@@ -103,5 +104,15 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/activity_sign_up_edittext_password" />
+
+    <CheckBox
+        android:id="@+id/shw_psswords"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Show Passwords"
+        app:layout_constraintBottom_toTopOf="@+id/activity_sign_up_checkbox_accept_terms_of_service"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/activity_sign_up_edittext_email" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

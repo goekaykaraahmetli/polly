@@ -4,12 +4,15 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.text.method.HideReturnsTransformationMethod;
+import android.text.method.PasswordTransformationMethod;
 import android.util.Patterns;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -33,6 +36,20 @@ public class SignupFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_sign_up, container, false);
         Button signup = (Button) view.findViewById(R.id.activity_sign_up_button_sign_up);
         EditText password = (EditText) view.findViewById(R.id.activity_sign_up_edittext_password);
+        EditText confirmpassword = (EditText) view.findViewById(R.id.activity_sign_up_edittext_password_confirm);
+        CheckBox viewPswd = (CheckBox) view.findViewById(R.id.shw_psswords);
+        viewPswd.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+                    password.setTransformationMethod(HideReturnsTransformationMethod.getInstance());
+                    confirmpassword.setTransformationMethod(HideReturnsTransformationMethod.getInstance());
+                } else {
+                    password.setTransformationMethod(PasswordTransformationMethod.getInstance());
+                    confirmpassword.setTransformationMethod(HideReturnsTransformationMethod.getInstance());
+                }
+            }
+        });
         password.addTextChangedListener(textWatcher);
         signup.setOnClickListener(new View.OnClickListener() {
             @Override
