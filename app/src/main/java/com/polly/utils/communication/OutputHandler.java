@@ -7,7 +7,7 @@ import java.util.concurrent.BlockingQueue;
 import com.polly.utils.Message;
 
 class OutputHandler extends DataStreamHandler{
-	private static final int MAX_QUEUE_LENGTH = 20;
+	private static final int MAX_QUEUE_LENGTH = 200;
 	protected final BlockingQueue<Message> handleQueue = new ArrayBlockingQueue<>(MAX_QUEUE_LENGTH);
 	
 	protected OutputHandler(DataStreamManager dataStreamManager) {
