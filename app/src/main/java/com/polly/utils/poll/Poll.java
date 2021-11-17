@@ -10,20 +10,15 @@ public class Poll implements Serializable {
 	private Map<String, Integer> data;
 	private String description;
 
-	public Poll(String name, Map<String, Integer> poll) {
-		this.id = PollManager.getNextId();
-		this.name = name;
-		this.data = poll;
-		this.description = "";
-		PollManager.registerPoll(this);
+	public Poll(long id, String name, Map<String, Integer> poll) {
+		this(id, name, poll, "");
 	}
 
-	public Poll(String name, Map<String, Integer> poll, String description) {
-		this.id = PollManager.getNextId();
+	public Poll(long id, String name, Map<String, Integer> poll, String description) {
+		this.id = id;
 		this.name = name;
 		this.data = poll;
 		this.description = description;
-		PollManager.registerPoll(this);
 	}
 	
 	public long getId() {
@@ -41,6 +36,10 @@ public class Poll implements Serializable {
 	public String getDescription(){
 		return description;
 	}
+
+
+
+
 
 	void vote(String option) throws NoSuchElementException{
 		if(!data.containsKey(option))

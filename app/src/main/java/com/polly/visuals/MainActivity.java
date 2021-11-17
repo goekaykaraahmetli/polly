@@ -15,8 +15,10 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import com.budiyev.android.codescanner.CodeScanner;
 import com.google.android.material.navigation.NavigationView;
 import com.polly.R;
+import com.polly.config.Config;
 import com.polly.utils.Organizer;
 import com.polly.utils.command.CreatePollCommand;
+import com.polly.utils.poll.PollManager;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
@@ -48,6 +50,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+        Organizer.getSocketHandler().send(0L, 0L, "connected!");
+
         new Thread(() -> {
             try {
                 Thread.sleep(2000);
@@ -59,7 +63,15 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             list.add("Apfel");
             list.add("Birne");
             list.add("Kirsche");
-            Organizer.getSocketHandler().send(0L, 1L, new CreatePollCommand("Baum", list));
+            try {
+                System.out.println("server id: " + Config.getServerCommunicationId());
+                long id = Organizer.getPollManager().createPoll("Baum", list);
+                System.out.println("id: " + id);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+
+            //Organizer.getSocketHandler().send(0L, 1L, new CreatePollCommand("Baum", list));
         }).start();
     }
 

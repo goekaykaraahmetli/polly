@@ -5,15 +5,22 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.lang.reflect.GenericSignatureFormatError;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
+import java.util.TreeMap;
 
 import com.polly.config.Config;
+import com.polly.utils.ListWrapper;
+import com.polly.utils.MapWrapper;
 import com.polly.utils.Message;
 import com.polly.utils.command.CreatePollCommand;
 import com.polly.utils.command.LoadPollCommand;
+import com.polly.utils.command.LoadPollOptionsCommand;
 import com.polly.utils.command.VotePollCommand;
 import com.polly.utils.poll.Poll;
 
@@ -48,11 +55,12 @@ class DataStreamManager {
 		return readInput(sender, receiver, Class.forName(className));
 	}
 
-	private Message readInput(long sender, long receiver, Class<?> dataType) throws IOException {
+	private Message readInput(long sender, long receiver, Class<?> dataType) throws IOException, ClassNotFoundException {
 		if(dataType == null) {
 			throw new NullPointerException();
 		}
 		Object data;
+		List<Class<?>> generics = new ArrayList<>();
 		// primitive types:
 		if(dataType.equals(Integer.class))
 			data = readInteger();
@@ -77,13 +85,28 @@ class DataStreamManager {
 			data = readLoadPollCommand();
 		else if (dataType.equals(VotePollCommand.class))
 			data = readVotePollCommand();
+		else if (dataType.equals(LoadPollOptionsCommand.class))
+			data = readLoadPollOptionsCommand();
 		else if (dataType.equals(Poll.class))
 			data = readPoll();
-			// default type:
+		else if (isList(dataType)) {
+			ListWrapper lw = readList();
+			data = lw.getList();
+			generics = new ArrayList<>();
+			generics.add(lw.getType());
+		}
+		else if (isMap(dataType)) {
+			MapWrapper mw = readMap();
+			data = mw.getMap();
+			generics = new ArrayList<>();
+			generics.add(mw.getKeyType());
+			generics.add(mw.getValueType());
+		}
+		// default type:
 		else
 			data = readString();
 
-		return new Message(sender, receiver, dataType, data);
+		return new Message(sender, receiver, dataType, data, generics);
 	}
 
 	private int readInteger() throws IOException {
@@ -140,16 +163,45 @@ class DataStreamManager {
 		return new VotePollCommand(readLong(), readString());
 	}
 
+	private LoadPollOptionsCommand readLoadPollOptionsCommand() throws IOException {
+		return new LoadPollOptionsCommand(readLong());
+	}
+
 	private Poll readPoll() throws IOException {
-		//TODO id wird nicht verwendet!
 		long id = readLong();
 		String name = readString();
 		Map<String, Integer> map = new HashMap<>();
-		for(int i=0;i<readInteger();i++) {
+		int size = readInteger();
+		for(int i=0;i<size;i++) {
 			map.put(readString(), readInteger());
 		}
 		String description = readString();
-		return new Poll(name, map, description);
+		return new Poll(id, name, map, description);
+	}
+
+	private ListWrapper readList() throws IOException, ClassNotFoundException {
+		Class<?> type = Class.forName(readString());
+		int size = readInteger();
+		List<Object> list = new ArrayList<>();
+		for(int i = 0;i <size;i++) {
+			Message message = readInput(0L, 0L, type);
+			list.add(message.getDataType().cast(message.getData()));
+		}
+		return new ListWrapper(list, type);
+
+	}
+
+	private MapWrapper readMap() throws IOException, ClassNotFoundException{
+		Class<?> keyType = Class.forName(readString());
+		Class<?> valueType = Class.forName(readString());
+		int size = readInteger();
+		Map<Object, Object> map = new HashMap<>();
+		for(int i = 0;i <size;i++) {
+			Message key = readInput(0L, 0L, keyType);
+			Message value = readInput(0L, 0L, valueType);
+			map.put(key.getDataType().cast(key.getData()), value.getDataType().cast(value.getData()));
+		}
+		return new MapWrapper(map, keyType, valueType);
 	}
 
 	public void send(Message message) throws IOException{
@@ -158,10 +210,16 @@ class DataStreamManager {
 			throw new NullPointerException();
 		}
 		Object data = message.getData();
+		List<Class<?>> generics = message.getGenerics();
 		writeLong(message.getSender());
 		writeLong(message.getReceiver());
 		writeString(message.getDataType().getName());
 
+		write(dataType, data, generics);
+	}
+
+	@SuppressWarnings("unchecked")
+	private void write(Class<?> dataType, Object data, List<Class<?>> generics) throws IOException, IllegalArgumentException{
 		if(dataType.equals(Integer.class))
 			writeInteger((Integer) data);
 		else if (dataType.equals(Boolean.class))
@@ -185,10 +243,20 @@ class DataStreamManager {
 			writeLoadPollCommand((LoadPollCommand) data);
 		else if (dataType.equals(VotePollCommand.class))
 			writeVotePollCommand((VotePollCommand) data);
+		else if (dataType.equals(LoadPollOptionsCommand.class))
+			writeLoadPollOptionsCommand((LoadPollOptionsCommand) data);
 		else if (dataType.equals(Poll.class))
 			writePoll((Poll) data);
+		else if (isList(dataType)) {
+			if(generics.isEmpty())
+				throw new IllegalArgumentException("missing generics");
+			writeList((List<Object>) data, generics.get(0));
+		} else if (isMap(dataType)) {
+			if(generics.size() < 2)
+				throw new IllegalArgumentException("missing generics");
+			writeMap((Map<Object,Object>) data, generics.get(0), generics.get(1));
 			// default type:
-		else
+		} else
 			writeString((String) data);
 	}
 
@@ -248,6 +316,10 @@ class DataStreamManager {
 		writeString(data.getPollOption());
 	}
 
+	private void writeLoadPollOptionsCommand(LoadPollOptionsCommand data) throws IOException {
+		writeLong(data.getPollId());
+	}
+
 	private void writePoll(Poll data) throws IOException {
 		writeLong(data.getId());
 		writeString(data.getName());
@@ -257,5 +329,31 @@ class DataStreamManager {
 			writeInteger(data.getData().get(s));
 		}
 		writeString(data.getDescription());
+	}
+
+	private void writeList(List<Object> data, Class<?> type) throws IOException {
+		writeString(type.getName());
+		writeInteger(data.size());
+		for(Object obj : data) {
+			write(type, type.cast(obj), new ArrayList<>());
+		}
+	}
+
+	private void writeMap(Map<Object,Object> data, Class<?> keyType, Class<?> valueType) throws IOException {
+		writeString(keyType.getName());
+		writeString(valueType.getName());
+		writeInteger(data.size());
+		for(Entry<Object, Object> entry : data.entrySet()) {
+			write(keyType, keyType.cast(entry.getKey()), new ArrayList<>());
+			write(valueType, valueType.cast(entry.getValue()), new ArrayList<>());
+		}
+	}
+
+	private boolean isList(Class<?> classType) {
+		return classType.equals(ArrayList.class) || classType.equals(LinkedList.class);
+	}
+
+	private boolean isMap(Class<?> classType) {
+		return classType.equals(HashMap.class) || classType.equals(TreeMap.class);
 	}
 }

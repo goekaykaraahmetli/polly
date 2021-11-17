@@ -14,11 +14,13 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.polly.R;
+import com.polly.config.Config;
 import com.polly.utils.EnterViaCodeFragmentCommunicator;
 import com.polly.utils.Message;
 import com.polly.utils.Organizer;
 import com.polly.utils.command.ErrorCommand;
 import com.polly.utils.command.LoadPollCommand;
+import com.polly.utils.command.LoadPollOptionsCommand;
 import com.polly.utils.command.VotePollCommand;
 import com.polly.utils.communicator.Communicator;
 import com.polly.utils.communicator.CommunicatorManager;
@@ -53,24 +55,47 @@ public class EnterViaCodeFragment extends Fragment {
                 //TODO HARDCODED
                 /**
                 for(int i = 0;i<123; i++){
-                    while(!Organizer.getSocketHandler().send(0L, 1L, new VotePollCommand(0L, "Apfel"))){
+                    while(!Organizer.getSocketHandler().send(0L, Config.getServerCommunicationId(), new VotePollCommand(0L, "Apfel"))){
 
                     }
                 }
                 for(int i = 0;i<32; i++){
-                    while(!Organizer.getSocketHandler().send(0L, 1L, new VotePollCommand(0L, "Kirsche"))){
+                    while(!Organizer.getSocketHandler().send(0L, Config.getServerCommunicationId(), new VotePollCommand(0L, "Kirsche"))){
 
                     }
                 }
                 for(int i = 0;i<24; i++){
-                    while(!Organizer.getSocketHandler().send(0L, 1L, new VotePollCommand(0L, "Birne"))){
+                    while(!Organizer.getSocketHandler().send(0L, Config.getServerCommunicationId(), new VotePollCommand(0L, "Birne"))){
 
                     }
                 }
                 */
+                for(int i = 0;i<123; i++){
+                    try {
+                        Organizer.getPollManager().vote(0L, "Apfel");
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+                for(int i = 0;i<32; i++){
+                    try {
+                        Organizer.getPollManager().vote(0L, "Kirsche");
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+                for(int i = 0;i<24; i++){
+                    try {
+                        Organizer.getPollManager().vote(0L, "Birne");
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+
 
                 Poll poll = null;
                 try {
+                    //loadPollOptions(0L);
                     poll = loadPoll(0L);
                     Intent intent = new Intent(getActivity(), PollActivity.class);
                     intent.putExtra("Poll", poll);
@@ -89,14 +114,27 @@ public class EnterViaCodeFragment extends Fragment {
         return root;
     }
 
+    private void loadPollOptions(long id){
+        try {
+            Organizer.getPollManager().loadPollOptions(id);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        //Organizer.getSocketHandler().send(CommunicatorManager.getDefaultCommunicator().getCommunicationId(), Config.getServerCommunicationId(), new LoadPollOptionsCommand(id));
+    }
+
     private Poll loadPoll(long id) throws InterruptedException, IllegalStateException{
         EnterViaCodeFragmentCommunicator communicator = new EnterViaCodeFragmentCommunicator();
-        Organizer.getSocketHandler().send(communicator.getCommunicationId(), 1L, new LoadPollCommand(id));
+        return Organizer.getPollManager().loadPoll(id);
+
+        /**
+        Organizer.getSocketHandler().send(communicator.getCommunicationId(), Config.getServerCommunicationId(), new LoadPollCommand(id));
 
         Message message = communicator.getInput();
         if(message.getDataType().equals(ErrorCommand.class))
             throw new IllegalStateException((String) message.getData());
 
         return (Poll) message.getData();
+         */
     }
 }

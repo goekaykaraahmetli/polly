@@ -1,7 +1,10 @@
 package com.polly.utils.communicator;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.ArrayBlockingQueue;
 
+import com.polly.config.Config;
 import com.polly.utils.Message;
 
 public class DefaultCommunicator extends Communicator {
@@ -11,6 +14,11 @@ public class DefaultCommunicator extends Communicator {
 	public DefaultCommunicator() {
 		super();
 		new Thread(() -> {
+			try {
+				Config.setServerCommunicationID(getInput().getSender());
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
 			while (true) {
 				try {
 					handleInput(getInput());
