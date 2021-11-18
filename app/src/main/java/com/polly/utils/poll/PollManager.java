@@ -17,17 +17,9 @@ import java.util.Map;
 import java.util.NoSuchElementException;
 
 
-public class PollManager extends Communicator {
+public class PollManager{
 	private static Map<Long, Poll> polls = new HashMap<>();
-
-	public PollManager() {
-		super();
-	}
-
-	@Override
-	protected void handleInput(Message message) {
-		//TODO
-	}
+	private static Communicator communicator = initialiseCommunicator();
 
 	public static void registerPoll(Poll poll) {
 		polls.put(poll.getId(), poll);
@@ -39,35 +31,39 @@ public class PollManager extends Communicator {
 		return polls.get(id);
 	}
 
-	public long createPoll(String name, List<String> pollOptions) throws InterruptedException {
-		Organizer.getSocketHandler().send(getCommunicationId(), Config.getServerCommunicationId(), new CreatePollCommand(name, pollOptions));
-		long id = (long) getInput().getData();
+	public static long createPoll(String name, List<String> pollOptions) throws InterruptedException {
+		Organizer.getSocketHandler().send(communicator.getCommunicationId(), Config.getServerCommunicationId(), new CreatePollCommand(name, pollOptions));
+		long id = (long) communicator.getInput().getData();
 		return id;
 	}
 
-	public Poll loadPoll(long id) throws InterruptedException {
-		Organizer.getSocketHandler().send(getCommunicationId(), Config.getServerCommunicationId(), new LoadPollCommand(id));
-		Poll poll = (Poll) getInput().getData();
+	public static Poll loadPoll(long id) throws InterruptedException {
+		Organizer.getSocketHandler().send(communicator.getCommunicationId(), Config.getServerCommunicationId(), new LoadPollCommand(id));
+		Poll poll = (Poll) communicator.getInput().getData();
 		return poll;
 	}
 
-	public List<String> loadPollOptions(long id) throws InterruptedException {
-		Organizer.getSocketHandler().send(getCommunicationId(), Config.getServerCommunicationId(), new LoadPollOptionsCommand(id));
-		List<Object> optionsObject = (List<Object>) getInput().getData();
-		List<String> options = new ArrayList<>();
-		for(Object obj : optionsObject){
-			options.add((String) obj);
-		}
-		return options;
+	public static Poll loadPollOptions(long id) throws InterruptedException {
+		Organizer.getSocketHandler().send(communicator.getCommunicationId(), Config.getServerCommunicationId(), new LoadPollOptionsCommand(id));
+		return (Poll) communicator.getInput().getData();
 	}
 
-	public boolean vote(long id, String option) throws InterruptedException {
-		Organizer.getSocketHandler().send(getCommunicationId(), Config.getServerCommunicationId(), new VotePollCommand(id, option));
-		boolean bool = (boolean) getInput().getData();
+	public static boolean vote(long id, String option) throws InterruptedException {
+		Organizer.getSocketHandler().send(communicator.getCommunicationId(), Config.getServerCommunicationId(), new VotePollCommand(id, option));
+		boolean bool = (boolean) communicator.getInput().getData();
 		return bool;
 	}
 
-	public void editPoll(long id) {
+	public static void editPoll(long id) {
 		throw new UnsupportedOperationException();
+	}
+
+	private static Communicator initialiseCommunicator(){
+		return new Communicator() {
+			@Override
+			protected void handleInput(Message message) {
+				// no default input handling
+			}
+		};
 	}
 }

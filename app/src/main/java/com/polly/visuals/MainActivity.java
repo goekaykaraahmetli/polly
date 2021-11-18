@@ -65,7 +65,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             list.add("Kirsche");
             try {
                 System.out.println("server id: " + Config.getServerCommunicationId());
-                long id = Organizer.getPollManager().createPoll("Baum", list);
+                long id = PollManager.createPoll("Baum", list);
                 System.out.println("id: " + id);
             } catch (InterruptedException e) {
                 e.printStackTrace();
