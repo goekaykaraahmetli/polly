@@ -73,6 +73,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
             //Organizer.getSocketHandler().send(0L, 1L, new CreatePollCommand("Baum", list));
         }).start();
+
     }
 
 
