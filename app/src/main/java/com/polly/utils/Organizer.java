@@ -8,10 +8,8 @@ import com.polly.utils.poll.PollManager;
 
 public class Organizer {
 	private static final SocketHandler socketHandler;
-	private static final PollManager pollManager;
 	static {
 		socketHandler = createSocketHandler();
-		pollManager = new PollManager();
 	}
 	
 	private static SocketHandler createSocketHandler() {
@@ -24,12 +22,7 @@ public class Organizer {
 		return sh;
 	}
 	
-	
 	public static SocketHandler getSocketHandler() {
 		return socketHandler;
-	}
-
-	public static PollManager getPollManager(){
-		return pollManager;
 	}
 }
