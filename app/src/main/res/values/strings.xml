@@ -4,7 +4,7 @@
 
     <!-- layout -->
 
-    <string name="activity_login_username">Username</string>
+    <string name="activity_login_email">Email</string>
     <string name="activity_login_password">Password</string>
     <string name="activity_login_button_login">Login</string>
     <string name="activity_login_sign_up_instead">If you do not have an account you can sign up here:</string>
