@@ -14,21 +14,8 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.polly.R;
-import com.polly.config.Config;
-import com.polly.utils.EnterViaCodeFragmentCommunicator;
-import com.polly.utils.Message;
-import com.polly.utils.Organizer;
-import com.polly.utils.command.ErrorCommand;
-import com.polly.utils.command.LoadPollCommand;
-import com.polly.utils.command.LoadPollOptionsCommand;
-import com.polly.utils.command.VotePollCommand;
-import com.polly.utils.communicator.Communicator;
-import com.polly.utils.communicator.CommunicatorManager;
 import com.polly.utils.poll.Poll;
 import com.polly.utils.poll.PollManager;
-
-import java.util.HashMap;
-import java.util.Map;
 
 
 public class EnterViaCodeFragment extends Fragment {
