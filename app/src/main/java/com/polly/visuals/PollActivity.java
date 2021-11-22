@@ -17,12 +17,16 @@ import com.github.mikephil.charting.data.PieEntry;
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 import com.github.mikephil.charting.utils.ColorTemplate;
 import com.polly.R;
+import com.polly.config.Config;
+import com.polly.utils.Organizer;
+import com.polly.utils.command.GetParticipatedPollsCommand;
 import com.polly.utils.listener.PieChartResultsListener;
 import com.polly.utils.listener.PieChartVoteListener;
 import com.polly.utils.poll.Poll;
 import com.polly.utils.poll.PollManager;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class PollActivity extends AppCompatActivity {
     private PieChart pieChart;
@@ -103,6 +107,8 @@ public class PollActivity extends AppCompatActivity {
 
                         // show poll-results:
                         poll = PollManager.loadPoll(poll.getId());
+
+
                         pieChart.setVisibility(View.INVISIBLE);
                         showPoll(false);
                     } catch (InterruptedException e) {

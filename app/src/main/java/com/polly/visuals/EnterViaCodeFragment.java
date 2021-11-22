@@ -35,53 +35,15 @@ public class EnterViaCodeFragment extends Fragment {
             public void onClick(View v) {
                 Editable codeEditable = codeInput.getText();
                 CharSequence code = codeEditable.toString();
-                if(code.length() != 6)
+                if(code.length() == 0 || code.length() > 6)
                     Toast.makeText(getActivity(), "The entered code has the wrong size. Try again", Toast.LENGTH_LONG).show();
-                else
+                else {
                     Toast.makeText(getActivity(), "Code has the right format. Your code is: " + code, Toast.LENGTH_SHORT).show();
-                // open PollActivity
 
+                    long id = 0L; //TODO
+                    EnterPoll.enterPoll(getContext(), id);
 
-                //TODO HARDCODED
-                for(int i = 0;i<123; i++){
-                    try {
-                        PollManager.vote(0L, "Apfel");
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
                 }
-                for(int i = 0;i<32; i++){
-                    try {
-                        PollManager.vote(0L, "Kirsche");
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                }
-                for(int i = 0;i<24; i++){
-                    try {
-                        PollManager.vote(0L, "Birne");
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                }
-
-
-                Poll poll = null;
-                try {
-                    //TODO hardcoded id in following line:
-                    poll = PollManager.loadPollOptions(0L);
-                    Intent intent = new Intent(getActivity(), PollActivity.class);
-                    intent.putExtra("Poll", poll);
-                    startActivity(intent);
-                } catch (InterruptedException e) {
-                    Toast.makeText(getActivity(), "Something went wrong, please try again!", Toast.LENGTH_LONG).show();
-                    e.printStackTrace();
-                } catch (IllegalStateException e){
-                    Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_LONG).show();
-                    e.printStackTrace();
-                }
-
-
             }
         });
         return root;

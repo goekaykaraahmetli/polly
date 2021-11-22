@@ -18,6 +18,8 @@ import com.polly.R;
 import com.polly.config.Config;
 import com.polly.utils.Organizer;
 import com.polly.utils.command.CreatePollCommand;
+import com.polly.utils.command.GetParticipatedPollsCommand;
+import com.polly.utils.poll.Poll;
 import com.polly.utils.poll.PollManager;
 
 import java.lang.reflect.Array;
@@ -71,7 +73,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 e.printStackTrace();
             }
 
-            //Organizer.getSocketHandler().send(0L, 1L, new CreatePollCommand("Baum", list));
+
         }).start();
     }
 
