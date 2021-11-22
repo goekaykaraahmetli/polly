@@ -55,28 +55,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         Organizer.getSocketHandler().send(0L, 0L, "connected!");
 
-        new Thread(() -> {
-            try {
-                Thread.sleep(2000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-
-            List<String> list = new ArrayList<>();
-            list.add("Apfel");
-            list.add("Birne");
-            list.add("Kirsche");
-            try {
-                System.out.println("server id: " + Config.getServerCommunicationId());
-                long id = PollManager.createPoll("Baum", list);
-                System.out.println("id: " + id);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-
-
-        }).start();
-
     }
 
 
