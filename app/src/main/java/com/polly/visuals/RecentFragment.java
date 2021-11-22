@@ -40,17 +40,23 @@ public class RecentFragment extends Fragment {
                              @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_recent, container, false);
-        LinearLayout layout = (LinearLayout) root.findViewById(R.id.scrollLinearLayout);
-
-
-        //PieChart pieChart = (PieChart) root.findViewById(R.id.pieChart1);
+        LinearLayout layoutParticipatedPolls = (LinearLayout) root.findViewById(R.id.scrollLinearLayoutParticipatedPolls);
+        LinearLayout layoutMyPolls = (LinearLayout) root.findViewById(R.id.scrollLinearLayoutMyPolls);
 
         try {
             List<Poll> participatedPolls = PollManager.getParticipatedPolls();
             for(Poll p : participatedPolls){
-                layout.addView(createPieChart(p));
+                layoutParticipatedPolls.addView(createPieChart(p));
             }
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
 
+        try {
+            List<Poll> myPolls = PollManager.getParticipatedPolls();
+            for(Poll p : myPolls){
+                layoutMyPolls.addView(createPieChart(p));
+            }
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
