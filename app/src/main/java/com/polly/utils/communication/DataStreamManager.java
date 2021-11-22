@@ -19,6 +19,7 @@ import com.polly.utils.MapWrapper;
 import com.polly.utils.Message;
 import com.polly.utils.command.CreatePollCommand;
 import com.polly.utils.command.ErrorCommand;
+import com.polly.utils.command.GetMyPollsCommand;
 import com.polly.utils.command.GetParticipatedPollsCommand;
 import com.polly.utils.command.LoadPollCommand;
 import com.polly.utils.command.LoadPollOptionsCommand;
@@ -106,9 +107,11 @@ public class DataStreamManager {
 		}
 		else if (dataType.equals(ErrorCommand.class))
 			data = readErrorCommand();
-		else if (dataType.equals(GetParticipatedPollsCommand.class)) {
+		else if (dataType.equals(GetParticipatedPollsCommand.class))
 			data = readGetParticipatedPollsCommand();
-		}
+		else if (dataType.equals(GetMyPollsCommand.class))
+			data = readGetMyPollsCommand();
+
 		// default type:
 		else
 			data = readString();
@@ -219,6 +222,10 @@ public class DataStreamManager {
 		return new GetParticipatedPollsCommand();
 	}
 
+	private GetMyPollsCommand readGetMyPollsCommand(){
+		return new GetMyPollsCommand();
+	}
+
 	public void send(Message message) throws IOException{
 		Class<?> dataType = message.getDataType();
 		if(dataType == null) {
@@ -277,7 +284,9 @@ public class DataStreamManager {
 		else if (dataType.equals(ErrorCommand.class))
 			writeErrorCommand((ErrorCommand) data);
 		else if (dataType.equals(GetParticipatedPollsCommand.class))
-			writeGetParticipatedPollsCommand();
+			writeGetParticipatedPollsCommand((GetParticipatedPollsCommand) data);
+		else if (dataType.equals(GetMyPollsCommand.class))
+			writeGetMyPollsCommand((GetMyPollsCommand) data);
 		else
 			writeString((String) data);
 	}
@@ -375,8 +384,12 @@ public class DataStreamManager {
 		writeString(data.getMessage());
 	}
 
-	private void writeGetParticipatedPollsCommand() {
+	private void writeGetParticipatedPollsCommand(GetParticipatedPollsCommand data) {
 		// empty
+	}
+
+	private void writeGetMyPollsCommand(GetMyPollsCommand data) {
+		//empty
 	}
 
 	public static boolean isList(Class<?> classType) {

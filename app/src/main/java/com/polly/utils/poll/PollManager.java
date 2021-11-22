@@ -5,6 +5,7 @@ import com.polly.utils.Message;
 import com.polly.utils.Organizer;
 import com.polly.utils.command.CreatePollCommand;
 import com.polly.utils.command.ErrorCommand;
+import com.polly.utils.command.GetMyPollsCommand;
 import com.polly.utils.command.GetParticipatedPollsCommand;
 import com.polly.utils.command.LoadPollCommand;
 import com.polly.utils.command.LoadPollOptionsCommand;
@@ -85,6 +86,21 @@ public class PollManager{
 
 	public static List<Poll> getParticipatedPolls() throws InterruptedException, IllegalArgumentException {
 		Message response = communicator.sendWithResponse(Config.getServerCommunicationId(), Message.getNextResponseId(), new GetParticipatedPollsCommand());
+		if(DataStreamManager.isList(response.getDataType())) {
+			if (response.getGenerics().get(0).equals(Poll.class)) {
+				return (List<Poll>) response.getData();
+			} else {
+				throw new InterruptedException("received response with wrong generics");
+			}
+		} else if(response.getDataType().equals(ErrorCommand.class)){
+			throw new IllegalArgumentException(((ErrorCommand) response.getData()).getMessage());
+		} else {
+			throw new InterruptedException("received response of wrong dataType");
+		}
+	}
+
+	public static List<Poll> getMyPolls() throws InterruptedException, IllegalArgumentException {
+		Message response = communicator.sendWithResponse(Config.getServerCommunicationId(), Message.getNextResponseId(), new GetMyPollsCommand());
 		if(DataStreamManager.isList(response.getDataType())) {
 			if (response.getGenerics().get(0).equals(Poll.class)) {
 				return (List<Poll>) response.getData();
