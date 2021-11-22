@@ -20,6 +20,8 @@ import com.polly.R;
 import com.polly.config.Config;
 import com.polly.utils.Organizer;
 import com.polly.utils.command.CreatePollCommand;
+import com.polly.utils.command.GetParticipatedPollsCommand;
+import com.polly.utils.poll.Poll;
 import com.polly.utils.poll.PollManager;
 
 import java.lang.reflect.Array;
@@ -60,31 +62,8 @@ catch (Exception e){
 
 }
 
-        /**
+
         Organizer.getSocketHandler().send(0L, 0L, "connected!");
-
-        new Thread(() -> {
-            try {
-                Thread.sleep(2000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-
-            List<String> list = new ArrayList<>();
-            list.add("Apfel");
-            list.add("Birne");
-            list.add("Kirsche");
-            try {
-                System.out.println("server id: " + Config.getServerCommunicationId());
-                long id = PollManager.createPoll("Baum", list);
-                System.out.println("id: " + id);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-
-            //Organizer.getSocketHandler().send(0L, 1L, new CreatePollCommand("Baum", list));
-        }).start();
-        **/
 
     }
 

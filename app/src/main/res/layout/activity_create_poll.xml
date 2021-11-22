@@ -2,22 +2,9 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/createPoll_constraintLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-
-    <Button
-        android:id="@+id/createPollBtn"
-        android:layout_width="384dp"
-        android:layout_height="57dp"
-        android:text="Create Poll"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.592"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/PollName"
-        app:layout_constraintVertical_bias="0.955" />
 
     <EditText
         android:id="@+id/PollName"
@@ -36,49 +23,104 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <EditText
-        android:id="@+id/option1"
-        android:layout_width="191dp"
-        android:layout_height="48dp"
-        android:layout_marginTop="160dp"
-        android:autofillHints="@string/activity_sign_up_username"
-        android:gravity="center"
-        android:hint="Option 1"
-        android:inputType="text"
-        android:maxLength="20"
-        android:minHeight="48dp"
-        android:selectAllOnFocus="true"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.061"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
 
-    <EditText
-        android:id="@+id/option2"
-        android:layout_width="191dp"
-        android:layout_height="47dp"
-        android:layout_marginTop="216dp"
-        android:autofillHints="@string/activity_sign_up_username"
-        android:gravity="center"
-        android:hint="Option 2"
-        android:inputType="text"
-        android:maxLength="20"
-        android:minHeight="48dp"
-        android:selectAllOnFocus="true"
+    <Button
+        android:id="@+id/createPollBtn"
+        android:layout_width="384dp"
+        android:layout_height="57dp"
+        android:text="Create Poll"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.061"
+        app:layout_constraintHorizontal_bias="0.592"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/PollName"
+        app:layout_constraintVertical_bias="0.955" />
+
+    <androidx.core.widget.NestedScrollView
+        android:id="@+id/nestedScrollView"
+        android:layout_width="408dp"
+        android:layout_height="389dp"
+        android:fillViewport="true"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <LinearLayout
+            android:id="@+id/linear_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <EditText
+                android:id="@+id/option1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:hint="Option 1"
+                android:inputType="textPersonName" />
+
+            <Button
+                android:id="@+id/removeBtn1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="remove Option"
+                android:visibility="invisible"
+                android:textColor="@color/black"/>
+
+            <EditText
+                android:id="@+id/option2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:hint="Option 2"
+                android:inputType="textPersonName" />
+
+            <Button
+                android:id="@+id/removeBtn2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="remove Option"
+                android:visibility="invisible"
+                android:textColor="@color/black"
+                />
+
+
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
 
     <Button
         android:id="@+id/addOption"
-        android:layout_width="165dp"
-        android:layout_height="39dp"
+        android:layout_width="164dp"
+        android:layout_height="48dp"
         android:text="Add option"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.479"
+        app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/PollName"
-        app:layout_constraintVertical_bias="0.3" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.838" />
+    <![CDATA[
+
+
+
+
+
+
+
+
+
+
+
+
+
+    />
+
+
+
+
+
+
+]]>
 </androidx.constraintlayout.widget.ConstraintLayout>

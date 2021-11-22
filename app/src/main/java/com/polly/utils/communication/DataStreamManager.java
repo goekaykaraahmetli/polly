@@ -19,12 +19,13 @@ import com.polly.utils.MapWrapper;
 import com.polly.utils.Message;
 import com.polly.utils.command.CreatePollCommand;
 import com.polly.utils.command.ErrorCommand;
+import com.polly.utils.command.GetParticipatedPollsCommand;
 import com.polly.utils.command.LoadPollCommand;
 import com.polly.utils.command.LoadPollOptionsCommand;
 import com.polly.utils.command.VotePollCommand;
 import com.polly.utils.poll.Poll;
 
-class DataStreamManager {
+public class DataStreamManager {
 	private static final int REFRESH_DELAY = Config.DATA_STREAM_MANAGER_REFRESH_DELAY;
 	private final DataInputStream input;
 	private final DataOutputStream output;
@@ -105,6 +106,9 @@ class DataStreamManager {
 		}
 		else if (dataType.equals(ErrorCommand.class))
 			data = readErrorCommand();
+		else if (dataType.equals(GetParticipatedPollsCommand.class)) {
+			data = readGetParticipatedPollsCommand();
+		}
 		// default type:
 		else
 			data = readString();
@@ -211,6 +215,10 @@ class DataStreamManager {
 		return new ErrorCommand(readString());
 	}
 
+	private GetParticipatedPollsCommand readGetParticipatedPollsCommand() {
+		return new GetParticipatedPollsCommand();
+	}
+
 	public void send(Message message) throws IOException{
 		Class<?> dataType = message.getDataType();
 		if(dataType == null) {
@@ -268,6 +276,8 @@ class DataStreamManager {
 		}
 		else if (dataType.equals(ErrorCommand.class))
 			writeErrorCommand((ErrorCommand) data);
+		else if (dataType.equals(GetParticipatedPollsCommand.class))
+			writeGetParticipatedPollsCommand();
 		else
 			writeString((String) data);
 	}
@@ -365,11 +375,15 @@ class DataStreamManager {
 		writeString(data.getMessage());
 	}
 
-	private boolean isList(Class<?> classType) {
+	private void writeGetParticipatedPollsCommand() {
+		// empty
+	}
+
+	public static boolean isList(Class<?> classType) {
 		return classType.equals(ArrayList.class) || classType.equals(LinkedList.class);
 	}
 
-	private boolean isMap(Class<?> classType) {
+	public static boolean isMap(Class<?> classType) {
 		return classType.equals(HashMap.class) || classType.equals(TreeMap.class);
 	}
 }
