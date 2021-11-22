@@ -34,6 +34,7 @@ public class PollActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_bar);
         pieChart = (PieChart) findViewById(R.id.pieChart);
+        pieChart.setVisibility(View.INVISIBLE);
         voteButton = (Button) findViewById(R.id.vote_button);
         voteButton.setVisibility(View.GONE);
 
@@ -77,6 +78,7 @@ public class PollActivity extends AppCompatActivity {
         } else {
             pieChart.setOnChartValueSelectedListener(new PieChartResultsListener(this));
         }
+        pieChart.setVisibility(View.VISIBLE);
     }
 
     public PieChart getPieChart(){
@@ -101,6 +103,7 @@ public class PollActivity extends AppCompatActivity {
 
                         // show poll-results:
                         poll = PollManager.loadPoll(poll.getId());
+                        pieChart.setVisibility(View.INVISIBLE);
                         showPoll(false);
                     } catch (InterruptedException e) {
                         e.printStackTrace();

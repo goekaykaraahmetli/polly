@@ -4,11 +4,13 @@ import com.polly.config.Config;
 import com.polly.utils.Message;
 import com.polly.utils.Organizer;
 import com.polly.utils.command.CreatePollCommand;
+import com.polly.utils.command.ErrorCommand;
 import com.polly.utils.command.LoadPollCommand;
 import com.polly.utils.command.LoadPollOptionsCommand;
 import com.polly.utils.command.VotePollCommand;
 import com.polly.utils.communicator.Communicator;
 import com.polly.utils.communicator.CommunicatorManager;
+import com.polly.utils.communicator.responseCommunicator;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -19,7 +21,7 @@ import java.util.NoSuchElementException;
 
 public class PollManager{
 	private static Map<Long, Poll> polls = new HashMap<>();
-	private static Communicator communicator = initialiseCommunicator();
+	private static responseCommunicator communicator = initialiseCommunicator();
 
 	public static void registerPoll(Poll poll) {
 		polls.put(poll.getId(), poll);
@@ -31,37 +33,67 @@ public class PollManager{
 		return polls.get(id);
 	}
 
-	public static long createPoll(String name, List<String> pollOptions) throws InterruptedException {
-		Organizer.getSocketHandler().send(communicator.getCommunicationId(), Config.getServerCommunicationId(), new CreatePollCommand(name, pollOptions));
-		long id = (long) communicator.getInput().getData();
-		return id;
+	public static long createPoll(String name, List<String> pollOptions) throws InterruptedException, IllegalArgumentException {
+		Message response = communicator.sendWithResponse(Config.getServerCommunicationId(), Message.getNextResponseId(), new CreatePollCommand(name, pollOptions));
+		if(response.getDataType().equals(Long.class)){
+			return (long) response.getData();
+		} else if(response.getDataType().equals(ErrorCommand.class)){
+			throw new IllegalArgumentException(((ErrorCommand) response.getData()).getMessage());
+		} else {
+			throw new InterruptedException("received response of wrong dataType");
+		}
 	}
 
-	public static Poll loadPoll(long id) throws InterruptedException {
-		Organizer.getSocketHandler().send(communicator.getCommunicationId(), Config.getServerCommunicationId(), new LoadPollCommand(id));
-		Poll poll = (Poll) communicator.getInput().getData();
-		return poll;
+	public static Poll loadPoll(long id) throws InterruptedException, IllegalArgumentException {
+		Message response = communicator.sendWithResponse(Config.getServerCommunicationId(), Message.getNextResponseId(), new LoadPollCommand(id));
+		if(response.getDataType().equals(Poll.class)){
+			return (Poll) response.getData();
+		} else if(response.getDataType().equals(ErrorCommand.class)){
+			throw new IllegalArgumentException(((ErrorCommand) response.getData()).getMessage());
+		} else {
+			throw new InterruptedException("received response of wrong dataType");
+		}
 	}
 
-	public static Poll loadPollOptions(long id) throws InterruptedException {
-		Organizer.getSocketHandler().send(communicator.getCommunicationId(), Config.getServerCommunicationId(), new LoadPollOptionsCommand(id));
-		return (Poll) communicator.getInput().getData();
+	public static Poll loadPollOptions(long id) throws InterruptedException, IllegalArgumentException {
+		Message response = communicator.sendWithResponse(Config.getServerCommunicationId(), Message.getNextResponseId(), new LoadPollOptionsCommand(id));
+		if(response.getDataType().equals(Poll.class)){
+			return (Poll) response.getData();
+		} else if(response.getDataType().equals(ErrorCommand.class)){
+			throw new IllegalArgumentException(((ErrorCommand) response.getData()).getMessage());
+		} else {
+			throw new InterruptedException("received response of wrong dataType");
+		}
 	}
 
-	public static boolean vote(long id, String option) throws InterruptedException {
-		Organizer.getSocketHandler().send(communicator.getCommunicationId(), Config.getServerCommunicationId(), new VotePollCommand(id, option));
-		boolean bool = (boolean) communicator.getInput().getData();
-		return bool;
+	public static boolean vote(long id, String option) throws InterruptedException, IllegalArgumentException {
+		Message response = communicator.sendWithResponse(Config.getServerCommunicationId(), Message.getNextResponseId(), new VotePollCommand(id, option));
+		if(response.getDataType().equals(Boolean.class)){
+			return (boolean) response.getData();
+		} else if(response.getDataType().equals(ErrorCommand.class)){
+			throw new IllegalArgumentException(((ErrorCommand) response.getData()).getMessage());
+		} else {
+			throw new InterruptedException("received response of wrong dataType");
+		}
 	}
 
 	public static void editPoll(long id) {
 		throw new UnsupportedOperationException();
 	}
 
-	private static Communicator initialiseCommunicator(){
-		return new Communicator() {
+	private static responseCommunicator initialiseCommunicator(){
+		return new responseCommunicator() {
 			@Override
 			protected void handleInput(Message message) {
+				//TODO
+
+				System.out.println("received message from " + message.getSender() + " with responseId " + message.getResponseId());
+				System.out.println("from type: " + message.getDataType().getName());
+
+				for(Long l : communicator.responseIds){
+					System.out.println(l);
+				}
+
 				// no default input handling
 			}
 		};
