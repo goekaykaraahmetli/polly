@@ -14,6 +14,8 @@ import androidx.drawerlayout.widget.DrawerLayout;
 
 import com.budiyev.android.codescanner.CodeScanner;
 import com.google.android.material.navigation.NavigationView;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.polly.R;
 import com.polly.config.Config;
 import com.polly.utils.Organizer;
@@ -49,6 +51,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+try {
+    FirebaseDatabase database = FirebaseDatabase.getInstance();
+    DatabaseReference myRef = database.getReference("message");
+    myRef.setValue("Hello, World!");
+}
+catch (Exception e){
+
+}
 
         /**
         Organizer.getSocketHandler().send(0L, 0L, "connected!");

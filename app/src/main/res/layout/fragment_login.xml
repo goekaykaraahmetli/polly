@@ -8,7 +8,9 @@
     android:paddingTop="20dp"
     android:paddingRight="20dp"
     android:paddingBottom="20dp"
-    tools:context=".visuals.LoginFragment">
+    android:visibility="visible"
+    tools:context=".visuals.LoginFragment"
+    tools:visibility="visible">
 
     <EditText
         android:id="@+id/activity_login_edittext_username"
@@ -74,5 +76,18 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.636"
         app:layout_constraintStart_toStartOf="parent" />
+
+    <ImageButton
+        android:id="@+id/googlesigninbtn"
+        android:layout_width="52dp"
+        android:layout_height="51dp"
+        android:layout_marginTop="119dp"
+        android:src="@drawable/btn_google_light_focus_hdpi"
+        app:layout_constraintBottom_toTopOf="@+id/activity_login_textView_sign_up_instead"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/activity_login_button_login"
+        app:layout_constraintVertical_bias="0.0" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

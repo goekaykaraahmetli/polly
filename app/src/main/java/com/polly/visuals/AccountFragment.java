@@ -53,7 +53,8 @@ public class AccountFragment extends Fragment {
 
         user = FirebaseAuth.getInstance().getCurrentUser();
         reference = FirebaseDatabase.getInstance().getReference("Users");
-        userID = user.getUid();
+        if(user != null){
+            userID = user.getUid();
 
         reference.child(userID).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -75,7 +76,7 @@ public class AccountFragment extends Fragment {
             public void onCancelled(@NonNull DatabaseError error) {
                 Toast.makeText(getActivity(), "Something went wrong", Toast.LENGTH_LONG).show();
             }
-        });
+        });}
         return view;
     }
 
