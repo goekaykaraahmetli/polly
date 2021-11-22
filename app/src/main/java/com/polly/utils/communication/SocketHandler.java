@@ -66,6 +66,10 @@ public class SocketHandler {
         }
     }
 	
+	public <T> boolean send(long sender, long receiver, long responseId, T data) {
+		return outputHandler.send(sender, receiver, responseId, data);
+	}
+
 	public <T> boolean send(long sender, long receiver, T data) {
 		return outputHandler.send(sender, receiver, data);
 	}

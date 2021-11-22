@@ -5,7 +5,6 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.lang.reflect.GenericSignatureFormatError;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -19,6 +18,7 @@ import com.polly.utils.ListWrapper;
 import com.polly.utils.MapWrapper;
 import com.polly.utils.Message;
 import com.polly.utils.command.CreatePollCommand;
+import com.polly.utils.command.ErrorCommand;
 import com.polly.utils.command.LoadPollCommand;
 import com.polly.utils.command.LoadPollOptionsCommand;
 import com.polly.utils.command.VotePollCommand;
@@ -50,12 +50,13 @@ class DataStreamManager {
 		}
 		long sender = readLong();
 		long receiver = readLong();
+		long responseId = readLong();
 		String className = readString();
 
-		return readInput(sender, receiver, Class.forName(className));
+		return readInput(sender, receiver, responseId, Class.forName(className));
 	}
 
-	private Message readInput(long sender, long receiver, Class<?> dataType) throws IOException, ClassNotFoundException {
+	private Message readInput(long sender, long receiver, long responseId, Class<?> dataType) throws IOException, ClassNotFoundException {
 		if(dataType == null) {
 			throw new NullPointerException();
 		}
@@ -102,11 +103,13 @@ class DataStreamManager {
 			generics.add(mw.getKeyType());
 			generics.add(mw.getValueType());
 		}
+		else if (dataType.equals(ErrorCommand.class))
+			data = readErrorCommand();
 		// default type:
 		else
 			data = readString();
 
-		return new Message(sender, receiver, dataType, data, generics);
+		return new Message(sender, receiver, responseId, dataType, data, generics);
 	}
 
 	private int readInteger() throws IOException {
@@ -184,24 +187,28 @@ class DataStreamManager {
 		int size = readInteger();
 		List<Object> list = new ArrayList<>();
 		for(int i = 0;i <size;i++) {
-			Message message = readInput(0L, 0L, type);
+			Message message = readInput(0L, 0L, 0L, type);
 			list.add(message.getDataType().cast(message.getData()));
 		}
 		return new ListWrapper(list, type);
 
 	}
 
-	private MapWrapper readMap() throws IOException, ClassNotFoundException{
+	private MapWrapper readMap() throws IOException, ClassNotFoundException {
 		Class<?> keyType = Class.forName(readString());
 		Class<?> valueType = Class.forName(readString());
 		int size = readInteger();
 		Map<Object, Object> map = new HashMap<>();
 		for(int i = 0;i <size;i++) {
-			Message key = readInput(0L, 0L, keyType);
-			Message value = readInput(0L, 0L, valueType);
+			Message key = readInput(0L, 0L, 0L, keyType);
+			Message value = readInput(0L, 0L, 0L, valueType);
 			map.put(key.getDataType().cast(key.getData()), value.getDataType().cast(value.getData()));
 		}
 		return new MapWrapper(map, keyType, valueType);
+	}
+
+	private ErrorCommand readErrorCommand() throws IOException {
+		return new ErrorCommand(readString());
 	}
 
 	public void send(Message message) throws IOException{
@@ -213,6 +220,7 @@ class DataStreamManager {
 		List<Class<?>> generics = message.getGenerics();
 		writeLong(message.getSender());
 		writeLong(message.getReceiver());
+		writeLong(message.getResponseId());
 		writeString(message.getDataType().getName());
 
 		write(dataType, data, generics);
@@ -251,12 +259,16 @@ class DataStreamManager {
 			if(generics.isEmpty())
 				throw new IllegalArgumentException("missing generics");
 			writeList((List<Object>) data, generics.get(0));
-		} else if (isMap(dataType)) {
+		}
+		else if (isMap(dataType)) {
 			if(generics.size() < 2)
 				throw new IllegalArgumentException("missing generics");
 			writeMap((Map<Object,Object>) data, generics.get(0), generics.get(1));
 			// default type:
-		} else
+		}
+		else if (dataType.equals(ErrorCommand.class))
+			writeErrorCommand((ErrorCommand) data);
+		else
 			writeString((String) data);
 	}
 
@@ -347,6 +359,10 @@ class DataStreamManager {
 			write(keyType, keyType.cast(entry.getKey()), new ArrayList<>());
 			write(valueType, valueType.cast(entry.getValue()), new ArrayList<>());
 		}
+	}
+
+	private void writeErrorCommand(ErrorCommand data) throws IOException {
+		writeString(data.getMessage());
 	}
 
 	private boolean isList(Class<?> classType) {

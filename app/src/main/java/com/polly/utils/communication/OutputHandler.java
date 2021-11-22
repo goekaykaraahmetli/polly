@@ -24,7 +24,11 @@ class OutputHandler extends DataStreamHandler{
 		}
 	}
 	
+	public <T> boolean send(long sender, long receiver, long responseId, T data) {
+		return handleQueue.offer(new Message(sender, receiver, responseId, data.getClass(), data));
+	}
+
 	public <T> boolean send(long sender, long receiver, T data) {
-		return handleQueue.offer(new Message(sender, receiver, data.getClass(), data));
+		return handleQueue.offer(new Message(sender, receiver, Message.getNextResponseId(), data.getClass(), data));
 	}
 }

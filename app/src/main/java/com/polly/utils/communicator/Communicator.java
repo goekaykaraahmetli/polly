@@ -4,6 +4,7 @@ package com.polly.utils.communicator;
 import java.util.concurrent.ArrayBlockingQueue;
 
 import com.polly.utils.Message;
+import com.polly.utils.Organizer;
 
 public abstract class Communicator{
     static final int MAX_QUEUE_LENGTH = 20;
@@ -32,4 +33,8 @@ public abstract class Communicator{
     }
 
     protected abstract void handleInput(Message message);
+
+    protected <T> void send(long receiver, T data) {
+        Organizer.getSocketHandler().send(getCommunicationId(), receiver, data);
+    }
 }
