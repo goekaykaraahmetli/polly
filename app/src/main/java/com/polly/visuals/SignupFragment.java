@@ -1,5 +1,6 @@
 package com.polly.visuals;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.text.Editable;
@@ -19,20 +20,28 @@ import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
+import androidx.lifecycle.ViewModelProvider;
 
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.polly.R;
+import com.polly.testclasses.DBHelper;
 
 import org.w3c.dom.Text;
 
 public class SignupFragment extends Fragment {
-    private boolean password_is_good = false;
-    public String username_global = "You are not";
-    public String email_global = "signed in.";
+    /**private boolean password_is_good = false;
+    public DBHelper myDB;
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater,
                              @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
+
+        myDB = new DBHelper(getContext());
         View view = inflater.inflate(R.layout.fragment_sign_up, container, false);
         Button signup = (Button) view.findViewById(R.id.activity_sign_up_button_sign_up);
         EditText password = (EditText) view.findViewById(R.id.activity_sign_up_edittext_password);
@@ -73,9 +82,20 @@ public class SignupFragment extends Fragment {
                 else if(!password_is_good)
                     Toast.makeText(getActivity(), "Your password is to weak", Toast.LENGTH_SHORT).show();
                 else {
-                    Toast.makeText(getActivity(), "Thank you for signing up", Toast.LENGTH_SHORT).show();
-                    username_global = username.getText().toString();
-                    email_global = email.getText().toString();
+                    if(myDB.checkUsername(username.getText().toString()))
+                        Toast.makeText(getActivity(), "The Username you entered already exists", Toast.LENGTH_SHORT).show();
+                    else {
+                       if(myDB.insertData(username.getText().toString(), password.getText().toString())) {
+                           Toast.makeText(getActivity(), "Registration was successful", Toast.LENGTH_SHORT).show();
+                           accountViewModel viewMod = new ViewModelProvider(requireActivity()).get(accountViewModel.class);
+                           viewMod.setUsername(username.getText().toString());
+                           viewMod.setEmail(email.getText().toString());
+                           String user = viewMod.getUsername();
+                       }
+                       else
+                           Toast.makeText(getActivity(), "Registration failed", Toast.LENGTH_SHORT).show();
+                    }
+
                 }
             }
         });
@@ -138,6 +158,8 @@ public class SignupFragment extends Fragment {
 
     }
 
+
+**/
 };
 
 

@@ -52,6 +52,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+        /**
         Organizer.getSocketHandler().send(0L, 0L, "connected!");
 
         new Thread(() -> {
@@ -75,6 +76,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
 
         }).start();
+        **/
+
     }
 
 

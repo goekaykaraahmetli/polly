@@ -11,6 +11,7 @@
     <string name="activity_login_button_sign_up">Sign up</string>
 
     <string name="activity_sign_up_username">Username</string>
+    <string name="activity_sign_up_fullname">Full Name</string>
     <string name="activity_sign_up_password">Password</string>
     <string name="activity_sign_up_password_confirm">Confirm Password</string>
     <string name="activity_sign_up_email">Email</string>
@@ -42,6 +43,7 @@
     <string name="invalid_username">Not a valid username</string>
     <string name="invalid_password">Password must be >5 characters</string>
     <string name="login_failed">"Login failed"</string>
+    <string name="title_activity_login_google">LoginActivityGoogle</string>
 
 
 </resources>

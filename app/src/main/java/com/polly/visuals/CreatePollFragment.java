@@ -12,17 +12,21 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.ScrollView;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModel;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.polly.R;
 
 public class CreatePollFragment extends Fragment {
     int optionCounter = 3;
     float yheight = 0;
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater,
@@ -44,6 +48,8 @@ public class CreatePollFragment extends Fragment {
                     Toast.makeText(getActivity(), "Please enter a Pollname.", Toast.LENGTH_SHORT).show();
                 }else{
                     Toast.makeText(getActivity(), "Poll '" + poll + "' created", Toast.LENGTH_SHORT).show();
+                    testViewModel viewModel = new ViewModelProvider(requireActivity()).get(testViewModel.class);
+                    viewModel.setNewPoll(poll.toString());
                 }
             }
         });
