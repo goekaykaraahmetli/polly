@@ -1,6 +1,5 @@
 package com.polly.visuals;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.view.LayoutInflater;
@@ -14,8 +13,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.polly.R;
-import com.polly.utils.poll.Poll;
-import com.polly.utils.poll.PollManager;
+import com.polly.utils.EnterPoll;
 
 
 public class EnterViaCodeFragment extends Fragment {
@@ -40,7 +38,7 @@ public class EnterViaCodeFragment extends Fragment {
                 else {
                     Toast.makeText(getActivity(), "Code has the right format. Your code is: " + code, Toast.LENGTH_SHORT).show();
 
-                    long id = 0L; //TODO
+                    long id = Long.valueOf((String) code);
                     EnterPoll.enterPoll(getContext(), id);
 
                 }

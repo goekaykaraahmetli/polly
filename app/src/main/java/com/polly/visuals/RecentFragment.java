@@ -2,6 +2,7 @@ package com.polly.visuals;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,8 +18,19 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.ActivityNavigator;
 
+import com.github.mikephil.charting.charts.PieChart;
+import com.github.mikephil.charting.components.Description;
+import com.github.mikephil.charting.data.PieData;
+import com.github.mikephil.charting.data.PieDataSet;
+import com.github.mikephil.charting.data.PieEntry;
+import com.github.mikephil.charting.utils.ColorTemplate;
 import com.polly.R;
 import com.polly.testclasses.ActivityHandler;
+import com.polly.utils.poll.Poll;
+import com.polly.utils.poll.PollManager;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class RecentFragment extends Fragment {
 
@@ -28,24 +40,56 @@ public class RecentFragment extends Fragment {
                              @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_recent, container, false);
-        LinearLayout linearLayout = root.findViewById(R.id.scroll_layout);
-        testViewModel viewModel = new ViewModelProvider(requireActivity()).get(testViewModel.class);
-        LiveData<String> test = viewModel.getPoll();
-        String pollName = test.getValue();
-        Button button = (Button) new Button(getContext());
-        button.setText(pollName);
-        button.setGravity(R.id.center);
-        linearLayout.addView(button);
-        button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent i = new Intent(getActivity(), PollActivity.class);
-                startActivity(i);
-                ((Activity) getActivity()).overridePendingTransition(0,0);
+        LinearLayout layout = (LinearLayout) root.findViewById(R.id.scrollLinearLayout);
+
+
+        //PieChart pieChart = (PieChart) root.findViewById(R.id.pieChart1);
+
+        try {
+            List<Poll> participatedPolls = PollManager.getParticipatedPolls();
+            for(Poll p : participatedPolls){
+                layout.addView(createPieChart(p));
             }
-        });
+
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+
         return root;
     }
 
+    private PieChart createPieChart(Poll poll){
+        PieChart pieChart = new PieChart(getContext());
 
+
+
+        ArrayList<PieEntry> options = new ArrayList<>();
+        for(String option : poll.getData().keySet()){
+            options.add(new PieEntry(poll.getData().get(option), option));
+        }
+
+        PieDataSet pieDataSet = new PieDataSet(options, "");
+        pieDataSet.setColors(ColorTemplate.COLORFUL_COLORS);
+        pieDataSet.setValueTextColor(Color.BLACK);
+
+        pieDataSet.setValueTextSize(2f);
+
+
+        PieData pieData = new PieData(pieDataSet);
+
+        pieChart.setData(pieData);
+        Description description = new Description();
+        description.setText(poll.getDescription());
+        pieChart.setDescription(description);
+        pieChart.getDescription().setEnabled(poll.getDescription() != "");
+        pieChart.setCenterText(poll.getName());
+
+        pieChart.setUsePercentValues(true);
+        pieChart.animate();
+
+        pieChart.setMinimumHeight(750);
+        pieChart.setMinimumWidth(750);
+        return pieChart;
+    }
 }
