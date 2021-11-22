@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "163467661096",
+    "project_id": "polly-abdd4",
+    "storage_bucket": "polly-abdd4.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:163467661096:android:9c573d05a4e671ea0f8a1d",
+        "android_client_info": {
+          "package_name": "com.example.polly"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "163467661096-2sp9pdj07ir9u0ie1qcrf5c11e34f8v4.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDaLN6quyx-MshW5ptxRrawE1EPT1wMb8g"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "163467661096-2sp9pdj07ir9u0ie1qcrf5c11e34f8v4.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

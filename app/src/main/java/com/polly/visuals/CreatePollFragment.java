@@ -50,7 +50,6 @@ public class CreatePollFragment extends Fragment {
                     Toast.makeText(getActivity(), "Poll '" + poll + "' created", Toast.LENGTH_SHORT).show();
                     testViewModel viewModel = new ViewModelProvider(requireActivity()).get(testViewModel.class);
                     viewModel.setNewPoll(poll.toString());
-
                 }
             }
         });
