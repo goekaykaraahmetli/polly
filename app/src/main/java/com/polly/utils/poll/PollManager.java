@@ -1,5 +1,7 @@
 package com.polly.utils.poll;
 
+import android.content.Context;
+
 import com.polly.config.Config;
 import com.polly.utils.Message;
 import com.polly.utils.Organizer;
@@ -15,6 +17,7 @@ import com.polly.utils.communicator.Communicator;
 import com.polly.utils.communicator.CommunicatorManager;
 import com.polly.utils.communicator.ResponseCommunicator;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -36,7 +39,7 @@ public class PollManager{
 		return polls.get(id);
 	}
 
-	public static long createPoll(String name, List<String> pollOptions) throws InterruptedException, IllegalArgumentException {
+	public static long createPoll(String name, List<String> pollOptions) throws InterruptedException, IllegalArgumentException, IOException {
 		Message response = communicator.sendWithResponse(Config.getServerCommunicationId(), Message.getNextResponseId(), new CreatePollCommand(name, pollOptions));
 		if(response.getDataType().equals(Long.class)){
 			return (long) response.getData();
@@ -47,7 +50,7 @@ public class PollManager{
 		}
 	}
 
-	public static Poll loadPoll(long id) throws InterruptedException, IllegalArgumentException {
+	public static Poll loadPoll(long id) throws InterruptedException, IllegalArgumentException, IOException {
 		Message response = communicator.sendWithResponse(Config.getServerCommunicationId(), Message.getNextResponseId(), new LoadPollCommand(id));
 		if(response.getDataType().equals(Poll.class)){
 			return (Poll) response.getData();
@@ -58,7 +61,7 @@ public class PollManager{
 		}
 	}
 
-	public static Poll loadPollOptions(long id) throws InterruptedException, IllegalArgumentException {
+	public static Poll loadPollOptions(long id) throws InterruptedException, IllegalArgumentException, IOException {
 		Message response = communicator.sendWithResponse(Config.getServerCommunicationId(), Message.getNextResponseId(), new LoadPollOptionsCommand(id));
 		if(response.getDataType().equals(Poll.class)){
 			return (Poll) response.getData();
@@ -69,7 +72,7 @@ public class PollManager{
 		}
 	}
 
-	public static boolean vote(long id, String option) throws InterruptedException, IllegalArgumentException {
+	public static boolean vote(long id, String option) throws InterruptedException, IllegalArgumentException, IOException {
 		Message response = communicator.sendWithResponse(Config.getServerCommunicationId(), Message.getNextResponseId(), new VotePollCommand(id, option));
 		if(response.getDataType().equals(Boolean.class)){
 			return (boolean) response.getData();
@@ -84,7 +87,7 @@ public class PollManager{
 		throw new UnsupportedOperationException();
 	}
 
-	public static List<Poll> getParticipatedPolls() throws InterruptedException, IllegalArgumentException {
+	public static List<Poll> getParticipatedPolls() throws InterruptedException, IllegalArgumentException, IOException {
 		Message response = communicator.sendWithResponse(Config.getServerCommunicationId(), Message.getNextResponseId(), new GetParticipatedPollsCommand());
 		if(DataStreamManager.isList(response.getDataType())) {
 			if (response.getGenerics().get(0).equals(Poll.class)) {
@@ -99,7 +102,7 @@ public class PollManager{
 		}
 	}
 
-	public static List<Poll> getMyPolls() throws InterruptedException, IllegalArgumentException {
+	public static List<Poll> getMyPolls() throws InterruptedException, IllegalArgumentException, IOException {
 		Message response = communicator.sendWithResponse(Config.getServerCommunicationId(), Message.getNextResponseId(), new GetMyPollsCommand());
 		if(DataStreamManager.isList(response.getDataType())) {
 			if (response.getGenerics().get(0).equals(Poll.class)) {

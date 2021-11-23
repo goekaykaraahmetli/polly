@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -24,6 +25,7 @@ import com.polly.utils.command.GetParticipatedPollsCommand;
 import com.polly.utils.poll.Poll;
 import com.polly.utils.poll.PollManager;
 
+import java.io.IOException;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
@@ -63,7 +65,12 @@ catch (Exception e){
 }
 
 
-        Organizer.getSocketHandler().send(0L, 0L, "connected!");
+        try {
+            Organizer.send(0L, 0L, "connected!");
+        } catch (IOException e) {
+            e.printStackTrace();
+            Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
+        }
 
     }
 

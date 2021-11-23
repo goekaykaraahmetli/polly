@@ -33,6 +33,7 @@ import com.polly.testclasses.ActivityHandler;
 import com.polly.utils.poll.Poll;
 import com.polly.utils.poll.PollManager;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -64,6 +65,9 @@ public class RecentFragment extends Fragment {
         } catch (InterruptedException | IllegalArgumentException e) {
             Toast.makeText(getContext(), "unable to fetch your participated polls!", Toast.LENGTH_SHORT).show();
             e.printStackTrace();
+        } catch (IOException e){
+            Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
+            e.printStackTrace();
         }
 
         try {
@@ -80,6 +84,9 @@ public class RecentFragment extends Fragment {
             }
         } catch (InterruptedException | IllegalArgumentException e) {
             Toast.makeText(getContext(), "unable to fetch your participated polls!", Toast.LENGTH_SHORT).show();
+            e.printStackTrace();
+        } catch (IOException e){
+            Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
             e.printStackTrace();
         }
 

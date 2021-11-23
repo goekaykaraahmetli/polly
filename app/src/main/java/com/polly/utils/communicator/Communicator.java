@@ -1,6 +1,9 @@
 package com.polly.utils.communicator;
 
 
+import android.content.Context;
+
+import java.io.IOException;
 import java.util.concurrent.ArrayBlockingQueue;
 
 import com.polly.utils.Message;
@@ -34,7 +37,7 @@ public abstract class Communicator{
 
     public abstract void handleInput(Message message);
 
-    public <T> void send(long receiver, T data) {
-        Organizer.getSocketHandler().send(getCommunicationId(), receiver, data);
+    public <T> void send(long receiver, T data) throws IOException {
+        Organizer.send(getCommunicationId(), receiver, data);
     }
 }

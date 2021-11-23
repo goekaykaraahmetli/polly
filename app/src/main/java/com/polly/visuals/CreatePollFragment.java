@@ -22,6 +22,7 @@ import androidx.fragment.app.Fragment;
 
 import com.polly.R;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -59,6 +60,9 @@ public class CreatePollFragment extends Fragment {
                     Toast.makeText(getActivity(), "Poll ID is: " + id, Toast.LENGTH_SHORT).show();
                 } catch (InterruptedException | IllegalArgumentException e) {
                     Toast.makeText(getActivity(), "Something went wrong, please try again!", Toast.LENGTH_SHORT).show();
+                    e.printStackTrace();
+                } catch (IOException e){
+                    Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
                     e.printStackTrace();
                 }
             }

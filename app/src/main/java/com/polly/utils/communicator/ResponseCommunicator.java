@@ -1,8 +1,11 @@
 package com.polly.utils.communicator;
 
+import android.content.Context;
+
 import com.polly.utils.Message;
 import com.polly.utils.Organizer;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ArrayBlockingQueue;
@@ -34,9 +37,9 @@ public abstract class ResponseCommunicator extends Communicator{
         }).start();
     }
 
-    public <T> Message sendWithResponse(long receiver, long responseId, T data) {
+    public <T> Message sendWithResponse(long receiver, long responseId, T data) throws IOException {
         responseIds.add(responseId);
-        Organizer.getSocketHandler().send(getCommunicationId(), receiver, responseId, data);
+        Organizer.send(getCommunicationId(), receiver, responseId, data);
 
         //TODO set timeout
         while(true) {

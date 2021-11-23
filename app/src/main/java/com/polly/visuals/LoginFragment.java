@@ -86,16 +86,16 @@ public class LoginFragment extends Fragment {
             if(task.isSuccessful()){
                 FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
                 if(user.isEmailVerified()) {
-                    Toast.makeText(getActivity(), "You are now logged in!", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getActivity(), "You are now logged in!", Toast.LENGTH_SHORT).show();
 
                 }
                 else{
                     user.sendEmailVerification();
-                    Toast.makeText(getActivity(), "Check your Email to verify your account", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getActivity(), "Check your Email to verify your account", Toast.LENGTH_SHORT).show();
                 }
             }
             else
-                Toast.makeText(getActivity(), "Failed to login! Check your credentials", Toast.LENGTH_LONG).show();
+                Toast.makeText(getActivity(), "Failed to login! Check your credentials", Toast.LENGTH_SHORT).show();
         });
     }
 }

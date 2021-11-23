@@ -2,6 +2,9 @@ package com.polly.utils.communication;
 
 import java.io.IOException;
 import java.net.Socket;
+import java.net.UnknownHostException;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class SocketHandler {
@@ -41,26 +44,50 @@ public class SocketHandler {
 	}
 	
 	private void connect(String ip, int port) throws IOException {
-		connect(ip, port, 0);
+		AtomicBoolean connecting = new AtomicBoolean(true);
+		new Thread(() -> {
+			new Timer().schedule(new TimerTask() {
+				@Override
+				public void run() {
+					connecting.set(false);
+				}
+			}, 7500);
+
+
+			try {
+				socket = new Socket(ip, port);
+			} catch (IOException e) {
+				System.out.println("could not connect!");
+				e.printStackTrace();
+			}
+			connecting.set(false);
+		}).start();
+		while(connecting.get()){}
+		if(socket == null){
+			throw new IOException("could not connect to the given server!");
+		}
+
+
+		//connect(ip, port, 0);
     }
 	
 	private void connect(String ip, int port, int tryCounter) throws IOException {
-		if(tryCounter > 10) {
+		if(tryCounter > 1) {
 			throw new IOException("could not connect to the given server!");
 		}
 		
         AtomicBoolean connecting = new AtomicBoolean(true);
-        new Thread(() -> {
+        Thread connectingThread = new Thread(() -> {
             try {
             	socket = new Socket(ip, port);
             } catch (IOException e) {
+            	System.out.println("could not connect!");
                 e.printStackTrace();
             }
             connecting.set(false);
-        }).start();
-
+        });
+        connectingThread.start();
         while(connecting.get()){}
-        
         if(socket == null){
             connect(ip, port, tryCounter+1);
         }

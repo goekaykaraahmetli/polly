@@ -30,6 +30,7 @@ import com.polly.utils.listener.PieChartVoteListener;
 import com.polly.utils.poll.Poll;
 import com.polly.utils.poll.PollManager;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -74,8 +75,14 @@ public class PollActivity extends AppCompatActivity {
         if(voting){
             pieChart.setOnChartValueSelectedListener(new PieChartVoteListener(this));
         } else {
-            communicator.send(Config.getServerCommunicationId(), "send updates!");
-            communicator.send(Config.getServerCommunicationId(), 1L);
+            try {
+                communicator.send(Config.getServerCommunicationId(), "send updates!");
+                communicator.send(Config.getServerCommunicationId(), 1L);
+            } catch (IOException e) {
+                e.printStackTrace();
+                Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+
             pieChart.setOnChartValueSelectedListener(new PieChartResultsListener(this));
         }
     }
@@ -113,7 +120,7 @@ public class PollActivity extends AppCompatActivity {
                     } catch (InterruptedException e){
                         Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
                         e.printStackTrace();
-                    } catch (IllegalArgumentException e) {
+                    } catch (IllegalArgumentException|IOException e) {
                         Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
                         e.printStackTrace();
                     }

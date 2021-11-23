@@ -184,13 +184,13 @@ public class GoogleLogin extends AppCompatActivity {
                     User user = new User(fullname, email, username);
                     FirebaseDatabase.getInstance().getReference("Users").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).setValue(user).addOnCompleteListener(task1 -> {
                         if (task1.isSuccessful()) {
-                            Toast.makeText(GoogleLogin.this, "User has been registered successfully!", Toast.LENGTH_LONG).show();
+                            Toast.makeText(GoogleLogin.this, "User has been registered successfully!", Toast.LENGTH_SHORT).show();
                         } else {
-                            Toast.makeText(GoogleLogin.this, "Failed to register. Try again", Toast.LENGTH_LONG).show();
+                            Toast.makeText(GoogleLogin.this, "Failed to register. Try again", Toast.LENGTH_SHORT).show();
                         }
                     });
                 } else
-                    Toast.makeText(GoogleLogin.this, "Failed to register. Try again", Toast.LENGTH_LONG).show();
+                    Toast.makeText(GoogleLogin.this, "Failed to register. Try again", Toast.LENGTH_SHORT).show();
             });
         }
 

@@ -44,7 +44,7 @@ public class AccountFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 FirebaseAuth.getInstance().signOut();
-                Toast.makeText(getActivity(), "You are now signed out", Toast.LENGTH_LONG).show();
+                Toast.makeText(getActivity(), "You are now signed out", Toast.LENGTH_SHORT).show();
                 emailInfo.setText("Email:");
                 fullNameInfo.setText("Full Name:");
                 usernameInfo.setText("Username:");
@@ -74,7 +74,7 @@ public class AccountFragment extends Fragment {
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-                Toast.makeText(getActivity(), "Something went wrong", Toast.LENGTH_LONG).show();
+                Toast.makeText(getActivity(), "Something went wrong", Toast.LENGTH_SHORT).show();
             }
         });}
         return view;
