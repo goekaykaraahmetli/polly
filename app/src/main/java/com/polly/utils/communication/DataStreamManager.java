@@ -23,6 +23,7 @@ import com.polly.utils.command.GetMyPollsCommand;
 import com.polly.utils.command.GetParticipatedPollsCommand;
 import com.polly.utils.command.LoadPollCommand;
 import com.polly.utils.command.LoadPollOptionsCommand;
+import com.polly.utils.command.RequestPollUpdatesCommand;
 import com.polly.utils.command.VotePollCommand;
 import com.polly.utils.poll.Poll;
 
@@ -111,7 +112,8 @@ public class DataStreamManager {
 			data = readGetParticipatedPollsCommand();
 		else if (dataType.equals(GetMyPollsCommand.class))
 			data = readGetMyPollsCommand();
-
+		else if (dataType.equals(RequestPollUpdatesCommand.class))
+			data = readRequestPollUpdatesCommand();
 		// default type:
 		else
 			data = readString();
@@ -218,12 +220,20 @@ public class DataStreamManager {
 		return new ErrorCommand(readString());
 	}
 
-	private GetParticipatedPollsCommand readGetParticipatedPollsCommand() {
+	private GetParticipatedPollsCommand readGetParticipatedPollsCommand() throws IOException{
 		return new GetParticipatedPollsCommand();
 	}
 
-	private GetMyPollsCommand readGetMyPollsCommand(){
+	private GetMyPollsCommand readGetMyPollsCommand() throws IOException {
 		return new GetMyPollsCommand();
+	}
+
+	private RequestPollUpdatesCommand readRequestPollUpdatesCommand() throws IOException{
+		long pollId = readLong();
+		if(RequestPollUpdatesCommand.RequestType.START.getValue() == readInteger()){
+			return new RequestPollUpdatesCommand(pollId, RequestPollUpdatesCommand.RequestType.START);
+		}
+		return new RequestPollUpdatesCommand(pollId, RequestPollUpdatesCommand.RequestType.STOP);
 	}
 
 	public void send(Message message) throws IOException{
@@ -287,6 +297,8 @@ public class DataStreamManager {
 			writeGetParticipatedPollsCommand((GetParticipatedPollsCommand) data);
 		else if (dataType.equals(GetMyPollsCommand.class))
 			writeGetMyPollsCommand((GetMyPollsCommand) data);
+		else if (dataType.equals(RequestPollUpdatesCommand.class))
+			writeRequestPollUpdatesCommand((RequestPollUpdatesCommand) data);
 		else
 			writeString((String) data);
 	}
@@ -384,12 +396,17 @@ public class DataStreamManager {
 		writeString(data.getMessage());
 	}
 
-	private void writeGetParticipatedPollsCommand(GetParticipatedPollsCommand data) {
+	private void writeGetParticipatedPollsCommand(GetParticipatedPollsCommand data) throws IOException {
 		// empty
 	}
 
-	private void writeGetMyPollsCommand(GetMyPollsCommand data) {
+	private void writeGetMyPollsCommand(GetMyPollsCommand data) throws IOException {
 		//empty
+	}
+
+	private void writeRequestPollUpdatesCommand(RequestPollUpdatesCommand data) throws IOException {
+		writeLong(data.getPollId());
+		writeInteger(data.getStartStop());
 	}
 
 	public static boolean isList(Class<?> classType) {

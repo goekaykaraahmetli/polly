@@ -74,6 +74,7 @@ public class RecentFragment extends Fragment {
             List<Poll> myPolls = PollManager.getMyPolls();
             for(Poll p : myPolls){
                 PieChart pieChart = createPieChart(p);
+
                 pieChart.setOnLongClickListener(view -> {
                     Intent intent = new Intent(getContext(), PollActivity.class);
                     intent.putExtra("PollResult", p);

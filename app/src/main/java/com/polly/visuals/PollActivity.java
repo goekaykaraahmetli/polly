@@ -23,6 +23,7 @@ import com.polly.config.Config;
 import com.polly.utils.Message;
 import com.polly.utils.Organizer;
 import com.polly.utils.command.GetParticipatedPollsCommand;
+import com.polly.utils.command.RequestPollUpdatesCommand;
 import com.polly.utils.communicator.Communicator;
 import com.polly.utils.communicator.ResponseCommunicator;
 import com.polly.utils.listener.PieChartResultsListener;
@@ -39,6 +40,21 @@ public class PollActivity extends AppCompatActivity {
     private Poll poll;
     private Button voteButton;
     private Communicator communicator = initialiseCommunicator();
+    private boolean hasRunningPollChangeListener = false;
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if(hasRunningPollChangeListener){
+            try {
+                communicator.send(Config.getServerCommunicationId(), new RequestPollUpdatesCommand(poll.getId(), RequestPollUpdatesCommand.RequestType.STOP));
+                hasRunningPollChangeListener = false;
+            } catch (IOException e) {
+                e.printStackTrace();
+                Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,8 +92,8 @@ public class PollActivity extends AppCompatActivity {
             pieChart.setOnChartValueSelectedListener(new PieChartVoteListener(this));
         } else {
             try {
-                communicator.send(Config.getServerCommunicationId(), "send updates!");
-                communicator.send(Config.getServerCommunicationId(), 1L);
+                communicator.send(Config.getServerCommunicationId(), new RequestPollUpdatesCommand(poll.getId(), RequestPollUpdatesCommand.RequestType.START));
+                hasRunningPollChangeListener = true;
             } catch (IOException e) {
                 e.printStackTrace();
                 Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
