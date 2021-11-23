@@ -14,7 +14,7 @@ public class EnterPoll {
         try {
             Poll poll = PollManager.loadPollOptions(id);
             Intent intent = new Intent(context, PollActivity.class);
-            intent.putExtra("Poll", poll);
+            intent.putExtra("PollOptions", poll);
             context.startActivity(intent);
         } catch (InterruptedException e) {
             Toast.makeText(context, "Something went wrong, please try again!", Toast.LENGTH_LONG).show();

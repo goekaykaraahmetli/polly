@@ -30,7 +30,7 @@ public class DefaultCommunicator extends Communicator {
 		}).start();
 	}
 
-	protected void handleInput(Message message) {
+	public void handleInput(Message message) {
 		// TODO change!
 		System.out.println("Sender: " + message.getSender());
 		System.out.println("Receiver: " + message.getReceiver());

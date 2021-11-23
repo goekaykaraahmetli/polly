@@ -44,24 +44,22 @@ public class CreatePollFragment extends Fragment {
 
 
 
-        createPollBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Editable poll = pollName.getText();
-                CharSequence poll1 = poll.toString();
+        createPollBtn.setOnClickListener(view -> {
+            Editable poll = pollName.getText();
+            CharSequence poll1 = poll.toString();
                 if(poll1.length() < 1){
-                    Toast.makeText(getActivity(), "Please enter a Pollname.", Toast.LENGTH_SHORT).show();
-                }else {
-                    List<String> pollOptions = new ArrayList<>();
-                    for (int i = 1; i < optionCounter; i++) {
-                        pollOptions.add(map.get(i).getText().toString());
-                    }
-                    try {
-                        long id = PollManager.createPoll(poll.toString(), pollOptions);
-                        Toast.makeText(getActivity(), "Poll ID is: " + id, Toast.LENGTH_SHORT).show();
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
+                Toast.makeText(getActivity(), "Please enter a Pollname.", Toast.LENGTH_SHORT).show();
+            }else {
+                List<String> pollOptions = new ArrayList<>();
+                for (int i = 1; i < optionCounter; i++) {
+                    pollOptions.add(map.get(i).getText().toString());
+                }
+                try {
+                    long id = PollManager.createPoll(poll.toString(), pollOptions);
+                    Toast.makeText(getActivity(), "Poll ID is: " + id, Toast.LENGTH_SHORT).show();
+                } catch (InterruptedException | IllegalArgumentException e) {
+                    Toast.makeText(getActivity(), "Something went wrong, please try again!", Toast.LENGTH_SHORT).show();
+                    e.printStackTrace();
                 }
             }
         });

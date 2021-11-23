@@ -13,7 +13,7 @@ import com.polly.utils.command.VotePollCommand;
 import com.polly.utils.communication.DataStreamManager;
 import com.polly.utils.communicator.Communicator;
 import com.polly.utils.communicator.CommunicatorManager;
-import com.polly.utils.communicator.responseCommunicator;
+import com.polly.utils.communicator.ResponseCommunicator;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -24,7 +24,7 @@ import java.util.NoSuchElementException;
 
 public class PollManager{
 	private static Map<Long, Poll> polls = new HashMap<>();
-	private static responseCommunicator communicator = initialiseCommunicator();
+	private static ResponseCommunicator communicator = initialiseCommunicator();
 
 	public static void registerPoll(Poll poll) {
 		polls.put(poll.getId(), poll);
@@ -114,10 +114,10 @@ public class PollManager{
 		}
 	}
 
-	private static responseCommunicator initialiseCommunicator(){
-		return new responseCommunicator() {
+	private static ResponseCommunicator initialiseCommunicator(){
+		return new ResponseCommunicator() {
 			@Override
-			protected void handleInput(Message message) {
+			public void handleInput(Message message) {
 				//TODO
 
 				System.out.println("received message from " + message.getSender() + " with responseId " + message.getResponseId());

@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -20,9 +21,12 @@ import androidx.navigation.ActivityNavigator;
 
 import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.components.Description;
+import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
+import com.github.mikephil.charting.highlight.Highlight;
+import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 import com.github.mikephil.charting.utils.ColorTemplate;
 import com.polly.R;
 import com.polly.testclasses.ActivityHandler;
@@ -46,18 +50,36 @@ public class RecentFragment extends Fragment {
         try {
             List<Poll> participatedPolls = PollManager.getParticipatedPolls();
             for(Poll p : participatedPolls){
-                layoutParticipatedPolls.addView(createPieChart(p));
+                PieChart pieChart = createPieChart(p);
+
+                pieChart.setOnLongClickListener(view -> {
+                    Intent intent = new Intent(getContext(), PollActivity.class);
+                    intent.putExtra("PollResult", p);
+                    getContext().startActivity(intent);
+                    return true;
+                });
+
+                layoutParticipatedPolls.addView(pieChart);
             }
-        } catch (InterruptedException e) {
+        } catch (InterruptedException | IllegalArgumentException e) {
+            Toast.makeText(getContext(), "unable to fetch your participated polls!", Toast.LENGTH_SHORT).show();
             e.printStackTrace();
         }
 
         try {
-            List<Poll> myPolls = PollManager.getParticipatedPolls();
+            List<Poll> myPolls = PollManager.getMyPolls();
             for(Poll p : myPolls){
-                layoutMyPolls.addView(createPieChart(p));
+                PieChart pieChart = createPieChart(p);
+                pieChart.setOnLongClickListener(view -> {
+                    Intent intent = new Intent(getContext(), PollActivity.class);
+                    intent.putExtra("PollResult", p);
+                    getContext().startActivity(intent);
+                    return true;
+                });
+                layoutMyPolls.addView(pieChart);
             }
-        } catch (InterruptedException e) {
+        } catch (InterruptedException | IllegalArgumentException e) {
+            Toast.makeText(getContext(), "unable to fetch your participated polls!", Toast.LENGTH_SHORT).show();
             e.printStackTrace();
         }
 
@@ -85,14 +107,14 @@ public class RecentFragment extends Fragment {
         PieData pieData = new PieData(pieDataSet);
 
         pieChart.setData(pieData);
-        Description description = new Description();
-        description.setText(poll.getDescription());
-        pieChart.setDescription(description);
-        pieChart.getDescription().setEnabled(poll.getDescription() != "");
         pieChart.setCenterText(poll.getName());
+
+        pieChart.setOnTouchListener(null);
+        pieChart.setClickable(true);
 
         pieChart.setUsePercentValues(true);
         pieChart.animate();
+
 
         pieChart.setMinimumHeight(750);
         pieChart.setMinimumWidth(750);

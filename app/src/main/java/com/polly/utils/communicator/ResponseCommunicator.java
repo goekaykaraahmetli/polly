@@ -9,12 +9,12 @@ import java.util.concurrent.ArrayBlockingQueue;
 
 
 
-public abstract class responseCommunicator extends Communicator{
+public abstract class ResponseCommunicator extends Communicator{
     final ArrayBlockingQueue<Message> responseQueue = new ArrayBlockingQueue<>(MAX_QUEUE_LENGTH);
 
     public final List<Long> responseIds = new ArrayList<>();
 
-    protected responseCommunicator() {
+    protected ResponseCommunicator() {
         super();
 
         new Thread(() -> {

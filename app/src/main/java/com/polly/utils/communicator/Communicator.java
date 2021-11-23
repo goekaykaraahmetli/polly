@@ -32,9 +32,9 @@ public abstract class Communicator{
         return id;
     }
 
-    protected abstract void handleInput(Message message);
+    public abstract void handleInput(Message message);
 
-    protected <T> void send(long receiver, T data) {
+    public <T> void send(long receiver, T data) {
         Organizer.getSocketHandler().send(getCommunicationId(), receiver, data);
     }
 }
