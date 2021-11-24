@@ -55,6 +55,9 @@ public class CreatePollFragment extends Fragment {
                 }else {
                     List<String> pollOptions = new ArrayList<>();
                     for (int i = 0; i < optionCounter; i++) {
+                        if(map.get(i).getText() == null){
+                            Toast.makeText(getActivity(), "Please edit or delete Option " + i, Toast.LENGTH_SHORT).show();
+                        }
                         pollOptions.add(map.get(i).getText().toString());
                     }
                     try {
