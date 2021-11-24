@@ -29,7 +29,7 @@ import java.util.List;
 import java.util.Map;
 
 public class CreatePollFragment extends Fragment {
-    int optionCounter = 3;
+    int optionCounter = 2;
     boolean start = true;
     HashMap<Integer, EditText> map = new HashMap<>();
     HashMap<Integer, Button> remove = new HashMap<>();
@@ -45,50 +45,33 @@ public class CreatePollFragment extends Fragment {
 
 
 
-        createPollBtn.setOnClickListener(view -> {
-            Editable poll = pollName.getText();
-            CharSequence poll1 = poll.toString();
+        createPollBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Editable poll = pollName.getText();
+                CharSequence poll1 = poll.toString();
                 if(poll1.length() < 1){
-                Toast.makeText(getActivity(), "Please enter a Pollname.", Toast.LENGTH_SHORT).show();
-            }else {
-                List<String> pollOptions = new ArrayList<>();
-                for (int i = 1; i < optionCounter; i++) {
-                    pollOptions.add(map.get(i).getText().toString());
-                }
-                try {
-                    long id = PollManager.createPoll(poll.toString(), pollOptions);
-                    Toast.makeText(getActivity(), "Poll ID is: " + id, Toast.LENGTH_SHORT).show();
-                } catch (InterruptedException | IllegalArgumentException e) {
-                    Toast.makeText(getActivity(), "Something went wrong, please try again!", Toast.LENGTH_SHORT).show();
-                    e.printStackTrace();
-                } catch (IOException e){
-                    Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
-                    e.printStackTrace();
+                    Toast.makeText(getActivity(), "Please enter a Pollname.", Toast.LENGTH_SHORT).show();
+                }else {
+                    List<String> pollOptions = new ArrayList<>();
+                    for (int i = 0; i < optionCounter; i++) {
+                        pollOptions.add(map.get(i).getText().toString());
+                    }
+                    try {
+                        long id = PollManager.createPoll(poll.toString(), pollOptions);
+                        Toast.makeText(getActivity(), "Poll ID is: " + id, Toast.LENGTH_SHORT).show();
+                    } catch (InterruptedException | IOException e) {
+                        e.printStackTrace();
+                    }
                 }
             }
         });
 
 
-
-
-        /**
-         Button b3 = new Button(getContext());
-         b3.setVisibility(View.VISIBLE);
-         b3.setText("asd");
-         b3.animate();
-
-         RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(500, 100);
-         params.setMargins(10,10,10,10);
-         b3.setLayoutParams(params);
-
-         ((RelativeLayout) root.findViewById(R.id.startpoll_relativeLayout)).addView(b3);
-         **/
-
-
-        map.put(1, (EditText) root.findViewById(R.id.option1));
-        map.put(2, (EditText) root.findViewById(R.id.option2));
-        remove.put(1, (Button) root.findViewById(R.id.removeBtn1));
-        remove.put(2, (Button) root.findViewById(R.id.removeBtn2));
+        map.put(0, (EditText) root.findViewById(R.id.option1));
+        map.put(1, (EditText) root.findViewById(R.id.option2));
+        remove.put(0, (Button) root.findViewById(R.id.removeBtn1));
+        remove.put(1, (Button) root.findViewById(R.id.removeBtn2));
         Button addOption = (Button) root.findViewById(R.id.addOption);
 
         Button remove1 = (Button) root.findViewById(R.id.removeBtn1);
@@ -97,7 +80,7 @@ public class CreatePollFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 EditText newOption = new EditText(getContext());
-                newOption.setHint("Option " + optionCounter);
+                newOption.setHint("Option " + (optionCounter+1));
 
                 ((LinearLayout) root.findViewById(R.id.linear_layout)).addView(newOption);
                 map.put(optionCounter, newOption);
@@ -120,8 +103,8 @@ public class CreatePollFragment extends Fragment {
                 optionCounter++;
 
                 if(optionCounter > 2){
+                    remove.get(0).setVisibility(View.VISIBLE);
                     remove.get(1).setVisibility(View.VISIBLE);
-                    remove.get(2).setVisibility(View.VISIBLE);
                 }
 
                 delete.setOnClickListener(new View.OnClickListener() {
@@ -131,32 +114,32 @@ public class CreatePollFragment extends Fragment {
                         newOption.setVisibility(View.GONE);
                         delete.setVisibility(View.GONE);
                         int id = getKey(remove, delete);
+
                         for (int i = id; i < optionCounter; i++) {
                             if (map.containsKey(i + 1)) {
-                                map.get(i + 1).setHint("Option " + i);
+                                map.get(i + 1).setHint("Option " + (i+1));
                                 map.replace(i, map.get(i + 1));
                                 remove.replace(i, remove.get(i + 1));
-                            }
-                            optionCounter--;
-
-                            if(optionCounter <= 3){
-                                remove.get(1).setVisibility(View.INVISIBLE);
-                                remove.get(2).setVisibility(View.INVISIBLE);
-                            }
-
-                            if(optionCounter<=3) {
-                                if(root.findViewById(R.id.option1).getVisibility() != View.GONE){
-                                    remove1.setVisibility(View.INVISIBLE);
-
-                                }
-                                if(root.findViewById(R.id.option2).getVisibility() != View.GONE){
-                                    remove2.setVisibility(View.INVISIBLE);
-                                }
-                                start = true;
+                            }else{
+                                map.remove(i);
+                                remove.remove(i);
                             }
                         }
-                    }
+                        optionCounter--;
 
+                        if(optionCounter < 3){
+                            remove.get(0).setVisibility(View.INVISIBLE);
+                            remove.get(1).setVisibility(View.INVISIBLE);
+
+                            if(root.findViewById(R.id.option1).getVisibility() != View.GONE){
+                                remove1.setVisibility(View.INVISIBLE);
+                            }
+                            if(root.findViewById(R.id.option2).getVisibility() != View.GONE){
+                                remove2.setVisibility(View.INVISIBLE);
+                            }
+                            start = true;
+                        }
+                    }
                 });
             }
 
@@ -168,15 +151,30 @@ public class CreatePollFragment extends Fragment {
             public void onClick(View v) {
                 root.findViewById(R.id.option1).setVisibility(View.GONE);
                 remove1.setVisibility(View.GONE);
-                for(int i = 1; i< optionCounter; i++){
-                    if(map.containsKey(i+1)) {
-                        map.get(i + 1).setHint("Option " + (i));
+
+
+                HashMap<Integer, EditText> tmp = map;
+
+                for(int i = 0; i< optionCounter; i++) {
+                    if (map.containsKey(i + 1)) {
+                        map.get(i + 1).setHint("Option " + (i+1));
                         map.replace(i, map.get(i + 1));
                         remove.replace(i, remove.get(i + 1));
+                    }else{
+                        map.remove(i);
+                        remove.remove(i);
                     }
                 }
-
                 optionCounter--;
+                if(optionCounter < 3){
+                    remove.get(0).setVisibility(View.INVISIBLE);
+                    remove.get(1).setVisibility(View.INVISIBLE);
+
+                    if(root.findViewById(R.id.option2).getVisibility() != View.GONE){
+                        remove2.setVisibility(View.INVISIBLE);
+                    }
+                    start = true;
+                }
             }
         });
 
@@ -184,18 +182,36 @@ public class CreatePollFragment extends Fragment {
         remove2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 root.findViewById(R.id.option2).setVisibility(View.GONE);
                 remove2.setVisibility(View.GONE);
 
-                for(int i = 1; i< optionCounter; i++){
+                int id = getKey(remove, remove2);
+
+
+                for(int i = id; i< optionCounter; i++){
                     if(map.containsKey(i+1)) {
-                        map.get(i + 1).setHint("Option " + (i));
+                        map.get(i + 1).setHint("Option " + (i+1));
                         map.replace(i, map.get(i + 1));
                         remove.replace(i, remove.get(i + 1));
+                    }
+                    else{
+                        map.remove(i);
+                        remove.remove(i);
                     }
                 }
 
                 optionCounter--;
+                if(optionCounter < 3){
+                    remove.get(0).setVisibility(View.INVISIBLE);
+                    remove.get(1).setVisibility(View.INVISIBLE);
+
+                    if(root.findViewById(R.id.option1).getVisibility() != View.GONE){
+                        remove1.setVisibility(View.INVISIBLE);
+                    }
+                    start = true;
+                }
+
             }
         });
         return root;
