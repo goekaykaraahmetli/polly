@@ -1,8 +1,15 @@
 package com.polly.utils.communication;
 
+import com.polly.utils.encryption.exceptions.FailedDecryptionException;
+import com.polly.utils.encryption.exceptions.FailedEncryptionException;
+import com.polly.utils.encryption.exceptions.FailedKeyGenerationException;
+
 import java.io.IOException;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.security.NoSuchAlgorithmException;
+import java.security.PublicKey;
+import java.security.spec.InvalidKeySpecException;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -11,19 +18,15 @@ public class SocketHandler {
 	private Socket socket;
 	private InputHandler inputHandler;
 	private OutputHandler outputHandler;
-	
-	public SocketHandler(String ip, int port) throws IOException {
+	private DataStreamManager dataStreamManager;
+
+	public SocketHandler(String ip, int port) throws IOException, FailedKeyGenerationException, InvalidKeySpecException, NoSuchAlgorithmException, FailedDecryptionException, FailedEncryptionException {
 		connect(ip, port);
 		init();
 	}
 	
-	public SocketHandler(Socket socket) throws IOException{
-		this.socket = socket;
-		init();
-	}
-	
-	private void init() throws IOException{
-		DataStreamManager dataStreamManager = new DataStreamManager(socket.getInputStream(), socket.getOutputStream());
+	private void init() throws IOException, FailedKeyGenerationException, InvalidKeySpecException, NoSuchAlgorithmException, FailedEncryptionException, FailedDecryptionException {
+		dataStreamManager = new DataStreamManager(socket.getInputStream(), socket.getOutputStream());
         inputHandler = new InputHandler(dataStreamManager);
         outputHandler = new OutputHandler(dataStreamManager);
 		inputHandler.start();

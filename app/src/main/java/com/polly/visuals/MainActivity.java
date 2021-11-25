@@ -90,6 +90,7 @@ catch (Exception e){
 
 }
 
+    new Organizer();
 
         try {
             Organizer.send(0L, 0L, "connected!");
