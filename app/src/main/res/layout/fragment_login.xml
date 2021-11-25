@@ -83,11 +83,11 @@
         android:layout_height="60dp"
         android:background="@android:color/transparent"
         android:src="@drawable/btn_google_light_focus_hdpi"
-        app:layout_constraintBottom_toTopOf="@+id/activity_login_textView_sign_up_instead"
+        app:layout_constraintBottom_toTopOf="@+id/activity_login_button_login"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/activity_login_button_login"
-        app:layout_constraintVertical_bias="0.542"
+        app:layout_constraintTop_toBottomOf="@+id/activity_login_edittext_password"
+        app:layout_constraintVertical_bias="0.609"
         tools:ignore="SpeakableTextPresentCheck" />
 
 
