@@ -1,6 +1,7 @@
 {
   "project_info": {
     "project_number": "163467661096",
+    "firebase_url": "https://polly-abdd4-default-rtdb.europe-west1.firebasedatabase.app",
     "project_id": "polly-abdd4",
     "storage_bucket": "polly-abdd4.appspot.com"
   },
@@ -13,6 +14,14 @@
         }
       },
       "oauth_client": [
+        {
+          "client_id": "163467661096-nkm0sp9bs1dkpli9pvcc2udseo1qdt24.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.polly",
+            "certificate_hash": "8e99627653c9270063260935bc036cb5d619649c"
+          }
+        },
         {
           "client_id": "163467661096-2sp9pdj07ir9u0ie1qcrf5c11e34f8v4.apps.googleusercontent.com",
           "client_type": 3
