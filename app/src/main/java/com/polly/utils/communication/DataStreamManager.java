@@ -50,7 +50,7 @@ public class DataStreamManager {
 	private SecretKey secretKeyComPartner;
 	private SecretKey secretKey;
 	private KeyPair keyPair;
-
+	private String CHARSET = "UTF-16";
 
 	public DataStreamManager(InputStream input, OutputStream output) throws FailedKeyGenerationException, IOException, InvalidKeySpecException, NoSuchAlgorithmException, FailedDecryptionException, FailedEncryptionException {
 		this.input = new DataInputStream(input);
@@ -61,7 +61,6 @@ public class DataStreamManager {
 			System.out.println(secretKey.getEncoded()[i]);
 		}
 		System.out.println("---------------------");
-
 
 		this.keyPair = generateKeyPair();
 		System.out.println("my public key: ");
@@ -208,7 +207,7 @@ public class DataStreamManager {
 	}
 
 	private String readString() throws IOException {
-		return new String(readDecryptedByteArray());
+		return new String(readDecryptedByteArray(), CHARSET);
 	}
 
 	private int readClearInteger() throws IOException {
@@ -412,7 +411,7 @@ public class DataStreamManager {
 	}
 
 	private void writeString(String data) throws IOException {
-		writeEncryptedByteArray(data.getBytes());
+		writeEncryptedByteArray(data.getBytes(CHARSET));
 	}
 
 	private void writeCreatePollCommand(CreatePollCommand data) throws IOException {
@@ -611,8 +610,6 @@ public class DataStreamManager {
 			writeByte(encryptedSecretKey[i]);
 		}
 	}
-
-
 
 	public static byte[] intToByteArray(final int x)
 	{
