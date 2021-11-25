@@ -10,8 +10,9 @@ import javax.crypto.Cipher;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
 
-import com.polly.encryption.exceptions.FailedDecryptionException;
-import com.polly.encryption.exceptions.FailedEncryptionException;
+
+import com.polly.utils.encryption.exceptions.FailedDecryptionException;
+import com.polly.utils.encryption.exceptions.FailedEncryptionException;
 
 public class RSACipher {
 	public static final String RSA_TRANSFORMATION = "RSA/ECB/PKCS1Padding";

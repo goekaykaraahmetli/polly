@@ -1,5 +1,6 @@
 package com.polly.visuals;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -27,18 +28,15 @@ import com.polly.testclasses.User;
 import org.w3c.dom.Text;
 
 public class AccountFragment extends Fragment {
-    private FirebaseUser user;
-    private DatabaseReference reference;
-    private String userID;
+    private FirebaseAuth mAuth;
+    TextView emailInfo;
     @Nullable
     public View onCreateView(LayoutInflater inflater,
                              @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_account, container, false);
-        TextView emailInfo = (TextView) view.findViewById(R.id.email_info);
-        TextView fullNameInfo = (TextView) view.findViewById(R.id.fullname_text);
-        TextView usernameInfo = (TextView) view.findViewById(R.id.username_info);
-
+        emailInfo = (TextView) view.findViewById(R.id.email_info);
+        mAuth = FirebaseAuth.getInstance();
         Button logout = (Button) view.findViewById(R.id.logout_button);
         logout.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -46,38 +44,24 @@ public class AccountFragment extends Fragment {
                 FirebaseAuth.getInstance().signOut();
                 Toast.makeText(getActivity(), "You are now signed out", Toast.LENGTH_SHORT).show();
                 emailInfo.setText("Email:");
-                fullNameInfo.setText("Full Name:");
-                usernameInfo.setText("Username:");
             }
         });
 
-        user = FirebaseAuth.getInstance().getCurrentUser();
-        reference = FirebaseDatabase.getInstance().getReference("Users");
-        if(user != null){
-            userID = user.getUid();
+        checkUser();
 
-        reference.child(userID).addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                User userProfile = snapshot.getValue(User.class);
 
-                if(userProfile != null){
-                    String fullName = userProfile.fullname;
-                    String email = userProfile.email;
-                    String username = userProfile.username;
-                    emailInfo.setText("Email: \n" + email);
-                    fullNameInfo.setText("Full Name: \n" + fullName);
-                    usernameInfo.setText("Username: \n" + username);
-
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-                Toast.makeText(getActivity(), "Something went wrong", Toast.LENGTH_SHORT).show();
-            }
-        });}
         return view;
+    }
+
+    private void checkUser() {
+        FirebaseUser firebaseUser = mAuth.getCurrentUser();
+        if(firebaseUser == null){
+            Toast.makeText(getActivity(), "You are currently not signed in", Toast.LENGTH_SHORT);
+        }
+        else{
+            String email = firebaseUser.getEmail();
+            emailInfo.setText("Email:\n"+ email);
+        }
     }
 
 }

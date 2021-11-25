@@ -13,7 +13,7 @@ import com.polly.utils.encryption.exceptions.FailedKeyGenerationException;
 import com.polly.utils.encryption.utils.CipherKeyGenerator;
 
 public class Encryption {
-
+/**
 	public static void main(String[] args) {
 		try {
 			KeyPair keyPair = CipherKeyGenerator.generateRSAKeyPair(8192);
@@ -46,4 +46,5 @@ public class Encryption {
 			e.printStackTrace();
 		}
 	}
+ **/
 }

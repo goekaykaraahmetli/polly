@@ -78,16 +78,17 @@
         app:layout_constraintStart_toStartOf="parent" />
 
     <ImageButton
-        android:id="@+id/googlesigninbtn"
-        android:layout_width="52dp"
-        android:layout_height="51dp"
-        android:layout_marginTop="119dp"
+        android:id="@+id/imageButtonGoogle"
+        android:layout_width="57dp"
+        android:layout_height="60dp"
+        android:background="@android:color/transparent"
         android:src="@drawable/btn_google_light_focus_hdpi"
         app:layout_constraintBottom_toTopOf="@+id/activity_login_textView_sign_up_instead"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/activity_login_button_login"
-        app:layout_constraintVertical_bias="0.0" />
+        app:layout_constraintTop_toBottomOf="@+id/activity_login_button_login"
+        app:layout_constraintVertical_bias="0.542"
+        tools:ignore="SpeakableTextPresentCheck" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
