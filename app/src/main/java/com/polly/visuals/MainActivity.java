@@ -81,14 +81,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-try {
-    FirebaseDatabase database = FirebaseDatabase.getInstance();
-    DatabaseReference myRef = database.getReference("message");
-    myRef.setValue("Hello, World!");
-}
-catch (Exception e){
+    try {
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference myRef = database.getReference("message");
+        myRef.setValue("Hello, World!");
+    }
+    catch (Exception e){
 
-}
+    }
 
     new Organizer();
 
