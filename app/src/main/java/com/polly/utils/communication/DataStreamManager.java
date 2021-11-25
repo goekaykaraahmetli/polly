@@ -50,7 +50,8 @@ public class DataStreamManager {
 	private SecretKey secretKeyComPartner;
 	private SecretKey secretKey;
 	private KeyPair keyPair;
-	private String CHARSET = "UTF-16";
+	private static final String CHARSET = "UTF-16";
+	private static final int SECRET_KEY_LENGTH = 256;
 
 	public DataStreamManager(InputStream input, OutputStream output) throws FailedKeyGenerationException, IOException, InvalidKeySpecException, NoSuchAlgorithmException, FailedDecryptionException, FailedEncryptionException {
 		this.input = new DataInputStream(input);
@@ -575,18 +576,8 @@ public class DataStreamManager {
 	}
 
 	private SecretKey readSecretKeyComPartner() throws IOException, FailedDecryptionException {
-		int lengthLength = readClearInteger();
-		byte[] lengthBytes = new byte[lengthLength];
-
-		for(int i = 0;i<lengthLength;i++){
-			lengthBytes[i] = readByte();
-		}
-
-		byte[] decryptedLength = RSACipher.decrypt(lengthBytes, keyPair.getPrivate());
-		int length = byteArrayToInt(decryptedLength);
-
-		byte[] encryptedSecretKeyBytes = new byte[length];
-		for(int i = 0;i<length;i++){
+		byte[] encryptedSecretKeyBytes = new byte[SECRET_KEY_LENGTH];
+		for(int i = 0;i<SECRET_KEY_LENGTH;i++){
 			encryptedSecretKeyBytes[i] = readByte();
 		}
 
@@ -596,17 +587,7 @@ public class DataStreamManager {
 
 	private void sendSecretKey() throws FailedEncryptionException, IOException {
 		byte[] encryptedSecretKey = RSACipher.encrypt(secretKey.getEncoded(), publicKeyComPartner);
-		int length = encryptedSecretKey.length;
-		byte[] lengthBytes = intToByteArray(length);
-
-		byte[] encryptedLength = RSACipher.encrypt(lengthBytes, publicKeyComPartner);
-
-		writeClearInteger(encryptedLength.length);
-		for (int i = 0; i < encryptedLength.length; i++) {
-			writeByte(encryptedLength[i]);
-		}
-
-		for (int i = 0; i < length; i++) {
+		for (int i = 0; i < SECRET_KEY_LENGTH; i++) {
 			writeByte(encryptedSecretKey[i]);
 		}
 	}
