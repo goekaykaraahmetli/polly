@@ -54,17 +54,24 @@ public class CreatePollFragment extends Fragment {
                     Toast.makeText(getActivity(), "Please enter a Pollname.", Toast.LENGTH_SHORT).show();
                 }else {
                     List<String> pollOptions = new ArrayList<>();
+                    boolean hinted = false;
                     for (int i = 0; i < optionCounter; i++) {
-                        if(map.get(i).getText() == null){
-                            Toast.makeText(getActivity(), "Please edit or delete Option " + i, Toast.LENGTH_SHORT).show();
+                        if(map.get(i).getText().length() == 0){
+                            hinted = true;
+                            break;
                         }
                         pollOptions.add(map.get(i).getText().toString());
                     }
-                    try {
-                        long id = PollManager.createPoll(poll.toString(), pollOptions);
-                        Toast.makeText(getActivity(), "Poll ID is: " + id, Toast.LENGTH_SHORT).show();
-                    } catch (InterruptedException | IOException e) {
-                        e.printStackTrace();
+                    if(!hinted) {
+                        try {
+                            long id = PollManager.createPoll(poll.toString(), pollOptions);
+                            Toast.makeText(getActivity(), "Poll ID is: " + id, Toast.LENGTH_SHORT).show();
+                        } catch (InterruptedException | IOException e) {
+                            e.printStackTrace();
+                            Toast.makeText(getActivity(), "No connection to the server!", Toast.LENGTH_SHORT).show();
+                        }
+                    }else{
+                        Toast.makeText(getActivity(), "Please edit all Options", Toast.LENGTH_SHORT).show();
                     }
                 }
             }
