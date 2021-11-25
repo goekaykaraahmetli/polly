@@ -13,8 +13,9 @@ import javax.crypto.NoSuchPaddingException;
 import javax.crypto.SecretKey;
 import javax.crypto.spec.GCMParameterSpec;
 
-import com.polly.encryption.exceptions.FailedDecryptionException;
-import com.polly.encryption.exceptions.FailedEncryptionException;
+import com.polly.utils.encryption.exceptions.FailedDecryptionException;
+import com.polly.utils.encryption.exceptions.FailedEncryptionException;
+import com.polly.utils.encryption.exceptions.FailedEncryptionException;
 
 public class AESCipher {
 	private static final String CIPHER_TRANSFORMATION_GCM = "AES/GCM/NoPadding";

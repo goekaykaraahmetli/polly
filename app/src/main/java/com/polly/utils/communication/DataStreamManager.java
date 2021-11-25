@@ -5,6 +5,12 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.security.KeyFactory;
+import java.security.KeyPair;
+import java.security.NoSuchAlgorithmException;
+import java.security.PublicKey;
+import java.security.spec.InvalidKeySpecException;
+import java.security.spec.X509EncodedKeySpec;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -25,21 +31,69 @@ import com.polly.utils.command.LoadPollCommand;
 import com.polly.utils.command.LoadPollOptionsCommand;
 import com.polly.utils.command.RequestPollUpdatesCommand;
 import com.polly.utils.command.VotePollCommand;
+import com.polly.utils.encryption.ciphers.AESCipher;
+import com.polly.utils.encryption.ciphers.RSACipher;
+import com.polly.utils.encryption.exceptions.FailedDecryptionException;
+import com.polly.utils.encryption.exceptions.FailedEncryptionException;
+import com.polly.utils.encryption.exceptions.FailedKeyGenerationException;
+import com.polly.utils.encryption.utils.CipherKeyGenerator;
 import com.polly.utils.poll.Poll;
+
+import javax.crypto.SecretKey;
+import javax.crypto.spec.SecretKeySpec;
 
 public class DataStreamManager {
 	private static final int REFRESH_DELAY = Config.DATA_STREAM_MANAGER_REFRESH_DELAY;
 	private final DataInputStream input;
 	private final DataOutputStream output;
+	private PublicKey publicKeyComPartner;
+	private SecretKey secretKeyComPartner;
+	private SecretKey secretKey;
+	private KeyPair keyPair;
 
-	public DataStreamManager(DataInputStream input, DataOutputStream output) {
-		this.input = input;
-		this.output = output;
-	}
 
-	public DataStreamManager(InputStream input, OutputStream output) {
+	public DataStreamManager(InputStream input, OutputStream output) throws FailedKeyGenerationException, IOException, InvalidKeySpecException, NoSuchAlgorithmException, FailedDecryptionException, FailedEncryptionException {
 		this.input = new DataInputStream(input);
 		this.output = new DataOutputStream(output);
+		this.secretKey = generateSecretKey();
+		System.out.println("my secret key: ");
+		for(int i = 0;i<secretKey.getEncoded().length;i++){
+			System.out.println(secretKey.getEncoded()[i]);
+		}
+		System.out.println("---------------------");
+
+
+		this.keyPair = generateKeyPair();
+		System.out.println("my public key: ");
+		for(int i = 0;i<keyPair.getPublic().getEncoded().length;i++){
+			System.out.print(keyPair.getPublic().getEncoded()[i]);
+		}
+		System.out.println("---------------------");
+		System.out.println("my private key: ");
+		for(int i = 0;i<keyPair.getPrivate().getEncoded().length;i++){
+			System.out.print(keyPair.getPrivate().getEncoded()[i]);
+		}
+		System.out.println("---------------------");
+
+
+		this.publicKeyComPartner = exchangePublicKeys();
+		System.out.println("their public key: ");
+		for(int i = 0;i<publicKeyComPartner.getEncoded().length;i++){
+			System.out.print(publicKeyComPartner.getEncoded()[i]);
+		}
+		System.out.println("---------------------");
+
+
+		this.secretKeyComPartner = exchangeSecretKeys();
+		System.out.println("their secret key: ");
+		for(int i = 0;i<secretKeyComPartner.getEncoded().length;i++){
+			System.out.print(secretKeyComPartner.getEncoded()[i]);
+		}
+		System.out.println("---------------------");
+
+
+
+
 	}
 
 	public Message receive() throws IOException, ClassNotFoundException{
@@ -114,7 +168,7 @@ public class DataStreamManager {
 			data = readGetMyPollsCommand();
 		else if (dataType.equals(RequestPollUpdatesCommand.class))
 			data = readRequestPollUpdatesCommand();
-		// default type:
+			// default type:
 		else
 			data = readString();
 
@@ -122,11 +176,11 @@ public class DataStreamManager {
 	}
 
 	private int readInteger() throws IOException {
-		return input.readInt();
+		return Integer.valueOf(readString());
 	}
 
 	private boolean readBoolean() throws IOException {
-		return input.readBoolean();
+		return Boolean.valueOf(readString());
 	}
 
 	private byte readByte() throws IOException {
@@ -134,27 +188,49 @@ public class DataStreamManager {
 	}
 
 	private char readChar() throws IOException {
-		return input.readChar();
+		return Character.valueOf(readString().toCharArray()[0]);
 	}
 
 	private double readDouble() throws IOException {
-		return input.readDouble();
+		return Double.valueOf(readString());
 	}
 
 	private float readFloat() throws IOException {
-		return input.readFloat();
+		return Float.valueOf(readString());
 	}
 
 	private long readLong() throws IOException {
-		return input.readLong();
+		return Long.valueOf(readString());
 	}
 
 	private short readShort() throws IOException {
-		return input.readShort();
+		return Short.valueOf(readString());
 	}
 
 	private String readString() throws IOException {
+		return new String(readDecryptedByteArray());
+	}
+
+	private int readClearInteger() throws IOException {
+		return input.readInt();
+	}
+
+	private String readClearString() throws IOException {
 		return input.readUTF();
+	}
+
+	private byte[] readDecryptedByteArray() throws IOException {
+		int length = readClearInteger();
+		byte[] bytes = new byte[length];
+		for(int i = 0;i<length;i++){
+			bytes[i] = readByte();
+		}
+
+		try {
+			return AESCipher.decrypt(bytes, secretKeyComPartner);
+		} catch (FailedDecryptionException e) {
+			throw new IOException(e);
+		}
 	}
 
 	private CreatePollCommand readCreatePollCommand() throws IOException {
@@ -304,11 +380,11 @@ public class DataStreamManager {
 	}
 
 	private void writeInteger(Integer data) throws IOException {
-		output.writeInt(data);
+		writeString(String.valueOf(data));
 	}
 
 	private void writeBoolean(Boolean data) throws IOException {
-		output.writeBoolean(data);
+		writeString(String.valueOf(data));
 	}
 
 	private void writeByte(Byte data) throws IOException {
@@ -316,27 +392,27 @@ public class DataStreamManager {
 	}
 
 	private void writeChar(Character data) throws IOException {
-		output.writeChar(data);
+		writeString(String.valueOf(data));
 	}
 
 	private void writeDouble(Double data) throws IOException {
-		output.writeDouble(data);
+		writeString(String.valueOf(data));
 	}
 
 	private void writeFloat(Float data) throws IOException {
-		output.writeFloat(data);
+		writeString(String.valueOf(data));
 	}
 
 	private void writeLong(Long data) throws IOException {
-		output.writeLong(data);
+		writeString(String.valueOf(data));
 	}
 
 	private void writeShort(Short data) throws IOException {
-		output.writeShort(data);
+		writeString(String.valueOf(data));
 	}
 
 	private void writeString(String data) throws IOException {
-		output.writeUTF(data);
+		writeEncryptedByteArray(data.getBytes());
 	}
 
 	private void writeCreatePollCommand(CreatePollCommand data) throws IOException {
@@ -409,11 +485,150 @@ public class DataStreamManager {
 		writeInteger(data.getStartStop());
 	}
 
+	private void writeClearString(String string) throws IOException {
+		output.writeUTF(string);
+	}
+
+	private void writeClearInteger(Integer intVal) throws IOException {
+		output.writeInt(intVal);
+	}
+
+	private void writeEncryptedByteArray(byte[] bytes) throws IOException {
+		byte[] encrypted;
+		try {
+			encrypted = AESCipher.encrypt(bytes, secretKey);
+		} catch (FailedEncryptionException e) {
+			throw new IOException(e);
+		}
+
+		int length = encrypted.length;
+		writeClearInteger(length);
+		for(int i=0;i<length;i++){
+			writeByte(encrypted[i]);
+		}
+	}
+
 	public static boolean isList(Class<?> classType) {
 		return classType.equals(ArrayList.class) || classType.equals(LinkedList.class);
 	}
 
 	public static boolean isMap(Class<?> classType) {
 		return classType.equals(HashMap.class) || classType.equals(TreeMap.class);
+	}
+
+	private SecretKey generateSecretKey() throws FailedKeyGenerationException{
+		return CipherKeyGenerator.generateAESSecretKey();
+	}
+
+	private KeyPair generateKeyPair() throws FailedKeyGenerationException{
+		return CipherKeyGenerator.generateRSAKeyPair(2048);
+	}
+
+
+
+
+	private PublicKey exchangePublicKeys() throws IOException, InvalidKeySpecException, NoSuchAlgorithmException {
+		sendPublicKey();
+
+		while(input.available() <= 0) {
+			try {
+				Thread.sleep(REFRESH_DELAY);
+			} catch(InterruptedException e) {
+				//TODO replace with logger
+				e.printStackTrace();
+			}
+		}
+
+		return readPublicKeyComPartner();
+	}
+
+	private void sendPublicKey() throws IOException {
+		byte[] pKey = keyPair.getPublic().getEncoded();
+		writeClearInteger(pKey.length);
+		for(int i = 0;i<pKey.length;i++){
+			writeByte(pKey[i]);
+		}
+	}
+
+	private PublicKey readPublicKeyComPartner() throws IOException, NoSuchAlgorithmException, InvalidKeySpecException {
+		int length = readClearInteger();
+		byte[] bytes = new byte[length];
+		for(int i = 0;i<length;i++){
+			bytes[i] = readByte();
+		}
+
+		return KeyFactory.getInstance("RSA").generatePublic(new X509EncodedKeySpec(bytes));
+	}
+
+	private SecretKey exchangeSecretKeys() throws IOException, FailedEncryptionException, FailedDecryptionException {
+		sendSecretKey();
+
+		while(input.available() <= 0) {
+			try {
+				Thread.sleep(REFRESH_DELAY);
+			} catch(InterruptedException e) {
+				//TODO replace with logger
+				e.printStackTrace();
+			}
+		}
+
+		return readSecretKeyComPartner();
+	}
+
+	private SecretKey readSecretKeyComPartner() throws IOException, FailedDecryptionException {
+		int lengthLength = readClearInteger();
+		byte[] lengthBytes = new byte[lengthLength];
+
+		for(int i = 0;i<lengthLength;i++){
+			lengthBytes[i] = readByte();
+		}
+
+		byte[] decryptedLength = RSACipher.decrypt(lengthBytes, keyPair.getPrivate());
+		int length = byteArrayToInt(decryptedLength);
+
+		byte[] encryptedSecretKeyBytes = new byte[length];
+		for(int i = 0;i<length;i++){
+			encryptedSecretKeyBytes[i] = readByte();
+		}
+
+		byte[] decryptedSecretKeyBytes = RSACipher.decrypt(encryptedSecretKeyBytes, keyPair.getPrivate());
+		return new SecretKeySpec(decryptedSecretKeyBytes, "AES");
+	}
+
+	private void sendSecretKey() throws FailedEncryptionException, IOException {
+		byte[] encryptedSecretKey = RSACipher.encrypt(secretKey.getEncoded(), publicKeyComPartner);
+		int length = encryptedSecretKey.length;
+		byte[] lengthBytes = intToByteArray(length);
+
+		byte[] encryptedLength = RSACipher.encrypt(lengthBytes, publicKeyComPartner);
+
+		writeClearInteger(encryptedLength.length);
+		for (int i = 0; i < encryptedLength.length; i++) {
+			writeByte(encryptedLength[i]);
+		}
+
+		for (int i = 0; i < length; i++) {
+			writeByte(encryptedSecretKey[i]);
+		}
+	}
+
+
+
+	public static byte[] intToByteArray(final int x)
+	{
+		final byte[] array = new byte[4];
+		array[0] = (byte)((x & 0xFF000000) >> 24);
+		array[1] = (byte)((x & 0xFF0000) >> 16);
+		array[2] = (byte)((x & 0xFF00) >> 8);
+		array[3] = (byte)(x & 0xFF);
+		return array;
+	}
+
+	public static int byteArrayToInt(final byte[] pByteArray)
+	{
+		return (((int)(pByteArray[0]) << 24) & 0xFF000000) |
+				(((int)(pByteArray[1]) << 16) & 0xFF0000) |
+				(((int)(pByteArray[2]) << 8) & 0xFF00) |
+				((int)(pByteArray[3]) & 0xFF);
 	}
 }
