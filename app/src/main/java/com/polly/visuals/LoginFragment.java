@@ -139,7 +139,7 @@ public class LoginFragment extends Fragment {
                 firebaseAuthWithGoogleAccount(account);
             }
             catch(Exception e){
-                Log.d(TAG, "onActivityResult: " + e.getMessage());
+                Log.d(TAG, "Google Sign In Failed " + e.getMessage());
             }
         }
     }
