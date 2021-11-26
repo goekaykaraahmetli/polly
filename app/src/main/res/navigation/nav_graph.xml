@@ -12,9 +12,16 @@
         <action
             android:id="@+id/action_loginFragment_to_signupFragment"
             app:destination="@id/signupFragment" />
+        <action
+            android:id="@+id/action_loginFragment_to_accountFragment"
+            app:destination="@id/accountFragment" />
     </fragment>
     <fragment
         android:id="@+id/signupFragment"
         android:name="com.polly.visuals.SignupFragment"
         android:label="SignupFragment" />
+    <fragment
+        android:id="@+id/accountFragment"
+        android:name="com.polly.visuals.AccountFragment"
+        android:label="AccountFragment" />
 </navigation>
