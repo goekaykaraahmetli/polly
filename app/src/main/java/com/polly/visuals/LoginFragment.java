@@ -22,6 +22,7 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
+import androidx.navigation.fragment.NavHostFragment;
 
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
@@ -39,6 +40,7 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
 import com.polly.R;
 import com.polly.testclasses.DBHelper;
+import com.polly.utils.Organizer;
 
 public class LoginFragment extends Fragment {
     EditText passwordInput;
@@ -167,11 +169,13 @@ public class LoginFragment extends Fragment {
                     Toast.makeText(getActivity(), "Existing User:\n" + email, Toast.LENGTH_SHORT);
                 }
 
+                /*Intent intent = new Intent(R.layout.fragment_account);
+
                 AccountFragment accountFragment = new AccountFragment();
                 FragmentTransaction transaction = getFragmentManager().beginTransaction();
                 transaction.replace(R.id.fragment_container, accountFragment);
                 transaction.addToBackStack(null);
-                transaction.commit();
+                transaction.commit();*/
 
             }
         }).addOnFailureListener(new OnFailureListener() {
