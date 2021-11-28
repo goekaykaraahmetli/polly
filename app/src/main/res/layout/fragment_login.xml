@@ -12,6 +12,7 @@
     tools:context=".visuals.LoginFragment"
     tools:visibility="visible">
 
+
     <EditText
         android:id="@+id/activity_login_edittext_username"
         android:layout_width="0dp"
@@ -25,6 +26,16 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <com.facebook.login.widget.LoginButton
+        android:id="@+id/login_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        app:layout_constraintBottom_toTopOf="@+id/imageButtonGoogle"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/activity_login_edittext_password" />
 
     <EditText
         android:id="@+id/activity_login_edittext_password"
@@ -44,12 +55,12 @@
         android:id="@+id/activity_login_button_login"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="100dp"
+        android:layout_marginTop="136dp"
         android:width="200dp"
         android:enabled="true"
         android:text="@string/activity_login_button_login"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.502"
+        app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/activity_login_edittext_password" />
 
@@ -79,15 +90,16 @@
 
     <ImageButton
         android:id="@+id/imageButtonGoogle"
-        android:layout_width="57dp"
+        android:layout_width="60dp"
         android:layout_height="60dp"
         android:background="@android:color/transparent"
         android:src="@drawable/btn_google_light_focus_hdpi"
         app:layout_constraintBottom_toTopOf="@+id/activity_login_button_login"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/activity_login_edittext_password"
-        app:layout_constraintVertical_bias="0.609"
+        app:layout_constraintVertical_bias="0.868"
         tools:ignore="SpeakableTextPresentCheck" />
 
 

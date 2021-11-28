@@ -1,5 +1,6 @@
 <resources>
     <string name="app_name">Polly</string>
+    <string name="facebook_app_id">298248395510660</string> <string name="fb_login_protocol_scheme">fb298248395510660</string>
 
 
     <!-- layout -->

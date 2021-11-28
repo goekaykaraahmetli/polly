@@ -24,6 +24,12 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 import androidx.navigation.fragment.NavHostFragment;
 
+import com.facebook.AccessToken;
+import com.facebook.CallbackManager;
+import com.facebook.FacebookCallback;
+import com.facebook.FacebookException;
+import com.facebook.login.LoginResult;
+import com.facebook.login.widget.LoginButton;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
@@ -35,6 +41,7 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FacebookAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
@@ -46,6 +53,7 @@ public class LoginFragment extends Fragment {
     EditText passwordInput;
     EditText emailInput;
     FirebaseAuth mAuth;
+    CallbackManager mCallbackManager;
     private static final int RC_SIGN_IN = 100;
     private GoogleSignInClient googleSignInClient;
     private static final String TAG = "GOOGLE_SIGN_IN_TAG";
@@ -81,6 +89,28 @@ public class LoginFragment extends Fragment {
             startActivityForResult(intent, RC_SIGN_IN);
         });
 
+        mCallbackManager = CallbackManager.Factory.create();
+        LoginButton loginButton = (LoginButton) view.findViewById(R.id.login_button);
+        loginButton.setFragment(this);
+        loginButton.setReadPermissions("email", "public_profile");
+        loginButton.registerCallback(mCallbackManager, new FacebookCallback<LoginResult>() {
+            @Override
+            public void onSuccess(LoginResult loginResult) {
+                Log.d(TAG, "facebook:onSuccess:" + loginResult);
+                handleFacebookAccessToken(loginResult.getAccessToken());
+            }
+
+            @Override
+            public void onCancel() {
+                Log.d(TAG, "facebook:onCancel");
+            }
+
+            @Override
+            public void onError(@NonNull FacebookException e) {
+                Log.d(TAG, "facebook:onError", e);
+            }
+        });
+
 
 
 
@@ -93,6 +123,8 @@ public class LoginFragment extends Fragment {
         });
         return view;
     }
+
+
 
     private void userLogin(){
         String email = emailInput.getText().toString().trim();
@@ -145,6 +177,8 @@ public class LoginFragment extends Fragment {
                 Log.d(TAG, "Google Sign In Failed " + e.getMessage());
             }
         }
+        else
+            mCallbackManager.onActivityResult(requestCode, resultCode, data);
     }
 
     private void firebaseAuthWithGoogleAccount(GoogleSignInAccount account){
@@ -184,5 +218,26 @@ public class LoginFragment extends Fragment {
                 Log.d(TAG, "onFailure: Log In failed "+e.getMessage());
             }
         });
+    }
+    private void handleFacebookAccessToken(AccessToken token) {
+        Log.d(TAG, "handleFacebookAccessToken:" + token);
+
+        AuthCredential credential = FacebookAuthProvider.getCredential(token.getToken());
+        mAuth.signInWithCredential(credential)
+                .addOnCompleteListener(getActivity(), new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if (task.isSuccessful()) {
+                            // Sign in success, update UI with the signed-in user's information
+                            Log.d(TAG, "signInWithCredential:success");
+                            FirebaseUser user = mAuth.getCurrentUser();
+                            Toast.makeText(getContext(), "You are now signed in as" + user.getEmail(), Toast.LENGTH_SHORT).show();
+                        } else {
+                            // If sign in fails, display a message to the user.
+                            Log.w(TAG, "signInWithCredential:failure", task.getException());
+                            Toast.makeText(getContext(), "Auth Failed", Toast.LENGTH_SHORT);
+                        }
+                    }
+                });
     }
 }
