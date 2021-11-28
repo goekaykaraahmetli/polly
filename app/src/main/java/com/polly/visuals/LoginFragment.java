@@ -52,6 +52,7 @@ public class LoginFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater,
                              @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
+
         View view = inflater.inflate(R.layout.fragment_login, container, false);
         Button b = (Button) view.findViewById(R.id.activity_login_button_sign_up);
         b.setOnClickListener(new View.OnClickListener() {
