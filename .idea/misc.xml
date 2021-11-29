@@ -3,41 +3,14 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
-        <entry key="..\:/Users/Gaming/AndroidStudioProjects/polly/app/src/main/res/layout/activity_bar.xml" value="0.26680562793121415" />
-        <entry key="..\:/Users/Gaming/AndroidStudioProjects/polly/app/src/main/res/layout/activity_create_poll.xml" value="0.38697916666666665" />
-        <entry key="..\:/Users/Gaming/AndroidStudioProjects/polly/app/src/main/res/layout/activity_enter_poll.xml" value="0.38697916666666665" />
-        <entry key="..\:/Users/Gaming/AndroidStudioProjects/polly/app/src/main/res/layout/activity_login.xml" value="0.2609375" />
-        <entry key="..\:/Users/Gaming/AndroidStudioProjects/polly/app/src/main/res/layout/activity_main.xml" value="0.25" />
+        <entry key="../../../../layout/custom_preview.xml" value="0.13958333333333334" />
+        <entry key="..\:/Users/Gaming/AndroidStudioProjects/polly/app/src/main/res/layout/activity_create_poll.xml" value="0.21875" />
+        <entry key="..\:/Users/Gaming/AndroidStudioProjects/polly/app/src/main/res/layout/activity_enter_poll.xml" value="0.21875" />
+        <entry key="..\:/Users/Gaming/AndroidStudioProjects/polly/app/src/main/res/layout/activity_main.xml" value="0.21875" />
         <entry key="..\:/Users/Gaming/AndroidStudioProjects/polly/app/src/main/res/layout/activity_settings.xml" value="0.2869791666666667" />
-        <entry key="..\:/Users/Gaming/AndroidStudioProjects/polly/app/src/main/res/layout/fragment_account.xml" value="0.2609375" />
-        <entry key="..\:/Users/Gaming/AndroidStudioProjects/polly/app/src/main/res/layout/fragment_recent.xml" value="0.26666666666666666" />
-        <entry key="..\:/Users/Gaming/AndroidStudioProjects/polly/app/src/main/res/layout/fragment_sign_up.xml" value="0.38697916666666665" />
-        <entry key="..\:/Users/Gaming/AndroidStudioProjects/polly/app/src/main/res/layout/nav_header.xml" value="0.38697916666666665" />
-        <entry key="..\:/Users/Gaming/AndroidStudioProjects/polly/app/src/main/res/layout/test.xml" value="0.375" />
         <entry key="..\:/Users/Gaming/AndroidStudioProjects/polly/app/src/main/res/menu/menu_main.xml" value="0.38697916666666665" />
-        <entry key="..\:/Users/willi/AndroidStudioProjects/polly_new/app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.22135416666666666" />
-        <entry key="..\:/Users/willi/AndroidStudioProjects/polly_new/app/src/main/res/drawable/ic_account.xml" value="0.22135416666666666" />
-        <entry key="..\:/Users/willi/AndroidStudioProjects/polly_new/app/src/main/res/drawable/ic_baseline_qr_code_scanner_24.xml" value="0.3671875" />
-        <entry key="..\:/Users/willi/AndroidStudioProjects/polly_new/app/src/main/res/drawable/ic_launcher_background.xml" value="0.22135416666666666" />
-        <entry key="..\:/Users/willi/AndroidStudioProjects/polly_new/app/src/main/res/layout/activity_codescanner.xml" value="0.35104166666666664" />
-        <entry key="..\:/Users/willi/AndroidStudioProjects/polly_new/app/src/main/res/layout/activity_create_poll.xml" value="0.20520833333333333" />
-        <entry key="..\:/Users/willi/AndroidStudioProjects/polly_new/app/src/main/res/layout/activity_enter_poll.xml" value="0.33" />
-        <entry key="..\:/Users/willi/AndroidStudioProjects/polly_new/app/src/main/res/layout/activity_login.xml" value="0.20520833333333333" />
-        <entry key="..\:/Users/willi/AndroidStudioProjects/polly_new/app/src/main/res/layout/activity_main.xml" value="0.17831813576494426" />
-        <entry key="..\:/Users/willi/AndroidStudioProjects/polly_new/app/src/main/res/layout/activity_settings.xml" value="0.20520833333333333" />
-        <entry key="..\:/Users/willi/AndroidStudioProjects/polly_new/app/src/main/res/layout/activity_sign_up.xml" value="0.20520833333333333" />
-        <entry key="..\:/Users/willi/AndroidStudioProjects/polly_new/app/src/main/res/layout/enter_via_code.xml" value="0.36666666666666664" />
-        <entry key="..\:/Users/willi/AndroidStudioProjects/polly_new/app/src/main/res/layout/fragment_account.xml" value="0.33" />
-        <entry key="..\:/Users/willi/AndroidStudioProjects/polly_new/app/src/main/res/layout/fragment_enterpoll.xml" value="0.36666666666666664" />
-        <entry key="..\:/Users/willi/AndroidStudioProjects/polly_new/app/src/main/res/layout/fragment_login.xml" value="0.33" />
-        <entry key="..\:/Users/willi/AndroidStudioProjects/polly_new/app/src/main/res/layout/fragment_recent.xml" value="0.25" />
-        <entry key="..\:/Users/willi/AndroidStudioProjects/polly_new/app/src/main/res/layout/fragment_sign_up.xml" value="0.36666666666666664" />
-        <entry key="..\:/Users/willi/AndroidStudioProjects/polly_new/app/src/main/res/layout/fragment_startpoll.xml" value="0.25" />
-        <entry key="..\:/Users/willi/AndroidStudioProjects/polly_new/app/src/main/res/layout/nav_header.xml" value="0.20520833333333333" />
-        <entry key="..\:/Users/willi/AndroidStudioProjects/polly_new/app/src/main/res/menu/menu_main.xml" value="0.36666666666666664" />
-        <entry key="..\:/Users/willi/AndroidStudioProjects/polly_new/app/src/main/res/menu/navigation_menu.xml" value="0.20520833333333333" />
-        <entry key="..\:/Users/willi/AndroidStudioProjects/polly_new/app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" value="0.22135416666666666" />
-        <entry key="..\:/Users/willi/AndroidStudioProjects/polly_new/app/src/main/res/mipmap-anydpi-v26/ic_launcher_round.xml" value="0.22135416666666666" />
+        <entry key="..\:/Users/Gaming/AndroidStudioProjects/polly/app/src/main/res/menu/navigation_menu.xml" value="0.21875" />
+        <entry key="app/src/main/res/layout/activity_create_poll.xml" value="0.1503623188405797" />
       </map>
     </option>
   </component>

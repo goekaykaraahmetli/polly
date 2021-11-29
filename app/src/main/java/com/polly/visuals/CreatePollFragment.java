@@ -29,7 +29,7 @@ import java.util.List;
 import java.util.Map;
 
 public class CreatePollFragment extends Fragment {
-    int optionCounter = 2;
+    int optionCounter = 0;
     boolean start = true;
     HashMap<Integer, EditText> map = new HashMap<>();
     HashMap<Integer, Button> remove = new HashMap<>();
@@ -43,6 +43,24 @@ public class CreatePollFragment extends Fragment {
         Button createPollBtn = (Button) root.findViewById(R.id.createPollBtn);
         EditText pollName = (EditText) root.findViewById(R.id.PollName);
 
+        EditText option1 = new EditText(getContext());
+        option1.setHint("Option " + (++optionCounter));
+        Button remove1 = new Button(getContext());
+        remove1.setText("remove Option");
+        remove1.setVisibility(View.INVISIBLE);
+        ((LinearLayout) root.findViewById(R.id.linear_layout)).addView(option1);
+        ((LinearLayout) root.findViewById(R.id.linear_layout)).addView(remove1);
+        EditText option2 = new EditText(getContext());
+        option2.setHint("Option " + (++optionCounter));
+        ((LinearLayout) root.findViewById(R.id.linear_layout)).addView(option2);
+        Button remove2 = new Button(getContext());
+        remove2.setText("remove Option");
+        remove2.setVisibility(View.INVISIBLE);
+        ((LinearLayout) root.findViewById(R.id.linear_layout)).addView(remove2);
+        map.put(0, option1);
+        map.put(1, option2);
+        remove.put(0, remove1);
+        remove.put(1, remove2);
 
 
         createPollBtn.setOnClickListener(new View.OnClickListener() {
@@ -78,14 +96,11 @@ public class CreatePollFragment extends Fragment {
         });
 
 
-        map.put(0, (EditText) root.findViewById(R.id.option1));
-        map.put(1, (EditText) root.findViewById(R.id.option2));
-        remove.put(0, (Button) root.findViewById(R.id.removeBtn1));
-        remove.put(1, (Button) root.findViewById(R.id.removeBtn2));
+
+
         Button addOption = (Button) root.findViewById(R.id.addOption);
 
-        Button remove1 = (Button) root.findViewById(R.id.removeBtn1);
-        Button remove2 = (Button) root.findViewById(R.id.removeBtn2);
+
         addOption.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -97,17 +112,14 @@ public class CreatePollFragment extends Fragment {
 
                 Button delete = new Button(getContext());
                 delete.setText("remove Option");
-                delete.setLayoutParams(remove1.getLayoutParams());
                 ((LinearLayout) root.findViewById(R.id.linear_layout)).addView(delete);
                 remove.put(optionCounter, delete);
                 if(start){
-                    if(root.findViewById(R.id.option1).getVisibility() != View.GONE)
+                    if(option1.getVisibility() != View.GONE)
                         remove1.setVisibility(View.VISIBLE);
-                    if(root.findViewById(R.id.option2).getVisibility() != View.GONE)
+                    if(option2.getVisibility() != View.GONE)
                         remove2.setVisibility(View.VISIBLE);
-                    remove1.setBackgroundColor(Color.parseColor("#CCCCCC"));
-                    remove2.setBackgroundColor(Color.parseColor("#CCCCCC"));
-                    start = false;
+                        start = false;
                 }
 
                 optionCounter++;
@@ -141,10 +153,10 @@ public class CreatePollFragment extends Fragment {
                             remove.get(0).setVisibility(View.INVISIBLE);
                             remove.get(1).setVisibility(View.INVISIBLE);
 
-                            if(root.findViewById(R.id.option1).getVisibility() != View.GONE){
+                            if(option1.getVisibility() != View.GONE){
                                 remove1.setVisibility(View.INVISIBLE);
                             }
-                            if(root.findViewById(R.id.option2).getVisibility() != View.GONE){
+                            if(option2.getVisibility() != View.GONE){
                                 remove2.setVisibility(View.INVISIBLE);
                             }
                             start = true;
@@ -159,7 +171,7 @@ public class CreatePollFragment extends Fragment {
         remove1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                root.findViewById(R.id.option1).setVisibility(View.GONE);
+                option1.setVisibility(View.GONE);
                 remove1.setVisibility(View.GONE);
 
 
@@ -180,7 +192,7 @@ public class CreatePollFragment extends Fragment {
                     remove.get(0).setVisibility(View.INVISIBLE);
                     remove.get(1).setVisibility(View.INVISIBLE);
 
-                    if(root.findViewById(R.id.option2).getVisibility() != View.GONE){
+                    if(option2.getVisibility() != View.GONE){
                         remove2.setVisibility(View.INVISIBLE);
                     }
                     start = true;
@@ -193,7 +205,7 @@ public class CreatePollFragment extends Fragment {
             @Override
             public void onClick(View v) {
 
-                root.findViewById(R.id.option2).setVisibility(View.GONE);
+                option2.setVisibility(View.GONE);
                 remove2.setVisibility(View.GONE);
 
                 int id = getKey(remove, remove2);
@@ -216,7 +228,7 @@ public class CreatePollFragment extends Fragment {
                     remove.get(0).setVisibility(View.INVISIBLE);
                     remove.get(1).setVisibility(View.INVISIBLE);
 
-                    if(root.findViewById(R.id.option1).getVisibility() != View.GONE){
+                    if(option1.getVisibility() != View.GONE){
                         remove1.setVisibility(View.INVISIBLE);
                     }
                     start = true;

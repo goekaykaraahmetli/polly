@@ -51,37 +51,7 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <EditText
-                android:id="@+id/option1"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:ems="10"
-                android:hint="Option 1"
-                android:inputType="textPersonName" />
 
-            <Button
-                android:id="@+id/removeBtn1"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="remove Option"
-                android:textColor="@color/black"
-                android:visibility="invisible" />
-
-            <EditText
-                android:id="@+id/option2"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:ems="10"
-                android:hint="Option 2"
-                android:inputType="textPersonName" />
-
-            <Button
-                android:id="@+id/removeBtn2"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="remove Option"
-                android:textColor="@color/black"
-                android:visibility="invisible" />
 
 
         </LinearLayout>
