@@ -9,7 +9,6 @@
     <EditText
         android:id="@+id/PollName"
         android:layout_width="wrap_content"
-
         android:layout_height="wrap_content"
         android:autofillHints="@string/activity_sign_up_username"
         android:gravity="center"

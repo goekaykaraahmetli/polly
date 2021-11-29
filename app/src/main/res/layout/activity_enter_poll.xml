@@ -12,33 +12,30 @@
         android:text="Enter An Existing Poll"
         android:textSize="24sp"
         android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.137" />
+        app:layout_constraintTop_toTopOf="@id/guideline16" />
 
     <ImageButton
         android:id="@+id/enterViaCodeButton"
-        android:layout_width="165dp"
-        android:layout_height="165dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView3"
-        app:layout_constraintVertical_bias="0.13"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="@id/guideline18"
+        app:layout_constraintEnd_toEndOf="@id/guideline12"
+        app:layout_constraintStart_toStartOf="@id/guideline13"
+        app:layout_constraintTop_toTopOf="@id/guideline17"
+
         app:srcCompat="@drawable/bycodere" />
 
     <ImageButton
         android:id="@+id/codeScannerButton"
-        android:layout_width="165dp"
-        android:layout_height="165dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="@id/guideline15"
+        app:layout_constraintEnd_toEndOf="@id/guideline12"
+        app:layout_constraintStart_toStartOf="@id/guideline13"
         app:layout_constraintTop_toBottomOf="@+id/enterViaCodeButton"
-        app:layout_constraintVertical_bias="0.298"
+        app:layout_constraintTop_toTopOf="@id/guideline14"
         app:srcCompat="@drawable/qrcode" />
 
     <TextView
@@ -46,21 +43,66 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Enter Via Code"
-        app:layout_constraintBottom_toTopOf="@+id/codeScannerButton"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/enterViaCodeButton"
-        app:layout_constraintVertical_bias="0.07" />
+        app:layout_constraintEnd_toStartOf="@+id/guideline12"
+        app:layout_constraintStart_toStartOf="@+id/guideline13"
+        app:layout_constraintTop_toBottomOf="@+id/enterViaCodeButton" />
 
     <TextView
         android:id="@+id/textView6"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Enter Via QR-Code"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/codeScannerButton"
-        app:layout_constraintVertical_bias="0.069" />
+        app:layout_constraintEnd_toEndOf="@id/guideline12"
+        app:layout_constraintStart_toStartOf="@id/guideline13"
+        app:layout_constraintTop_toBottomOf="@+id/codeScannerButton" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline12"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.7" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline13"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.3" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline14"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.55" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline15"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.8" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline16"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.05" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline17"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.2" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline18"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.45"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
