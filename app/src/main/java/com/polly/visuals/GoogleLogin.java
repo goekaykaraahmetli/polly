@@ -20,6 +20,7 @@ import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.FirebaseOptions;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.polly.R;
@@ -28,6 +29,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.Navigation;
 
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
@@ -43,6 +45,8 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
 import com.polly.testclasses.User;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.util.zip.Inflater;
 
 public class GoogleLogin extends AppCompatActivity {
@@ -54,14 +58,15 @@ public class GoogleLogin extends AppCompatActivity {
     EditText editTextEmail;
     CheckBox checkbox;
     Boolean password_is_good = false;
-    private static final int RC_SIGN_IN = 9001;
-    private GoogleSignInClient googleSignInClient;
+
 
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.fragment_sign_up);
+
+
 
         mAuth = FirebaseAuth.getInstance();
         editTextEmail = (EditText) findViewById(R.id.activity_sign_up_edittext_email);
@@ -71,18 +76,7 @@ public class GoogleLogin extends AppCompatActivity {
         editTextFullname = (EditText) findViewById(R.id.activity_sign_up_edittext_fullname);
         checkbox = (CheckBox) findViewById(R.id.activity_sign_up_checkbox_accept_terms_of_service);
 
-        /**
-        GoogleSignInOptions googleSignInOptions = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestIdToken(getString(R.string.default_web_client_id)).requestEmail().build();
-        googleSignInClient = GoogleSignIn.getClient(this, googleSignInOptions);
-        ImageButton googleBtn = (ImageButton) findViewById(R.id.googlesigninbtn);
-        googleBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = googleSignInClient.getSignInIntent();
-                startActivityForResult(intent, RC_SIGN_IN);
-            }
-        });
-        **/
+
 
         CheckBox viewPswd = (CheckBox) findViewById(R.id.shw_psswords);
         viewPswd.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -182,13 +176,15 @@ public class GoogleLogin extends AppCompatActivity {
             mAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(task -> {
                 if (task.isSuccessful()) {
                     User user = new User(fullname, email, username);
-                    FirebaseDatabase.getInstance().getReference("Users").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).setValue(user).addOnCompleteListener(task1 -> {
+                    FirebaseDatabase.getInstance("https://polly-abdd4-default-rtdb.europe-west1.firebasedatabase.app/").getReference("Users").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).setValue(user).addOnCompleteListener(task1 -> {
                         if (task1.isSuccessful()) {
-                            Toast.makeText(GoogleLogin.this, "User has been registered successfully!", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(GoogleLogin.this, "User has been registered successfully! Please verify your email before you sign in.", Toast.LENGTH_SHORT).show();
                         } else {
                             Toast.makeText(GoogleLogin.this, "Failed to register. Try again", Toast.LENGTH_SHORT).show();
                         }
                     });
+                    mAuth.getCurrentUser().sendEmailVerification();
+                    mAuth.signOut();
                 } else
                     Toast.makeText(GoogleLogin.this, "Failed to register. Try again", Toast.LENGTH_SHORT).show();
             });

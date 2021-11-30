@@ -3,12 +3,15 @@ package com.polly.visuals;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.material.navigation.NavigationView;
+import com.google.firebase.auth.FirebaseAuth;
 import com.polly.R;
 
 public class LoginActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
@@ -17,9 +20,10 @@ public class LoginActivity extends AppCompatActivity implements NavigationView.O
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setDisplayHomeAsUpEnabled(true);
 
 
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
     @Override
@@ -58,12 +62,14 @@ public class LoginActivity extends AppCompatActivity implements NavigationView.O
 
             case R.id.menu_main_settings:
                 // TODO
-                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new SettingsFragment()).commit();
+                getSupportFragmentManager().beginTransaction().replace(R.id.fragmentContainerView, new SettingsFragment()).commit();
                 return true;
             case R.id.menu_main_login_or_sign_up:
                 //TODO
-
-                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new LoginFragment()).commit();
+                if(FirebaseAuth.getInstance().getCurrentUser() == null)
+                getSupportFragmentManager().beginTransaction().replace(R.id.fragmentContainerView, new LoginFragment()).commit();
+                else
+                    Toast.makeText(this, "You are already signed in. You can sign out through the account page", Toast.LENGTH_SHORT).show();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

@@ -48,7 +48,7 @@ import java.util.List;
 
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
-    private DrawerLayout drawerLayout;
+    protected DrawerLayout drawerLayout;
     private ActionBarDrawerToggle actionBarDrawerToggle;
 
 
@@ -70,25 +70,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-
-
-
-
-
-
-
-
-
-
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-    try {
-        FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference myRef = database.getReference("message");
-        myRef.setValue("Hello, World!");
-    }
-    catch (Exception e){
 
-    }
 
     new Organizer();
 
@@ -143,9 +126,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new SettingsFragment()).commit();
                 break;
             case R.id.menu_main_login_or_sign_up:
-                //TODO
-                Intent intent = new Intent(this, LoginActivity.class);
-                startActivity(intent);
+                if(FirebaseAuth.getInstance().getCurrentUser() == null) {
+                    Intent intent = new Intent(this, LoginActivity.class);
+                    startActivity(intent);
+                }
+                else
+                    Toast.makeText(this, "You are already signed in. You can log out through the account page", Toast.LENGTH_SHORT).show();
                 break;
             default:
                 return super.onOptionsItemSelected(item);
