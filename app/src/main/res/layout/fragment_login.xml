@@ -17,7 +17,6 @@
         android:id="@+id/activity_login_edittext_username"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="100dp"
         android:autofillHints="@string/activity_login_email"
         android:hint="@string/activity_login_email"
         android:inputType="textEmailAddress"
@@ -25,7 +24,7 @@
         android:selectAllOnFocus="true"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="@id/guideline36" />
 
     <com.facebook.login.widget.LoginButton
         android:id="@+id/login_button"
@@ -33,15 +32,15 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         app:layout_constraintBottom_toTopOf="@+id/imageButtonGoogle"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/activity_login_edittext_password" />
+        app:layout_constraintEnd_toEndOf="@id/guideline32"
+        app:layout_constraintStart_toStartOf="@id/guideline31"
+        app:layout_constraintTop_toBottomOf="@+id/activity_login_edittext_password"
+        tools:ignore="MissingClass" />
 
     <EditText
         android:id="@+id/activity_login_edittext_password"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
         android:autofillHints="@string/activity_login_password"
         android:hint="@string/activity_login_password"
         android:inputType="textPassword"
@@ -49,44 +48,37 @@
         android:selectAllOnFocus="true"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/activity_login_edittext_username" />
+        app:layout_constraintBottom_toTopOf="@id/guideline37" />
 
     <Button
         android:id="@+id/activity_login_button_login"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="136dp"
-        android:width="200dp"
         android:enabled="true"
         android:text="@string/activity_login_button_login"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.497"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/activity_login_edittext_password" />
+        app:layout_constraintEnd_toEndOf="@id/guideline32"
+        app:layout_constraintStart_toStartOf="@id/guideline31"
+        app:layout_constraintTop_toTopOf="@id/guideline35" />
 
     <Button
         android:id="@+id/activity_login_button_sign_up"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="56dp"
-        android:width="200dp"
         android:enabled="true"
         android:text="@string/activity_login_button_sign_up"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"></Button>
+        app:layout_constraintEnd_toEndOf="@id/guideline32"
+        app:layout_constraintStart_toStartOf="@id/guideline31"
+        app:layout_constraintTop_toTopOf="@id/guideline33"></Button>
 
     <TextView
         android:id="@+id/activity_login_textView_sign_up_instead"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="32dp"
         android:text="@string/activity_login_sign_up_instead"
-        app:layout_constraintBottom_toTopOf="@+id/activity_login_button_sign_up"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.636"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+
+        app:layout_constraintTop_toTopOf="@id/guideline34" />
 
     <ImageButton
         android:id="@+id/imageButtonGoogle"
@@ -95,12 +87,59 @@
         android:background="@android:color/transparent"
         android:src="@drawable/btn_google_light_focus_hdpi"
         app:layout_constraintBottom_toTopOf="@+id/activity_login_button_login"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/activity_login_edittext_password"
-        app:layout_constraintVertical_bias="0.868"
+        app:layout_constraintEnd_toEndOf="@id/guideline32"
+        app:layout_constraintStart_toStartOf="@id/guideline31"
+        app:layout_constraintTop_toBottomOf="@id/login_button"
         tools:ignore="SpeakableTextPresentCheck" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline31"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.25" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline32"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.75" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline33"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.9" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline34"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.85" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline35"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.52" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline36"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.15" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline37"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.32" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
