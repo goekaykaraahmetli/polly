@@ -13,9 +13,6 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.facebook.login.LoginManager;
-import com.google.android.gms.auth.api.signin.GoogleSignIn;
-import com.google.android.gms.auth.api.signin.GoogleSignInClient;
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -24,14 +21,11 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.polly.R;
 
-import org.w3c.dom.Text;
-
 public class AccountFragment extends Fragment {
     private FirebaseAuth mAuth;
     TextView emailInfo;
     TextView fullnameInfo;
     TextView usernameInfo;
-    boolean loggedIn;
     @Nullable
     public View onCreateView(LayoutInflater inflater,
                              @Nullable ViewGroup container,
