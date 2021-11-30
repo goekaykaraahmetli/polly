@@ -1,6 +1,8 @@
 package com.polly.visuals;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.media.Image;
 import android.os.Bundle;
@@ -28,6 +30,7 @@ import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
+import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
@@ -45,8 +48,13 @@ import com.google.firebase.auth.FacebookAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.polly.R;
 import com.polly.testclasses.DBHelper;
+import com.polly.testclasses.User;
 import com.polly.utils.Organizer;
 
 public class LoginFragment extends Fragment {
@@ -57,13 +65,14 @@ public class LoginFragment extends Fragment {
     private static final int RC_SIGN_IN = 100;
     private GoogleSignInClient googleSignInClient;
     private static final String TAG = "GOOGLE_SIGN_IN_TAG";
+    View view;
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater,
                              @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
 
-        View view = inflater.inflate(R.layout.fragment_login, container, false);
+        view = inflater.inflate(R.layout.fragment_login, container, false);
         Button b = (Button) view.findViewById(R.id.activity_login_button_sign_up);
         b.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -90,6 +99,7 @@ public class LoginFragment extends Fragment {
         });
 
         mCallbackManager = CallbackManager.Factory.create();
+
         LoginButton loginButton = (LoginButton) view.findViewById(R.id.login_button);
         loginButton.setFragment(this);
         loginButton.setReadPermissions("email", "public_profile");
@@ -151,6 +161,7 @@ public class LoginFragment extends Fragment {
                 FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
                 if(user.isEmailVerified()) {
                     Toast.makeText(getActivity(), "You are now logged in!", Toast.LENGTH_SHORT).show();
+                    Navigation.findNavController(view).navigate(R.id.action_loginFragment_to_accountFragment);
 
                 }
                 else{
@@ -202,14 +213,43 @@ public class LoginFragment extends Fragment {
                     Log.d(TAG, "onSuccess: Existing User:\n" + email);
                     Toast.makeText(getActivity(), "Existing User:\n" + email, Toast.LENGTH_SHORT);
                 }
+                FirebaseUser user = mAuth.getCurrentUser();
+                FirebaseDatabase.getInstance("https://polly-abdd4-default-rtdb.europe-west1.firebasedatabase.app/").getReference("Users").addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        if(!snapshot.hasChild(user.getUid())){
+                            AlertDialog.Builder alert = new AlertDialog.Builder(getContext());
+                            alert.setTitle("Select Username");
+                            alert.setMessage("Please enter an username");
+                            EditText usernameInput = new EditText(getContext());
+                            alert.setView(usernameInput);
+                            alert.setPositiveButton("Enter", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    User user_polly = new User(user.getDisplayName(), user.getEmail(), usernameInput.getText().toString());
+                                    FirebaseDatabase.getInstance("https://polly-abdd4-default-rtdb.europe-west1.firebasedatabase.app/").getReference("Users").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).setValue(user_polly).addOnCompleteListener(task1 -> {
+                                        if (task1.isSuccessful()) {
+                                            Toast.makeText(getActivity(), "You are now signed in", Toast.LENGTH_SHORT).show();
+                                        } else {
+                                            Toast.makeText(getActivity(), "Failed to sign in. Try again", Toast.LENGTH_SHORT).show();
+                                        }
+                                    });
+                                }
 
-                /*Intent intent = new Intent(R.layout.fragment_account);
+                            });
+                            alert.show();
+                        }
+                        else
+                            Toast.makeText(getActivity(), "You are now signed in", Toast.LENGTH_SHORT).show();
+                        Navigation.findNavController(view).navigate(R.id.action_loginFragment_to_accountFragment);
+                    }
 
-                AccountFragment accountFragment = new AccountFragment();
-                FragmentTransaction transaction = getFragmentManager().beginTransaction();
-                transaction.replace(R.id.fragment_container, accountFragment);
-                transaction.addToBackStack(null);
-                transaction.commit();*/
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+                        Toast.makeText(getContext(), "Something went wrong, I can feel it", Toast.LENGTH_SHORT).show();
+                    }
+                });
+
 
             }
         }).addOnFailureListener(new OnFailureListener() {
@@ -231,11 +271,46 @@ public class LoginFragment extends Fragment {
                             // Sign in success, update UI with the signed-in user's information
                             Log.d(TAG, "signInWithCredential:success");
                             FirebaseUser user = mAuth.getCurrentUser();
-                            Toast.makeText(getContext(), "You are now signed in as" + user.getEmail(), Toast.LENGTH_SHORT).show();
+                            FirebaseDatabase.getInstance("https://polly-abdd4-default-rtdb.europe-west1.firebasedatabase.app/").getReference("Users").addValueEventListener(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                    if(!snapshot.hasChild(user.getUid())){
+                                        AlertDialog.Builder alert = new AlertDialog.Builder(getContext());
+                                        alert.setTitle("Select Username");
+                                        alert.setMessage("Please enter an username");
+                                        EditText usernameInput = new EditText(getContext());
+                                        alert.setView(usernameInput);
+                                        alert.setPositiveButton("Enter", new DialogInterface.OnClickListener() {
+                                            @Override
+                                            public void onClick(DialogInterface dialog, int which) {
+                                                User user_polly = new User(user.getDisplayName(), user.getEmail(), usernameInput.getText().toString());
+                                                FirebaseDatabase.getInstance("https://polly-abdd4-default-rtdb.europe-west1.firebasedatabase.app/").getReference("Users").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).setValue(user_polly).addOnCompleteListener(task1 -> {
+                                                    if (task1.isSuccessful()) {
+                                                        Toast.makeText(getActivity(), "You are now signed in", Toast.LENGTH_SHORT).show();
+                                                    } else {
+                                                        Toast.makeText(getActivity(), "Failed to sign in. Try again", Toast.LENGTH_SHORT).show();
+                                                    }
+                                                });
+                                            }
+
+                                        });
+                                        alert.show();
+                                    }
+                                    else
+                                        Toast.makeText(getActivity(), "You are now signed in", Toast.LENGTH_SHORT).show();
+                                    Navigation.findNavController(view).navigate(R.id.action_loginFragment_to_accountFragment);
+                                }
+
+                                @Override
+                                public void onCancelled(@NonNull DatabaseError error) {
+                                    Toast.makeText(getContext(), "Something went wrong, I can feel it", Toast.LENGTH_SHORT).show();
+                                }
+                            });
+
                         } else {
                             // If sign in fails, display a message to the user.
                             Log.w(TAG, "signInWithCredential:failure", task.getException());
-                            Toast.makeText(getContext(), "Auth Failed", Toast.LENGTH_SHORT);
+                            Toast.makeText(getContext(), "Auth Failed", Toast.LENGTH_SHORT).show();
                         }
                     }
                 });
