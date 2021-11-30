@@ -37,9 +37,9 @@ public class AccountFragment extends Fragment {
                              @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_account, container, false);
-        emailInfo = (TextView) view.findViewById(R.id.email_text);
+        emailInfo = (TextView) view.findViewById(R.id.email_info);
         fullnameInfo = (TextView) view.findViewById(R.id.fullname_text);
-        usernameInfo = (TextView) view.findViewById(R.id.username_text);
+        usernameInfo = (TextView) view.findViewById(R.id.username_info);
         mAuth = FirebaseAuth.getInstance();
         Button logout = (Button) view.findViewById(R.id.logout_button);
 
