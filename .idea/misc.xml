@@ -3,17 +3,23 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
-        <entry key="../../../../layout/custom_preview.xml" value="0.13958333333333334" />
         <entry key="..\:/Users/Gaming/AndroidStudioProjects/polly/app/src/main/res/layout/activity_create_poll.xml" value="0.21875" />
         <entry key="..\:/Users/Gaming/AndroidStudioProjects/polly/app/src/main/res/layout/activity_enter_poll.xml" value="0.21875" />
         <entry key="..\:/Users/Gaming/AndroidStudioProjects/polly/app/src/main/res/layout/activity_main.xml" value="0.21875" />
         <entry key="..\:/Users/Gaming/AndroidStudioProjects/polly/app/src/main/res/layout/activity_settings.xml" value="0.2869791666666667" />
         <entry key="..\:/Users/Gaming/AndroidStudioProjects/polly/app/src/main/res/menu/menu_main.xml" value="0.38697916666666665" />
         <entry key="..\:/Users/Gaming/AndroidStudioProjects/polly/app/src/main/res/menu/navigation_menu.xml" value="0.21875" />
-        <entry key="app/src/main/res/layout/activity_bar.xml" value="0.2164855072463768" />
-        <entry key="app/src/main/res/layout/activity_codescanner.xml" value="0.2164855072463768" />
-        <entry key="app/src/main/res/layout/activity_create_poll.xml" value="0.25" />
-        <entry key="app/src/main/res/layout/activity_enter_poll.xml" value="0.25" />
+        <entry key="app/src/main/res/layout/activity_codescanner.xml" value="0.11702127659574468" />
+        <entry key="app/src/main/res/layout/activity_create_poll.xml" value="0.165" />
+        <entry key="app/src/main/res/layout/activity_enter_poll.xml" value="0.11702127659574468" />
+        <entry key="app/src/main/res/layout/activity_login.xml" value="0.165" />
+        <entry key="app/src/main/res/layout/activity_main.xml" value="0.11702127659574468" />
+        <entry key="app/src/main/res/layout/fragment_account.xml" value="0.165" />
+        <entry key="app/src/main/res/layout/fragment_first.xml" value="0.11702127659574468" />
+        <entry key="app/src/main/res/layout/fragment_login.xml" value="0.11702127659574468" />
+        <entry key="app/src/main/res/layout/fragment_recent.xml" value="0.11702127659574468" />
+        <entry key="app/src/main/res/layout/fragment_sign_up.xml" value="0.25" />
+        <entry key="app/src/main/res/layout/fragment_startpoll.xml" value="0.11702127659574468" />
       </map>
     </option>
   </component>
