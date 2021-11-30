@@ -11,11 +11,9 @@ import com.google.zxing.qrcode.QRCodeWriter;
 
 public class QRCode {
 
-    QRCodeWriter writer = new QRCodeWriter();
-
-    public Bitmap QRCode(String content) {
+    public static Bitmap QRCode(String content) {
         try {
-            BitMatrix bitMatrix = writer.encode(content, BarcodeFormat.QR_CODE, 512, 512);
+            BitMatrix bitMatrix = new QRCodeWriter().encode(content, BarcodeFormat.QR_CODE, 512, 512);
             int width = bitMatrix.getWidth();
             int height = bitMatrix.getHeight();
             Bitmap bmp = Bitmap.createBitmap(width, height, Bitmap.Config.RGB_565);

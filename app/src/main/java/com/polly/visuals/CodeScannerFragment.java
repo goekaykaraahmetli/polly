@@ -34,6 +34,14 @@ public class CodeScannerFragment extends Fragment {
                 activity.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
+                        try {
+                            long id = Long.valueOf(result.getText());
+
+                            // open Poll with id "id"
+                        } catch (NumberFormatException e){
+                            e.printStackTrace();
+                        }
+
                         Toast.makeText(activity, result.getText(), Toast.LENGTH_SHORT).show();
                     }
                 });
