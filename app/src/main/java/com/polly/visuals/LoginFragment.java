@@ -92,7 +92,6 @@ public class LoginFragment extends Fragment {
         googleSignInClient = GoogleSignIn.getClient(getActivity(),googleSignInOptions);
         ImageButton googleBtn = (ImageButton) view.findViewById(R.id.imageButtonGoogle);
         googleBtn.setOnClickListener(v -> {
-            Toast.makeText(getActivity(), "This Button Still works", Toast.LENGTH_SHORT).show();
             Log.d(TAG, "onClick: begin Google SignIn");
             Intent intent = googleSignInClient.getSignInIntent();
             startActivityForResult(intent, RC_SIGN_IN);

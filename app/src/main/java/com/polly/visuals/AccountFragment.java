@@ -13,6 +13,9 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.facebook.login.LoginManager;
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -43,12 +46,14 @@ public class AccountFragment extends Fragment {
         logout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                FirebaseAuth.getInstance().signOut();
-                Toast.makeText(getActivity(), "You are now signed out", Toast.LENGTH_SHORT).show();
-                emailInfo.setText("");
-                fullnameInfo.setText("");
-                usernameInfo.setText("");
-                LoginManager.getInstance().logOut();
+                if(mAuth.getCurrentUser() != null) {
+                    FirebaseAuth.getInstance().signOut();
+                    Toast.makeText(getActivity(), "You are now signed out", Toast.LENGTH_SHORT).show();
+                    emailInfo.setText("");
+                    fullnameInfo.setText("");
+                    usernameInfo.setText("");
+                    LoginManager.getInstance().logOut();
+                }
             }
         });
 
@@ -61,7 +66,7 @@ public class AccountFragment extends Fragment {
     private void checkUser() {
         FirebaseUser firebaseUser = mAuth.getCurrentUser();
         if(firebaseUser == null){
-            Toast.makeText(getActivity(), "You are currently not signed in", Toast.LENGTH_SHORT);
+            Toast.makeText(getActivity(), "You are currently not signed in", Toast.LENGTH_SHORT).show();
         }
         else{
             FirebaseDatabase.getInstance("https://polly-abdd4-default-rtdb.europe-west1.firebasedatabase.app/").getReference("Users").child(firebaseUser.getUid()).child("fullname").addValueEventListener(new ValueEventListener() {

@@ -14,17 +14,19 @@
         android:src="@mipmap/ic_launcher_round"></ImageView>
 
     <TextView
+        android:id="@+id/username_header"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:paddingTop="8dp"
-        android:text="Insert Username Here"
-        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-        />
+        android:text="Username:"
+        android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
 
     <TextView
+        android:id="@+id/email_header"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="insert email adress here"/>
+        android:text="E-Mail:"
+        android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
 
 
 </LinearLayout>
