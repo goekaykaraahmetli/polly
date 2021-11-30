@@ -6,91 +6,132 @@
 
     <Switch
         android:id="@+id/switch2"
-        android:layout_width="110dp"
+        android:layout_width="0dp"
         android:layout_height="48dp"
-        android:layout_marginStart="44dp"
-        android:layout_marginTop="48dp"
         android:text="Setting 1"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <Switch
-        android:id="@+id/switch3"
-        android:layout_width="110dp"
-        android:layout_height="48dp"
-        android:layout_marginStart="44dp"
-        android:layout_marginTop="24dp"
-        android:text="Setting 2"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/switch2" />
-
-    <Switch
-        android:id="@+id/switch4"
-        android:layout_width="110dp"
-        android:layout_height="48dp"
-        android:layout_marginStart="44dp"
-        android:layout_marginTop="24dp"
-        android:text="Setting 3"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/switch3" />
-
-    <Switch
-        android:id="@+id/switch5"
-        android:layout_width="110dp"
-        android:layout_height="48dp"
-        android:layout_marginStart="44dp"
-        android:layout_marginTop="24dp"
-        android:text="Setting 4"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/switch4" />
-
-    <Switch
-        android:id="@+id/switch8"
-        android:layout_width="110dp"
-        android:layout_height="48dp"
-        android:layout_marginStart="44dp"
-        android:layout_marginTop="24dp"
-        android:text="Setting 7"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/switch7" />
-
-    <Switch
-        android:id="@+id/switch7"
-        android:layout_width="110dp"
-        android:layout_height="48dp"
-        android:layout_marginStart="44dp"
-        android:layout_marginTop="24dp"
-        android:text="Setting 6"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/switch6" />
+        app:layout_constraintBottom_toTopOf="@+id/switch3"
+        app:layout_constraintStart_toStartOf="@id/guideline5"
+        app:layout_constraintEnd_toEndOf="@id/guideline2"
+        app:layout_constraintTop_toTopOf="@id/guideline4" />
 
     <Switch
         android:id="@+id/switch6"
-        android:layout_width="110dp"
+        android:layout_width="0dp"
         android:layout_height="48dp"
-        android:layout_marginStart="44dp"
-        android:layout_marginTop="24dp"
         android:text="Setting 5"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/switch7"
+        app:layout_constraintEnd_toEndOf="@id/guideline2"
+        app:layout_constraintStart_toStartOf="@id/guideline5"
         app:layout_constraintTop_toBottomOf="@+id/switch5" />
+
+    <Switch
+        android:id="@+id/switch4"
+        android:layout_width="0dp"
+        android:layout_height="48dp"
+        android:text="Setting 3"
+        app:layout_constraintBottom_toTopOf="@+id/switch5"
+        app:layout_constraintEnd_toEndOf="@id/guideline2"
+        app:layout_constraintStart_toStartOf="@id/guideline5"
+        app:layout_constraintTop_toBottomOf="@+id/switch3" />
+
+    <Switch
+        android:id="@+id/switch8"
+        android:layout_width="0dp"
+        android:layout_height="48dp"
+        android:text="Setting 7"
+        app:layout_constraintBottom_toTopOf="@+id/button2"
+        app:layout_constraintEnd_toEndOf="@id/guideline2"
+        app:layout_constraintStart_toStartOf="@id/guideline5"
+        app:layout_constraintTop_toBottomOf="@+id/switch7" />
+
+    <Switch
+        android:id="@+id/switch5"
+        android:layout_width="0dp"
+        android:layout_height="48dp"
+        android:text="Setting 4"
+        app:layout_constraintBottom_toTopOf="@+id/switch6"
+        app:layout_constraintEnd_toEndOf="@id/guideline2"
+        app:layout_constraintStart_toStartOf="@id/guideline5"
+        app:layout_constraintTop_toBottomOf="@+id/switch4" />
+
+    <Switch
+        android:id="@+id/switch7"
+        android:layout_width="0dp"
+        android:layout_height="48dp"
+        android:text="Setting 6"
+        app:layout_constraintBottom_toTopOf="@+id/switch8"
+        app:layout_constraintEnd_toEndOf="@id/guideline2"
+        app:layout_constraintStart_toStartOf="@id/guideline5"
+        app:layout_constraintTop_toBottomOf="@+id/switch6" />
+
+    <Switch
+        android:id="@+id/switch3"
+        android:layout_width="0dp"
+        android:layout_height="48dp"
+        android:text="Setting 2"
+        app:layout_constraintBottom_toTopOf="@+id/switch4"
+        app:layout_constraintEnd_toEndOf="@id/guideline2"
+        app:layout_constraintStart_toStartOf="@id/guideline5"
+        app:layout_constraintTop_toBottomOf="@+id/switch2" />
 
     <Button
         android:id="@+id/button"
-        android:layout_width="172dp"
-        android:layout_height="65dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginBottom="36dp"
-        android:text="Save Changes"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Save"
+        app:layout_constraintTop_toTopOf="@id/guideline7"
+        app:layout_constraintEnd_toEndOf="@id/guideline6"
+        app:layout_constraintStart_toStartOf="@id/guideline3" />
 
     <Button
         android:id="@+id/button2"
-        android:layout_width="139dp"
-        android:layout_height="63dp"
-        android:layout_marginStart="16dp"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
         android:layout_marginBottom="36dp"
         android:text="Cancel"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintTop_toTopOf="@id/guideline7"
+        app:layout_constraintEnd_toEndOf="@id/guideline2"
+        app:layout_constraintStart_toStartOf="@id/guideline5" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.4" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.6" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.05" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline5"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.1" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline6"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.9" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline7"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.9" />
 </androidx.constraintlayout.widget.ConstraintLayout>
