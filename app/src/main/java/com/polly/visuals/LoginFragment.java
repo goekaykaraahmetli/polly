@@ -88,6 +88,7 @@ public class LoginFragment extends Fragment {
         mAuth = FirebaseAuth.getInstance();
 
 
+
         GoogleSignInOptions googleSignInOptions = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestIdToken(getString(R.string.default_web_client_id)).requestEmail().build();
         googleSignInClient = GoogleSignIn.getClient(getActivity(),googleSignInOptions);
         ImageButton googleBtn = (ImageButton) view.findViewById(R.id.imageButtonGoogle);
