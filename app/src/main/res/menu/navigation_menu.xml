@@ -3,10 +3,6 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <group android:checkableBehavior="single">
-        <item
-            android:id="@+id/nav_account"
-            android:icon="@drawable/ic_account"
-            android:title="My Account" />
 
         <item
             android:id="@+id/nav_startpoll"
@@ -23,6 +19,10 @@
             android:icon="@drawable/ic_recent"
             android:title="Recent Polls" />
 
+        <item
+            android:id="@+id/nav_account"
+            android:icon="@drawable/ic_account"
+            android:title="My Account" />
         <item
             android:id="@+id/nav_signin_signup"
             android:icon="@drawable/ic_baseline_login_24"

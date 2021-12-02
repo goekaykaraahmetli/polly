@@ -19,6 +19,7 @@ import com.polly.R;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.navigation.Navigation;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.polly.testclasses.User;
@@ -105,6 +106,8 @@ public class SignupActivity extends AppCompatActivity {
                     FirebaseDatabase.getInstance("https://polly-abdd4-default-rtdb.europe-west1.firebasedatabase.app/").getReference("Users").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).setValue(user).addOnCompleteListener(task1 -> {
                         if (task1.isSuccessful()) {
                             Toast.makeText(SignupActivity.this, "User has been registered successfully! Please verify your email before you sign in.", Toast.LENGTH_SHORT).show();
+
+                            Navigation.findNavController(this, R.id.nav_host_fragment).navigate(R.id.loginFragment);
                         } else {
                             Toast.makeText(SignupActivity.this, "Failed to register. Try again", Toast.LENGTH_SHORT).show();
                         }

@@ -21,7 +21,11 @@
         android:id="@+id/signupFragment"
         android:name="com.polly.visuals.SignupActivity"
         android:label="SignupFragment"
-        tools:layout="@layout/fragment_sign_up"/>
+        tools:layout="@layout/fragment_sign_up">
+        <action
+            android:id="@+id/action_signupFragment_to_loginFragment"
+            app:destination="@id/loginFragment" />
+    </fragment>
 
     <fragment
         android:id="@+id/accountFragment"
@@ -48,4 +52,12 @@
         android:id="@+id/startFragment"
         android:name="com.polly.visuals.StartFragment"
         android:label="StartFragment" />
+    <fragment
+        android:id="@+id/codeScannerFragment"
+        android:name="com.polly.visuals.CodeScannerFragment"
+        android:label="CodeScannerFragment" />
+    <fragment
+        android:id="@+id/enterViaCodeFragment"
+        android:name="com.polly.visuals.EnterViaCodeFragment"
+        android:label="EnterViaCodeFragment" />
 </navigation>
