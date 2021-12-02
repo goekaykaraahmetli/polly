@@ -17,6 +17,8 @@ import androidx.fragment.app.Fragment;
 import com.polly.R;
 import com.polly.utils.EnterPoll;
 
+import java.io.IOException;
+
 
 public class EnterViaCodeFragment extends Fragment {
     @Nullable
@@ -41,8 +43,16 @@ public class EnterViaCodeFragment extends Fragment {
                     Toast.makeText(getActivity(), "Code has the right format. Your code is: " + code, Toast.LENGTH_SHORT).show();
 
                     long id = Long.valueOf((String) code);
-                    EnterPoll.enterPoll(getContext(), id);
 
+                    try {
+                        EnterPoll.enterPoll(getContext(), id);
+                    } catch (InterruptedException e) {
+                        Toast.makeText(getContext(), "Something went wrong, please try again!", Toast.LENGTH_SHORT).show();
+                        e.printStackTrace();
+                    } catch (IllegalStateException | IllegalArgumentException | IOException e){
+                        Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
+                        e.printStackTrace();
+                    }
                 }
             }
         });

@@ -16,6 +16,9 @@ import com.budiyev.android.codescanner.DecodeCallback;
 import com.google.zxing.Result;
 import com.polly.R;
 import com.budiyev.android.codescanner.CodeScanner;
+import com.polly.utils.EnterPoll;
+
+import java.io.IOException;
 
 public class CodeScannerFragment extends Fragment {
     private CodeScanner mCodeScanner;
@@ -31,20 +34,7 @@ public class CodeScannerFragment extends Fragment {
         mCodeScanner.setDecodeCallback(new DecodeCallback() {
             @Override
             public void onDecoded(@NonNull final Result result) {
-                activity.runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        try {
-                            long id = Long.valueOf(result.getText());
-
-                            // open Poll with id "id"
-                        } catch (NumberFormatException e){
-                            e.printStackTrace();
-                        }
-
-                        Toast.makeText(activity, result.getText(), Toast.LENGTH_SHORT).show();
-                    }
-                });
+                startScanner(result);
             }
         });
         scannerView.setOnClickListener(new View.OnClickListener() {
@@ -54,6 +44,31 @@ public class CodeScannerFragment extends Fragment {
             }
         });
         return root;
+    }
+
+    private void startScanner(Result result){
+        Activity activity = getActivity();
+        activity.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    long id = Long.valueOf(result.getText());
+                    EnterPoll.enterPoll(getContext(), id);
+                }catch (NumberFormatException e){
+                    Toast.makeText(activity, "\"" + result.getText() + "\" is not a valid poll id", Toast.LENGTH_SHORT).show();
+                    e.printStackTrace();
+                    mCodeScanner.startPreview();
+                } catch (InterruptedException e) {
+                    Toast.makeText(getContext(), "Something went wrong, please try again!", Toast.LENGTH_SHORT).show();
+                    e.printStackTrace();
+                    mCodeScanner.startPreview();
+                } catch (IllegalStateException | IllegalArgumentException | IOException e){
+                    Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
+                    e.printStackTrace();
+                    mCodeScanner.startPreview();
+                }
+            }
+        });
     }
 
     @Override
