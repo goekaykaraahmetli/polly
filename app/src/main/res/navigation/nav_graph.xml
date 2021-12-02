@@ -59,4 +59,8 @@
             android:id="@+id/action_signupFragment_to_loginFragment"
             app:destination="@id/loginFragment" />
     </fragment>
+    <fragment
+        android:id="@+id/termsOfService"
+        android:name="com.polly.visuals.TermsOfService"
+        android:label="TermsOfService" />
 </navigation>

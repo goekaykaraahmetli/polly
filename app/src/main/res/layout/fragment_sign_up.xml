@@ -96,9 +96,9 @@
         android:id="@+id/activity_sign_up_checkbox_accept_terms_of_service"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/activity_sign_up_accept_terms_of_service"
         app:layout_constraintBottom_toTopOf="@+id/activity_sign_up_button_sign_up"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/shw_psswords" />
 
@@ -143,5 +143,18 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         app:layout_constraintGuide_percent="0.75" />
+
+    <TextView
+        android:id="@+id/acceptTerms"
+        android:layout_width="324dp"
+        android:layout_height="21dp"
+        android:text="I have read the terms of service and accept them"
+        android:textColor="@color/com_facebook_blue"
+        android:textStyle="italic"
+        app:layout_constraintBottom_toTopOf="@+id/activity_sign_up_button_sign_up"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toEndOf="@+id/activity_sign_up_checkbox_accept_terms_of_service"
+        app:layout_constraintTop_toBottomOf="@+id/shw_psswords" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

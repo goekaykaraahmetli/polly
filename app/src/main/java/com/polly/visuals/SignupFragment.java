@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.text.method.HideReturnsTransformationMethod;
+import android.text.method.LinkMovementMethod;
 import android.util.Patterns;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -50,7 +51,13 @@ public class SignupFragment extends Fragment {
         editTextPasswordConf = (EditText) root.findViewById(R.id.activity_sign_up_edittext_password_confirm);
         editTextFullname = (EditText) root.findViewById(R.id.activity_sign_up_edittext_fullname);
         checkbox = (CheckBox) root.findViewById(R.id.activity_sign_up_checkbox_accept_terms_of_service);
-
+        TextView terms = (TextView) root.findViewById(R.id.acceptTerms);
+        terms.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Navigation.findNavController(getActivity(), R.id.nav_host_fragment).navigate(R.id.termsOfService);
+            }
+        });
 
 
         CheckBox viewPswd = (CheckBox) root.findViewById(R.id.shw_psswords);
