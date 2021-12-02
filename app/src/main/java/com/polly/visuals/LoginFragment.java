@@ -290,7 +290,7 @@ public class LoginFragment extends Fragment {
                                     }
                                     else
                                         Toast.makeText(getActivity(), "You are now signed in", Toast.LENGTH_SHORT).show();
-                                    Navigation.findNavController(view).navigate(R.id.action_loginFragment_to_accountFragment);
+                                    Navigation.findNavController(getActivity(), R.id.nav_host_fragment).navigate(R.id.accountFragment);
                                 }
 
                                 @Override
