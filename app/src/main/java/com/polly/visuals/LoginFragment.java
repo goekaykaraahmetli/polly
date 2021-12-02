@@ -4,11 +4,9 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.media.Image;
 import android.os.Bundle;
 import android.util.Log;
 import android.util.Patterns;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,9 +18,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
-import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.fragment.NavHostFragment;
 
@@ -30,7 +26,6 @@ import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
-import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
@@ -53,9 +48,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.polly.R;
-import com.polly.testclasses.DBHelper;
 import com.polly.testclasses.User;
-import com.polly.utils.Organizer;
 
 public class LoginFragment extends Fragment {
     EditText passwordInput;
@@ -77,7 +70,7 @@ public class LoginFragment extends Fragment {
         b.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent i = new Intent(getActivity(), GoogleLogin.class);
+                Intent i = new Intent(getActivity(), SignupActivity.class);
                 startActivity(i);
                 ((Activity) getActivity()).overridePendingTransition(0, 0);
             }
@@ -160,9 +153,10 @@ public class LoginFragment extends Fragment {
             if(task.isSuccessful()){
                 FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
                 if(user.isEmailVerified()) {
-                    Toast.makeText(getActivity(), "You are now logged in!", Toast.LENGTH_SHORT).show();
+                    /**Toast.makeText(getActivity(), "You are now logged in!", Toast.LENGTH_SHORT).show();
                     Navigation.findNavController(view).navigate(R.id.action_loginFragment_to_accountFragment);
-
+                     **/
+                    Navigation.findNavController(getActivity(), R.id.nav_host_fragment).navigate(R.id.accountFragment);
                 }
                 else{
                     user.sendEmailVerification();

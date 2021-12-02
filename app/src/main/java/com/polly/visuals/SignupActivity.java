@@ -1,55 +1,29 @@
 package com.polly.visuals;
 
-import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.text.method.HideReturnsTransformationMethod;
-import android.text.method.PasswordTransformationMethod;
-import android.util.Log;
 import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.FirebaseOptions;
-import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.polly.R;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.lifecycle.ViewModelProvider;
-import androidx.navigation.Navigation;
 
-import com.google.android.gms.auth.api.signin.GoogleSignIn;
-import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
-import com.google.android.gms.auth.api.signin.GoogleSignInClient;
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
-import com.google.android.gms.common.api.ApiException;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.AuthCredential;
-import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.auth.GoogleAuthProvider;
 import com.polly.testclasses.User;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.util.zip.Inflater;
-
-public class GoogleLogin extends AppCompatActivity {
+public class SignupActivity extends AppCompatActivity {
     FirebaseAuth mAuth;
     EditText editTextFullname;
     EditText editTextPasswordConf;
@@ -97,55 +71,7 @@ public class GoogleLogin extends AppCompatActivity {
         });
 
     }
-    /**
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
 
-        super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode == RC_SIGN_IN) {
-            Log.d("TAG", "onActivityResult: Google Signin intent result");
-            Task<GoogleSignInAccount> accountTask = GoogleSignIn.getSignedInAccountFromIntent(data);
-            try {
-                GoogleSignInAccount account = accountTask.getResult(ApiException.class);
-                firebaseAuthWithGoogleAccount(account);
-            }
-            catch (Exception e){
-                Log.d("TAG", "onActivityResult: " + e.getMessage());
-            }
-        }
-    }
-
-    private void firebaseAuthWithGoogleAccount(GoogleSignInAccount account) {
-        Log.d("TAG", "firebaseAuthWithGoogleAccount: begin firebase auth with google account");
-        AuthCredential credential = GoogleAuthProvider.getCredential(account.getIdToken(), null);
-        mAuth.signInWithCredential(credential).addOnSuccessListener(new OnSuccessListener<AuthResult>() {
-            @Override
-            public void onSuccess(AuthResult authResult) {
-                Log.d("TAG", "onSuccess: Logging In");
-                FirebaseUser firebaseUser = mAuth.getCurrentUser();
-                String uid = firebaseUser.getUid();
-                String email = firebaseUser.getEmail();
-                Log.d("TAG", "onSuccess: Email: " + email);
-                Log.d("TAG", "onSuccess: UID: " + uid);
-
-                if(authResult.getAdditionalUserInfo().isNewUser()){
-                    Log.d("TAG", "onSuccess: Account Created: " +email);
-                    Toast.makeText(GoogleLogin.this, "Account Created", Toast.LENGTH_LONG).show();
-                }
-                else{
-                    Log.d("TAG", "onSuccess: Existing user: " + email);
-                    Toast.makeText(GoogleLogin.this, "Existing user: " +email, Toast.LENGTH_LONG).show();
-                }
-            }
-        })
-        .addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                Log.d("TAG", "onFailure: Login failed " + e.getMessage());
-
-            }
-        });
-    } **/
 
     private void registerUser() {
         String email = editTextEmail.getText().toString();
@@ -178,15 +104,15 @@ public class GoogleLogin extends AppCompatActivity {
                     User user = new User(fullname, email, username);
                     FirebaseDatabase.getInstance("https://polly-abdd4-default-rtdb.europe-west1.firebasedatabase.app/").getReference("Users").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).setValue(user).addOnCompleteListener(task1 -> {
                         if (task1.isSuccessful()) {
-                            Toast.makeText(GoogleLogin.this, "User has been registered successfully! Please verify your email before you sign in.", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(SignupActivity.this, "User has been registered successfully! Please verify your email before you sign in.", Toast.LENGTH_SHORT).show();
                         } else {
-                            Toast.makeText(GoogleLogin.this, "Failed to register. Try again", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(SignupActivity.this, "Failed to register. Try again", Toast.LENGTH_SHORT).show();
                         }
                     });
                     mAuth.getCurrentUser().sendEmailVerification();
                     mAuth.signOut();
                 } else
-                    Toast.makeText(GoogleLogin.this, "Failed to register. Try again", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(SignupActivity.this, "Failed to register. Try again", Toast.LENGTH_SHORT).show();
             });
         }
 

@@ -17,6 +17,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.navigation.Navigation;
 
 import com.budiyev.android.codescanner.CodeScanner;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
@@ -64,22 +65,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
         drawerLayout = findViewById(R.id.my_drawer_layout);
         actionBarDrawerToggle = new ActionBarDrawerToggle(this, drawerLayout, R.string.nav_open, R.string.nav_close);
-
         drawerLayout.addDrawerListener(actionBarDrawerToggle);
         actionBarDrawerToggle.syncState();
-
-
         NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        View headerView = navigationView.getHeaderView(0);
-        TextView email = (TextView) headerView.findViewById(R.id.email_header);
-        if(FirebaseAuth.getInstance().getCurrentUser() != null)
-            email.setText("E-Mail: " + FirebaseAuth.getInstance().getCurrentUser().getEmail());
 
     new Organizer();
 
@@ -99,16 +91,23 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         switch(item.getItemId()){
             case R.id.nav_account:
-                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new AccountFragment()).commit();
+                Navigation.findNavController(this, R.id.nav_host_fragment).navigate(R.id.accountFragment);
                 break;
             case R.id.nav_startpoll:
-                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new StartpollFragment()).commit();
+                Navigation.findNavController(this, R.id.nav_host_fragment).navigate(R.id.createPollFragment);
                 break;
             case R.id.nav_enterpoll:
-                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new EnterpollFragment()).commit();
+                Navigation.findNavController(this, R.id.nav_host_fragment).navigate(R.id.enterpollFragment);
                 break;
             case R.id.nav_recentpolls:
-                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new RecentFragment()).commit();
+                Navigation.findNavController(this, R.id.nav_host_fragment).navigate(R.id.recentFragment);
+                break;
+            case R.id.nav_signin_signup:
+                if(FirebaseAuth.getInstance().getCurrentUser() == null) {
+                    Navigation.findNavController(this, R.id.nav_host_fragment).navigate(R.id.loginFragment);
+                }
+                else
+                    Toast.makeText(this, "You are already signed in. You can log out through the account page", Toast.LENGTH_SHORT).show();
                 break;
         }
 
@@ -116,11 +115,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         return true;
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
-    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -128,22 +122,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         int id = item.getItemId();
         if (actionBarDrawerToggle.onOptionsItemSelected(item))
             return true;
-        switch (id) {
-            case R.id.menu_main_settings:
-                // TODO
-                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new SettingsFragment()).commit();
-                break;
-            case R.id.menu_main_login_or_sign_up:
-                if(FirebaseAuth.getInstance().getCurrentUser() == null) {
-                    Intent intent = new Intent(this, LoginActivity.class);
-                    startActivity(intent);
-                }
-                else
-                    Toast.makeText(this, "You are already signed in. You can log out through the account page", Toast.LENGTH_SHORT).show();
-                break;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
         return true;
     }
 }

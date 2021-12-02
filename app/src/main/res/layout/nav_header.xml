@@ -14,19 +14,10 @@
         android:src="@mipmap/ic_launcher_round"></ImageView>
 
     <TextView
-        android:id="@+id/username_header"
-        android:layout_width="wrap_content"
+        android:id="@+id/textView2"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingTop="8dp"
-        android:text="Username:"
-        android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
-
-    <TextView
-        android:id="@+id/email_header"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="E-Mail:"
-        android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
+        android:text="Voting Made Simple" />
 
 
 </LinearLayout>

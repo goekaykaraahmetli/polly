@@ -3,12 +3,13 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/loginFragment">
+    app:startDestination="@id/startFragment">
 
     <fragment
         android:id="@+id/loginFragment"
         android:name="com.polly.visuals.LoginFragment"
-        android:label="LoginFragment" >
+        android:label="LoginFragment"
+        tools:layout="@layout/fragment_login">
         <action
             android:id="@+id/action_loginFragment_to_signupFragment"
             app:destination="@id/signupFragment" />
@@ -18,10 +19,33 @@
     </fragment>
     <fragment
         android:id="@+id/signupFragment"
-        android:name="com.polly.visuals.SignupFragment"
-        android:label="SignupFragment" />
+        android:name="com.polly.visuals.SignupActivity"
+        android:label="SignupFragment"
+        tools:layout="@layout/fragment_sign_up"/>
+
     <fragment
         android:id="@+id/accountFragment"
         android:name="com.polly.visuals.AccountFragment"
-        android:label="AccountFragment" />
+        android:label="AccountFragment"
+        tools:layout="@layout/fragment_account"/>
+    <fragment
+        android:id="@+id/startpollFragment"
+        android:name="com.polly.visuals.StartpollFragment"
+        android:label="StartpollFragment" />
+    <fragment
+        android:id="@+id/createPollFragment"
+        android:name="com.polly.visuals.CreatePollFragment"
+        android:label="CreatePollFragment" />
+    <fragment
+        android:id="@+id/recentFragment"
+        android:name="com.polly.visuals.RecentFragment"
+        android:label="RecentFragment" />
+    <fragment
+        android:id="@+id/enterpollFragment"
+        android:name="com.polly.visuals.EnterpollFragment"
+        android:label="EnterpollFragment" />
+    <fragment
+        android:id="@+id/startFragment"
+        android:name="com.polly.visuals.StartFragment"
+        android:label="StartFragment" />
 </navigation>
