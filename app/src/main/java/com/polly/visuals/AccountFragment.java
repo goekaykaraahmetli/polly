@@ -40,6 +40,12 @@ public class AccountFragment extends Fragment {
         usernameInfo = (TextView) view.findViewById(R.id.username_text);
         mAuth = FirebaseAuth.getInstance();
         Button logout = (Button) view.findViewById(R.id.logout_button);
+        if(mAuth.getCurrentUser() == null){
+            view.findViewById(R.id.logout_button).setVisibility(View.INVISIBLE);
+        }else{
+            view.findViewById(R.id.logout_button).setVisibility(View.VISIBLE);
+        }
+
 
         logout.setOnClickListener(new View.OnClickListener() {
             @Override
