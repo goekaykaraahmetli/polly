@@ -124,8 +124,8 @@ public class RecentFragment extends Fragment {
         pieChart.animate();
 
 
-        pieChart.setMinimumHeight(750);
-        pieChart.setMinimumWidth(750);
+        pieChart.setMinimumHeight(600);
+        pieChart.setMinimumWidth(600);
         return pieChart;
     }
 }
