@@ -40,7 +40,7 @@ public class EnterViaCodeFragment extends Fragment {
                 if(code.length() == 0 || code.length() > 6)
                     Toast.makeText(getActivity(), "The entered code has the wrong size. Try again", Toast.LENGTH_SHORT).show();
                 else {
-                    Toast.makeText(getActivity(), "Code has the right format. Your code is: " + code, Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(getActivity(), "Code has the right format. Your code is: " + code, Toast.LENGTH_SHORT).show();
 
                     long id = Long.valueOf((String) code);
 

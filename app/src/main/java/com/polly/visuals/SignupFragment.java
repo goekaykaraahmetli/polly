@@ -6,7 +6,9 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.text.method.HideReturnsTransformationMethod;
 import android.util.Patterns;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
@@ -14,16 +16,18 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.firebase.database.FirebaseDatabase;
-import com.polly.R;
-
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
+import androidx.navigation.Navigation;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.FirebaseDatabase;
+import com.polly.R;
 import com.polly.testclasses.User;
 
-public class SignupActivity extends AppCompatActivity {
+public class SignupFragment extends Fragment {
     FirebaseAuth mAuth;
     EditText editTextFullname;
     EditText editTextPasswordConf;
@@ -34,25 +38,22 @@ public class SignupActivity extends AppCompatActivity {
     Boolean password_is_good = false;
 
 
-
+    @Nullable
     @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.fragment_sign_up);
-
-
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        View root = inflater.inflate(R.layout.fragment_sign_up, container, false);
 
         mAuth = FirebaseAuth.getInstance();
-        editTextEmail = (EditText) findViewById(R.id.activity_sign_up_edittext_email);
-        editTextUsername = (EditText) findViewById(R.id.activity_sign_up_edittext_username);
-        editTextPassword = (EditText) findViewById(R.id.activity_sign_up_edittext_password);
-        editTextPasswordConf = (EditText) findViewById(R.id.activity_sign_up_edittext_password_confirm);
-        editTextFullname = (EditText) findViewById(R.id.activity_sign_up_edittext_fullname);
-        checkbox = (CheckBox) findViewById(R.id.activity_sign_up_checkbox_accept_terms_of_service);
+        editTextEmail = (EditText) root.findViewById(R.id.activity_sign_up_edittext_email);
+        editTextUsername = (EditText) root.findViewById(R.id.activity_sign_up_edittext_username);
+        editTextPassword = (EditText) root.findViewById(R.id.activity_sign_up_edittext_password);
+        editTextPasswordConf = (EditText) root.findViewById(R.id.activity_sign_up_edittext_password_confirm);
+        editTextFullname = (EditText) root.findViewById(R.id.activity_sign_up_edittext_fullname);
+        checkbox = (CheckBox) root.findViewById(R.id.activity_sign_up_checkbox_accept_terms_of_service);
 
 
 
-        CheckBox viewPswd = (CheckBox) findViewById(R.id.shw_psswords);
+        CheckBox viewPswd = (CheckBox) root.findViewById(R.id.shw_psswords);
         viewPswd.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -62,7 +63,7 @@ public class SignupActivity extends AppCompatActivity {
         });
 
         editTextPassword.addTextChangedListener(textWatcher);
-        Button signup = (Button) findViewById(R.id.activity_sign_up_button_sign_up);
+        Button signup = (Button) root.findViewById(R.id.activity_sign_up_button_sign_up);
         signup.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -70,6 +71,7 @@ public class SignupActivity extends AppCompatActivity {
             }
         });
 
+        return root;
     }
 
 
@@ -104,15 +106,18 @@ public class SignupActivity extends AppCompatActivity {
                     User user = new User(fullname, email, username);
                     FirebaseDatabase.getInstance("https://polly-abdd4-default-rtdb.europe-west1.firebasedatabase.app/").getReference("Users").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).setValue(user).addOnCompleteListener(task1 -> {
                         if (task1.isSuccessful()) {
-                            Toast.makeText(SignupActivity.this, "User has been registered successfully! Please verify your email before you sign in.", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getContext(), "User has been registered successfully! Please verify your email before you sign in.", Toast.LENGTH_SHORT).show();
                         } else {
-                            Toast.makeText(SignupActivity.this, "Failed to register. Try again", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getContext(), "Failed to register. Try again", Toast.LENGTH_SHORT).show();
                         }
                     });
                     mAuth.getCurrentUser().sendEmailVerification();
                     mAuth.signOut();
+
+
+                    Navigation.findNavController(getActivity(), R.id.nav_host_fragment).navigate(R.id.loginFragment);
                 } else
-                    Toast.makeText(SignupActivity.this, "Failed to register. Try again", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), "Failed to register. Try again", Toast.LENGTH_SHORT).show();
             });
         }
 
@@ -132,7 +137,7 @@ public class SignupActivity extends AppCompatActivity {
         @Override
         public void afterTextChanged(Editable s) {
 
-            TextView strength = ((TextView) findViewById(R.id.password_strength));
+            TextView strength = ((TextView) getView().findViewById(R.id.password_strength));
             if (s.length() < 6) {
                 strength.setText("Not even close \n (Your password needs at least 6 digits, a uppercase letter, a number and a special character)");
                 strength.setTextColor(Color.GRAY);

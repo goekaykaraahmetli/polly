@@ -11,17 +11,12 @@
         android:label="LoginFragment"
         tools:layout="@layout/fragment_login">
         <action
-            android:id="@+id/action_loginFragment_to_signupFragment"
-            app:destination="@id/signupFragment" />
-        <action
             android:id="@+id/action_loginFragment_to_accountFragment"
             app:destination="@id/accountFragment" />
+        <action
+            android:id="@+id/action_loginFragment_to_signupFragment"
+            app:destination="@id/signupFragment" />
     </fragment>
-    <fragment
-        android:id="@+id/signupFragment"
-        android:name="com.polly.visuals.SignupActivity"
-        android:label="SignupFragment"
-        tools:layout="@layout/fragment_sign_up"/>
 
     <fragment
         android:id="@+id/accountFragment"
@@ -48,4 +43,20 @@
         android:id="@+id/startFragment"
         android:name="com.polly.visuals.StartFragment"
         android:label="StartFragment" />
+    <fragment
+        android:id="@+id/codeScannerFragment"
+        android:name="com.polly.visuals.CodeScannerFragment"
+        android:label="CodeScannerFragment" />
+    <fragment
+        android:id="@+id/enterViaCodeFragment"
+        android:name="com.polly.visuals.EnterViaCodeFragment"
+        android:label="EnterViaCodeFragment" />
+    <fragment
+        android:id="@+id/signupFragment"
+        android:name="com.polly.visuals.SignupFragment"
+        android:label="SignupFragment" >
+        <action
+            android:id="@+id/action_signupFragment_to_loginFragment"
+            app:destination="@id/loginFragment" />
+    </fragment>
 </navigation>

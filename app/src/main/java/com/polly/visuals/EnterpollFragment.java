@@ -9,6 +9,7 @@ import android.widget.ImageButton;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.navigation.Navigation;
 
 import com.polly.R;
 
@@ -37,18 +38,22 @@ public class EnterpollFragment extends Fragment {
         public void onClick(View v) {
             switch(v.getId()) {
                 case R.id.codeScannerButton:
-                    CodeScannerFragment scannerFragment = new CodeScannerFragment();
+                    Navigation.findNavController(getActivity(), R.id.nav_host_fragment).navigate(R.id.codeScannerFragment);
+
+                    /**CodeScannerFragment scannerFragment = new CodeScannerFragment();
                     FragmentTransaction transaction = getFragmentManager().beginTransaction();
                     transaction.replace(R.id.fragment_container, scannerFragment);
                     transaction.addToBackStack(null);
-                    transaction.commit();
+                    transaction.commit();*/
                     break;
                 case R.id.enterViaCodeButton:
-                    EnterViaCodeFragment enterViaCodeFragment = new EnterViaCodeFragment();
+                    Navigation.findNavController(getActivity(), R.id.nav_host_fragment).navigate(R.id.enterViaCodeFragment);
+
+                    /**EnterViaCodeFragment enterViaCodeFragment = new EnterViaCodeFragment();
                     FragmentTransaction transaction1 = getFragmentManager().beginTransaction();
                     transaction1.replace(R.id.fragment_container, enterViaCodeFragment);
                     transaction1.addToBackStack(null);
-                    transaction1.commit();
+                    transaction1.commit();*/
                     break;
             }
         }

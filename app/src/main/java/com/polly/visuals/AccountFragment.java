@@ -40,6 +40,12 @@ public class AccountFragment extends Fragment {
         usernameInfo = (TextView) view.findViewById(R.id.username_text);
         mAuth = FirebaseAuth.getInstance();
         Button logout = (Button) view.findViewById(R.id.logout_button);
+        if(mAuth.getCurrentUser() == null){
+            view.findViewById(R.id.logout_button).setVisibility(View.INVISIBLE);
+        }else{
+            view.findViewById(R.id.logout_button).setVisibility(View.VISIBLE);
+        }
+
 
         logout.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -54,6 +60,7 @@ public class AccountFragment extends Fragment {
                     GoogleSignInOptions googleSignInOptions = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestIdToken(getString(R.string.default_web_client_id)).requestEmail().build();
                     GoogleSignInClient googleSignInClient = GoogleSignIn.getClient(getActivity(), googleSignInOptions);
                     googleSignInClient.signOut();
+                    view.findViewById(R.id.logout_button).setVisibility(View.INVISIBLE);
                 }
             }
         });

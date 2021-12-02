@@ -70,9 +70,7 @@ public class LoginFragment extends Fragment {
         b.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent i = new Intent(getActivity(), SignupActivity.class);
-                startActivity(i);
-                ((Activity) getActivity()).overridePendingTransition(0, 0);
+                Navigation.findNavController(getActivity(), R.id.nav_host_fragment).navigate(R.id.signupFragment);
             }
         });
         Button signInBtn = (Button) view.findViewById(R.id.activity_login_button_login);
@@ -235,7 +233,7 @@ public class LoginFragment extends Fragment {
                         }
                         else
                             Toast.makeText(getActivity(), "You are now signed in", Toast.LENGTH_SHORT).show();
-                        Navigation.findNavController(view).navigate(R.id.action_loginFragment_to_accountFragment);
+                        Navigation.findNavController(getActivity(), R.id.nav_host_fragment).navigate(R.id.accountFragment);
                     }
 
                     @Override
@@ -249,7 +247,7 @@ public class LoginFragment extends Fragment {
         }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
-                Log.d(TAG, "onFailure: Log In failed "+e.getMessage());
+                Log.d(TAG, "onFailure: Log In failed " + e.getMessage());
             }
         });
     }
