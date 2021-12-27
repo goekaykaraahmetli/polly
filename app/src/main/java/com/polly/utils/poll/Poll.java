@@ -40,16 +40,6 @@ public class Poll implements Serializable {
 	}
 
 
-
-
-
-	void vote(String option) throws NoSuchElementException{
-		if(!data.containsKey(option))
-			throw new NoSuchElementException();
-		data.put(option, data.get(option)+1);
-	}
-
-
 	//TODO only test-purpose
 	public void printPoll(){
 		System.out.println("Poll: " + name);
