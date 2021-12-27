@@ -10,6 +10,7 @@ public class Poll implements Serializable {
 	private Map<String, Integer> data;
 	private String description;
 
+
 	public Poll(long id, String name, Map<String, Integer> poll) {
 		this(id, name, poll, "");
 	}
@@ -20,6 +21,7 @@ public class Poll implements Serializable {
 		this.data = poll;
 		this.description = description;
 	}
+
 	
 	public long getId() {
 		return id;

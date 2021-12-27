@@ -2,30 +2,27 @@ package com.polly.visuals;
 
 import android.content.Context;
 import android.graphics.Color;
-import android.graphics.Point;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.constraintlayout.widget.ConstraintLayout;
 
 import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.components.Description;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
-import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 import com.github.mikephil.charting.utils.ColorTemplate;
 import com.polly.R;
 import com.polly.config.Config;
 import com.polly.utils.Message;
-import com.polly.utils.Organizer;
-import com.polly.utils.command.GetParticipatedPollsCommand;
+import com.polly.utils.QRCode;
 import com.polly.utils.command.RequestPollUpdatesCommand;
 import com.polly.utils.communicator.Communicator;
-import com.polly.utils.communicator.ResponseCommunicator;
 import com.polly.utils.listener.PieChartResultsListener;
 import com.polly.utils.listener.PieChartVoteListener;
 import com.polly.utils.poll.Poll;
@@ -33,10 +30,10 @@ import com.polly.utils.poll.PollManager;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.List;
 
 public class PollActivity extends AppCompatActivity {
     private PieChart pieChart;
+    private ImageView qrCode;
     private Poll poll;
     private Button voteButton;
     private Communicator communicator = initialiseCommunicator();
@@ -73,6 +70,9 @@ public class PollActivity extends AppCompatActivity {
         setContentView(R.layout.activity_bar);
         pieChart = (PieChart) findViewById(R.id.pieChart);
         pieChart.setVisibility(View.INVISIBLE);
+
+
+
         voteButton = (Button) findViewById(R.id.vote_button);
         voteButton.setVisibility(View.GONE);
 
@@ -87,7 +87,16 @@ public class PollActivity extends AppCompatActivity {
 
     public void showPoll(boolean voting){
         updatePieChart(voting, poll);
-
+        qrCode = (ImageView) findViewById(R.id.qrCodeImageView);
+        qrCode.setImageBitmap(QRCode.QRCode(""+ poll.getId()));
+        qrCode.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                MediaStore.Images.Media.insertImage(getContentResolver(), QRCode.QRCode("" + poll.getId()), "QRCode: " + poll.getName(), poll.getDescription());
+                Toast.makeText(getContext(), "The QR-Code has been saved to your camera roll!", Toast.LENGTH_SHORT).show();
+                return true;
+            }
+        });
         if(voting){
             pieChart.setOnChartValueSelectedListener(new PieChartVoteListener(this));
         } else {

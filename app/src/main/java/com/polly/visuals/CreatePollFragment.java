@@ -2,22 +2,17 @@ package com.polly.visuals;
 import com.polly.utils.poll.PollManager;
 
 
-import android.graphics.Color;
 import android.os.Bundle;
-import android.provider.Settings;
 import android.text.Editable;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
-import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 
 import com.polly.R;
@@ -66,6 +61,7 @@ public class CreatePollFragment extends Fragment {
         createPollBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 Editable poll = pollName.getText();
                 CharSequence poll1 = poll.toString();
                 if(poll1.length() < 1){
