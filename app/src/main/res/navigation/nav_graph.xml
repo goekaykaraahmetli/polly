@@ -63,4 +63,8 @@
         android:id="@+id/termsOfService"
         android:name="com.polly.visuals.TermsOfService"
         android:label="TermsOfService" />
+    <fragment
+        android:id="@+id/scanRoom"
+        android:name="com.polly.visuals.ScanRoom"
+        android:label="ScanRoom" />
 </navigation>

@@ -39,6 +39,7 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FacebookAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.GetTokenResult;
 import com.google.firebase.auth.GoogleAuthProvider;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -96,6 +97,7 @@ public class LoginFragment extends Fragment {
             public void onSuccess(LoginResult loginResult) {
                 Log.d(TAG, "facebook:onSuccess:" + loginResult);
                 handleFacebookAccessToken(loginResult.getAccessToken());
+                sendTokenToServer();
             }
 
             @Override
@@ -119,6 +121,8 @@ public class LoginFragment extends Fragment {
                 userLogin();
             }
         });
+
+
         return view;
     }
 
@@ -148,9 +152,7 @@ public class LoginFragment extends Fragment {
             if(task.isSuccessful()){
                 FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
                 if(user.isEmailVerified()) {
-                    /**Toast.makeText(getActivity(), "You are now logged in!", Toast.LENGTH_SHORT).show();
-                    Navigation.findNavController(view).navigate(R.id.action_loginFragment_to_accountFragment);
-                     **/
+                    sendTokenToServer();
                     Navigation.findNavController(getActivity(), R.id.nav_host_fragment).navigate(R.id.accountFragment);
                 }
                 else{
@@ -161,6 +163,21 @@ public class LoginFragment extends Fragment {
             else
                 Toast.makeText(getActivity(), "Failed to login! Check your credentials", Toast.LENGTH_SHORT).show();
         });
+    }
+
+    public void sendTokenToServer(){
+        FirebaseUser mUser = FirebaseAuth.getInstance().getCurrentUser();
+        mUser.getIdToken(true)
+                .addOnCompleteListener(new OnCompleteListener<GetTokenResult>() {
+                    public void onComplete(@NonNull Task<GetTokenResult> task) {
+                        if (task.isSuccessful()) {
+                            String idToken = task.getResult().getToken();
+                            //TODO Send Token to Server
+                        } else {
+                            Log.d(TAG, task.getException().getMessage());
+                        }
+                    }
+                });
     }
 
     @Override
@@ -228,8 +245,10 @@ public class LoginFragment extends Fragment {
                             });
                             alert.show();
                         }
-                        else
+                        else {
                             Toast.makeText(getActivity(), "You are now signed in", Toast.LENGTH_SHORT).show();
+                            sendTokenToServer();
+                        }
                         Navigation.findNavController(getActivity(), R.id.nav_host_fragment).navigate(R.id.accountFragment);
                     }
 
@@ -285,8 +304,10 @@ public class LoginFragment extends Fragment {
                                         });
                                         alert.show();
                                     }
-                                    else
+                                    else {
                                         Toast.makeText(getActivity(), "You are now signed in", Toast.LENGTH_SHORT).show();
+                                        sendTokenToServer();
+                                    }
                                     Navigation.findNavController(getActivity(), R.id.nav_host_fragment).navigate(R.id.accountFragment);
                                 }
 
