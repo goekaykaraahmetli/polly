@@ -10,6 +10,8 @@ import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.lifecycle.ViewModel;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 
 import com.google.android.material.navigation.NavigationView;
@@ -39,7 +41,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
+        SavingClass saving = new ViewModelProvider(this).get(SavingClass.class);
 
 
 
@@ -66,7 +68,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 Navigation.findNavController(this, R.id.nav_host_fragment).navigate(R.id.accountFragment);
                 break;
             case R.id.nav_startpoll:
-                Navigation.findNavController(this, R.id.nav_host_fragment).navigate(R.id.createPollFragment);
+                Navigation.findNavController(this, R.id.nav_host_fragment).navigate(R.id.polloptionFragment);
                 break;
             case R.id.nav_enterpoll:
                 Navigation.findNavController(this, R.id.nav_host_fragment).navigate(R.id.enterpollFragment);
@@ -96,4 +98,5 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             return true;
         return true;
     }
+
 }

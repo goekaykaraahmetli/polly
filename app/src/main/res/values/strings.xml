@@ -2,7 +2,12 @@
     <string name="app_name">Polly</string>
     <string name="facebook_app_id">298248395510660</string> <string name="fb_login_protocol_scheme">fb298248395510660</string>
 
-
+    <string-array name="visibility">
+        <item>PUBLIC</item>
+        <item>PRIVATE</item>
+        <item>CUSTOM</item>
+        <item>GEOFENCE</item>
+    </string-array>
     <!-- layout -->
 
     <string name="activity_login_email">Email</string>

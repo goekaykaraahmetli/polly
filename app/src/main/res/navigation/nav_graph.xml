@@ -24,13 +24,13 @@
         android:label="AccountFragment"
         tools:layout="@layout/fragment_account"/>
     <fragment
-        android:id="@+id/startpollFragment"
-        android:name="com.polly.visuals.StartpollFragment"
-        android:label="StartpollFragment" />
-    <fragment
         android:id="@+id/createPollFragment"
         android:name="com.polly.visuals.CreatePollFragment"
-        android:label="CreatePollFragment" />
+        android:label="CreatePollFragment" >
+        <action
+            android:id="@+id/action_createPollFragment_to_polloptionFragment"
+            app:destination="@id/polloptionFragment" />
+    </fragment>
     <fragment
         android:id="@+id/recentFragment"
         android:name="com.polly.visuals.RecentFragment"
@@ -67,4 +67,12 @@
         android:id="@+id/scanRoom"
         android:name="com.polly.visuals.ScanRoom"
         android:label="ScanRoom" />
+    <fragment
+        android:id="@+id/polloptionFragment"
+        android:name="com.polly.visuals.PolloptionFragment"
+        android:label="PolloptionFragment" >
+        <action
+            android:id="@+id/action_polloptionFragment_to_createPollFragment"
+            app:destination="@id/createPollFragment" />
+    </fragment>
 </navigation>

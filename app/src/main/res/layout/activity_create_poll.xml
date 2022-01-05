@@ -6,30 +6,39 @@
     android:layout_height="match_parent">
 
 
-    <EditText
+    <TextView
         android:id="@+id/PollName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:autofillHints="@string/activity_sign_up_username"
         android:gravity="center"
-        android:hint="Enter Poll Name"
-        android:inputType="text"
-        android:maxLength="20"
+        android:hint="Pollname"
+        android:inputType="none"
         android:selectAllOnFocus="true"
         app:layout_constraintBottom_toTopOf="@+id/nestedScrollView"
         app:layout_constraintEnd_toStartOf="@+id/guideline3"
-
         app:layout_constraintStart_toStartOf="@+id/guideline2"
         app:layout_constraintTop_toTopOf="@+id/guideline6"
-        app:layout_constraintVertical_bias="0.0" />
+        android:textSize="25sp" />
 
     <Button
         android:id="@+id/createPollBtn"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="Create Poll"
+        android:layout_marginStart="10dp"
+        android:text="save Changes"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@id/guideline10"
+        app:layout_constraintStart_toStartOf="@id/guideline45"
+        app:layout_constraintTop_toBottomOf="@+id/addOption" />
+    <Button
+        android:id="@+id/goBack"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="10dp"
+        android:text="Go Back"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@id/guideline45"
         app:layout_constraintStart_toStartOf="@id/guideline11"
         app:layout_constraintTop_toBottomOf="@+id/addOption" />
 
@@ -49,8 +58,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
-
-
 
 
         </LinearLayout>
@@ -135,6 +142,13 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         app:layout_constraintGuide_percent="0.01" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline45"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.5" />
     <![CDATA[
 
 
