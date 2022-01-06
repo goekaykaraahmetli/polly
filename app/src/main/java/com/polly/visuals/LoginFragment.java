@@ -165,7 +165,7 @@ public class LoginFragment extends Fragment {
         });
     }
 
-    public void sendTokenToServer(){
+    public static void sendTokenToServer(){
         FirebaseUser mUser = FirebaseAuth.getInstance().getCurrentUser();
         mUser.getIdToken(true)
                 .addOnCompleteListener(new OnCompleteListener<GetTokenResult>() {
