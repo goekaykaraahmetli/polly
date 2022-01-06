@@ -6,8 +6,7 @@ import android.widget.EditText;
 
 import androidx.lifecycle.ViewModel;
 
-import com.google.android.material.textfield.TextInputEditText;
-
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -20,7 +19,25 @@ public class SavingClass extends ViewModel {
     private Editable dropDownMenu;
     private Editable Pollname;
     private Editable description;
+    private String usergroupName;
     List<String> pollOptions;
+    ArrayList<SearchListItem> userGroupList;
+
+    public void setUserGroupList(ArrayList<SearchListItem> userGroupList) {
+        this.userGroupList = userGroupList;
+    }
+
+    public ArrayList<SearchListItem> getUserGroupList() {
+        return userGroupList;
+    }
+
+    public void setUsergroupName(String usergroupName) {
+        this.usergroupName = usergroupName;
+    }
+
+    public String getUsergroupName() {
+        return usergroupName;
+    }
 
     public List<String> getPollOptions() {
         return pollOptions;
@@ -92,5 +109,17 @@ public class SavingClass extends ViewModel {
 
     public boolean isStart() {
         return start;
+    }
+
+    public void reset(){
+        setStart(true);
+        setMap(null);
+        setRemove(null);
+        setOptionCounter(0);
+        setPollOptions(null);
+        setCalendarText(null);
+        setDropDownMenu(null);
+        setDescription(null);
+        setPollname(null);
     }
 }

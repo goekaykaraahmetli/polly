@@ -2,6 +2,7 @@ package com.polly.visuals;
 import com.polly.utils.poll.PollManager;
 
 
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.text.Editable;
 import android.view.LayoutInflater;
@@ -15,6 +16,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.ViewModelProvider;
@@ -159,6 +161,7 @@ public class CreatePollFragment extends Fragment {
                     saving.setRemove(remove);
                     saving.setMap(map);
                     saving.setStart(start);
+                    Navigation.findNavController(getActivity(), R.id.nav_host_fragment).navigate(R.id.polloptionFragment);
                 }else{
                     Toast.makeText(getActivity(), "Please edit all Options", Toast.LENGTH_SHORT).show();
                 }

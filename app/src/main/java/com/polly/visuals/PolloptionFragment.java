@@ -62,13 +62,15 @@ public class PolloptionFragment extends Fragment {
 
         AutoCompleteTextView test = (AutoCompleteTextView) root.findViewById(R.id.DatePicker);
         AutoCompleteTextView dropDownMenu = (AutoCompleteTextView) root.findViewById(R.id.autoCompleteTextView);
+
+        TextInputLayout geofence = (TextInputLayout) root.findViewById(R.id.geofencingLayout);
+        TextInputLayout userGroup = (TextInputLayout) root.findViewById(R.id.usergroupLayout);
+        TextInputLayout votingCandidates = (TextInputLayout) root.findViewById(R.id.votingCandidatesLayout);
+        TextInputLayout oberserveCandidates = (TextInputLayout) root.findViewById(R.id.observingCandidatesLayout);
+
         dropDownMenu.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                TextInputLayout geofence = (TextInputLayout) root.findViewById(R.id.geofencingLayout);
-                TextInputLayout userGroup = (TextInputLayout) root.findViewById(R.id.usergroupLayout);
-                TextInputLayout votingCandidates = (TextInputLayout) root.findViewById(R.id.votingCandidatesLayout);
-                TextInputLayout oberserveCandidates = (TextInputLayout) root.findViewById(R.id.observingCandidatesLayout);
 
                 if (dropDownMenu.getText().toString().equals("GEOFENCE")) {
                     geofence.setVisibility(View.VISIBLE);
@@ -93,6 +95,28 @@ public class PolloptionFragment extends Fragment {
                 }
             }
         });
+        if(saving.getDropDownMenu() != null) {
+            dropDownMenu.setText(saving.getDropDownMenu().toString());
+            if (dropDownMenu.getText().toString().equals("GEOFENCE")) {
+                geofence.setVisibility(View.VISIBLE);
+                userGroup.setVisibility(View.GONE);
+                votingCandidates.setVisibility(View.GONE);
+                oberserveCandidates.setVisibility(View.GONE);
+            } else if (dropDownMenu.getText().toString().equals("PRIVATE")) {
+                geofence.setVisibility(View.GONE);
+                userGroup.setVisibility(View.VISIBLE);
+                AutoCompleteTextView usergroupText = (AutoCompleteTextView) root.findViewById(R.id.usergroupNumber);
+                usergroupText.setText(saving.getUsergroupName());
+                votingCandidates.setVisibility(View.GONE);
+                oberserveCandidates.setVisibility(View.GONE);
+            } else if (dropDownMenu.getText().toString().equals("CUSTOM")) {
+                geofence.setVisibility(View.GONE);
+                userGroup.setVisibility(View.GONE);
+                votingCandidates.setVisibility(View.VISIBLE);
+                oberserveCandidates.setVisibility(View.VISIBLE);
+            }
+        }
+
         EditText Pollname = (EditText) root.findViewById(R.id.Name);
         TextInputEditText description = (TextInputEditText) root.findViewById(R.id.description);
         Pollname.setText(saving.getPollname());
@@ -125,6 +149,41 @@ public class PolloptionFragment extends Fragment {
                 datePickerDialog.show();
             }
         });
+
+        root.findViewById(R.id.usergroupNumber).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                saving.setDescription(description.getText());
+                saving.setPollname(Pollname.getText());
+                saving.setCalendarText(test.getText());
+                saving.setDropDownMenu(dropDownMenu.getText());
+                System.out.println(dropDownMenu.getText());
+                Navigation.findNavController(getActivity(), R.id.nav_host_fragment).navigate(R.id.usergroupSearch);
+            }
+        });
+
+        root.findViewById(R.id.votingCandidates).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                saving.setDescription(description.getText());
+                saving.setPollname(Pollname.getText());
+                saving.setCalendarText(test.getText());
+                saving.setDropDownMenu(dropDownMenu.getText());
+                System.out.println(dropDownMenu.getText());
+                Navigation.findNavController(getActivity(), R.id.nav_host_fragment).navigate(R.id.votingCandidates2);
+            }
+        });
+        root.findViewById(R.id.observingCandidates).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                saving.setDescription(description.getText());
+                saving.setPollname(Pollname.getText());
+                saving.setCalendarText(test.getText());
+                saving.setDropDownMenu(dropDownMenu.getText());
+                System.out.println(dropDownMenu.getText());
+                Navigation.findNavController(getActivity(), R.id.nav_host_fragment).navigate(R.id.observingCandidates2);
+            }
+        });
         root.findViewById(R.id.EditOptions).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -149,12 +208,13 @@ public class PolloptionFragment extends Fragment {
                     Toast.makeText(getActivity(), "Please enter Pollname", Toast.LENGTH_SHORT).show();
                 }
 
-                if(test.getText().length() == 0){
-                    Toast.makeText(getActivity(), "Please choose an Expiration date", Toast.LENGTH_SHORT).show();
+                if(!(test.getText().toString().contains("/") && test.getText().toString().contains(":"))){
+                    Toast.makeText(getActivity(), "Please choose a valid Expiration date", Toast.LENGTH_SHORT).show();
                 }
                 try {
                     long id = PollManager.createPoll(Pollname.toString(), pollOptions);
                     Toast.makeText(getActivity(), "Poll ID is: " + id, Toast.LENGTH_SHORT).show();
+                    saving.reset();
                 } catch (InterruptedException | IOException e) {
                     e.printStackTrace();
                     Toast.makeText(getActivity(), "No connection to the server!", Toast.LENGTH_SHORT).show();
