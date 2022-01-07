@@ -56,6 +56,7 @@ public class ListAdapterUser extends RecyclerView.Adapter<ListAdapterUser.ListVi
     };
     public interface OnItemClickListener{
         void onItemClick(int position);
+        void onChecked(int position);
     }
 
     public void setOnItemClickListener(OnItemClickListener listener){
@@ -107,6 +108,17 @@ public class ListAdapterUser extends RecyclerView.Adapter<ListAdapterUser.ListVi
                         int position = getAdapterPosition();
                         if(position != RecyclerView.NO_POSITION){
                             listener.onItemClick(getAdapterPosition());
+                        }
+                    }
+                }
+            });
+            mCheckBox.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if(listener != null){
+                        int position = getAdapterPosition();
+                        if(position != RecyclerView.NO_POSITION){
+                            listener.onChecked(getAdapterPosition());
                         }
                     }
                 }

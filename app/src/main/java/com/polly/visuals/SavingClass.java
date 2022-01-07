@@ -5,6 +5,7 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import androidx.lifecycle.ViewModel;
+import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -22,6 +23,24 @@ public class SavingClass extends ViewModel {
     private String usergroupName;
     List<String> pollOptions;
     ArrayList<SearchListItem> userGroupList;
+    private ArrayList<SearchListItemUser> UserArrayVoting;
+    private ArrayList<SearchListItemUser> userArrayObserving;
+
+    public ArrayList<SearchListItemUser> getUserArrayObserving() {
+        return userArrayObserving;
+    }
+
+    public void setUserArrayObserving(ArrayList<SearchListItemUser> userArrayObserving) {
+        this.userArrayObserving = userArrayObserving;
+    }
+
+    public ArrayList<SearchListItemUser> getUserArrayVoting() {
+        return UserArrayVoting;
+    }
+
+    public void setUserArrayVoting(ArrayList<SearchListItemUser> userArrayVoting) {
+        UserArrayVoting = userArrayVoting;
+    }
 
     public void setUserGroupList(ArrayList<SearchListItem> userGroupList) {
         this.userGroupList = userGroupList;

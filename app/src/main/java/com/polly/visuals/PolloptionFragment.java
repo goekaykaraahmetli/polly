@@ -114,6 +114,14 @@ public class PolloptionFragment extends Fragment {
                 userGroup.setVisibility(View.GONE);
                 votingCandidates.setVisibility(View.VISIBLE);
                 oberserveCandidates.setVisibility(View.VISIBLE);
+                AutoCompleteTextView votingCandidatesList = (AutoCompleteTextView) root.findViewById(R.id.votingCandidates);
+                AutoCompleteTextView observingCandidatesList = (AutoCompleteTextView) root.findViewById(R.id.observingCandidates);
+                if(saving.getUserArrayVoting() != null){
+                    votingCandidatesList.setText(saving.getUserArrayVoting().get(0).getmText1() + ", ...");
+                }
+                if(saving.getUserArrayObserving() != null){
+                    observingCandidatesList.setText(saving.getUserArrayObserving().get(0).getmText1() + ", ...");
+                }
             }
         }
 
