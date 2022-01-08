@@ -62,7 +62,7 @@
             android:layout_weight="1"
             android:inputType="none"
             android:text="PUBLIC"
-            android:textSize="14sp" />
+            android:textSize="12sp" />
 
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -117,7 +117,6 @@
 
     <LinearLayout
         android:id="@+id/optionLayout"
-
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:orientation="vertical"
@@ -196,6 +195,37 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:inputType="number" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <TextView
+            android:id="@+id/PollyRoomInfo"
+            android:visibility="gone"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Pollyroom is an innovative feature that allows you to vote in a group without the participants needing the Polly app, an internet connection or even a device of any kind. Just send the QR-Codes below to your computer, print them and let your participents vote."
+            android:textSize="12dp">
+        </TextView>
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/PollRoomLayout"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="match_parent"
+            android:visibility="gone"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:hint="Number of Participants"
+            app:endIconMode="clear_text"
+            app:layout_constraintEnd_toEndOf="@id/guideline48"
+            app:layout_constraintStart_toStartOf="@+id/guideline49"
+            app:layout_constraintTop_toBottomOf="@+id/Name"
+            app:startIconDrawable="@drawable/ic_roomnumber">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/PollyRoomNumber"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text=""
+                android:maxLength="2"
+                android:textSize="14sp" />
         </com.google.android.material.textfield.TextInputLayout>
     </LinearLayout>
 
