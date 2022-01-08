@@ -23,14 +23,6 @@ import com.polly.config.Config;
 import com.polly.utils.ListWrapper;
 import com.polly.utils.MapWrapper;
 import com.polly.utils.Message;
-import com.polly.utils.commandold.CreatePollCommand;
-import com.polly.utils.commandold.ErrorCommand;
-import com.polly.utils.commandold.GetMyPollsCommand;
-import com.polly.utils.commandold.GetParticipatedPollsCommand;
-import com.polly.utils.commandold.LoadPollCommand;
-import com.polly.utils.commandold.LoadPollOptionsCommand;
-import com.polly.utils.commandold.RequestPollUpdatesCommand;
-import com.polly.utils.commandold.VotePollCommand;
 import com.polly.utils.encryption.ciphers.AESCipher;
 import com.polly.utils.encryption.ciphers.RSACipher;
 import com.polly.utils.encryption.exceptions.FailedDecryptionException;
@@ -51,48 +43,15 @@ public class DataStreamManager {
 	private KeyPair keyPair;
 	private static final String CHARSET = "UTF-16";
 	private static final int SECRET_KEY_LENGTH = 256;
+	private static final int RSA_KEY_LENGTH = 2048;
 
 	public DataStreamManager(InputStream input, OutputStream output) throws FailedKeyGenerationException, IOException, InvalidKeySpecException, NoSuchAlgorithmException, FailedDecryptionException, FailedEncryptionException {
 		this.input = new DataInputStream(input);
 		this.output = new DataOutputStream(output);
 		this.secretKey = generateSecretKey();
-		System.out.println("my secret key: ");
-		for(int i = 0;i<secretKey.getEncoded().length;i++){
-			System.out.println(secretKey.getEncoded()[i]);
-		}
-		System.out.println("---------------------");
-
 		this.keyPair = generateKeyPair();
-		System.out.println("my public key: ");
-		for(int i = 0;i<keyPair.getPublic().getEncoded().length;i++){
-			System.out.print(keyPair.getPublic().getEncoded()[i]);
-		}
-		System.out.println("---------------------");
-		System.out.println("my private key: ");
-		for(int i = 0;i<keyPair.getPrivate().getEncoded().length;i++){
-			System.out.print(keyPair.getPrivate().getEncoded()[i]);
-		}
-		System.out.println("---------------------");
-
-
 		this.publicKeyComPartner = exchangePublicKeys();
-		System.out.println("their public key: ");
-		for(int i = 0;i<publicKeyComPartner.getEncoded().length;i++){
-			System.out.print(publicKeyComPartner.getEncoded()[i]);
-		}
-		System.out.println("---------------------");
-
-
 		this.secretKeyComPartner = exchangeSecretKeys();
-		System.out.println("their secret key: ");
-		for(int i = 0;i<secretKeyComPartner.getEncoded().length;i++){
-			System.out.print(secretKeyComPartner.getEncoded()[i]);
-		}
-		System.out.println("---------------------");
-
-
-
-
 	}
 
 	public Message receive() throws IOException, ClassNotFoundException{
@@ -100,7 +59,6 @@ public class DataStreamManager {
 			try {
 				Thread.sleep(REFRESH_DELAY);
 			} catch(InterruptedException e) {
-				//TODO replace with logger
 				e.printStackTrace();
 			}
 		}
@@ -136,16 +94,6 @@ public class DataStreamManager {
 		else if (dataType.equals(Short.class))
 			data = readShort();
 			// complex types:
-		else if (dataType.equals(CreatePollCommand.class))
-			data = readCreatePollCommand();
-		else if (dataType.equals(LoadPollCommand.class))
-			data = readLoadPollCommand();
-		else if (dataType.equals(VotePollCommand.class))
-			data = readVotePollCommand();
-		else if (dataType.equals(LoadPollOptionsCommand.class))
-			data = readLoadPollOptionsCommand();
-		else if (dataType.equals(Poll.class))
-			data = readPoll();
 		else if (isList(dataType)) {
 			ListWrapper lw = readList();
 			data = lw.getList();
@@ -159,15 +107,7 @@ public class DataStreamManager {
 			generics.add(mw.getKeyType());
 			generics.add(mw.getValueType());
 		}
-		else if (dataType.equals(ErrorCommand.class))
-			data = readErrorCommand();
-		else if (dataType.equals(GetParticipatedPollsCommand.class))
-			data = readGetParticipatedPollsCommand();
-		else if (dataType.equals(GetMyPollsCommand.class))
-			data = readGetMyPollsCommand();
-		else if (dataType.equals(RequestPollUpdatesCommand.class))
-			data = readRequestPollUpdatesCommand();
-			// default type:
+		// default type:
 		else
 			data = readString();
 
@@ -232,40 +172,6 @@ public class DataStreamManager {
 		}
 	}
 
-	private CreatePollCommand readCreatePollCommand() throws IOException {
-		String pollName = readString();
-		List<String> pollOptions = new ArrayList<>();
-		int listSize = readInteger();
-		for(int i = 0;i<listSize;i++){
-			pollOptions.add(i, readString());
-		}
-		return new CreatePollCommand(pollName, pollOptions);
-	}
-
-	private LoadPollCommand readLoadPollCommand() throws IOException {
-		return new LoadPollCommand(readLong());
-	}
-
-	private VotePollCommand readVotePollCommand() throws IOException {
-		return new VotePollCommand(readLong(), readString());
-	}
-
-	private LoadPollOptionsCommand readLoadPollOptionsCommand() throws IOException {
-		return new LoadPollOptionsCommand(readLong());
-	}
-
-	private Poll readPoll() throws IOException {
-		long id = readLong();
-		String name = readString();
-		Map<String, Integer> map = new HashMap<>();
-		int size = readInteger();
-		for(int i=0;i<size;i++) {
-			map.put(readString(), readInteger());
-		}
-		String description = readString();
-		return new Poll(id, name, map, description);
-	}
-
 	private ListWrapper readList() throws IOException, ClassNotFoundException {
 		Class<?> type = Class.forName(readString());
 		int size = readInteger();
@@ -289,26 +195,6 @@ public class DataStreamManager {
 			map.put(key.getDataType().cast(key.getData()), value.getDataType().cast(value.getData()));
 		}
 		return new MapWrapper(map, keyType, valueType);
-	}
-
-	private ErrorCommand readErrorCommand() throws IOException {
-		return new ErrorCommand(readString());
-	}
-
-	private GetParticipatedPollsCommand readGetParticipatedPollsCommand() throws IOException{
-		return new GetParticipatedPollsCommand();
-	}
-
-	private GetMyPollsCommand readGetMyPollsCommand() throws IOException {
-		return new GetMyPollsCommand();
-	}
-
-	private RequestPollUpdatesCommand readRequestPollUpdatesCommand() throws IOException{
-		long pollId = readLong();
-		if(RequestPollUpdatesCommand.RequestType.START.getValue() == readInteger()){
-			return new RequestPollUpdatesCommand(pollId, RequestPollUpdatesCommand.RequestType.START);
-		}
-		return new RequestPollUpdatesCommand(pollId, RequestPollUpdatesCommand.RequestType.STOP);
 	}
 
 	public void send(Message message) throws IOException{
@@ -345,16 +231,6 @@ public class DataStreamManager {
 		else if (dataType.equals(Short.class))
 			writeShort((short) data);
 			// complex types:
-		else if (dataType.equals(CreatePollCommand.class))
-			writeCreatePollCommand((CreatePollCommand) data);
-		else if (dataType.equals(LoadPollCommand.class))
-			writeLoadPollCommand((LoadPollCommand) data);
-		else if (dataType.equals(VotePollCommand.class))
-			writeVotePollCommand((VotePollCommand) data);
-		else if (dataType.equals(LoadPollOptionsCommand.class))
-			writeLoadPollOptionsCommand((LoadPollOptionsCommand) data);
-		else if (dataType.equals(Poll.class))
-			writePoll((Poll) data);
 		else if (isList(dataType)) {
 			if(generics.isEmpty())
 				throw new IllegalArgumentException("missing generics");
@@ -366,14 +242,6 @@ public class DataStreamManager {
 			writeMap((Map<Object,Object>) data, generics.get(0), generics.get(1));
 			// default type:
 		}
-		else if (dataType.equals(ErrorCommand.class))
-			writeErrorCommand((ErrorCommand) data);
-		else if (dataType.equals(GetParticipatedPollsCommand.class))
-			writeGetParticipatedPollsCommand((GetParticipatedPollsCommand) data);
-		else if (dataType.equals(GetMyPollsCommand.class))
-			writeGetMyPollsCommand((GetMyPollsCommand) data);
-		else if (dataType.equals(RequestPollUpdatesCommand.class))
-			writeRequestPollUpdatesCommand((RequestPollUpdatesCommand) data);
 		else
 			writeString((String) data);
 	}
@@ -414,41 +282,6 @@ public class DataStreamManager {
 		writeEncryptedByteArray(data.getBytes(CHARSET));
 	}
 
-	private void writeCreatePollCommand(CreatePollCommand data) throws IOException {
-		String pollName = data.getPollName();
-		List<String> pollOptions = data.getPollOptions();
-
-		writeString(pollName);
-		writeInteger(pollOptions.size());
-		for(int i = 0;i<pollOptions.size();i++){
-			writeString(pollOptions.get(i));
-		}
-	}
-
-	private void writeLoadPollCommand(LoadPollCommand data) throws IOException {
-		writeLong(data.getPollId());
-	}
-
-	private void writeVotePollCommand(VotePollCommand data) throws IOException {
-		writeLong(data.getPollId());
-		writeString(data.getPollOption());
-	}
-
-	private void writeLoadPollOptionsCommand(LoadPollOptionsCommand data) throws IOException {
-		writeLong(data.getPollId());
-	}
-
-	private void writePoll(Poll data) throws IOException {
-		writeLong(data.getId());
-		writeString(data.getName());
-		writeInteger(data.getData().size());
-		for(String s : data.getData().keySet()) {
-			writeString(s);
-			writeInteger(data.getData().get(s));
-		}
-		writeString(data.getDescription());
-	}
-
 	private void writeList(List<Object> data, Class<?> type) throws IOException {
 		writeString(type.getName());
 		writeInteger(data.size());
@@ -465,23 +298,6 @@ public class DataStreamManager {
 			write(keyType, keyType.cast(entry.getKey()), new ArrayList<>());
 			write(valueType, valueType.cast(entry.getValue()), new ArrayList<>());
 		}
-	}
-
-	private void writeErrorCommand(ErrorCommand data) throws IOException {
-		writeString(data.getMessage());
-	}
-
-	private void writeGetParticipatedPollsCommand(GetParticipatedPollsCommand data) throws IOException {
-		// empty
-	}
-
-	private void writeGetMyPollsCommand(GetMyPollsCommand data) throws IOException {
-		//empty
-	}
-
-	private void writeRequestPollUpdatesCommand(RequestPollUpdatesCommand data) throws IOException {
-		writeLong(data.getPollId());
-		writeInteger(data.getStartStop());
 	}
 
 	private void writeClearString(String string) throws IOException {
@@ -520,7 +336,7 @@ public class DataStreamManager {
 	}
 
 	private KeyPair generateKeyPair() throws FailedKeyGenerationException{
-		return CipherKeyGenerator.generateRSAKeyPair(2048);
+		return CipherKeyGenerator.generateRSAKeyPair(RSA_KEY_LENGTH);
 	}
 
 
