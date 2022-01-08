@@ -24,13 +24,13 @@
         android:label="AccountFragment"
         tools:layout="@layout/fragment_account"/>
     <fragment
-        android:id="@+id/startpollFragment"
-        android:name="com.polly.visuals.StartpollFragment"
-        android:label="StartpollFragment" />
-    <fragment
         android:id="@+id/createPollFragment"
         android:name="com.polly.visuals.CreatePollFragment"
-        android:label="CreatePollFragment" />
+        android:label="CreatePollFragment" >
+        <action
+            android:id="@+id/action_createPollFragment_to_polloptionFragment"
+            app:destination="@id/polloptionFragment" />
+    </fragment>
     <fragment
         android:id="@+id/recentFragment"
         android:name="com.polly.visuals.RecentFragment"
@@ -64,39 +64,49 @@
         android:name="com.polly.visuals.TermsOfService"
         android:label="TermsOfService" />
     <fragment
-        android:id="@+id/observingCandidates2"
-        android:name="com.polly.visuals.ObservingCandidates"
-        android:label="ObservingCandidates" />
+        android:id="@+id/scanRoom"
+        android:name="com.polly.visuals.ScanRoom"
+        android:label="ScanRoom" />
     <fragment
-        android:id="@+id/polloptionFragment2"
+        android:id="@+id/polloptionFragment"
         android:name="com.polly.visuals.PolloptionFragment"
-        android:label="PolloptionFragment" />
-    <fragment
-        android:id="@+id/scanRoomCreate"
-        android:name="com.polly.visuals.ScanRoomCreate"
-        android:label="ScanRoomCreate" />
-    <fragment
-        android:id="@+id/scanRoomStart"
-        android:name="com.polly.visuals.ScanRoomStart"
-        android:label="ScanRoomStart" />
+        android:label="PolloptionFragment" >
+        <action
+            android:id="@+id/action_polloptionFragment_to_createPollFragment"
+            app:destination="@id/createPollFragment" />
+        <action
+            android:id="@+id/action_polloptionFragment_to_usergroupSearch"
+            app:destination="@id/usergroupSearch" />
+        <action
+            android:id="@+id/action_polloptionFragment_to_votingCandidates2"
+            app:destination="@id/votingCandidates2" />
+    </fragment>
     <fragment
         android:id="@+id/usergroupSearch"
         android:name="com.polly.visuals.UsergroupSearch"
-        android:label="UsergroupSearch" />
+        android:label="UsergroupSearch" >
+        <action
+            android:id="@+id/action_usergroupSearch_to_polloptionFragment"
+            app:destination="@id/polloptionFragment" />
+    </fragment>
     <fragment
         android:id="@+id/votingCandidates2"
         android:name="com.polly.visuals.VotingCandidates"
-        android:label="VotingCandidates" />
-    <activity
-        android:id="@+id/displayQRCodePie"
-        android:name="com.polly.visuals.DisplayQRCodePie"
-        android:label="DisplayQRCodePie" />
-    <activity
-        android:id="@+id/pollActivity"
-        android:name="com.polly.visuals.PollActivity"
-        android:label="PollActivity" />
-    <activity
-        android:id="@+id/visualPoll"
-        android:name="com.polly.testclasses.VisualPoll"
-        android:label="VisualPoll" />
+        android:label="VotingCandidates" >
+        <action
+            android:id="@+id/action_votingCandidates2_to_polloptionFragment"
+            app:destination="@id/polloptionFragment" />
+        <action
+            android:id="@+id/action_votingCandidates2_to_observingCandidates2"
+            app:destination="@id/observingCandidates2" />
+    </fragment>
+    <fragment
+        android:id="@+id/observingCandidates2"
+        android:name="com.polly.visuals.ObservingCandidates"
+        android:label="ObservingCandidates" >
+        <action
+            android:id="@+id/action_observingCandidates2_to_votingCandidates2"
+            app:destination="@id/votingCandidates2" />
+    </fragment>
+    <fragment android:id="@+id/placeholder3" />
 </navigation>
