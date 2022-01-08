@@ -109,4 +109,16 @@
             app:destination="@id/votingCandidates2" />
     </fragment>
     <fragment android:id="@+id/placeholder3" />
+    <fragment
+        android:id="@+id/scanRoomCreate"
+        android:name="com.polly.visuals.ScanRoomCreate"
+        android:label="ScanRoomCreate" />
+    <fragment
+        android:id="@+id/scanRoomStart"
+        android:name="com.polly.visuals.ScanRoomStart"
+        android:label="ScanRoomStart" />
+    <activity
+        android:id="@+id/displayQRCodePie"
+        android:name="com.polly.visuals.DisplayQRCodePie"
+        android:label="DisplayQRCodePie" />
 </navigation>

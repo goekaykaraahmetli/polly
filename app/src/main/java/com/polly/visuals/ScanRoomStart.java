@@ -1,7 +1,9 @@
 package com.polly.visuals;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.provider.MediaStore;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,6 +17,8 @@ import androidx.navigation.Navigation;
 
 import com.polly.R;
 
+import java.io.File;
+
 public class ScanRoomStart extends Fragment {
     @Nullable
     @Override
@@ -24,7 +28,7 @@ public class ScanRoomStart extends Fragment {
                 container, false);
 
         Button createButton = (Button) rootView.findViewById(R.id.createroompoll);
-
+        Button emailButton = (Button) rootView.findViewById(R.id.sendviaemail);
 
         createButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -32,6 +36,27 @@ public class ScanRoomStart extends Fragment {
                 Navigation.findNavController(getActivity(), R.id.nav_host_fragment).navigate(R.id.scanRoomCreate);
             }
         });
+
+        emailButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String filename="contacts_sid.vcf";
+                File filelocation = new File(Environment.getExternalStorageDirectory().getAbsolutePath(), filename);
+                Uri path = Uri.fromFile(filelocation);
+                Intent emailIntent = new Intent(Intent.ACTION_SEND);
+                // set the type to 'email'
+                emailIntent.setType("vnd.android.cursor.dir/email");
+                String to[] = {"asd@gmail.com"};
+                emailIntent.putExtra(Intent.EXTRA_EMAIL, to);
+                // the attachment
+                emailIntent.putExtra(Intent.EXTRA_STREAM, path);
+                // the mail subject
+                emailIntent .putExtra(Intent.EXTRA_SUBJECT, "Subject");
+                startActivity(Intent.createChooser(emailIntent , "Send email..."));
+            }
+        });
+
+
 
 
 
