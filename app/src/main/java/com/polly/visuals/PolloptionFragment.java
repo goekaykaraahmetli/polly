@@ -1,9 +1,13 @@
 package com.polly.visuals;
 
+import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.text.Editable;
+import android.text.InputFilter;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -252,7 +256,10 @@ public class PolloptionFragment extends Fragment {
                 Navigation.findNavController(getActivity(), R.id.nav_host_fragment).navigate(R.id.usergroupSearch);
             }
         });
-
+        EditText tmp = root.findViewById(R.id.PollyRoomNumber);
+        tmp.setFilters(new InputFilter[]{
+                new InputFilterMinMax("1", "26")
+        });
         root.findViewById(R.id.votingCandidates).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
