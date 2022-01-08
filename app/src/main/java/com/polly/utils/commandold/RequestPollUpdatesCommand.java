@@ -1,4 +1,4 @@
-package com.polly.utils.command;
+package com.polly.utils.commandold;
 
 public class RequestPollUpdatesCommand {
     private final long pollId;

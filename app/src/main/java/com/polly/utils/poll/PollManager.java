@@ -1,24 +1,18 @@
 package com.polly.utils.poll;
 
-import android.content.Context;
-
 import com.polly.config.Config;
 import com.polly.utils.Message;
-import com.polly.utils.Organizer;
-import com.polly.utils.command.CreatePollCommand;
-import com.polly.utils.command.ErrorCommand;
-import com.polly.utils.command.GetMyPollsCommand;
-import com.polly.utils.command.GetParticipatedPollsCommand;
-import com.polly.utils.command.LoadPollCommand;
-import com.polly.utils.command.LoadPollOptionsCommand;
-import com.polly.utils.command.VotePollCommand;
+import com.polly.utils.commandold.CreatePollCommand;
+import com.polly.utils.commandold.ErrorCommand;
+import com.polly.utils.commandold.GetMyPollsCommand;
+import com.polly.utils.commandold.GetParticipatedPollsCommand;
+import com.polly.utils.commandold.LoadPollCommand;
+import com.polly.utils.commandold.LoadPollOptionsCommand;
+import com.polly.utils.commandold.VotePollCommand;
 import com.polly.utils.communication.DataStreamManager;
-import com.polly.utils.communicator.Communicator;
-import com.polly.utils.communicator.CommunicatorManager;
 import com.polly.utils.communicator.ResponseCommunicator;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;

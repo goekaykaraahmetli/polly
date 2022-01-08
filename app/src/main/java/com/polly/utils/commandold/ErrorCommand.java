@@ -1,13 +1,13 @@
-package com.polly.utils.command;
+package com.polly.utils.commandold;
 
 public class ErrorCommand {
     private final String message;
 
-    public ErrorCommand(String message) {
+    public ErrorCommand(String message){
         this.message = message;
     }
 
-    public String getMessage() {
+    public String getMessage(){
         return message;
     }
 }

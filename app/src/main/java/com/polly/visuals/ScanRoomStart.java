@@ -1,6 +1,7 @@
 package com.polly.visuals;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -12,11 +13,14 @@ import android.widget.Button;
 import android.widget.ImageView;
 
 import androidx.annotation.Nullable;
+import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 
 import com.polly.R;
+import com.polly.utils.QRCode;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 
 public class ScanRoomStart extends Fragment {
@@ -40,16 +44,18 @@ public class ScanRoomStart extends Fragment {
         emailButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String filename="contacts_sid.vcf";
-                File filelocation = new File(Environment.getExternalStorageDirectory().getAbsolutePath(), filename);
-                Uri path = Uri.fromFile(filelocation);
+                Bitmap inImage = QRCode.QRCode("1A");
+                ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+                inImage.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
+                String path = MediaStore.Images.Media.insertImage(getContext().getContentResolver(), inImage, "Answer_" + "1" + "_Participant_"+"1", null);
+                Uri uri = Uri.parse(path);
                 Intent emailIntent = new Intent(Intent.ACTION_SEND);
                 // set the type to 'email'
                 emailIntent.setType("vnd.android.cursor.dir/email");
-                String to[] = {"asd@gmail.com"};
+                String to[] = {"willimowski4@gmail.com"};
                 emailIntent.putExtra(Intent.EXTRA_EMAIL, to);
                 // the attachment
-                emailIntent.putExtra(Intent.EXTRA_STREAM, path);
+                emailIntent.putExtra(Intent.EXTRA_STREAM, uri);
                 // the mail subject
                 emailIntent .putExtra(Intent.EXTRA_SUBJECT, "Subject");
                 startActivity(Intent.createChooser(emailIntent , "Send email..."));

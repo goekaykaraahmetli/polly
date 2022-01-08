@@ -21,7 +21,7 @@ import com.polly.R;
 import com.polly.config.Config;
 import com.polly.utils.Message;
 import com.polly.utils.QRCode;
-import com.polly.utils.command.RequestPollUpdatesCommand;
+import com.polly.utils.commandold.RequestPollUpdatesCommand;
 import com.polly.utils.communicator.Communicator;
 import com.polly.utils.listener.PieChartResultsListener;
 import com.polly.utils.listener.PieChartVoteListener;
