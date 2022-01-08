@@ -64,7 +64,39 @@
         android:name="com.polly.visuals.TermsOfService"
         android:label="TermsOfService" />
     <fragment
-        android:id="@+id/scanRoom"
-        android:name="com.polly.visuals.ScanRoom"
-        android:label="ScanRoom" />
+        android:id="@+id/observingCandidates2"
+        android:name="com.polly.visuals.ObservingCandidates"
+        android:label="ObservingCandidates" />
+    <fragment
+        android:id="@+id/polloptionFragment2"
+        android:name="com.polly.visuals.PolloptionFragment"
+        android:label="PolloptionFragment" />
+    <fragment
+        android:id="@+id/scanRoomCreate"
+        android:name="com.polly.visuals.ScanRoomCreate"
+        android:label="ScanRoomCreate" />
+    <fragment
+        android:id="@+id/scanRoomStart"
+        android:name="com.polly.visuals.ScanRoomStart"
+        android:label="ScanRoomStart" />
+    <fragment
+        android:id="@+id/usergroupSearch"
+        android:name="com.polly.visuals.UsergroupSearch"
+        android:label="UsergroupSearch" />
+    <fragment
+        android:id="@+id/votingCandidates2"
+        android:name="com.polly.visuals.VotingCandidates"
+        android:label="VotingCandidates" />
+    <activity
+        android:id="@+id/displayQRCodePie"
+        android:name="com.polly.visuals.DisplayQRCodePie"
+        android:label="DisplayQRCodePie" />
+    <activity
+        android:id="@+id/pollActivity"
+        android:name="com.polly.visuals.PollActivity"
+        android:label="PollActivity" />
+    <activity
+        android:id="@+id/visualPoll"
+        android:name="com.polly.testclasses.VisualPoll"
+        android:label="VisualPoll" />
 </navigation>
