@@ -1,9 +1,19 @@
 package com.polly.visuals;
+import com.google.android.material.textfield.TextInputEditText;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.FirebaseDatabase;
+import com.polly.testclasses.User;
+import com.polly.utils.QRCode;
 import com.polly.utils.poll.PollManager;
 
 
+import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.text.Editable;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,7 +26,6 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.ViewModelProvider;
@@ -24,6 +33,7 @@ import androidx.navigation.Navigation;
 
 import com.polly.R;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -34,6 +44,8 @@ public class CreatePollFragment extends Fragment {
     int optionCounter = 0;
     int optionMax = 8;
     boolean start = true;
+    int numberOfParticipants;
+    int numberOfOptions;
     HashMap<Integer, EditText> map = new HashMap<>();
     HashMap<Integer, Button> remove = new HashMap<>();
     @Nullable
@@ -44,6 +56,7 @@ public class CreatePollFragment extends Fragment {
         super.onCreate(savedInstanceState);
         View root = inflater.inflate(R.layout.activity_create_poll, container, false);
         SavingClass saving = new ViewModelProvider(getActivity()).get(SavingClass.class);
+
         if(saving.getDropDownMenu().toString().equals("POLLYROOM")){
             optionMax = 4;
         }

@@ -38,6 +38,7 @@ public class DisplayQRCodePie extends AppCompatActivity {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_qrpie);
+        setTheme(R.style.Theme_Polly);
         LinearLayout linearLayout = findViewById(R.id.linearLayoutQRPie);
         numberOfParticipants = (int) getIntent().getExtras().get("PARTICIPANTS");
         HashMap<String, Integer> hashMap = (HashMap<String, Integer>) getIntent().getExtras().get("THE_PIE");

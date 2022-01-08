@@ -52,7 +52,7 @@ public class ScanRoomCreate extends Fragment {
 
         Button scanRoomButton = (Button) rootView.findViewById(R.id.scanRoomBtn);
 
-
+        getActivity().setTheme(R.style.Theme_Polly);
 
 
         if(answer1 == "")
