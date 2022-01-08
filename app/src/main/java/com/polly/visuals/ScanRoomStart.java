@@ -22,8 +22,11 @@ import com.polly.utils.QRCode;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.util.ArrayList;
 
 public class ScanRoomStart extends Fragment {
+    int numberOfParticipants = 4;
+    int numberOfOptions = 2;
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
@@ -44,20 +47,26 @@ public class ScanRoomStart extends Fragment {
         emailButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Bitmap inImage = QRCode.QRCode("1A");
-                ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-                inImage.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
-                String path = MediaStore.Images.Media.insertImage(getContext().getContentResolver(), inImage, "Answer_" + "1" + "_Participant_"+"1", null);
-                Uri uri = Uri.parse(path);
-                Intent emailIntent = new Intent(Intent.ACTION_SEND);
+                ArrayList<Uri> uris = new ArrayList<>();
+                Intent emailIntent = new Intent(Intent.ACTION_SEND_MULTIPLE);
                 // set the type to 'email'
                 emailIntent.setType("vnd.android.cursor.dir/email");
                 String to[] = {"willimowski4@gmail.com"};
                 emailIntent.putExtra(Intent.EXTRA_EMAIL, to);
-                // the attachment
-                emailIntent.putExtra(Intent.EXTRA_STREAM, uri);
-                // the mail subject
                 emailIntent .putExtra(Intent.EXTRA_SUBJECT, "Subject");
+                for(int i = 1; i <= numberOfParticipants; i++){
+                    for(int j = 97; j <= 96 + numberOfParticipants; j++){
+                        Bitmap inImage = QRCode.QRCode("" + i + (char) j);
+                        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+                        inImage.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
+                        String path = MediaStore.Images.Media.insertImage(getContext().getContentResolver(), inImage, "Answer_" + i + "_Participant_"+ (j-96), null);
+                        Uri uri = Uri.parse(path);
+                        uris.add(uri);
+
+                    }
+                }
+                // the attachment
+                emailIntent.putParcelableArrayListExtra(Intent.EXTRA_STREAM, uris);
                 startActivity(Intent.createChooser(emailIntent , "Send email..."));
             }
         });
