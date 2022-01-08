@@ -14,7 +14,7 @@ import java.util.concurrent.ArrayBlockingQueue;
 
 public abstract class ResponseCommunicator extends Communicator{
     final ArrayBlockingQueue<Message> responseQueue = new ArrayBlockingQueue<>(MAX_QUEUE_LENGTH);
-
+    private long nextResponseId = 0L;
     public final List<Long> responseIds = new ArrayList<>();
 
     protected ResponseCommunicator() {
@@ -37,7 +37,9 @@ public abstract class ResponseCommunicator extends Communicator{
         }).start();
     }
 
-    public <T> Message sendWithResponse(long receiver, long responseId, T data) throws IOException {
+    public <T> Message sendWithResponse(long receiver, T data) throws IOException {
+        long responseId = getNextResponseId();
+
         responseIds.add(responseId);
         Organizer.send(getCommunicationId(), receiver, responseId, data);
 
@@ -53,5 +55,9 @@ public abstract class ResponseCommunicator extends Communicator{
                 e.printStackTrace();
             }
         }
+    }
+
+    public long getNextResponseId() {
+        return nextResponseId++;
     }
 }

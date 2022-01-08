@@ -21,6 +21,8 @@ public class SavingClass extends ViewModel {
     private Editable Pollname;
     private Editable description;
     private String usergroupName;
+    private List<String> pollOptions;
+    private ArrayList<SearchListItem> userGroupList;
     private Editable numberOfParticipants;
     List<String> pollOptions;
     ArrayList<SearchListItem> userGroupList;

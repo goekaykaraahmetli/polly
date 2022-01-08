@@ -10,7 +10,6 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
@@ -19,7 +18,6 @@ import com.budiyev.android.codescanner.DecodeCallback;
 import com.google.zxing.Result;
 import com.polly.R;
 import com.budiyev.android.codescanner.CodeScanner;
-import com.polly.utils.EnterPoll;
 
 import java.io.IOException;
 import java.util.Timer;

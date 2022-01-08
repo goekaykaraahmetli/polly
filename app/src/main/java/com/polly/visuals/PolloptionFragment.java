@@ -4,12 +4,15 @@ import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.DialogInterface;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.text.Editable;
+import android.text.InputFilter;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -269,7 +272,10 @@ public class PolloptionFragment extends Fragment {
                 Navigation.findNavController(getActivity(), R.id.nav_host_fragment).navigate(R.id.usergroupSearch);
             }
         });
-
+        EditText tmp = root.findViewById(R.id.PollyRoomNumber);
+        tmp.setFilters(new InputFilter[]{
+                new InputFilterMinMax("1", "26")
+        });
         root.findViewById(R.id.votingCandidates).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -284,7 +290,7 @@ public class PolloptionFragment extends Fragment {
         root.findViewById(R.id.observingCandidates).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                saving.setDescription(description[0].getText());
+                saving.setDescription(description.getText());
                 saving.setPollname(Pollname.getText());
                 saving.setCalendarText(test.getText());
                 saving.setDropDownMenu(dropDownMenu.getText());
@@ -407,8 +413,6 @@ public class PolloptionFragment extends Fragment {
                 alert.show();
             }
         });
-
-
         return root;
     }
 }

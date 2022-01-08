@@ -25,8 +25,6 @@ import com.polly.utils.commandold.RequestPollUpdatesCommand;
 import com.polly.utils.communicator.Communicator;
 import com.polly.utils.listener.PieChartResultsListener;
 import com.polly.utils.listener.PieChartVoteListener;
-import com.polly.utils.poll.Poll;
-import com.polly.utils.poll.PollManager;
 
 import java.io.IOException;
 import java.util.ArrayList;
