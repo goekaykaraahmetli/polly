@@ -1,4 +1,4 @@
-package com.polly.utils.command;
+package com.polly.utils.commandold;
 
 public class ErrorCommand {
     private final String message;
