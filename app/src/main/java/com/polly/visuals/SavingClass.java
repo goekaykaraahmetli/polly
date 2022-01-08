@@ -140,5 +140,11 @@ public class SavingClass extends ViewModel {
         setDropDownMenu(null);
         setDescription(null);
         setPollname(null);
+        setUserArrayObserving(null);
+        setUserArrayVoting(null);
+        setUserGroupList(null);
+        setUsergroupName(null);
+
+
     }
 }

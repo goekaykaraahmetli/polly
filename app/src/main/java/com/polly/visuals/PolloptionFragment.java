@@ -45,6 +45,17 @@ public class PolloptionFragment extends Fragment {
         dropDownMenu.setAdapter(arrayAdapter);
     }
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        Navigation.findNavController(getActivity(), R.id.nav_host_fragment).navigate(R.id.startFragment);
+        SavingClass saving = new ViewModelProvider(getActivity()).get(SavingClass.class);
+        saving.setCalendarText(null);
+        saving.setDescription(null);
+        saving.setPollname(null);
+        saving.reset();
+    }
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater,
@@ -222,7 +233,6 @@ public class PolloptionFragment extends Fragment {
                 try {
                     long id = PollManager.createPoll(Pollname.toString(), pollOptions);
                     Toast.makeText(getActivity(), "Poll ID is: " + id, Toast.LENGTH_SHORT).show();
-                    saving.reset();
                 } catch (InterruptedException | IOException e) {
                     e.printStackTrace();
                     Toast.makeText(getActivity(), "No connection to the server!", Toast.LENGTH_SHORT).show();
