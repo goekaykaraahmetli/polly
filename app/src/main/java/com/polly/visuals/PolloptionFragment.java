@@ -1,8 +1,13 @@
 package com.polly.visuals;
 
+import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.InputFilter;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,14 +23,21 @@ import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentController;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 import com.polly.R;
+import com.polly.utils.poll.Poll;
+import com.polly.utils.poll.PollManager;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
@@ -244,7 +256,10 @@ public class PolloptionFragment extends Fragment {
                 Navigation.findNavController(getActivity(), R.id.nav_host_fragment).navigate(R.id.usergroupSearch);
             }
         });
-
+        EditText tmp = root.findViewById(R.id.PollyRoomNumber);
+        tmp.setFilters(new InputFilter[]{
+                new InputFilterMinMax("1", "26")
+        });
         root.findViewById(R.id.votingCandidates).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

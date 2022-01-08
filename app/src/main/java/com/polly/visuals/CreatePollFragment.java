@@ -68,8 +68,8 @@ public class CreatePollFragment extends Fragment {
         if(saving.getOptionCounter()>=2){
             optionCounter = saving.getOptionCounter();
             start = saving.isStart();
-            option1.setText(saving.pollOptions.get(0));
-            option2.setText(saving.pollOptions.get(1));
+            option1.setText(saving.getPollOptions().get(0));
+            option2.setText(saving.getPollOptions().get(1));
             remove1.setVisibility(View.VISIBLE);
             remove2.setVisibility(View.VISIBLE);
             if(optionCounter > optionMax){
