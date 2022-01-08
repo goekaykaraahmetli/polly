@@ -37,7 +37,6 @@ import com.polly.utils.encryption.exceptions.FailedDecryptionException;
 import com.polly.utils.encryption.exceptions.FailedEncryptionException;
 import com.polly.utils.encryption.exceptions.FailedKeyGenerationException;
 import com.polly.utils.encryption.utils.CipherKeyGenerator;
-import com.polly.utils.poll.Poll;
 
 import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;

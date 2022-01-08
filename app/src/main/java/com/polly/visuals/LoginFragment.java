@@ -46,7 +46,6 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.polly.R;
-import com.polly.testclasses.User;
 
 public class LoginFragment extends Fragment {
     EditText passwordInput;

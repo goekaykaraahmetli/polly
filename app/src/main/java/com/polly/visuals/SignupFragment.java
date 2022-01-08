@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.text.method.HideReturnsTransformationMethod;
-import android.text.method.LinkMovementMethod;
 import android.util.Patterns;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,14 +18,12 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.FirebaseDatabase;
 import com.polly.R;
-import com.polly.testclasses.User;
 
 public class SignupFragment extends Fragment {
     FirebaseAuth mAuth;
