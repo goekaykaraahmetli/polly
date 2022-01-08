@@ -32,7 +32,6 @@ import androidx.navigation.Navigation;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 import com.polly.R;
-import com.polly.utils.poll.Poll;
 import com.polly.utils.poll.PollManager;
 
 import java.io.IOException;
