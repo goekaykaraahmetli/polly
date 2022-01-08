@@ -108,5 +108,4 @@
             android:id="@+id/action_observingCandidates2_to_votingCandidates2"
             app:destination="@id/votingCandidates2" />
     </fragment>
-    <fragment android:id="@+id/placeholder2" />
 </navigation>
