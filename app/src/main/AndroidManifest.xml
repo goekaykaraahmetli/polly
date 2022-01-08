@@ -17,6 +17,8 @@
             android:name=".visuals.PollActivity"
             android:exported="false"
             android:label="PollActivity" />
+        <activity android:name=".visuals.BarcodeScannerActivity"></activity>
+        <activity android:name=".visuals.DisplayQRCodePie"></activity>
         <activity
             android:name=".visuals.MainActivity"
             android:exported="true">

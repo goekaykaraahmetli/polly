@@ -13,19 +13,27 @@
         <entry key="..\:/Users/willi/StudioProjects/polly/app/src/main/res/drawable/ic_recent.xml" value="0.37864583333333335" />
         <entry key="..\:/Users/willi/StudioProjects/polly/app/src/main/res/drawable/ic_signin_signup.xml" value="0.37864583333333335" />
         <entry key="..\:/Users/willi/StudioProjects/polly/app/src/main/res/layout/activity_bar.xml" value="0.3625" />
+        <entry key="..\:/Users/willi/StudioProjects/polly/app/src/main/res/layout/activity_barcode_scanner.xml" value="0.25" />
+        <entry key="..\:/Users/willi/StudioProjects/polly/app/src/main/res/layout/activity_codescanner.xml" value="0.23697916666666666" />
         <entry key="..\:/Users/willi/StudioProjects/polly/app/src/main/res/layout/activity_create_poll.xml" value="0.3625" />
         <entry key="..\:/Users/willi/StudioProjects/polly/app/src/main/res/layout/activity_enter_poll.xml" value="0.3625" />
         <entry key="..\:/Users/willi/StudioProjects/polly/app/src/main/res/layout/activity_login.xml" value="0.3625" />
         <entry key="..\:/Users/willi/StudioProjects/polly/app/src/main/res/layout/activity_main.xml" value="0.3625" />
+        <entry key="..\:/Users/willi/StudioProjects/polly/app/src/main/res/layout/activity_qrpie.xml" value="0.26979166666666665" />
         <entry key="..\:/Users/willi/StudioProjects/polly/app/src/main/res/layout/content_main.xml" value="0.3625" />
         <entry key="..\:/Users/willi/StudioProjects/polly/app/src/main/res/layout/fragment_account.xml" value="0.20260416666666667" />
         <entry key="..\:/Users/willi/StudioProjects/polly/app/src/main/res/layout/fragment_first.xml" value="0.3625" />
         <entry key="..\:/Users/willi/StudioProjects/polly/app/src/main/res/layout/fragment_login.xml" value="0.20260416666666667" />
         <entry key="..\:/Users/willi/StudioProjects/polly/app/src/main/res/layout/fragment_recent.xml" value="0.3625" />
         <entry key="..\:/Users/willi/StudioProjects/polly/app/src/main/res/layout/fragment_roomscanner.xml" value="0.2630208333333333" />
+        <entry key="..\:/Users/willi/StudioProjects/polly/app/src/main/res/layout/fragment_roomscanner_create.xml" value="0.23697916666666666" />
+        <entry key="..\:/Users/willi/StudioProjects/polly/app/src/main/res/layout/fragment_roomscanner_scan.xml" value="0.23697916666666666" />
+        <entry key="..\:/Users/willi/StudioProjects/polly/app/src/main/res/layout/fragment_roomscanner_start.xml" value="0.3734375" />
         <entry key="..\:/Users/willi/StudioProjects/polly/app/src/main/res/layout/fragment_sign_up.xml" value="0.33" />
         <entry key="..\:/Users/willi/StudioProjects/polly/app/src/main/res/layout/fragment_start.xml" value="0.25" />
+        <entry key="..\:/Users/willi/StudioProjects/polly/app/src/main/res/layout/fragment_startpoll.xml" value="0.23697916666666666" />
         <entry key="..\:/Users/willi/StudioProjects/polly/app/src/main/res/layout/nav_header.xml" value="0.3625" />
+        <entry key="..\:/Users/willi/StudioProjects/polly/app/src/main/res/layout/qrcodetest.xml" value="0.23697916666666666" />
         <entry key="..\:/Users/willi/StudioProjects/polly/app/src/main/res/layout/termsofservice.xml" value="0.33" />
         <entry key="..\:/Users/willi/StudioProjects/polly/app/src/main/res/menu/menu_main.xml" value="0.3625" />
         <entry key="..\:/Users/willi/StudioProjects/polly/app/src/main/res/menu/navigation_menu.xml" value="0.3625" />
