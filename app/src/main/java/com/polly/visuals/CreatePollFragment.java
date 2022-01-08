@@ -32,6 +32,7 @@ import java.util.Map;
 
 public class CreatePollFragment extends Fragment {
     int optionCounter = 0;
+    int optionMax = 8;
     boolean start = true;
     HashMap<Integer, EditText> map = new HashMap<>();
     HashMap<Integer, Button> remove = new HashMap<>();
@@ -43,7 +44,9 @@ public class CreatePollFragment extends Fragment {
         super.onCreate(savedInstanceState);
         View root = inflater.inflate(R.layout.activity_create_poll, container, false);
         SavingClass saving = new ViewModelProvider(getActivity()).get(SavingClass.class);
-
+        if(saving.getDropDownMenu().toString().equals("POLLYROOM")){
+            optionMax = 4;
+        }
         Button createPollBtn = (Button) root.findViewById(R.id.createPollBtn);
         TextView pollName = (TextView) root.findViewById(R.id.PollName);
         pollName.setText(saving.getPollname());
@@ -76,7 +79,9 @@ public class CreatePollFragment extends Fragment {
             option2.setText(saving.pollOptions.get(1));
             remove1.setVisibility(View.VISIBLE);
             remove2.setVisibility(View.VISIBLE);
-
+            if(optionCounter > optionMax){
+                optionCounter = 4;
+            }
             for(int i = 2; i< optionCounter; i++){
                 EditText newOption = new EditText(getContext());
                 newOption.setHint("Option " + i);
@@ -177,10 +182,10 @@ public class CreatePollFragment extends Fragment {
         addOption.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(optionCounter >= 8) {
+                if(optionCounter >= optionMax) {
                     return;
                 }
-
+                System.out.println(saving.getDropDownMenu().toString());
                 EditText newOption = new EditText(getContext());
                 newOption.setHint("Option " + (optionCounter+1));
 
@@ -204,7 +209,7 @@ public class CreatePollFragment extends Fragment {
                     remove.get(0).setVisibility(View.VISIBLE);
                     remove.get(1).setVisibility(View.VISIBLE);
                 }
-                if(optionCounter == 8){
+                if(optionCounter == optionMax){
                     root.findViewById(R.id.addOption).setVisibility(View.INVISIBLE);
                 }
 

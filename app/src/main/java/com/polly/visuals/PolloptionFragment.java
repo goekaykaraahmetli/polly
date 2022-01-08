@@ -76,6 +76,7 @@ public class PolloptionFragment extends Fragment {
         AutoCompleteTextView test = (AutoCompleteTextView) root.findViewById(R.id.DatePicker);
         AutoCompleteTextView dropDownMenu = (AutoCompleteTextView) root.findViewById(R.id.autoCompleteTextView);
 
+        TextInputLayout datePicker = (TextInputLayout) root.findViewById(R.id.DateLayout);
         TextInputLayout geofence = (TextInputLayout) root.findViewById(R.id.geofencingLayout);
         TextInputLayout userGroup = (TextInputLayout) root.findViewById(R.id.usergroupLayout);
         TextInputLayout votingCandidates = (TextInputLayout) root.findViewById(R.id.votingCandidatesLayout);
@@ -83,6 +84,7 @@ public class PolloptionFragment extends Fragment {
         TextInputLayout pollyRoom = (TextInputLayout) root.findViewById(R.id.PollRoomLayout);
         TextView pollyRoomInfo = (TextView) root.findViewById(R.id.PollyRoomInfo);
         Button createPollBtn = (Button) root.findViewById(R.id.CreatePollOnMenu);
+        Button sendQRviaEmail = (Button) root.findViewById(R.id.SendQRviaEmailBtn);
 
         dropDownMenu.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -96,6 +98,8 @@ public class PolloptionFragment extends Fragment {
                     oberserveCandidates.setVisibility(View.GONE);
                     pollyRoom.setVisibility(View.GONE);
                     pollyRoomInfo.setVisibility(View.GONE);
+                    datePicker.setVisibility(View.VISIBLE);
+                    sendQRviaEmail.setVisibility(View.GONE);
                 } else if (dropDownMenu.getText().toString().equals("PRIVATE")) {
                     createPollBtn.setText("CREATE POLL");
                     geofence.setVisibility(View.GONE);
@@ -104,6 +108,8 @@ public class PolloptionFragment extends Fragment {
                     oberserveCandidates.setVisibility(View.GONE);
                     pollyRoom.setVisibility(View.GONE);
                     pollyRoomInfo.setVisibility(View.GONE);
+                    datePicker.setVisibility(View.VISIBLE);
+                    sendQRviaEmail.setVisibility(View.GONE);
                 } else if (dropDownMenu.getText().toString().equals("CUSTOM")) {
                     createPollBtn.setText("CREATE POLL");
                     geofence.setVisibility(View.GONE);
@@ -112,6 +118,8 @@ public class PolloptionFragment extends Fragment {
                     oberserveCandidates.setVisibility(View.VISIBLE);
                     pollyRoom.setVisibility(View.GONE);
                     pollyRoomInfo.setVisibility(View.GONE);
+                    datePicker.setVisibility(View.VISIBLE);
+                    sendQRviaEmail.setVisibility(View.GONE);
                 } else if (dropDownMenu.getText().toString().equals("PUBLIC")) {
                     createPollBtn.setText("CREATE POLL");
                     geofence.setVisibility(View.GONE);
@@ -120,6 +128,8 @@ public class PolloptionFragment extends Fragment {
                     oberserveCandidates.setVisibility(View.GONE);
                     pollyRoom.setVisibility(View.GONE);
                     pollyRoomInfo.setVisibility(View.GONE);
+                    datePicker.setVisibility(View.VISIBLE);
+                    sendQRviaEmail.setVisibility(View.GONE);
                 }else if(dropDownMenu.getText().toString().equals("POLLYROOM")){
                     createPollBtn.setText("SCAN ROOM");
                     geofence.setVisibility(View.GONE);
@@ -128,6 +138,13 @@ public class PolloptionFragment extends Fragment {
                     oberserveCandidates.setVisibility(View.GONE);
                     pollyRoomInfo.setVisibility(View.VISIBLE);
                     pollyRoom.setVisibility(View.VISIBLE);
+                    saving.setCalendarText(null);
+                    datePicker.setVisibility(View.GONE);
+                    if(saving.getPollOptions() == null || saving.getPollOptions().size() < 2){
+                        sendQRviaEmail.setVisibility(View.GONE);
+                    }else{
+                        sendQRviaEmail.setVisibility(View.VISIBLE);
+                    }
                 }
             }
         });
@@ -141,6 +158,8 @@ public class PolloptionFragment extends Fragment {
                 oberserveCandidates.setVisibility(View.GONE);
                 pollyRoom.setVisibility(View.GONE);
                 pollyRoomInfo.setVisibility(View.GONE);
+                datePicker.setVisibility(View.VISIBLE);
+                sendQRviaEmail.setVisibility(View.GONE);
             } else if (dropDownMenu.getText().toString().equals("PRIVATE")) {
                 createPollBtn.setText("CREATE POLL");
                 geofence.setVisibility(View.GONE);
@@ -151,6 +170,8 @@ public class PolloptionFragment extends Fragment {
                 oberserveCandidates.setVisibility(View.GONE);
                 pollyRoom.setVisibility(View.GONE);
                 pollyRoomInfo.setVisibility(View.GONE);
+                datePicker.setVisibility(View.VISIBLE);
+                sendQRviaEmail.setVisibility(View.GONE);
             } else if (dropDownMenu.getText().toString().equals("CUSTOM")) {
                 createPollBtn.setText("CREATE POLL");
                 geofence.setVisibility(View.GONE);
@@ -161,6 +182,8 @@ public class PolloptionFragment extends Fragment {
                 AutoCompleteTextView observingCandidatesList = (AutoCompleteTextView) root.findViewById(R.id.observingCandidates);
                 pollyRoom.setVisibility(View.GONE);
                 pollyRoomInfo.setVisibility(View.GONE);
+                datePicker.setVisibility(View.VISIBLE);
+                sendQRviaEmail.setVisibility(View.GONE);
                 if(saving.getUserArrayVoting() != null){
                     votingCandidatesList.setText(saving.getUserArrayVoting().get(0).getmText1() + ", ...");
                 }
@@ -175,6 +198,13 @@ public class PolloptionFragment extends Fragment {
                 oberserveCandidates.setVisibility(View.GONE);
                 pollyRoomInfo.setVisibility(View.VISIBLE);
                 pollyRoom.setVisibility(View.VISIBLE);
+                saving.setCalendarText(null);
+                datePicker.setVisibility(View.GONE);
+                if(saving.getPollOptions() == null){
+                    sendQRviaEmail.setVisibility(View.GONE);
+                }else{
+                    sendQRviaEmail.setVisibility(View.VISIBLE);
+                }
             }
         }
 
