@@ -10,8 +10,10 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
+import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
@@ -78,61 +80,101 @@ public class PolloptionFragment extends Fragment {
         TextInputLayout userGroup = (TextInputLayout) root.findViewById(R.id.usergroupLayout);
         TextInputLayout votingCandidates = (TextInputLayout) root.findViewById(R.id.votingCandidatesLayout);
         TextInputLayout oberserveCandidates = (TextInputLayout) root.findViewById(R.id.observingCandidatesLayout);
+        TextInputLayout pollyRoom = (TextInputLayout) root.findViewById(R.id.PollRoomLayout);
+        TextView pollyRoomInfo = (TextView) root.findViewById(R.id.PollyRoomInfo);
+        Button createPollBtn = (Button) root.findViewById(R.id.CreatePollOnMenu);
 
         dropDownMenu.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
 
                 if (dropDownMenu.getText().toString().equals("GEOFENCE")) {
+                    createPollBtn.setText("CREATE POLL");
                     geofence.setVisibility(View.VISIBLE);
                     userGroup.setVisibility(View.GONE);
                     votingCandidates.setVisibility(View.GONE);
                     oberserveCandidates.setVisibility(View.GONE);
+                    pollyRoom.setVisibility(View.GONE);
+                    pollyRoomInfo.setVisibility(View.GONE);
                 } else if (dropDownMenu.getText().toString().equals("PRIVATE")) {
+                    createPollBtn.setText("CREATE POLL");
                     geofence.setVisibility(View.GONE);
                     userGroup.setVisibility(View.VISIBLE);
                     votingCandidates.setVisibility(View.GONE);
                     oberserveCandidates.setVisibility(View.GONE);
+                    pollyRoom.setVisibility(View.GONE);
+                    pollyRoomInfo.setVisibility(View.GONE);
                 } else if (dropDownMenu.getText().toString().equals("CUSTOM")) {
+                    createPollBtn.setText("CREATE POLL");
                     geofence.setVisibility(View.GONE);
                     userGroup.setVisibility(View.GONE);
                     votingCandidates.setVisibility(View.VISIBLE);
                     oberserveCandidates.setVisibility(View.VISIBLE);
+                    pollyRoom.setVisibility(View.GONE);
+                    pollyRoomInfo.setVisibility(View.GONE);
                 } else if (dropDownMenu.getText().toString().equals("PUBLIC")) {
+                    createPollBtn.setText("CREATE POLL");
                     geofence.setVisibility(View.GONE);
                     userGroup.setVisibility(View.GONE);
                     votingCandidates.setVisibility(View.GONE);
                     oberserveCandidates.setVisibility(View.GONE);
+                    pollyRoom.setVisibility(View.GONE);
+                    pollyRoomInfo.setVisibility(View.GONE);
+                }else if(dropDownMenu.getText().toString().equals("POLLYROOM")){
+                    createPollBtn.setText("SCAN ROOM");
+                    geofence.setVisibility(View.GONE);
+                    userGroup.setVisibility(View.GONE);
+                    votingCandidates.setVisibility(View.GONE);
+                    oberserveCandidates.setVisibility(View.GONE);
+                    pollyRoomInfo.setVisibility(View.VISIBLE);
+                    pollyRoom.setVisibility(View.VISIBLE);
                 }
             }
         });
         if(saving.getDropDownMenu() != null) {
             dropDownMenu.setText(saving.getDropDownMenu().toString());
             if (dropDownMenu.getText().toString().equals("GEOFENCE")) {
+                createPollBtn.setText("CREATE POLL");
                 geofence.setVisibility(View.VISIBLE);
                 userGroup.setVisibility(View.GONE);
                 votingCandidates.setVisibility(View.GONE);
                 oberserveCandidates.setVisibility(View.GONE);
+                pollyRoom.setVisibility(View.GONE);
+                pollyRoomInfo.setVisibility(View.GONE);
             } else if (dropDownMenu.getText().toString().equals("PRIVATE")) {
+                createPollBtn.setText("CREATE POLL");
                 geofence.setVisibility(View.GONE);
                 userGroup.setVisibility(View.VISIBLE);
                 AutoCompleteTextView usergroupText = (AutoCompleteTextView) root.findViewById(R.id.usergroupNumber);
                 usergroupText.setText(saving.getUsergroupName());
                 votingCandidates.setVisibility(View.GONE);
                 oberserveCandidates.setVisibility(View.GONE);
+                pollyRoom.setVisibility(View.GONE);
+                pollyRoomInfo.setVisibility(View.GONE);
             } else if (dropDownMenu.getText().toString().equals("CUSTOM")) {
+                createPollBtn.setText("CREATE POLL");
                 geofence.setVisibility(View.GONE);
                 userGroup.setVisibility(View.GONE);
                 votingCandidates.setVisibility(View.VISIBLE);
                 oberserveCandidates.setVisibility(View.VISIBLE);
                 AutoCompleteTextView votingCandidatesList = (AutoCompleteTextView) root.findViewById(R.id.votingCandidates);
                 AutoCompleteTextView observingCandidatesList = (AutoCompleteTextView) root.findViewById(R.id.observingCandidates);
+                pollyRoom.setVisibility(View.GONE);
+                pollyRoomInfo.setVisibility(View.GONE);
                 if(saving.getUserArrayVoting() != null){
                     votingCandidatesList.setText(saving.getUserArrayVoting().get(0).getmText1() + ", ...");
                 }
                 if(saving.getUserArrayObserving() != null){
                     observingCandidatesList.setText(saving.getUserArrayObserving().get(0).getmText1() + ", ...");
                 }
+            }else if(dropDownMenu.getText().toString().equals("POLLYROOM")){
+                createPollBtn.setText("SCAN ROOM");
+                geofence.setVisibility(View.GONE);
+                userGroup.setVisibility(View.GONE);
+                votingCandidates.setVisibility(View.GONE);
+                oberserveCandidates.setVisibility(View.GONE);
+                pollyRoomInfo.setVisibility(View.VISIBLE);
+                pollyRoom.setVisibility(View.VISIBLE);
             }
         }
 
