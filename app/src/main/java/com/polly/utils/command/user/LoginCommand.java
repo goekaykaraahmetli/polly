@@ -1,4 +1,4 @@
-package com.polly.utils.command;
+package com.polly.utils.command.user;
 
 public class LoginCommand {
 	private final String idToken;
