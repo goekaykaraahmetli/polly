@@ -172,6 +172,7 @@ public class LoginFragment extends Fragment {
                     public void onComplete(@NonNull Task<GetTokenResult> task) {
                         if (task.isSuccessful()) {
                             String idToken = task.getResult().getToken();
+                            System.out.println("--------------------" + idToken);
                             //TODO Send Token to Server
                         } else {
                             Log.d(TAG, task.getException().getMessage());
