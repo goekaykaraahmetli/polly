@@ -20,9 +20,9 @@ import java.util.Map.Entry;
 import java.util.TreeMap;
 
 import com.polly.config.Config;
-import com.polly.utils.ListWrapper;
-import com.polly.utils.MapWrapper;
-import com.polly.utils.Message;
+import com.polly.utils.wrapper.ListWrapper;
+import com.polly.utils.wrapper.MapWrapper;
+import com.polly.utils.wrapper.Message;
 import com.polly.utils.encryption.ciphers.AESCipher;
 import com.polly.utils.encryption.ciphers.RSACipher;
 import com.polly.utils.encryption.exceptions.FailedDecryptionException;

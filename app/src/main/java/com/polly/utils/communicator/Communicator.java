@@ -1,12 +1,10 @@
 package com.polly.utils.communicator;
 
 
-import android.content.Context;
-
 import java.io.IOException;
 import java.util.concurrent.ArrayBlockingQueue;
 
-import com.polly.utils.Message;
+import com.polly.utils.wrapper.Message;
 import com.polly.utils.Organizer;
 
 public abstract class Communicator{

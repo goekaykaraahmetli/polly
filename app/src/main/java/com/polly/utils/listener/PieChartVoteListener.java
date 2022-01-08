@@ -1,11 +1,9 @@
 package com.polly.utils.listener;
 
-import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.PieEntry;
 import com.github.mikephil.charting.highlight.Highlight;
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
-import com.polly.visuals.PollActivity;
 
 public class PieChartVoteListener implements OnChartValueSelectedListener{
     PollActivity pollActivity;
