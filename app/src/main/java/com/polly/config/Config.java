@@ -10,12 +10,4 @@ public class Config {
 	private Config() {
 		super();
 	}
-
-	public static void setServerCommunicationID(long id){
-		serverCommunicationId = id;
-	}
-
-	public static long getServerCommunicationId(){
-		return serverCommunicationId;
-	}
 }

@@ -3,7 +3,7 @@ package com.polly.utils.communication;
 import java.io.IOException;
 import java.util.NoSuchElementException;
 
-import com.polly.utils.Message;
+import com.polly.utils.wrapper.Message;
 import com.polly.utils.communicator.CommunicatorManager;
 
 class InputHandler extends DataStreamHandler{	

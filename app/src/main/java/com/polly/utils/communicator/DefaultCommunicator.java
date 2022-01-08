@@ -1,11 +1,9 @@
 package com.polly.utils.communicator;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.concurrent.ArrayBlockingQueue;
 
 import com.polly.config.Config;
-import com.polly.utils.Message;
+import com.polly.utils.wrapper.Message;
 
 public class DefaultCommunicator extends Communicator {
 	static final int MAX_QUEUE_LENGTH = 20;

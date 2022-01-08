@@ -1,8 +1,6 @@
 package com.polly.utils.communicator;
 
-import android.content.Context;
-
-import com.polly.utils.Message;
+import com.polly.utils.wrapper.Message;
 import com.polly.utils.Organizer;
 
 import java.io.IOException;

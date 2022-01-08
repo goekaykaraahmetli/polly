@@ -1,11 +1,10 @@
 package com.polly.utils.communication;
 
 import java.io.IOException;
-import java.security.PublicKey;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 
-import com.polly.utils.Message;
+import com.polly.utils.wrapper.Message;
 
 class OutputHandler extends DataStreamHandler{
 	private static final int MAX_QUEUE_LENGTH = 200;
