@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/information1"
+        android:layout_width="204dp"
+        android:layout_height="71dp"
+        android:layout_marginTop="72dp"
+        android:text="Enter a question and up to four answers. QR-Code 1 is for the first answer QR-Code 2 for the second and so on. Press the back button once every QR-Code has turned green"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.497"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <EditText
+        android:id="@+id/pollEdittext"
+        android:layout_width="313dp"
+        android:layout_height="62dp"
+        android:layout_marginTop="24dp"
+        android:hint="Enter your Question"
+        android:textAlignment="center"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/information1" />
+
+    <EditText
+        android:id="@+id/pollEdittextAnswer1"
+        android:layout_width="256dp"
+        android:layout_height="62dp"
+        android:layout_marginTop="160dp"
+        android:hint="Answer 1"
+        android:textAlignment="center"
+        app:layout_constraintBottom_toTopOf="@+id/pollEdittextAnswer2"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.49"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/information1"
+        app:layout_constraintVertical_bias="0.0" />
+
+    <EditText
+        android:id="@+id/pollEdittextAnswer2"
+        android:layout_width="256dp"
+        android:layout_height="62dp"
+        android:layout_marginTop="248dp"
+        android:hint="Answer 2"
+        android:textAlignment="center"
+        app:layout_constraintBottom_toTopOf="@+id/pollEdittextAnswer3"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.49"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/information1"
+        app:layout_constraintVertical_bias="0.014" />
+
+    <EditText
+        android:id="@+id/pollEdittextAnswer3"
+        android:layout_width="256dp"
+        android:layout_height="62dp"
+        android:layout_marginTop="340dp"
+        android:hint="Answer 3"
+        android:textAlignment="center"
+        app:layout_constraintBottom_toTopOf="@+id/pollEdittextAnswer4"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.49"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/information1"
+        app:layout_constraintVertical_bias="0.064" />
+
+    <EditText
+        android:id="@+id/pollEdittextAnswer4"
+        android:layout_width="256dp"
+        android:layout_height="62dp"
+        android:layout_marginTop="432dp"
+        android:hint="Answer 4"
+        android:textAlignment="center"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.496"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/information1"
+        app:layout_constraintVertical_bias="0.0" />
+
+    <Button
+        android:id="@+id/scanRoomBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Scan Room"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/pollEdittextAnswer4"
+        app:layout_constraintVertical_bias="0.456" />
+
+    <EditText
+        android:id="@+id/editTextParticipants"
+        android:layout_width="196dp"
+        android:layout_height="48dp"
+        android:ems="10"
+        android:hint="Number of participants"
+        android:inputType="number"
+        android:textAlignment="center"
+        app:layout_constraintBottom_toTopOf="@+id/pollEdittextAnswer1"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/pollEdittext" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
