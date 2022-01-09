@@ -49,7 +49,7 @@ public class PollManager {
         return (long) response.getData();
     }
 
-    public static long createCustomPoll(String name, PollDescription description, LocalDateTime expirationTime, List<String> options, List<Long> canSee, List<Long> canSeeResults) throws IOException {
+    public static long createCustomPoll(String name, PollDescription description, LocalDateTime expirationTime, List<String> options, List<String> canSee, List<String> canSeeResults) throws IOException {
         Message response = communicator.sendWithResponse(Config.serverCommunicationId, new CreateCustomPollCommand(name, description, expirationTime, options, canSee, canSeeResults));
         return (long) response.getData();
     }
