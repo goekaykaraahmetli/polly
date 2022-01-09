@@ -7,7 +7,6 @@ import com.polly.utils.wrapper.Message;
 import com.polly.utils.command.poll.GetPollOptionsCommand;
 import com.polly.utils.wrapper.PollOptionsWrapper;
 import com.polly.utils.wrapper.PollResultsWrapper;
-import com.polly.utils.wrapper.VoteAnswerWrapper;
 import com.polly.utils.command.poll.VoteCommand;
 import com.polly.utils.command.poll.create.CreateCustomPollCommand;
 import com.polly.utils.command.poll.create.CreateGeofencePollCommand;
@@ -62,8 +61,10 @@ public class PollManager {
 
     public static boolean vote(long id, String option) throws IOException {
         Message response = communicator.sendWithResponse(Config.serverCommunicationId, new VoteCommand(id, option));
-        VoteAnswerWrapper answer = (VoteAnswerWrapper) response.getData();
-        return answer.isSuccessful();
+        if(response.getDataType().equals(boolean.class))
+            return (boolean) response.getData();
+
+        return false;
     }
 
     public static List<String> getPollOptions(long id) throws IOException {
