@@ -1,5 +1,6 @@
 package com.polly.utils.wrapper;
 
+import java.util.Collections;
 import java.util.List;
 import com.polly.utils.poll.BasicPollInformation;
 
@@ -8,7 +9,7 @@ public class PollOptionsWrapper {
 	private final BasicPollInformation basicPollInformation;
 	
 	public PollOptionsWrapper(List<String> pollOptions, BasicPollInformation basicPollInformation) {
-		this.pollOptions = List.copyOf(pollOptions);
+		this.pollOptions = Collections.unmodifiableList(pollOptions);
 		this.basicPollInformation = basicPollInformation;
 	}
 
