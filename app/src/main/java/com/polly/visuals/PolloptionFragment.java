@@ -366,37 +366,29 @@ public class PolloptionFragment extends Fragment {
                         Toast.makeText(getActivity(), "Please enter Pollname", Toast.LENGTH_SHORT).show();
                     }
 
-                if(!(test.getText().toString().contains("-") && test.getText().toString().contains(":"))){
+                    if(!(test.getText().toString().contains("-") && test.getText().toString().contains(":"))){
                     Toast.makeText(getActivity(), "Please choose a valid Expiration date", Toast.LENGTH_SHORT).show();
-                }
-                try {
-                    long id;
-                    localDateTime.of(localDate, localTime);
-                    switch(dropDownMenu.getText().toString()) {
-                        case "PUBLIC":
-                            id = PollManager.createPublicPoll(Pollname.getText().toString(), new PollDescription(description.getText().toString()), localDateTime, pollOptions);
-                            break;
-                        case "PRIVATE":
-                            id = PollManager.createPrivatePoll(Pollname.getText().toString(), new PollDescription(description.getText().toString()), localDateTime, pollOptions, saving.getUsergroupName());
-                            break;
-                        case "CUSTOM":
-                            id = PollManager.createCustomPoll(Pollname.getText().toString(), new PollDescription(description.getText().toString()), localDateTime, pollOptions, saving.getUserArrayVoting(), saving.getUserArrayObserving());
-                            break;
-                        case "GEOFENCE":
-                            id = PollManager.createPublicPoll(Pollname.getText().toString(), new PollDescription(description.getText().toString()), localDateTime , pollOptions, new Area(latitude, longitude, Double.parseDouble(geofenceBtn.getText().toString())));
-                            break;
-                        default:
-                            throw new IllegalStateException("Unexpected value: " + "switch statement can't work with the given cases");
-                    }
-                    Toast.makeText(getActivity(), "Poll ID is: " + id, Toast.LENGTH_SHORT).show();
-                } catch (InterruptedException | IOException e) {
-                    e.printStackTrace();
-                    Toast.makeText(getActivity(), "No connection to the server!", Toast.LENGTH_SHORT).show();
-                    if (!(test.getText().toString().contains("/") && test.getText().toString().contains(":"))) {
-                        Toast.makeText(getActivity(), "Please choose a valid Expiration date", Toast.LENGTH_SHORT).show();
-                    }
+                     }
+
                     try {
-                        long id = PollManager.createPoll(Pollname.toString(), pollOptions);
+                        long id;
+                        localDateTime.of(localDate, localTime);
+                        switch(dropDownMenu.getText().toString()) {
+                            case "PUBLIC":
+                                id = PollManager.createPublicPoll(Pollname.getText().toString(), new PollDescription(description.getText().toString()), localDateTime, pollOptions);
+                                break;
+                            case "PRIVATE":
+                                id = PollManager.createPrivatePoll(Pollname.getText().toString(), new PollDescription(description.getText().toString()), localDateTime, pollOptions, saving.getUsergroupName());
+                                break;
+                            case "CUSTOM":
+                                id = PollManager.createCustomPoll(Pollname.getText().toString(), new PollDescription(description.getText().toString()), localDateTime, pollOptions, saving.getUserArrayVoting(), saving.getUserArrayObserving());
+                                break;
+                            case "GEOFENCE":
+                                id = PollManager.createPublicPoll(Pollname.getText().toString(), new PollDescription(description.getText().toString()), localDateTime , pollOptions, new Area(latitude, longitude, Double.parseDouble(geofenceBtn.getText().toString())));
+                                break;
+                            default:
+                                throw new IllegalStateException("Unexpected value: " + "switch statement can't work with the given cases");
+                        }
                         Toast.makeText(getActivity(), "Poll ID is: " + id, Toast.LENGTH_SHORT).show();
                     } catch (InterruptedException | IOException e) {
                         e.printStackTrace();
