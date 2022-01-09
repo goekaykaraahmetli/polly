@@ -17,8 +17,11 @@ import com.github.mikephil.charting.data.PieEntry;
 import com.github.mikephil.charting.utils.ColorTemplate;
 import com.polly.R;
 import com.polly.utils.ShowPollPage;
+import com.polly.utils.exceptions.CanNotSeePollResultsException;
+import com.polly.utils.poll.PollManager;
 import com.polly.utils.wrapper.PollResultsWrapper;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -31,11 +34,21 @@ public class RecentFragment extends Fragment {
                              @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_recent, container, false);
-        LinearLayout layoutParticipatedPolls = (LinearLayout) root.findViewById(R.id.scrollLinearLayoutParticipatedPolls);
-        LinearLayout layoutMyPolls = (LinearLayout) root.findViewById(R.id.scrollLinearLayoutMyPolls);
+        LinearLayout layoutParticipatedPolls = root.findViewById(R.id.scrollLinearLayoutParticipatedPolls);
+        LinearLayout layoutMyPolls = root.findViewById(R.id.scrollLinearLayoutMyPolls);
 
-        List<PollResultsWrapper> participatedPolls = new ArrayList<>(); //TODO: insert useful values
-        List<PollResultsWrapper> myPolls = new ArrayList<>(); //TODO: insert useful values
+        List<PollResultsWrapper> participatedPolls = new ArrayList<>();
+        try {
+            participatedPolls = PollManager.getParticipatedPolls();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        List<PollResultsWrapper> myPolls = new ArrayList<>();
+        try {
+            myPolls = PollManager.getMyPolls();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
         /**try {
             // get participatedPolls
@@ -49,37 +62,33 @@ public class RecentFragment extends Fragment {
          e.printStackTrace();
          }*/
 
-        showRecentPolls(layoutParticipatedPolls, participatedPolls, layoutMyPolls, myPolls);
+        addPieChartsToLayout(layoutParticipatedPolls, participatedPolls);
+        addPieChartsToLayout(layoutMyPolls, myPolls);
         return root;
     }
 
-    private void showRecentPolls(LinearLayout layoutParticipatedPolls, List<PollResultsWrapper> participatedPolls, LinearLayout layoutMyPolls, List<PollResultsWrapper> myPolls) {
-        for(PollResultsWrapper p : participatedPolls) {
+    private void addPieChartsToLayout(LinearLayout layout, List<PollResultsWrapper> pollResults) {
+        for(PollResultsWrapper p : pollResults) {
             PieChart pieChart = createPieChart(p.getPollResults(), p.getBasicPollInformation().getName());
 
             pieChart.setOnLongClickListener(view -> {
-                showPollResults(p);
+                try {
+                    showPollResults(p);
+                } catch (CanNotSeePollResultsException e) {
+                    e.printStackTrace();
+                    return false;
+                }
                 return true;
             });
-            layoutParticipatedPolls.addView(pieChart);
-        }
-
-        for(PollResultsWrapper p : myPolls) {
-            PieChart pieChart = createPieChart(p.getPollResults(), p.getBasicPollInformation().getName());
-
-            pieChart.setOnLongClickListener(view -> {
-                showPollResults(p);
-                return true;
-            });
-            layoutMyPolls.addView(pieChart);
+            layout.addView(pieChart);
         }
     }
 
-    private void showPollResults(PollResultsWrapper p) {
-        ShowPollPage.showPollResultsPage(p);
+    private void showPollResults(PollResultsWrapper p) throws CanNotSeePollResultsException {
+        ShowPollPage.showPollResultsPage(p.getBasicPollInformation().getId());
     }
 
-    private PieChart createPieChart(Map<String, Integer> data, String centerText){
+    private PieChart createPieChart(Map<String, Integer> data, String centerText) {
         PieChart pieChart = new PieChart(getContext());
 
         ArrayList<PieEntry> options = new ArrayList<>();
