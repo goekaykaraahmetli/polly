@@ -114,7 +114,7 @@ public class LoginFragment extends Fragment {
 
 
 
-        GoogleSignInOptions googleSignInOptions = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestIdToken(getString(R.string.default_web_client_id)).requestEmail().build();
+        GoogleSignInOptions googleSignInOptions = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestIdToken("163467661096-gk0vsogu94m484ochd3m5mei8nq6esjr.apps.googleusercontent.com").requestEmail().build();
         googleSignInClient = GoogleSignIn.getClient(getActivity(),googleSignInOptions);
         ImageButton googleBtn = (ImageButton) view.findViewById(R.id.imageButtonGoogle);
         googleBtn.setOnClickListener(v -> {
