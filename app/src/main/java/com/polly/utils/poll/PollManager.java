@@ -2,9 +2,12 @@ package com.polly.utils.poll;
 
 import com.polly.config.Config;
 import com.polly.utils.Area;
+import com.polly.utils.command.GetMyPollsCommand;
+import com.polly.utils.command.GetParticipatedPollsCommand;
 import com.polly.utils.command.poll.GetPollResultsCommand;
 import com.polly.utils.wrapper.Message;
 import com.polly.utils.command.poll.GetPollOptionsCommand;
+import com.polly.utils.wrapper.PollListWrapper;
 import com.polly.utils.wrapper.PollOptionsWrapper;
 import com.polly.utils.wrapper.PollResultsWrapper;
 import com.polly.utils.command.poll.VoteCommand;
@@ -77,11 +80,13 @@ public class PollManager {
         return ((PollResultsWrapper) response.getData()).getPollResults();
     }
 
-    public static List<PollResultsWrapper> getMypolls() {
-
+    public static List<PollResultsWrapper> getMyPolls() throws IOException {
+        Message response = communicator.sendWithResponse(Config.serverCommunicationId, new GetMyPollsCommand());
+        return ((PollListWrapper) response.getData()).getList();
     }
 
-    public static List<PollResultsWrapper> getparticipatedPolls() {
-
+    public static List<PollResultsWrapper> getParticipatedPolls() throws IOException {
+        Message response = communicator.sendWithResponse(Config.serverCommunicationId, new GetParticipatedPollsCommand());
+        return ((PollListWrapper) response.getData()).getList();
     }
 }
