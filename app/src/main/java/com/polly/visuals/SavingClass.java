@@ -7,6 +7,8 @@ import android.widget.EditText;
 import androidx.lifecycle.ViewModel;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.polly.utils.wrapper.PollResultsWrapper;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -24,12 +26,11 @@ public class SavingClass extends ViewModel {
     private List<String> pollOptions;
     private ArrayList<SearchListItem> userGroupList;
     private Editable numberOfParticipants;
-    List<String> pollOptions;
-    ArrayList<SearchListItem> userGroupList;
     private ArrayList<SearchListItemUser> UserArrayVoting;
     private ArrayList<SearchListItemUser> userArrayObserving;
     private boolean isSaved = true;
     private Editable geofence;
+
 
     public void setGeofence(Editable geofence) {
         this.geofence = geofence;
