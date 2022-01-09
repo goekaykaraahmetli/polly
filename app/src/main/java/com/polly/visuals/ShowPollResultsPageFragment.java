@@ -39,15 +39,14 @@ import com.polly.utils.wrapper.PollResultsWrapper;
 import java.io.IOException;
 import java.util.ArrayList;
 
-public class showPollFragment extends Fragment {
+public class ShowPollResultsPageFragment extends Fragment {
     private PieChart pieChart;
     private ImageView qrCode;
     PollResultsWrapper pollResults;
-    PollOptionsWrapper pollOptionsWrapper;
+    long id;
     private Button voteButton;
     private Communicator communicator = initialiseCommunicator();
     private boolean hasRunningPollChangeListener = false;
-    private boolean voted = false;
 
     SavingClass saving;
 
@@ -56,7 +55,7 @@ public class showPollFragment extends Fragment {
         super.onDestroy();
         if(hasRunningPollChangeListener){
             try {
-                communicator.send(Config.serverCommunicationId, new RemovePollChangeListenerCommand(pollResults.getBasicPollInformation().getId()));
+                communicator.send(Config.serverCommunicationId, new RemovePollChangeListenerCommand(id));
                 hasRunningPollChangeListener = false;
             } catch (IOException e) {
                 e.printStackTrace();
@@ -65,14 +64,13 @@ public class showPollFragment extends Fragment {
         }
     }
 
-
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_showpoll, container, false);
         saving = new ViewModelProvider(getActivity()).get(SavingClass.class);
 
-        new Thread(() -> {
+       /** new Thread(() -> {
             while(true){
                 try {
                     communicator.handleInput(communicator.getInput());
@@ -80,29 +78,24 @@ public class showPollFragment extends Fragment {
                     e.printStackTrace();
                 }
             }
-        }).start();
+        }).start();**/
         pieChart = (PieChart) root.findViewById(R.id.pieChart);
         pieChart.setVisibility(View.GONE);
         voteButton = (Button) root.findViewById(R.id.vote_button);
         voteButton.setVisibility(View.GONE);
 
         try {
-            if(PollManager.getPollOptions(pollResults.getBasicPollInformation().getId()) != null){
-                pollOptionsWrapper = new PollOptionsWrapper(PollManager.getPollOptions(pollResults.getBasicPollInformation().getId()), pollResults.getBasicPollInformation());
-                showPoll(true);
-            } else if(PollManager.getPollResults(pollResults.getBasicPollInformation().getId()) != null) {
-                showPoll(true);
-            }
-
-            return root;
+            pollResults = PollManager.getPollResults(id);
+            showPoll();
         } catch (IOException e) {
             e.printStackTrace();
         }
+
         return root;
     }
 
-        public void showPoll(boolean voting){
-            updatePieChart(voting, pollResults);
+        public void showPoll(){
+            updatePieChart(pollResults);
             qrCode = (ImageView) getView().findViewById(R.id.qrCodeImageView);
             qrCode.setImageBitmap(QRCode.QRCode(""+ pollResults.getBasicPollInformation().getId()));
             qrCode.setOnLongClickListener(new View.OnLongClickListener() {
@@ -113,28 +106,15 @@ public class showPollFragment extends Fragment {
                     return true;
                 }
             });
-            if(voting){
-                pieChart.setOnChartValueSelectedListener(new OnChartValueSelectedListener() {
-                    @Override
-                    public void onValueSelected(Entry e, Highlight h) {
-
-                    }
-
-                    @Override
-                    public void onNothingSelected() {
-
-                    }
-                });
-            } else {
                 try {
-                    communicator.send(Config.serverCommunicationId, new RegisterPollChangeListenerCommand(pollResults.getBasicPollInformation().getId(), voted);
+                    communicator.send(Config.serverCommunicationId, new RegisterPollChangeListenerCommand(pollResults.getBasicPollInformation().getId(), true));
                     hasRunningPollChangeListener = true;
                 } catch (IOException e) {
                     e.printStackTrace();
                     Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
                 }
 
-                pieChart.setOnChartValueSelectedListener(new OnChartValueSelectedListener() {
+                /**pieChart.setOnChartValueSelectedListener(new OnChartValueSelectedListener() {
                     @Override
                     public void onValueSelected(Entry e, Highlight h) {
 
@@ -144,9 +124,8 @@ public class showPollFragment extends Fragment {
                     public void onNothingSelected() {
 
                     }
-                });
+                });**/
             }
-        }
 
     public void showVoteButton(String option){
         if(option == null){
@@ -171,43 +150,33 @@ public class showPollFragment extends Fragment {
 
 
                         pieChart.setVisibility(View.INVISIBLE);
-                        showPoll(false);
+                        showPoll();
 
-                    } catch (InterruptedException e){
-                        Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
-                        e.printStackTrace();
                     } catch (IllegalArgumentException|IOException e) {
                         Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
                         e.printStackTrace();
                     }
                 }
             });
-
             voteButton.setVisibility(View.VISIBLE);
         }
     }
 
-    private Communicator initialiseCommunicator(){
+    private Communicator initialiseCommunicator() {
         return new Communicator() {
             @Override
             public void handleInput(Message message) {
                 System.out.println("PollActivity received message from type: " + message.getDataType().getName());
-                if(voted){
-                    if(message.getDataType().equals(pollResults.getClass())){
-                        PollResultsWrapper updatePoll = (PollResultsWrapper) message.getData();
-
-                    }
-                } else {
-                    if(message.getDataType().equals(pollOptionsWrapper.getClass())){
-                        PollOptionsWrapper updatePoll = (PollOptionsWrapper) message.getData();
-                    }
+                if (message.getDataType().equals(pollResults.getClass())) {
+                    PollResultsWrapper updatePoll = (PollResultsWrapper) message.getData();
+                    updatePieChart(updatePoll);
                 }
-
             }
         };
     }
 
-    private void updatePieChart(boolean voting, PollResultsWrapper updatePoll){
+
+    private void updatePieChart(PollResultsWrapper updatePoll){
             pollResults = updatePoll;
             ArrayList<PieEntry> options = new ArrayList<>();
             for(String option : updatePoll.getPollResults().keySet()){
@@ -217,12 +186,7 @@ public class showPollFragment extends Fragment {
             PieDataSet pieDataSet = new PieDataSet(options, "");
             pieDataSet.setColors(ColorTemplate.COLORFUL_COLORS);
             pieDataSet.setValueTextColor(Color.BLACK);
-
-            if(voting){
-                pieDataSet.setValueTextSize(0f);
-            } else {
-                pieDataSet.setValueTextSize(16f);
-            }
+            pieDataSet.setValueTextSize(16f);
             PieData pieData = new PieData(pieDataSet);
 
             pieChart.setVisibility(View.INVISIBLE);
