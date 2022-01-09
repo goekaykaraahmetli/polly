@@ -34,6 +34,7 @@ public class CreatePollFragment extends Fragment {
     int optionCounter = 0;
     int optionMax = 8;
     boolean start = true;
+    boolean isSaved = true;
     int numberOfParticipants;
     int numberOfOptions;
     HashMap<Integer, EditText> map = new HashMap<>();
@@ -136,7 +137,26 @@ public class CreatePollFragment extends Fragment {
         root.findViewById(R.id.goBack).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Navigation.findNavController(getActivity(), R.id.nav_host_fragment).navigate(R.id.polloptionFragment);
+                if (!saving.isSaved()) {
+                    androidx.appcompat.app.AlertDialog.Builder alert = new AlertDialog.Builder(getContext());
+                    alert.setTitle("Options not saved");
+                    alert.setMessage("Save before exit?");
+                    alert.setPositiveButton("YES", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            saving.setSaved(true);
+                            Navigation.findNavController(getActivity(), R.id.nav_host_fragment).navigate(R.id.polloptionFragment);
+                        }
+                    });
+                    alert.setNegativeButton("NO", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            saving.setSaved(true);
+                            Navigation.findNavController(getActivity(), R.id.nav_host_fragment).navigate(R.id.polloptionFragment);
+                        }
+                    });
+                    alert.create().show();
+                }
             }
         });
         createPollBtn.setOnClickListener(new View.OnClickListener() {
@@ -187,6 +207,8 @@ public class CreatePollFragment extends Fragment {
                 if(optionCounter >= optionMax) {
                     return;
                 }
+                saving.setSaved(false);
+                isSaved = false;
                 System.out.println(saving.getDropDownMenu().toString());
                 EditText newOption = new EditText(getContext());
                 newOption.setHint("Option " + (optionCounter+1));
