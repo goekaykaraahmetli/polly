@@ -52,9 +52,12 @@ public class UsergroupSearch extends Fragment {
 
 
         ArrayList<SearchListItem> exampleList = new ArrayList<>();
-        for(int i = 0; i< usergroups.size() ; i ++){
-            exampleList.add(new SearchListItem(R.drawable.ic_usergroup, usergroups.get(0).getName()));
+        if(usergroups != null){
+            for(int i = 0; i< usergroups.size() ; i ++){
+                exampleList.add(new SearchListItem(R.drawable.ic_usergroup, usergroups.get(0).getName()));
+            }
         }
+
 /**        exampleList.add(new SearchListItem(R.drawable.ic_usergroup, "Usergroup 1"));
         exampleList.add(new SearchListItem(R.drawable.ic_usergroup, "Usergroup 2"));
         exampleList.add(new SearchListItem(R.drawable.ic_usergroup, "Usergroup 3"));

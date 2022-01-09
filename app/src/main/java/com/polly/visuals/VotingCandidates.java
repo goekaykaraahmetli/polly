@@ -35,7 +35,7 @@ public class VotingCandidates extends Fragment {
     private ListAdapterUser mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
     private boolean pressedSelected = false;
-    ArrayList<SearchListItemUser> exampleList = new ArrayList<>();
+    ArrayList<SearchListItemUser> exampleList;
     List<UserWrapper> list;
 
     @Nullable
@@ -47,6 +47,7 @@ public class VotingCandidates extends Fragment {
         View root = inflater.inflate(R.layout.user_layout, container, false);
         setHasOptionsMenu(true);
         SavingClass saving = new ViewModelProvider(getActivity()).get(SavingClass.class);
+        exampleList = new ArrayList<>();
 
         try {
             list = UserManager.findUsers();
@@ -54,7 +55,7 @@ public class VotingCandidates extends Fragment {
             e.printStackTrace();
         }
 
-        if(saving.getUserArrayVoting() == null) {
+        if(saving.getUserArrayVoting() == null && list != null) {
             for(int i = 0; i< list.size(); i++) {
                 exampleList.add(new SearchListItemUser(R.drawable.ic_usergroup, list.get(i).getName(), false));
             }
@@ -82,37 +83,41 @@ public class VotingCandidates extends Fragment {
         mRecyclerView = root.findViewById(R.id.userRecyclerView);
         mRecyclerView.setHasFixedSize(true); //Performance
         mLayoutManager = new LinearLayoutManager(getContext());
-        mAdapter = new ListAdapterUser(exampleList);
+        if(exampleList != null){
+            mAdapter = new ListAdapterUser(exampleList);
 
-        mRecyclerView.setLayoutManager(mLayoutManager);
-        mRecyclerView.setAdapter(mAdapter);
+            mRecyclerView.setLayoutManager(mLayoutManager);
+            mRecyclerView.setAdapter(mAdapter);
 
 
-        mAdapter.setOnItemClickListener(new ListAdapterUser.OnItemClickListener() {
+            mAdapter.setOnItemClickListener(new ListAdapterUser.OnItemClickListener() {
 
-            @Override
-            public void onItemClick(int position) {
-                if(exampleList.get(position).isCheckbox()){
-                    exampleList.get(position).setCheckbox(false);
-                }else {
-                    exampleList.get(position).setCheckbox(true);
+                @Override
+                public void onItemClick(int position) {
+                    if(exampleList.get(position).isCheckbox()){
+                        exampleList.get(position).setCheckbox(false);
+                    }else {
+                        exampleList.get(position).setCheckbox(true);
+                    }
+                    mAdapter.notifyItemChanged(position);
                 }
-                mAdapter.notifyItemChanged(position);
-            }
 
-            @Override
-            public void onChecked(int position) {
-                if(exampleList.get(position).isCheckbox()){
-                    exampleList.get(position).setCheckbox(false);
-                }else {
-                    exampleList.get(position).setCheckbox(true);
+                @Override
+                public void onChecked(int position) {
+                    if(exampleList.get(position).isCheckbox()){
+                        exampleList.get(position).setCheckbox(false);
+                    }else {
+                        exampleList.get(position).setCheckbox(true);
+                    }
+                    mAdapter.notifyItemChanged(position);
                 }
-                mAdapter.notifyItemChanged(position);
-            }
-        });
+            });
+        }
+
         root.findViewById(R.id.showSelected).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if(exampleList == null) return;
                 if(!pressedSelected){
                     ArrayList<SearchListItemUser> selected = new ArrayList<>();
                     for(int i = 0; i<exampleList.size();i++){
@@ -165,13 +170,16 @@ public class VotingCandidates extends Fragment {
             @Override
             public void onClick(View v) {
                 List<String> canSeeList = new ArrayList<>();
-                for(int i = 0; i < exampleList.size(); i++){
-                    if(exampleList.get(i).isCheckbox()){
-                        canSeeList.add(exampleList.get(i).getmText1());
+                if (exampleList != null){
+                    for(int i = 0; i < exampleList.size(); i++){
+                        if(exampleList.get(i).isCheckbox()){
+                            canSeeList.add(exampleList.get(i).getmText1());
+                        }
                     }
+                    saving.setCanSeeList(canSeeList);
+                    saving.setUserArrayVoting(exampleList);
                 }
-                saving.setCanSeeList(canSeeList);
-                saving.setUserArrayVoting(exampleList);
+
                 Navigation.findNavController(getActivity(), R.id.nav_host_fragment).navigate(R.id.polloptionFragment);
             }
         });
