@@ -13,7 +13,7 @@ public class RegisterPollChangeListenerCommand {
 		return id;
 	}
 
-	public boolean isHasVoted() {
+	public boolean hasVoted() {
 		return hasVoted;
 	}
 }

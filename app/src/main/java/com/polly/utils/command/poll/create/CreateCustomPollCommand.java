@@ -6,22 +6,22 @@ import java.util.List;
 import com.polly.utils.poll.PollDescription;
 
 public class CreateCustomPollCommand extends CreatePollCommand {
-	private final List<Long> canSee;
-	private final List<Long> canSeeResults;
-	
-	
+	private final List<String> canSee;
+	private final List<String> canSeeResults;
+
+
 	public CreateCustomPollCommand(String name, PollDescription description, LocalDateTime expirationTime,
-								   List<String> options, List<Long> canSee, List<Long> canSeeResults) {
+								   List<String> options, List<String> canSee, List<String> canSeeResults) {
 		super(name, description, expirationTime, options);
 		this.canSee = canSee;
 		this.canSeeResults = canSeeResults;
 	}
-	
-	public List<Long> getCanSee() {
+
+	public List<String> getCanSee() {
 		return canSee;
 	}
-	
-	public List<Long> getCanSeeResults() {
+
+	public List<String> getCanSeeResults() {
 		return canSeeResults;
 	}
 }

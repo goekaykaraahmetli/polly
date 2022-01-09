@@ -13,7 +13,7 @@ public class DefaultCommunicator extends Communicator {
 		super();
 		new Thread(() -> {
 			try {
-				Config.setServerCommunicationID(getInput().getSender());
+				Config.serverCommunicationId = getInput().getSender();
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}

@@ -1,9 +1,9 @@
-package com.polly.utils.command.errors;
+package com.polly.utils.wrapper;
 
-public class ErrorCommand {
+public class ErrorWrapper {
 	private final String message;
 	
-	public ErrorCommand(String message) {
+	public ErrorWrapper(String message) {
 		this.message = message;
 	}
 
