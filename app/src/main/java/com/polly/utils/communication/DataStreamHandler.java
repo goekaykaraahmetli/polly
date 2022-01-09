@@ -3,10 +3,11 @@ package com.polly.utils.communication;
 abstract class DataStreamHandler extends Thread{
 	private boolean running = false;
 	protected final DataStreamManager dataStreamManager;
-
+	
 	protected DataStreamHandler(DataStreamManager dataStreamManager) {
 		this.dataStreamManager = dataStreamManager;
 	}
+
 
 	@Override
 	public void run() {
