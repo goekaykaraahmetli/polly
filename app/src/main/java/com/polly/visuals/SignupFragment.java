@@ -107,18 +107,9 @@ public class SignupFragment extends Fragment {
         } else {
             mAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(task -> {
                 if (task.isSuccessful()) {
-                    User user = new User(fullname, email, username);
-                    FirebaseDatabase.getInstance("https://polly-abdd4-default-rtdb.europe-west1.firebasedatabase.app/").getReference("Users").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).setValue(user).addOnCompleteListener(task1 -> {
-                        if (task1.isSuccessful()) {
-                            Toast.makeText(getContext(), "User has been registered successfully! Please verify your email before you sign in.", Toast.LENGTH_SHORT).show();
-                        } else {
-                            Toast.makeText(getContext(), "Failed to register. Try again", Toast.LENGTH_SHORT).show();
-                        }
-                    });
                     mAuth.getCurrentUser().sendEmailVerification();
                     mAuth.signOut();
-
-
+                    Toast.makeText(getContext(), "User has been registered successfully! Please verify your email before you sign in.", Toast.LENGTH_SHORT).show();
                     Navigation.findNavController(getActivity(), R.id.nav_host_fragment).navigate(R.id.loginFragment);
                 } else
                     Toast.makeText(getContext(), "Failed to register. Try again", Toast.LENGTH_SHORT).show();
