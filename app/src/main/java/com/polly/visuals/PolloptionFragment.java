@@ -37,11 +37,9 @@ import androidx.navigation.Navigation;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 import com.polly.R;
-import com.polly.utils.QRCode;
 import com.polly.utils.poll.Poll;
 import com.polly.utils.poll.PollManager;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -229,9 +227,9 @@ public class PolloptionFragment extends Fragment {
         }
 
         EditText Pollname = (EditText) root.findViewById(R.id.Name);
-        final TextInputEditText[] description = {(TextInputEditText) root.findViewById(R.id.description)};
+        TextInputEditText description = (TextInputEditText) root.findViewById(R.id.description);
         Pollname.setText(saving.getPollname());
-        description[0].setText(saving.getDescription());
+        description.setText(saving.getDescription());
         if(saving.getCalendarText() != null)
             test.setText(saving.getCalendarText());
         if(saving.getDropDownMenu() != null)
@@ -264,7 +262,7 @@ public class PolloptionFragment extends Fragment {
         root.findViewById(R.id.usergroupNumber).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                saving.setDescription(description[0].getText());
+                saving.setDescription(description.getText());
                 saving.setPollname(Pollname.getText());
                 saving.setCalendarText(test.getText());
                 saving.setDropDownMenu(dropDownMenu.getText());
@@ -279,7 +277,7 @@ public class PolloptionFragment extends Fragment {
         root.findViewById(R.id.votingCandidates).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                saving.setDescription(description[0].getText());
+                saving.setDescription(description.getText());
                 saving.setPollname(Pollname.getText());
                 saving.setCalendarText(test.getText());
                 saving.setDropDownMenu(dropDownMenu.getText());
@@ -302,11 +300,10 @@ public class PolloptionFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 Navigation.findNavController(getActivity(), R.id.nav_host_fragment).navigate(R.id.createPollFragment);
-                saving.setDescription(description[0].getText());
+                saving.setDescription(description.getText());
                 saving.setPollname(Pollname.getText());
                 saving.setCalendarText(test.getText());
                 saving.setDropDownMenu(dropDownMenu.getText());
-                saving.setNumberOfParticipants(((TextInputEditText) root.findViewById(R.id.PollyRoomNumber)).getText());
 
             }
         });
