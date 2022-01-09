@@ -37,9 +37,10 @@ import androidx.navigation.Navigation;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 import com.polly.R;
-import com.polly.utils.poll.Poll;
+import com.polly.utils.QRCode;
 import com.polly.utils.poll.PollManager;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -89,7 +90,7 @@ public class PolloptionFragment extends Fragment {
         int hour = calendar.get(Calendar.HOUR);
         int minute = calendar.get(Calendar.MINUTE);
         if(saving.getNumberOfParticipants() != null){
-            ((TextInputEditText) root.findViewById(R.id.PollyRoomNumber)).setText(saving.getNumberOfParticipants());
+            ((EditText) root.findViewById(R.id.PollyRoomNumber)).setText(saving.getNumberOfParticipants());
         }
         AutoCompleteTextView test = (AutoCompleteTextView) root.findViewById(R.id.DatePicker);
         AutoCompleteTextView dropDownMenu = (AutoCompleteTextView) root.findViewById(R.id.autoCompleteTextView);
