@@ -5,15 +5,13 @@ import com.polly.utils.Area;
 import com.polly.utils.command.poll.GetPollResultsCommand;
 import com.polly.utils.wrapper.Message;
 import com.polly.utils.command.poll.GetPollOptionsCommand;
-import com.polly.utils.command.poll.VoteAnswerCommand;
+import com.polly.utils.wrapper.VoteAnswerWrapper;
 import com.polly.utils.command.poll.VoteCommand;
 import com.polly.utils.command.poll.create.CreateCustomPollCommand;
 import com.polly.utils.command.poll.create.CreateGeofencePollCommand;
 import com.polly.utils.command.poll.create.CreatePrivatePollCommand;
 import com.polly.utils.command.poll.create.CreatePublicPollCommand;
 import com.polly.utils.communicator.ResponseCommunicator;
-import com.polly.utils.wrapper.PollOptionsWrapper;
-import com.polly.utils.wrapper.PollResultsWrapper;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
@@ -62,7 +60,7 @@ public class PollManager {
 
     public static boolean vote(long id, String option) throws IOException {
         Message response = communicator.sendWithResponse(Config.serverCommunicationId, new VoteCommand(id, option));
-        VoteAnswerCommand answer = (VoteAnswerCommand) response.getData();
+        VoteAnswerWrapper answer = (VoteAnswerWrapper) response.getData();
         return answer.isSuccessful();
     }
 

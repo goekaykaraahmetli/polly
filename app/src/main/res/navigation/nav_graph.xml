@@ -117,8 +117,4 @@
         android:id="@+id/scanRoomStart"
         android:name="com.polly.visuals.ScanRoomStart"
         android:label="ScanRoomStart" />
-    <activity
-        android:id="@+id/displayQRCodePie"
-        android:name="com.polly.visuals.DisplayQRCodePie"
-        android:label="DisplayQRCodePie" />
 </navigation>

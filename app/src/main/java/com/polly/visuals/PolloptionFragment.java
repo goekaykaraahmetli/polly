@@ -4,7 +4,12 @@ import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.DialogInterface;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.text.Editable;
 import android.text.InputFilter;
 import android.text.TextWatcher;
@@ -32,10 +37,12 @@ import androidx.navigation.Navigation;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 import com.polly.R;
+import com.polly.utils.QRCode;
 import com.polly.utils.Area;
 import com.polly.utils.poll.PollDescription;
 import com.polly.utils.poll.PollManager;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -45,6 +52,13 @@ import java.util.Calendar;
 import java.util.List;
 
 public class PolloptionFragment extends Fragment {
+    public static String name;
+
+    public static String answer1;
+    public static String answer2;
+    public static String answer3;
+    public static String answer4;
+    public static int numberOfParticipants;
     LocalTime localTime;
     LocalDate localDate;
     LocalDateTime localDateTime;
@@ -82,7 +96,9 @@ public class PolloptionFragment extends Fragment {
         int day = calendar.get(Calendar.DAY_OF_MONTH);
         int hour = calendar.get(Calendar.HOUR);
         int minute = calendar.get(Calendar.MINUTE);
-
+        if(saving.getNumberOfParticipants() != null){
+            ((EditText) root.findViewById(R.id.PollyRoomNumber)).setText(saving.getNumberOfParticipants());
+        }
         AutoCompleteTextView test = (AutoCompleteTextView) root.findViewById(R.id.DatePicker);
         AutoCompleteTextView dropDownMenu = (AutoCompleteTextView) root.findViewById(R.id.autoCompleteTextView);
 
@@ -306,15 +322,49 @@ public class PolloptionFragment extends Fragment {
         root.findViewById(R.id.CreatePollOnMenu).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //Editable poll = pollName.getText();
-                //CharSequence poll1 = poll.toString();
+                TextInputEditText participants = root.findViewById(R.id.PollyRoomNumber);
+                if(!participants.getText().toString().equals(""))
+                    numberOfParticipants = Integer.parseInt(participants.getText().toString());
+                else
+                    numberOfParticipants = 0;
                 List<String> pollOptions = saving.getPollOptions();
-                if(pollOptions == null){
-                    Toast.makeText(getActivity(), "Please add some Options", Toast.LENGTH_SHORT).show();
-                }
-                if(Pollname.getText().length() == 0){
-                    Toast.makeText(getActivity(), "Please enter Pollname", Toast.LENGTH_SHORT).show();
-                }
+
+                name = ((EditText) root.findViewById(R.id.Name)).getText().toString();
+                if (dropDownMenu.getText().toString().equals("POLLYROOM")) {
+                    if (pollOptions == null) {
+                        Toast.makeText(getActivity(), "Please add some Options", Toast.LENGTH_SHORT).show();
+                    }
+                    else if (Pollname.getText().length() == 0) {
+                        Toast.makeText(getActivity(), "Please enter Pollname", Toast.LENGTH_SHORT).show();
+                    }
+                    else if (numberOfParticipants == 0){
+                        Toast.makeText(getActivity(), "Please increase the number of participants", Toast.LENGTH_SHORT).show();
+                    }
+                    else{
+                    List<String> options = saving.getPollOptions();
+                    if(options.get(0) != null){
+                        answer1 = options.get(0);
+                    }
+                    if(options.get(1) != null){
+                        answer2 = options.get(1);
+                    }
+                    if(options.size() > 2 && options.get(2) != null){
+                        answer3 = options.get(2);
+                    }
+                    if(options.size() > 3 && options.get(3) != null){
+                        answer4 = options.get(3);
+                    }
+                    Intent intent = new Intent(getActivity(), BarcodeScannerActivity.class);
+                    startActivity(intent);}
+                } else {
+                    //Editable poll = pollName.getText();
+                    //CharSequence poll1 = poll.toString();
+                    if (pollOptions == null) {
+                        Toast.makeText(getActivity(), "Please add some Options", Toast.LENGTH_SHORT).show();
+                    }
+                    if (Pollname.getText().length() == 0) {
+                        Toast.makeText(getActivity(), "Please enter Pollname", Toast.LENGTH_SHORT).show();
+                    }
 
                 if(!(test.getText().toString().contains("-") && test.getText().toString().contains(":"))){
                     Toast.makeText(getActivity(), "Please choose a valid Expiration date", Toast.LENGTH_SHORT).show();
@@ -342,7 +392,60 @@ public class PolloptionFragment extends Fragment {
                 } catch (InterruptedException | IOException e) {
                     e.printStackTrace();
                     Toast.makeText(getActivity(), "No connection to the server!", Toast.LENGTH_SHORT).show();
+                    if (!(test.getText().toString().contains("/") && test.getText().toString().contains(":"))) {
+                        Toast.makeText(getActivity(), "Please choose a valid Expiration date", Toast.LENGTH_SHORT).show();
+                    }
+                    try {
+                        long id = PollManager.createPoll(Pollname.toString(), pollOptions);
+                        Toast.makeText(getActivity(), "Poll ID is: " + id, Toast.LENGTH_SHORT).show();
+                    } catch (InterruptedException | IOException e) {
+                        e.printStackTrace();
+                        Toast.makeText(getActivity(), "No connection to the server!", Toast.LENGTH_SHORT).show();
+                    }
                 }
+            }
+        });
+
+        Button sendQRViaEmailBtn = root.findViewById(R.id.SendQRviaEmailBtn);
+        sendQRViaEmailBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                TextInputEditText participants = root.findViewById(R.id.PollyRoomNumber);
+                numberOfParticipants = Integer.parseInt(participants.getText().toString());
+                int numberOfOptions = saving.getOptionCounter();
+                AlertDialog.Builder alert = new AlertDialog.Builder(getContext());
+                alert.setTitle("Enter the E-Mail address you want the QR-Codes sent to");
+                alert.setMessage("Please enter an E-Mail");
+                EditText usernameInput = new EditText(getContext());
+                alert.setView(usernameInput);
+                alert.setPositiveButton("Enter", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        ArrayList<Uri> uris = new ArrayList<>();
+                        Intent emailIntent = new Intent(Intent.ACTION_SEND_MULTIPLE);
+                        // set the type to 'email'
+                        emailIntent.setType("vnd.android.cursor.dir/email");
+                        String to[] = {"willimowski4@gmail.com"};
+                        emailIntent.putExtra(Intent.EXTRA_EMAIL, to);
+                        emailIntent .putExtra(Intent.EXTRA_SUBJECT, "Subject");
+                        for(int i = 1; i <= numberOfOptions; i++){
+                            for(int j = 97; j <= 96 + numberOfParticipants; j++){
+                                Bitmap inImage = QRCode.QRCode("" + i + (char) j);
+                                ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+                                inImage.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
+                                String path = MediaStore.Images.Media.insertImage(getContext().getContentResolver(), inImage, "Answer_" + i + "_Participant_"+ (j-96), null);
+                                Uri uri = Uri.parse(path);
+                                uris.add(uri);
+
+                            }
+                        }
+                        // the attachment
+                        emailIntent.putParcelableArrayListExtra(Intent.EXTRA_STREAM, uris);
+                        startActivity(Intent.createChooser(emailIntent , "Send email..."));
+                    }
+
+                });
+                alert.show();
             }
         });
         return root;

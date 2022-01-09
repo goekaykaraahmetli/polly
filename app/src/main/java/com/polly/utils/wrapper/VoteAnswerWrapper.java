@@ -1,10 +1,10 @@
-package com.polly.utils.command.poll;
+package com.polly.utils.wrapper;
 
-public class VoteAnswerCommand {
+public class VoteAnswerWrapper {
 	private final boolean successful;
 	private final String message;
 	
-	public VoteAnswerCommand(boolean successful, String message) {
+	public VoteAnswerWrapper(boolean successful, String message) {
 		this.successful = successful;
 		this.message = message;
 	}

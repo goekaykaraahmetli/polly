@@ -20,6 +20,7 @@ import com.github.mikephil.charting.data.PieDataSet
 import com.github.mikephil.charting.data.PieEntry
 import com.github.mikephil.charting.utils.ColorTemplate
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.polly.R
 import com.polly.databinding.ActivityBarcodeScannerBinding
 import com.polly.testclasses.QrCodeAnalyzer
 import java.util.*
@@ -40,11 +41,12 @@ class BarcodeScannerActivity : AppCompatActivity() {
         var votes2 = 0
         var votes3 = 0
         var votes4 = 0
-        var numberOfParticipants = ScanRoomCreate.numberOfParticipants;
+        var numberOfParticipants = PolloptionFragment.numberOfParticipants;
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        setTheme(R.style.Theme_Polly)
         binding = ActivityBarcodeScannerBinding.inflate(layoutInflater)
         setContentView(binding.root)
         cameraExecutor = Executors.newSingleThreadExecutor()
@@ -52,7 +54,7 @@ class BarcodeScannerActivity : AppCompatActivity() {
         votes2 = 0
         votes3 = 0
         votes4 = 0
-        numberOfParticipants = ScanRoomCreate.numberOfParticipants
+        numberOfParticipants = PolloptionFragment.numberOfParticipants
         barcodeBoxView = BarcodeBoxView(this)
         addContentView(barcodeBoxView, ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT))
 
@@ -66,14 +68,14 @@ class BarcodeScannerActivity : AppCompatActivity() {
         cameraExecutor.shutdown()
         if (numberOfParticipants == votes1 + votes2 + votes3 + votes4) {
             val results = HashMap<String, Int>()
-            results.put(ScanRoomCreate.answer1, votes1)
-            results.put(ScanRoomCreate.answer2, votes2)
-            results.put(ScanRoomCreate.answer3, votes3)
-            results.put(ScanRoomCreate.answer4, votes4)
+            results.put(PolloptionFragment.answer1, votes1)
+            results.put(PolloptionFragment.answer2, votes2)
+            results.put(PolloptionFragment.answer3, votes3)
+            results.put(PolloptionFragment.answer4, votes4)
             val intent = Intent(this, DisplayQRCodePie::class.java).apply {
                 putExtra("THE_PIE", results)
                 putExtra("PARTICIPANTS", numberOfParticipants)
-                putExtra("DESCRIPTION", ScanRoomCreate.question)
+                putExtra("DESCRIPTION", PolloptionFragment.name)
             }
             startActivity(intent)
         } else {

@@ -23,6 +23,9 @@ public class SavingClass extends ViewModel {
     private String usergroupName;
     private List<String> pollOptions;
     private ArrayList<SearchListItem> userGroupList;
+    private Editable numberOfParticipants;
+    List<String> pollOptions;
+    ArrayList<SearchListItem> userGroupList;
     private ArrayList<SearchListItemUser> UserArrayVoting;
     private ArrayList<SearchListItemUser> userArrayObserving;
     private boolean isSaved = true;
@@ -46,6 +49,10 @@ public class SavingClass extends ViewModel {
 
     public ArrayList<SearchListItemUser> getUserArrayObserving() {
         return userArrayObserving;
+    }
+
+    public Editable getNumberOfParticipants() {
+        return numberOfParticipants;
     }
 
     public void setUserArrayObserving(ArrayList<SearchListItemUser> userArrayObserving) {
@@ -164,5 +171,9 @@ public class SavingClass extends ViewModel {
         setUsergroupName(null);
 
 
+    }
+
+    public void setNumberOfParticipants(Editable text) {
+        this.numberOfParticipants = text;
     }
 }

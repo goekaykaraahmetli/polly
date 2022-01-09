@@ -9,7 +9,7 @@
         android:id="@+id/information"
         android:layout_width="269dp"
         android:layout_height="117dp"
-        android:text="Polly Meeting is an innovative feature that allows you to vote in a group without the participants needing the Polly app, an internet connection or even a device of any kind. Just send the QR-Codes below to your computer, print them and let your participents vote."
+        android:text="Polly Meeting is an innovative feature that allows you to vote in a group without the participants needing the Polly app, an internet connection or even a device of any kind. Just send the QR-Codes below to your computer, print them and let your participants vote."
         app:layout_constraintBottom_toTopOf="@+id/sendviaemail"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.495"
