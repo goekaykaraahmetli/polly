@@ -25,6 +25,24 @@ public class SavingClass extends ViewModel {
     private ArrayList<SearchListItem> userGroupList;
     private ArrayList<SearchListItemUser> UserArrayVoting;
     private ArrayList<SearchListItemUser> userArrayObserving;
+    private boolean isSaved = true;
+    private Editable geofence;
+
+    public void setGeofence(Editable geofence) {
+        this.geofence = geofence;
+    }
+
+    public Editable getGeofence() {
+        return geofence;
+    }
+
+    public boolean isSaved() {
+        return isSaved;
+    }
+
+    public void setSaved(boolean saved) {
+        isSaved = saved;
+    }
 
     public ArrayList<SearchListItemUser> getUserArrayObserving() {
         return userArrayObserving;
