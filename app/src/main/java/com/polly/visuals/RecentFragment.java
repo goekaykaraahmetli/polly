@@ -1,13 +1,11 @@
 package com.polly.visuals;
 
-import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
-import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -17,13 +15,10 @@ import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
 import com.github.mikephil.charting.utils.ColorTemplate;
-import com.google.api.Distribution;
 import com.polly.R;
-import com.polly.utils.poll.PollManager;
-import com.polly.utils.wrapper.PollOptionsWrapper;
+import com.polly.utils.ShowPollPage;
 import com.polly.utils.wrapper.PollResultsWrapper;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -81,8 +76,7 @@ public class RecentFragment extends Fragment {
     }
 
     private void showPollResults(PollResultsWrapper p) {
-        //TODO!
-        // TODO: navigate to See poll results page
+        ShowPollPage.showPollResultsPage(p);
     }
 
     private PieChart createPieChart(Map<String, Integer> data, String centerText){

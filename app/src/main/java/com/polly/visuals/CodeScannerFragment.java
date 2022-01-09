@@ -18,6 +18,8 @@ import com.budiyev.android.codescanner.DecodeCallback;
 import com.google.zxing.Result;
 import com.polly.R;
 import com.budiyev.android.codescanner.CodeScanner;
+import com.polly.utils.ShowPollPage;
+import com.polly.utils.exceptions.CanNotEnterPollException;
 
 import java.io.IOException;
 import java.util.Timer;
@@ -69,17 +71,17 @@ public class CodeScannerFragment extends Fragment {
                     public void run() {
                         try {
                             long id = Long.valueOf(result.getText());
-                            EnterPoll.enterPoll(getContext(), id);
+                            ShowPollPage.showPollVotingPage(id);
                         }catch (NumberFormatException e){
                             Toast.makeText(activity, "\"" + result.getText() + "\" is not a valid poll id", Toast.LENGTH_SHORT).show();
                             e.printStackTrace();
                             restartScanner(2.5);
-                        } catch (InterruptedException e) {
-                            Toast.makeText(activity, "Something went wrong, please try again!", Toast.LENGTH_SHORT).show();
+                        } catch (IllegalStateException | IllegalArgumentException e){
+                            Toast.makeText(activity, e.getMessage(), Toast.LENGTH_SHORT).show();
                             e.printStackTrace();
                             restartScanner(2.5);
-                        } catch (IllegalStateException | IllegalArgumentException | IOException e){
-                            Toast.makeText(activity, e.getMessage(), Toast.LENGTH_SHORT).show();
+                        } catch (CanNotEnterPollException e) {
+                            Toast.makeText(activity, "Something went wrong, please try again!", Toast.LENGTH_SHORT).show();
                             e.printStackTrace();
                             restartScanner(2.5);
                         }

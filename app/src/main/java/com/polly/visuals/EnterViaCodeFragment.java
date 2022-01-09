@@ -14,6 +14,8 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.polly.R;
+import com.polly.utils.ShowPollPage;
+import com.polly.utils.exceptions.CanNotEnterPollException;
 
 import java.io.IOException;
 
@@ -43,12 +45,12 @@ public class EnterViaCodeFragment extends Fragment {
                     long id = Long.valueOf((String) code);
 
                     try {
-                        EnterPoll.enterPoll(getContext(), id);
-                    } catch (InterruptedException e) {
-                        Toast.makeText(getContext(), "Something went wrong, please try again!", Toast.LENGTH_SHORT).show();
-                        e.printStackTrace();
-                    } catch (IllegalStateException | IllegalArgumentException | IOException e){
+                        ShowPollPage.showPollVotingPage(id);
+                    } catch (IllegalStateException | IllegalArgumentException e){
                         Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
+                        e.printStackTrace();
+                    } catch (CanNotEnterPollException e) {
+                        Toast.makeText(getContext(), "You are not allowed to Enter this Poll!", Toast.LENGTH_SHORT).show();
                         e.printStackTrace();
                     }
                 }
