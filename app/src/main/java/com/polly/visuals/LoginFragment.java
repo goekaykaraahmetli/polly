@@ -50,7 +50,9 @@ import com.google.firebase.firestore.auth.User;
 import com.polly.R;
 import com.polly.config.Config;
 import com.polly.utils.Organizer;
+import com.polly.utils.command.user.IsUsernameAvailableCommand;
 import com.polly.utils.command.user.LoginCommand;
+import com.polly.utils.command.user.RegisterCommand;
 import com.polly.utils.communicator.ResponseCommunicator;
 import com.polly.utils.wrapper.LoginAnswerWrapper;
 import com.polly.utils.wrapper.Message;
@@ -219,9 +221,20 @@ public class LoginFragment extends Fragment {
                                         alert.setPositiveButton("Enter", new DialogInterface.OnClickListener() {
                                             @Override
                                             public void onClick(DialogInterface dialog, int which) {
-                                                Toast.makeText(getActivity(), "You are now signed in", Toast.LENGTH_SHORT).show();
-                                                Navigation.findNavController(getActivity(), R.id.nav_host_fragment).navigate(R.id.accountFragment);
-                                                //TODO Check if username is available
+                                                IsUsernameAvailableCommand com = new IsUsernameAvailableCommand(usernameInput.getText().toString());
+                                                try {
+                                                    Boolean isFree = (Boolean) communicator.sendWithResponse(Config.serverCommunicationId, com).getData();
+                                                    if(isFree){
+                                                        Message message = communicator.sendWithResponse(Config.serverCommunicationId, new RegisterCommand(idToken, usernameInput.getText().toString()));
+                                                        if(message.getData().equals("Success")){
+                                                            Navigation.findNavController(getActivity(), R.id.nav_host_fragment).navigate(R.id.startFragment);
+                                                        }
+                                                        else
+                                                            Toast.makeText(getContext(), "Something went wrong, please try again", Toast.LENGTH_SHORT).show();
+                                                    }
+                                                } catch (IOException e) {
+                                                    e.printStackTrace();
+                                                }
                                             }
 
                                         });
