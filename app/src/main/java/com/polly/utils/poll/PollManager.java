@@ -5,6 +5,8 @@ import com.polly.utils.Area;
 import com.polly.utils.command.poll.GetPollResultsCommand;
 import com.polly.utils.wrapper.Message;
 import com.polly.utils.command.poll.GetPollOptionsCommand;
+import com.polly.utils.wrapper.PollOptionsWrapper;
+import com.polly.utils.wrapper.PollResultsWrapper;
 import com.polly.utils.wrapper.VoteAnswerWrapper;
 import com.polly.utils.command.poll.VoteCommand;
 import com.polly.utils.command.poll.create.CreateCustomPollCommand;
