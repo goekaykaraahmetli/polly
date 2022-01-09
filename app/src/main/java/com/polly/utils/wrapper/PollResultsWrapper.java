@@ -1,15 +1,16 @@
 package com.polly.utils.wrapper;
 
+import java.util.Collections;
 import java.util.Map;
 
-import com.polly.utils.poll.BasisPollInformation;
+import com.polly.utils.poll.BasicPollInformation;
 
 public class PollResultsWrapper {
 	private final Map<String, Integer> pollResults;
-	private final BasisPollInformation basicPollInformation;
+	private final BasicPollInformation basicPollInformation;
 	
-	public PollResultsWrapper(Map<String, Integer> pollResults, BasisPollInformation basicPollInformation) {
-		this.pollResults = Map.copyOf(pollResults);
+	public PollResultsWrapper(Map<String, Integer> pollResults, BasicPollInformation basicPollInformation) {
+		this.pollResults = Collections.unmodifiableMap(pollResults);
 		this.basicPollInformation = basicPollInformation;
 	}
 
@@ -17,7 +18,7 @@ public class PollResultsWrapper {
 		return pollResults;
 	}
 
-	public BasisPollInformation getBasicPollInformation() {
+	public BasicPollInformation getBasicPollInformation() {
 		return basicPollInformation;
 	}
 }

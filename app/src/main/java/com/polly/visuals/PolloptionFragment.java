@@ -38,11 +38,15 @@ import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 import com.polly.R;
 import com.polly.utils.QRCode;
+import com.polly.utils.Area;
+import com.polly.utils.poll.PollDescription;
 import com.polly.utils.poll.PollManager;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -55,6 +59,9 @@ public class PolloptionFragment extends Fragment {
     public static String answer3;
     public static String answer4;
     public static int numberOfParticipants;
+    LocalTime localTime;
+    LocalDate localDate;
+    LocalDateTime localDateTime;
     @Override
     public void onResume() {
         super.onResume();
@@ -104,6 +111,7 @@ public class PolloptionFragment extends Fragment {
         TextView pollyRoomInfo = (TextView) root.findViewById(R.id.PollyRoomInfo);
         Button createPollBtn = (Button) root.findViewById(R.id.CreatePollOnMenu);
         Button sendQRviaEmail = (Button) root.findViewById(R.id.SendQRviaEmailBtn);
+        TextInputEditText geofenceBtn = root.findViewById(R.id.geofencing);
 
         dropDownMenu.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -242,6 +250,7 @@ public class PolloptionFragment extends Fragment {
                     @Override
                     public void onTimeSet(TimePicker timePicker, int hour, int minute) {
                         String time = hour + ":" + minute;
+                        localTime = LocalTime.parse(time);
                         test.setText(test.getText() + time);
                     }
                 }, hour, minute, true);
@@ -251,8 +260,8 @@ public class PolloptionFragment extends Fragment {
                     @Override
                     public void onDateSet(DatePicker datePicker, int year, int month, int day) {
                         month = month + 1;
-                        String date = year+"/"+month+"/"+day + " ";
-
+                        String date = year+"-"+month+"-"+day + " ";
+                        localDate = LocalDate.parse(year +"-"+month+"-"+day);
                         test.setText(date);
                     }
                 }, year,month, day);
@@ -293,6 +302,7 @@ public class PolloptionFragment extends Fragment {
                 saving.setPollname(Pollname.getText());
                 saving.setCalendarText(test.getText());
                 saving.setDropDownMenu(dropDownMenu.getText());
+                saving.setGeofence(geofenceBtn.getText());
                 System.out.println(dropDownMenu.getText());
                 Navigation.findNavController(getActivity(), R.id.nav_host_fragment).navigate(R.id.observingCandidates2);
             }
@@ -305,6 +315,7 @@ public class PolloptionFragment extends Fragment {
                 saving.setPollname(Pollname.getText());
                 saving.setCalendarText(test.getText());
                 saving.setDropDownMenu(dropDownMenu.getText());
+                saving.setGeofence(geofenceBtn.getText());
 
             }
         });
@@ -355,11 +366,29 @@ public class PolloptionFragment extends Fragment {
                         Toast.makeText(getActivity(), "Please enter Pollname", Toast.LENGTH_SHORT).show();
                     }
 
-                    if (!(test.getText().toString().contains("/") && test.getText().toString().contains(":"))) {
-                        Toast.makeText(getActivity(), "Please choose a valid Expiration date", Toast.LENGTH_SHORT).show();
-                    }
+                    if(!(test.getText().toString().contains("-") && test.getText().toString().contains(":"))){
+                    Toast.makeText(getActivity(), "Please choose a valid Expiration date", Toast.LENGTH_SHORT).show();
+                     }
+
                     try {
-                        long id = PollManager.createPoll(Pollname.toString(), pollOptions);
+                        long id;
+                        localDateTime.of(localDate, localTime);
+                        switch(dropDownMenu.getText().toString()) {
+                            case "PUBLIC":
+                                id = PollManager.createPublicPoll(Pollname.getText().toString(), new PollDescription(description.getText().toString()), localDateTime, pollOptions);
+                                break;
+                            case "PRIVATE":
+                                id = PollManager.createPrivatePoll(Pollname.getText().toString(), new PollDescription(description.getText().toString()), localDateTime, pollOptions, saving.getUsergroupName());
+                                break;
+                            case "CUSTOM":
+                                id = PollManager.createCustomPoll(Pollname.getText().toString(), new PollDescription(description.getText().toString()), localDateTime, pollOptions, saving.getUserArrayVoting(), saving.getUserArrayObserving());
+                                break;
+                            case "GEOFENCE":
+                                id = PollManager.createPublicPoll(Pollname.getText().toString(), new PollDescription(description.getText().toString()), localDateTime , pollOptions, new Area(latitude, longitude, Double.parseDouble(geofenceBtn.getText().toString())));
+                                break;
+                            default:
+                                throw new IllegalStateException("Unexpected value: " + "switch statement can't work with the given cases");
+                        }
                         Toast.makeText(getActivity(), "Poll ID is: " + id, Toast.LENGTH_SHORT).show();
                     } catch (InterruptedException | IOException e) {
                         e.printStackTrace();
