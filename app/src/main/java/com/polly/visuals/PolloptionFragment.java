@@ -322,15 +322,14 @@ public class PolloptionFragment extends Fragment {
         root.findViewById(R.id.CreatePollOnMenu).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                TextInputEditText participants = root.findViewById(R.id.PollyRoomNumber);
-                if(!participants.getText().toString().equals(""))
-                    numberOfParticipants = Integer.parseInt(participants.getText().toString());
-                else
-                    numberOfParticipants = 0;
                 List<String> pollOptions = saving.getPollOptions();
-
-                name = ((EditText) root.findViewById(R.id.Name)).getText().toString();
                 if (dropDownMenu.getText().toString().equals("POLLYROOM")) {
+                 TextInputEditText participants = root.findViewById(R.id.PollyRoomNumber);
+                    if(!participants.getText().toString().equals(""))
+                        numberOfParticipants = Integer.parseInt(participants.getText().toString());
+                 else
+                     numberOfParticipants = 0;
+                     name = ((EditText) root.findViewById(R.id.Name)).getText().toString();
                     if (pollOptions == null) {
                         Toast.makeText(getActivity(), "Please add some Options", Toast.LENGTH_SHORT).show();
                     }

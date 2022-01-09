@@ -204,6 +204,7 @@ public class VotingCandidates extends Fragment {
 
             @Override
             public boolean onQueryTextChange(String newText) {
+                if(mAdapter == null)return false;
                 mAdapter.getFilter().filter(newText);
                 return false;
             }
