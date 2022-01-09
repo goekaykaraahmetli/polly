@@ -16,6 +16,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 
@@ -47,9 +48,32 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.firestore.auth.User;
 import com.polly.R;
+import com.polly.config.Config;
+import com.polly.utils.Organizer;
+import com.polly.utils.command.user.LoginCommand;
+import com.polly.utils.communicator.ResponseCommunicator;
+import com.polly.utils.wrapper.LoginAnswerWrapper;
+import com.polly.utils.wrapper.Message;
+
+import java.io.IOException;
 
 public class LoginFragment extends Fragment {
+    private static ResponseCommunicator communicator = initialiseCommunicator();
+    private static ResponseCommunicator initialiseCommunicator(){
+        return new ResponseCommunicator() {
+            @Override
+            public void handleInput(Message message) {
+                System.out.println("LoginFragment received message from " + message.getSender() + " with responseId " + message.getResponseId());
+                System.out.println("from type: " + message.getDataType().getName());
 
+                for(Long l : communicator.responseIds){
+                    System.out.println(l);
+                }
+
+                // no default input handling
+            }
+        };
+    }
     EditText passwordInput;
     EditText emailInput;
     FirebaseAuth mAuth;
@@ -58,13 +82,21 @@ public class LoginFragment extends Fragment {
     private GoogleSignInClient googleSignInClient;
     private static final String TAG = "GOOGLE_SIGN_IN_TAG";
     View view;
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        ((DrawerLocker)getActivity()).setDrawerLocked(false);
+        ((DrawerLayout) view.findViewById(R.id.my_drawer_layout)).setVisibility(View.VISIBLE);
+    }
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater,
                              @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-
         view = inflater.inflate(R.layout.fragment_login, container, false);
+        ((DrawerLocker)getActivity()).setDrawerLocked(true);
         Button b = (Button) view.findViewById(R.id.activity_login_button_sign_up);
         b.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -72,6 +104,7 @@ public class LoginFragment extends Fragment {
                 Navigation.findNavController(getActivity(), R.id.nav_host_fragment).navigate(R.id.signupFragment);
             }
         });
+        ((DrawerLayout) view.findViewById(R.id.my_drawer_layout)).setVisibility(View.GONE);
         Button signInBtn = (Button) view.findViewById(R.id.activity_login_button_login);
         emailInput = (EditText) view.findViewById(R.id.activity_login_edittext_username);
         passwordInput = (EditText) view.findViewById(R.id.activity_login_edittext_password);
@@ -98,7 +131,6 @@ public class LoginFragment extends Fragment {
             public void onSuccess(LoginResult loginResult) {
                 Log.d(TAG, "facebook:onSuccess:" + loginResult);
                 handleFacebookAccessToken(loginResult.getAccessToken());
-                sendTokenToServer();
             }
 
             @Override
@@ -154,7 +186,6 @@ public class LoginFragment extends Fragment {
                 FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
                 if(user.isEmailVerified()) {
                     sendTokenToServer();
-                    Navigation.findNavController(getActivity(), R.id.nav_host_fragment).navigate(R.id.accountFragment);
                 }
                 else{
                     user.sendEmailVerification();
@@ -166,15 +197,39 @@ public class LoginFragment extends Fragment {
         });
     }
 
-    public static void sendTokenToServer(){
+    public void sendTokenToServer(){
         FirebaseUser mUser = FirebaseAuth.getInstance().getCurrentUser();
         mUser.getIdToken(true)
                 .addOnCompleteListener(new OnCompleteListener<GetTokenResult>() {
                     public void onComplete(@NonNull Task<GetTokenResult> task) {
                         if (task.isSuccessful()) {
                             String idToken = task.getResult().getToken();
-                            System.out.println("--------------------" + idToken);
-                            //TODO Send Token to Server
+                            LoginCommand loginCommand = new LoginCommand(idToken);
+                            try {
+                                Message messageResponse = communicator.sendWithResponse(Config.serverCommunicationId, loginCommand);
+                                if(!messageResponse.getDataType().equals(LoginAnswerWrapper.class))
+                                    System.err.println("Wrong Datatype");
+                                if(!((LoginAnswerWrapper) messageResponse.getData()).isSuccessful())
+                                    if(((LoginAnswerWrapper) messageResponse.getData()).getMessage().equals("User does not exist")){
+                                        AlertDialog.Builder alert = new AlertDialog.Builder(getContext());
+                                        alert.setTitle("Select Username");
+                                        alert.setMessage("You are new here, please enter an username");
+                                        EditText usernameInput = new EditText(getContext());
+                                        alert.setView(usernameInput);
+                                        alert.setPositiveButton("Enter", new DialogInterface.OnClickListener() {
+                                            @Override
+                                            public void onClick(DialogInterface dialog, int which) {
+                                                Toast.makeText(getActivity(), "You are now signed in", Toast.LENGTH_SHORT).show();
+                                                Navigation.findNavController(getActivity(), R.id.nav_host_fragment).navigate(R.id.accountFragment);
+                                                //TODO Check if username is available
+                                            }
+
+                                        });
+                                        alert.show();
+                                    }
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
                         } else {
                             Log.d(TAG, task.getException().getMessage());
                         }
@@ -212,7 +267,7 @@ public class LoginFragment extends Fragment {
                 String email = firebaseUser.getEmail();
                 Log.d(TAG, "onSuccess: Email: "+email);
                 Log.d(TAG, "onSuccess: UID: "+uid);
-
+                /**
                 if(authResult.getAdditionalUserInfo().isNewUser()){
                     Log.d(TAG, "onSuccess: Account Created");
                     Toast.makeText(getActivity(), "Account Created:\n" + email, Toast.LENGTH_SHORT).show();
@@ -260,7 +315,8 @@ public class LoginFragment extends Fragment {
                     }
                 });
 
-
+            **/
+                sendTokenToServer();
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
@@ -280,6 +336,8 @@ public class LoginFragment extends Fragment {
                         if (task.isSuccessful()) {
                             // Sign in success, update UI with the signed-in user's information
                             Log.d(TAG, "signInWithCredential:success");
+                            sendTokenToServer();
+                            /**
                             FirebaseUser user = mAuth.getCurrentUser();
                             FirebaseDatabase.getInstance("https://polly-abdd4-default-rtdb.europe-west1.firebasedatabase.app/").getReference("Users").addValueEventListener(new ValueEventListener() {
                                 @Override
@@ -310,6 +368,7 @@ public class LoginFragment extends Fragment {
                                         Toast.makeText(getActivity(), "You are now signed in", Toast.LENGTH_SHORT).show();
                                         sendTokenToServer();
                                     }
+
                                     Navigation.findNavController(getActivity(), R.id.nav_host_fragment).navigate(R.id.accountFragment);
                                 }
 
@@ -317,7 +376,7 @@ public class LoginFragment extends Fragment {
                                 public void onCancelled(@NonNull DatabaseError error) {
                                     Toast.makeText(getContext(), "Something went wrong, I can feel it", Toast.LENGTH_SHORT).show();
                                 }
-                            });
+                            });**/
 
                         } else {
                             // If sign in fails, display a message to the user.
