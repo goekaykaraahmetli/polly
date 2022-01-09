@@ -70,14 +70,14 @@ public class PollManager {
         return false;
     }
 
-    public static List<String> getPollOptions(long id) throws IOException {
+    public static PollOptionsWrapper getPollOptions(long id) throws IOException {
         Message response = communicator.sendWithResponse(Config.serverCommunicationId, new GetPollOptionsCommand(id));
-        return ((PollOptionsWrapper) response.getData()).getPollOptions();
+        return (PollOptionsWrapper) response.getData();
     }
 
-    public static Map<String, Integer> getPollResults(long id) throws IOException {
+    public static PollResultsWrapper getPollResults(long id) throws IOException {
         Message response = communicator.sendWithResponse(Config.serverCommunicationId, new GetPollResultsCommand(id));
-        return ((PollResultsWrapper) response.getData()).getPollResults();
+        return (PollResultsWrapper) response.getData();
     }
 
     public static List<PollResultsWrapper> getMyPolls() throws IOException {
