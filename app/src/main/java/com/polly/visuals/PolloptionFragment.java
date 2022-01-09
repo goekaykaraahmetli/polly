@@ -384,7 +384,7 @@ public class PolloptionFragment extends Fragment {
                                 id = PollManager.createCustomPoll(Pollname.getText().toString(), new PollDescription(description.getText().toString()), localDateTime, pollOptions, saving.getUserArrayVoting(), saving.getUserArrayObserving());
                                 break;
                             case "GEOFENCE":
-                                id = PollManager.createPublicPoll(Pollname.getText().toString(), new PollDescription(description.getText().toString()), localDateTime , pollOptions, new Area(latitude, longitude, Double.parseDouble(geofenceBtn.getText().toString())));
+                                id = PollManager.createGeofencePoll(Pollname.getText().toString(), new PollDescription(description.getText().toString()), localDateTime , pollOptions, new Area(latitude, longitude, Double.parseDouble(geofenceBtn.getText().toString())));
                                 break;
                             default:
                                 throw new IllegalStateException("Unexpected value: " + "switch statement can't work with the given cases");
