@@ -27,8 +27,8 @@ public class UserManager {
             }
         };
     }
+
     public static List<UsergroupWrapper> getMyUsergroups() throws IOException {
         return ((UsergroupListWrapper) communicator.sendWithResponse(Config.serverCommunicationId, new GetMyUsergroupsCommand()).getData()).getUsergroupList();
     }
-
 }
