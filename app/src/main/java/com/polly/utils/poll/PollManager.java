@@ -77,4 +77,11 @@ public class PollManager {
         return ((PollResultsWrapper) response.getData()).getPollResults();
     }
 
+    public static List<PollResultsWrapper> getMypolls() {
+
+    }
+
+    public static List<PollResultsWrapper> getparticipatedPolls() {
+
+    }
 }
