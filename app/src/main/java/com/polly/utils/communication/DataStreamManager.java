@@ -11,6 +11,7 @@ import java.security.NoSuchAlgorithmException;
 import java.security.PublicKey;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.X509EncodedKeySpec;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -20,15 +21,44 @@ import java.util.Map.Entry;
 import java.util.TreeMap;
 
 import com.polly.config.Config;
-import com.polly.utils.wrapper.ListWrapper;
-import com.polly.utils.wrapper.MapWrapper;
-import com.polly.utils.wrapper.Message;
+import com.polly.utils.Area;
+import com.polly.utils.command.GetMyPollsCommand;
+import com.polly.utils.command.GetParticipatedPollsCommand;
+import com.polly.utils.command.poll.GetPollOptionsCommand;
+import com.polly.utils.command.poll.GetPollResultsCommand;
+import com.polly.utils.command.poll.RegisterPollChangeListenerCommand;
+import com.polly.utils.command.poll.RemovePollChangeListenerCommand;
+import com.polly.utils.command.poll.VoteCommand;
+import com.polly.utils.command.poll.create.CreateCustomPollCommand;
+import com.polly.utils.command.poll.create.CreateGeofencePollCommand;
+import com.polly.utils.command.poll.create.CreatePrivatePollCommand;
+import com.polly.utils.command.poll.create.CreatePublicPollCommand;
+import com.polly.utils.command.user.FindUsersCommand;
+import com.polly.utils.command.user.GetMyUsergroupsCommand;
+import com.polly.utils.command.user.IsUsernameAvailableCommand;
+import com.polly.utils.command.user.LoginCommand;
+import com.polly.utils.command.user.RegisterCommand;
 import com.polly.utils.encryption.ciphers.AESCipher;
 import com.polly.utils.encryption.ciphers.RSACipher;
 import com.polly.utils.encryption.exceptions.FailedDecryptionException;
 import com.polly.utils.encryption.exceptions.FailedEncryptionException;
 import com.polly.utils.encryption.exceptions.FailedKeyGenerationException;
 import com.polly.utils.encryption.utils.CipherKeyGenerator;
+import com.polly.utils.poll.BasicPollInformation;
+import com.polly.utils.poll.PollDescription;
+import com.polly.utils.usergroup.UsergroupDescription;
+import com.polly.utils.wrapper.ErrorWrapper;
+import com.polly.utils.wrapper.ListWrapper;
+import com.polly.utils.wrapper.LoginAnswerWrapper;
+import com.polly.utils.wrapper.MapWrapper;
+import com.polly.utils.wrapper.Message;
+import com.polly.utils.wrapper.PollListWrapper;
+import com.polly.utils.wrapper.PollOptionsWrapper;
+import com.polly.utils.wrapper.PollResultsWrapper;
+import com.polly.utils.wrapper.UserListWrapper;
+import com.polly.utils.wrapper.UserWrapper;
+import com.polly.utils.wrapper.UsergroupListWrapper;
+import com.polly.utils.wrapper.UsergroupWrapper;
 
 import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
@@ -107,7 +137,69 @@ public class DataStreamManager {
 			generics.add(mw.getKeyType());
 			generics.add(mw.getValueType());
 		}
-		// default type:
+			// own types:
+		else if(dataType.equals(VoteCommand.class))
+			data = readVoteCommand();
+		else if(dataType.equals(RegisterPollChangeListenerCommand.class))
+			data = readRegisterPollChangeListenerCommand();
+		else if(dataType.equals(RemovePollChangeListenerCommand.class))
+			data = readRemovePollChangeListenerCommand();
+		else if(dataType.equals(IsUsernameAvailableCommand.class))
+			data = readIsUsernameAvailableCommand();
+		else if(dataType.equals(LoginCommand.class))
+			data = readLoginCommand();
+		else if(dataType.equals(GetMyUsergroupsCommand.class))
+			data = readGetMyUsergroupsCommand();
+		else if(dataType.equals(RegisterCommand.class))
+			data = readRegisterCommand();
+		else if(dataType.equals(GetMyPollsCommand.class))
+			data = readGetMyPollsCommand();
+		else if(dataType.equals(GetParticipatedPollsCommand.class))
+			data = readGetParticipatedPollsCommand();
+		else if(dataType.equals(UsergroupDescription.class))
+			data = readUsergroupDescription();
+		else if(dataType.equals(PollDescription.class))
+			data = readPollDescription();
+		else if(dataType.equals(ErrorWrapper.class))
+			data = readErrorWrapper();
+		else if(dataType.equals(LoginAnswerWrapper.class))
+			data = readLoginAnswerWrapper();
+		else if(dataType.equals(PollOptionsWrapper.class))
+			data = readPollOptionsWrapper();
+		else if(dataType.equals(BasicPollInformation.class))
+			data = readBasicPollInformation();
+		else if(dataType.equals(LocalDateTime.class))
+			data = readLocalDateTime();
+		else if(dataType.equals(FindUsersCommand.class))
+			data = readFindUsersCommand();
+		else if(dataType.equals(GetPollResultsCommand.class))
+			data = readGetPollResultsCommand();
+		else if(dataType.equals(GetPollOptionsCommand.class))
+			data = readGetPollOptionsCommand();
+		else if(dataType.equals(Area.class))
+			data = readArea();
+		else if(dataType.equals(UserWrapper.class))
+			data = readUserWrapper();
+		else if(dataType.equals(UserListWrapper.class))
+			data = readUserListWrapper();
+		else if(dataType.equals(PollResultsWrapper.class))
+			data = readPollResultsWrapper();
+		else if(dataType.equals(PollListWrapper.class))
+			data = readPollListWrapper();
+		else if(dataType.equals(UsergroupWrapper.class))
+			data = readUsergroupWrapper();
+		else if(dataType.equals(UsergroupListWrapper.class))
+			data = readUsergroupListWrapper();
+		else if(dataType.equals(CreatePublicPollCommand.class))
+			data = readCreatePublicPollCommand();
+		else if(dataType.equals(CreateGeofencePollCommand.class))
+			data = readCreateGeofencePollCommand();
+		else if(dataType.equals(CreatePrivatePollCommand.class))
+			data = readCreatePrivatePollCommand();
+		else if(dataType.equals(CreateCustomPollCommand.class))
+			data = readCreateCustomPollCommand();
+			
+			// default type:
 		else
 			data = readString();
 
@@ -240,8 +332,70 @@ public class DataStreamManager {
 			if(generics.size() < 2)
 				throw new IllegalArgumentException("missing generics");
 			writeMap((Map<Object,Object>) data, generics.get(0), generics.get(1));
-			// default type:
 		}
+			// own types:
+		else if(dataType.equals(VoteCommand.class))
+			writeVoteCommand((VoteCommand) data);
+		else if(dataType.equals(RegisterPollChangeListenerCommand.class))
+			writeRegisterPollChangeListenerCommand((RegisterPollChangeListenerCommand) data);
+		else if(dataType.equals(RemovePollChangeListenerCommand.class))
+			writeRemovePollChangeListenerCommand((RemovePollChangeListenerCommand) data);
+		else if(dataType.equals(IsUsernameAvailableCommand.class))
+			writeIsUsernameAvailableCommand((IsUsernameAvailableCommand) data);
+		else if(dataType.equals(LoginCommand.class))
+			writeLoginCommand((LoginCommand) data);
+		else if(dataType.equals(GetMyUsergroupsCommand.class))
+			writeGetMyUsergroupsCommand((GetMyUsergroupsCommand) data);
+		else if(dataType.equals(RegisterCommand.class))
+			writeRegisterCommand((RegisterCommand) data);
+		else if(dataType.equals(GetMyPollsCommand.class))
+			writeGetMyPollsCommand((GetMyPollsCommand) data);
+		else if(dataType.equals(GetParticipatedPollsCommand.class))
+			writeGetParticipatedPollsCommand((GetParticipatedPollsCommand) data);
+		else if(dataType.equals(UsergroupDescription.class))
+			writeUsergroupDescription((UsergroupDescription) data);
+		else if(dataType.equals(PollDescription.class))
+			writePollDescription((PollDescription) data);
+		else if(dataType.equals(ErrorWrapper.class))
+			writeErrorWrapper((ErrorWrapper) data);
+		else if(dataType.equals(LoginAnswerWrapper.class))
+			writeLoginAnswerWrapper((LoginAnswerWrapper) data);
+		else if(dataType.equals(PollOptionsWrapper.class))
+			writePollOptionsWrapper((PollOptionsWrapper) data);
+		else if(dataType.equals(BasicPollInformation.class))
+			writeBasicPollInformation((BasicPollInformation) data);
+		else if(dataType.equals(LocalDateTime.class))
+			writeLocalDateTime((LocalDateTime) data);
+		else if(dataType.equals(FindUsersCommand.class))
+			writeFindUsersCommand((FindUsersCommand) data);
+		else if(dataType.equals(GetPollResultsCommand.class))
+			writeGetPollResultsCommand((GetPollResultsCommand) data);
+		else if(dataType.equals(GetPollOptionsCommand.class))
+			writeGetPollOptionsCommand((GetPollOptionsCommand) data);
+		else if(dataType.equals(Area.class))
+			writeArea((Area) data);
+		else if(dataType.equals(UserWrapper.class))
+			writeUserWrapper((UserWrapper) data);
+		else if(dataType.equals(UserListWrapper.class))
+			writeUserListWrapper((UserListWrapper) data);
+		else if(dataType.equals(PollResultsWrapper.class))
+			writePollResultsWrapper((PollResultsWrapper) data);
+		else if(dataType.equals(PollListWrapper.class))
+			writePollListWrapper((PollListWrapper) data);
+		else if(dataType.equals(UsergroupWrapper.class))
+			writeUsergroupWrapper((UsergroupWrapper) data);
+		else if(dataType.equals(UsergroupListWrapper.class))
+			writeUsergroupListWrapper((UsergroupListWrapper) data);
+		else if(dataType.equals(CreatePublicPollCommand.class))
+			writeCreatePublicPollCommand((CreatePublicPollCommand) data);
+		else if(dataType.equals(CreateGeofencePollCommand.class))
+			writeCreateGeofencePollCommand((CreateGeofencePollCommand) data);
+		else if(dataType.equals(CreatePrivatePollCommand.class))
+			writeCreatePrivatePollCommand((CreatePrivatePollCommand) data);
+		else if(dataType.equals(CreateCustomPollCommand.class))
+			writeCreateCustomPollCommand((CreateCustomPollCommand) data);
+		
+			// default type:
 		else
 			writeString((String) data);
 	}
@@ -281,7 +435,7 @@ public class DataStreamManager {
 	private void writeString(String data) throws IOException {
 		writeEncryptedByteArray(data.getBytes(CHARSET));
 	}
-
+	
 	private void writeList(List<Object> data, Class<?> type) throws IOException {
 		writeString(type.getName());
 		writeInteger(data.size());
@@ -299,7 +453,7 @@ public class DataStreamManager {
 			write(valueType, valueType.cast(entry.getValue()), new ArrayList<>());
 		}
 	}
-
+	
 	private void writeClearString(String string) throws IOException {
 		output.writeUTF(string);
 	}
@@ -423,5 +577,451 @@ public class DataStreamManager {
 				(((int)(pByteArray[1]) << 16) & 0xFF0000) |
 				(((int)(pByteArray[2]) << 8) & 0xFF00) |
 				((int)(pByteArray[3]) & 0xFF);
+	}
+	
+	
+	// own read/write methods
+	private void writeVoteCommand(VoteCommand data) throws IOException {
+		writeLong(data.getId());
+		writeString(data.getOption());
+	}
+	
+	private VoteCommand readVoteCommand() throws IOException{
+		return new VoteCommand(readLong(), readString());
+	}
+	
+	private void writeRegisterPollChangeListenerCommand(RegisterPollChangeListenerCommand data) throws IOException{
+		writeLong(data.getId());
+		writeBoolean(data.hasVoted());
+	}
+	
+	private RegisterPollChangeListenerCommand readRegisterPollChangeListenerCommand() throws IOException {
+		return new RegisterPollChangeListenerCommand(readLong(), readBoolean());
+	}
+	
+	private void writeRemovePollChangeListenerCommand(RemovePollChangeListenerCommand data) throws IOException {
+		writeLong(data.getId());
+	}
+	
+	private RemovePollChangeListenerCommand readRemovePollChangeListenerCommand() throws IOException {
+		return new RemovePollChangeListenerCommand(readLong());
+	}
+	
+	private void writeIsUsernameAvailableCommand(IsUsernameAvailableCommand data) throws IOException {
+		writeString(data.getUsername());
+	}
+	
+	private IsUsernameAvailableCommand readIsUsernameAvailableCommand() throws IOException {
+		return new IsUsernameAvailableCommand(readString());
+	}
+	
+	private void writeLoginCommand(LoginCommand data) throws IOException {
+		writeString(data.getIdToken());
+	}
+	
+	private LoginCommand readLoginCommand() throws IOException {
+		return new LoginCommand(readString());
+	}
+	
+	private void writeGetMyUsergroupsCommand(GetMyUsergroupsCommand data) throws IOException {
+		// nothing to do
+	}
+	
+	private GetMyUsergroupsCommand readGetMyUsergroupsCommand() throws IOException {
+		return new GetMyUsergroupsCommand();
+	}
+	
+	private void writeRegisterCommand(RegisterCommand data) throws IOException {
+		writeString(data.getIdToken());
+		writeString(data.getName());
+	}
+	
+	private RegisterCommand readRegisterCommand() throws IOException {
+		return new RegisterCommand(readString(), readString());
+	}
+	
+	private void writeGetMyPollsCommand(GetMyPollsCommand data) throws IOException {
+		// nothing to do
+	}
+	
+	private GetMyPollsCommand readGetMyPollsCommand() throws IOException {
+		return new GetMyPollsCommand();
+	}
+	
+	private void writeGetParticipatedPollsCommand(GetParticipatedPollsCommand data) throws IOException {
+		// nothing to do
+	}
+	
+	private GetParticipatedPollsCommand readGetParticipatedPollsCommand() throws IOException {
+		return new GetParticipatedPollsCommand();
+	}
+	
+	private void writeUsergroupDescription(UsergroupDescription data) throws IOException {
+		writeString(data.getDescription());
+	}
+	
+	private UsergroupDescription readUsergroupDescription() throws IOException {
+		return new UsergroupDescription(readString());
+	}
+	
+	private void writePollDescription(PollDescription data) throws IOException {
+		writeString(data.getDescription());
+	}
+	
+	private PollDescription readPollDescription() throws IOException {
+		return new PollDescription(readString());
+	}
+	
+	private void writeErrorWrapper(ErrorWrapper data) throws IOException {
+		writeString(data.getMessage());
+	}
+	
+	private ErrorWrapper readErrorWrapper() throws IOException {
+		return new ErrorWrapper(readString());
+	}
+	
+	private void writeLoginAnswerWrapper(LoginAnswerWrapper data) throws IOException {
+		writeBoolean(data.isSuccessful());
+		writeString(data.getMessage());
+	}
+	
+	private LoginAnswerWrapper readLoginAnswerWrapper() throws IOException {
+		return new LoginAnswerWrapper(readBoolean(), readString());
+	}
+	
+	private void writePollOptionsWrapper(PollOptionsWrapper data) throws IOException {
+		writeInteger(data.getPollOptions().size());
+		for(int i = 0;i<data.getPollOptions().size();i++) {
+			writeString(data.getPollOptions().get(i));
+		}
+		writeBasicPollInformation(data.getBasicPollInformation());
+	}
+	
+	private PollOptionsWrapper readPollOptionsWrapper() throws IOException {
+		List<String> list = new ArrayList<>();
+		
+		int length = readInteger();
+		for(int i = 0;i<length;i++) {
+			list.add(readString());
+		}
+		return new PollOptionsWrapper(list, readBasicPollInformation());
+	}
+	
+	private void writeBasicPollInformation(BasicPollInformation data) throws IOException {
+		writeLong(data.getId());
+		writeString(data.getName());
+		writePollDescription(data.getDescription());
+		writeLocalDateTime(data.getExpirationTime());
+	}
+	
+	private BasicPollInformation readBasicPollInformation() throws IOException {
+		return new BasicPollInformation(readLong(), readString(), readPollDescription(), readLocalDateTime());
+	}
+	
+	private void writeLocalDateTime(LocalDateTime data) throws IOException {
+		writeInteger(data.getYear());
+		writeInteger(data.getMonthValue());
+		writeInteger(data.getDayOfMonth());
+		writeInteger(data.getHour());
+		writeInteger(data.getMinute());
+	}
+	
+	private LocalDateTime readLocalDateTime() throws IOException {
+		return LocalDateTime.of(readInteger(), readInteger(), readInteger(), readInteger(), readInteger());
+	}
+	
+	private void writeFindUsersCommand(FindUsersCommand data) throws IOException {
+		// nothing to do
+	}
+	
+	private FindUsersCommand readFindUsersCommand() throws IOException {
+		return new FindUsersCommand();
+	}
+	
+	private void writeGetPollResultsCommand(GetPollResultsCommand data) throws IOException {
+		writeLong(data.getId());
+	}
+	
+	private GetPollResultsCommand readGetPollResultsCommand() throws IOException {
+		return new GetPollResultsCommand(readLong());
+	}
+	
+	private void writeGetPollOptionsCommand(GetPollOptionsCommand data) throws IOException {
+		writeLong(data.getId());
+	}
+	
+	private GetPollOptionsCommand readGetPollOptionsCommand() throws IOException {
+		return new GetPollOptionsCommand(readLong());
+	}
+	
+	private void writeArea(Area data) throws IOException {
+		writeDouble(data.getLatitude());
+		writeDouble(data.getLongitude());
+		writeDouble(data.getRadius());
+	}
+	
+	private Area readArea() throws IOException {
+		return new Area(readDouble(), readDouble(), readDouble());
+	}
+	
+	private void writeUserWrapper(UserWrapper data) throws IOException {
+		writeString(data.getName());
+	}
+	
+	private UserWrapper readUserWrapper() throws IOException {
+		return new UserWrapper(readString());
+	}
+	
+	private void writeUserListWrapper(UserListWrapper data) throws IOException {
+		writeInteger(data.getUserList().size());
+		
+		for(int i = 0;i<data.getUserList().size();i++) {
+			writeUserWrapper(data.getUserList().get(i));
+		}
+	}
+	
+	private UserListWrapper readUserListWrapper() throws IOException {
+		List<UserWrapper> list = new ArrayList<>();
+		int length = readInteger();
+		
+		for(int i = 0;i<length;i++) {
+			list.add(readUserWrapper());
+		}
+		return new UserListWrapper(list);
+	}
+	
+	private void writePollResultsWrapper(PollResultsWrapper data) throws IOException {
+		writeInteger(data.getPollResults().size());
+		
+		for(String key : data.getPollResults().keySet()) {
+			writeString(key);
+			writeInteger(data.getPollResults().get(key));
+		}
+		
+		writeBasicPollInformation(data.getBasicPollInformation());
+	}
+	
+	private PollResultsWrapper readPollResultsWrapper() throws IOException {
+		Map<String, Integer> map = new HashMap<>();
+		
+		int length = readInteger();
+		for(int i = 0;i<length;i++) {
+			map.put(readString(), readInteger());
+		}
+		
+		return new PollResultsWrapper(map, readBasicPollInformation());
+	}
+	
+	private void writePollListWrapper(PollListWrapper data) throws IOException {
+		writeInteger(data.getList().size());
+		
+		for(PollResultsWrapper wrapper : data.getList()) {
+			writePollResultsWrapper(wrapper);
+		}
+	}
+	
+	private PollListWrapper readPollListWrapper() throws IOException {
+		List<PollResultsWrapper> list = new ArrayList<>();
+		int length = readInteger();
+		
+		for(int i = 0;i<length;i++) {
+			list.add(readPollResultsWrapper());
+		}
+		return new PollListWrapper(list);
+	}
+	
+	private void writeUsergroupWrapper(UsergroupWrapper data) throws IOException {
+		writeLong(data.getId());
+		writeString(data.getName());
+		
+		// write members
+		writeInteger(data.getMembers().size());
+		for(UserWrapper wrapper : data.getMembers()) {
+			writeUserWrapper(wrapper);
+		}
+		
+		// write admins
+		writeInteger(data.getAdmins().size());
+		for(UserWrapper wrapper : data.getAdmins()) {
+			writeUserWrapper(wrapper);
+		}
+		
+		// write description
+		writeUsergroupDescription(data.getDescription());
+		
+		// write polls
+		writeInteger(data.getPolls().size());
+		for(BasicPollInformation basicInfo : data.getPolls()) {
+			writeBasicPollInformation(basicInfo);
+		}
+		
+	}
+	
+	private UsergroupWrapper readUsergroupWrapper() throws IOException {
+		long id = readLong();
+		String name = readString();
+		
+		List<UserWrapper> members = new ArrayList<>();
+		int membersLength = readInteger();
+		for(int i = 0;i<membersLength;i++) {
+			members.add(readUserWrapper());
+		}
+		
+		List<UserWrapper> admins = new ArrayList<>();
+		int adminsLength = readInteger();
+		for(int i = 0;i<adminsLength;i++) {
+			admins.add(readUserWrapper());
+		}
+		
+		UsergroupDescription description = readUsergroupDescription();
+		
+		List<BasicPollInformation> polls = new ArrayList<>();
+		int pollInfolength = readInteger();
+		for(int i = 0;i<pollInfolength;i++) {
+			polls.add(readBasicPollInformation());
+		}
+		
+		return new UsergroupWrapper(id, name, members, admins, description, polls);
+	}
+	
+	private void writeUsergroupListWrapper(UsergroupListWrapper data) throws IOException {
+		writeInteger(data.getUsergroupList().size());
+		
+		for(UsergroupWrapper wrapper : data.getUsergroupList()) {
+			writeUsergroupWrapper(wrapper);
+		}
+	}
+	
+	private UsergroupListWrapper readUsergroupListWrapper() throws IOException {
+		List<UsergroupWrapper> list = new ArrayList<>();
+		
+		int length = readInteger();
+		
+		for(int i = 0;i<length;i++) {
+			list.add(readUsergroupWrapper());
+		}
+		return new UsergroupListWrapper(list);
+	}
+	
+	private void writeCreatePublicPollCommand(CreatePublicPollCommand data) throws IOException {
+		writeString(data.getName());
+		writePollDescription(data.getDescription());
+		writeLocalDateTime(data.getExpirationTime());
+		// write options
+		writeInteger(data.getOptions().size());
+		for(String option : data.getOptions()) {
+			writeString(option);
+		}
+	}
+	
+	private CreatePublicPollCommand readCreatePublicPollCommand() throws IOException {
+		String name = readString();
+		PollDescription description = readPollDescription();
+		LocalDateTime expirationTime = readLocalDateTime();
+		List<String> options = new ArrayList<>();
+		
+		int length = readInteger();
+		for(int i = 0;i<length;i++) {
+			options.add(readString());
+		}
+		return new CreatePublicPollCommand(name, description, expirationTime, options);
+	}
+	
+	private void writeCreateGeofencePollCommand(CreateGeofencePollCommand data) throws IOException {
+		writeString(data.getName());
+		writePollDescription(data.getDescription());
+		writeLocalDateTime(data.getExpirationTime());
+		// write options
+		writeInteger(data.getOptions().size());
+		for(String option : data.getOptions()) {
+			writeString(option);
+		}
+		
+		writeArea(data.getArea());
+	}
+	
+	private CreateGeofencePollCommand readCreateGeofencePollCommand() throws IOException {
+		String name = readString();
+		PollDescription description = readPollDescription();
+		LocalDateTime expirationTime = readLocalDateTime();
+		List<String> options = new ArrayList<>();
+		
+		int length = readInteger();
+		for(int i = 0;i<length;i++) {
+			options.add(readString());
+		}
+		return new CreateGeofencePollCommand(name, description, expirationTime, options, readArea());
+	}
+	
+	private void writeCreatePrivatePollCommand(CreatePrivatePollCommand data) throws IOException {
+		writeString(data.getName());
+		writePollDescription(data.getDescription());
+		writeLocalDateTime(data.getExpirationTime());
+		// write options
+		writeInteger(data.getOptions().size());
+		for(String option : data.getOptions()) {
+			writeString(option);
+		}
+		
+		writeLong(data.getUsergroup());
+	}
+	
+	private CreatePrivatePollCommand readCreatePrivatePollCommand() throws IOException {
+		String name = readString();
+		PollDescription description = readPollDescription();
+		LocalDateTime expirationTime = readLocalDateTime();
+		List<String> options = new ArrayList<>();
+		
+		int length = readInteger();
+		for(int i = 0;i<length;i++) {
+			options.add(readString());
+		}
+		return new CreatePrivatePollCommand(name, description, expirationTime, options, readLong());
+	}
+	
+	private void writeCreateCustomPollCommand(CreateCustomPollCommand data) throws IOException {
+		writeString(data.getName());
+		writePollDescription(data.getDescription());
+		writeLocalDateTime(data.getExpirationTime());
+		// write options
+		writeInteger(data.getOptions().size());
+		for(String option : data.getOptions()) {
+			writeString(option);
+		}
+		// write canSee
+		writeInteger(data.getCanSee().size());
+		for(String name : data.getCanSee()) {
+			writeString(name);
+		}
+		// write canSeeResults
+		writeInteger(data.getCanSeeResults().size());
+		for(String name : data.getCanSeeResults()) {
+			writeString(name);
+		}
+	}
+	
+	private CreateCustomPollCommand readCreateCustomPollCommand() throws IOException {
+		String name = readString();
+		PollDescription description = readPollDescription();
+		LocalDateTime expirationTime = readLocalDateTime();
+		List<String> options = new ArrayList<>();
+		List<String> canSee = new ArrayList<>();
+		List<String> canSeeResults = new ArrayList<>();
+		
+		int optionsLength = readInteger();
+		for(int i = 0;i<optionsLength;i++) {
+			options.add(readString());
+		}
+		
+		int canSeeLength = readInteger();
+		for(int i = 0;i<canSeeLength;i++) {
+			canSee.add(readString());
+		}
+		
+		int canSeeResultsLength = readInteger();
+		for(int i = 0;i<canSeeResultsLength;i++) {
+			canSeeResults.add(readString());
+		}
+		return new CreateCustomPollCommand(name, description, expirationTime, options, canSee, canSeeResults);
 	}
 }

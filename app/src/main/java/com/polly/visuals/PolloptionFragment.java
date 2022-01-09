@@ -250,7 +250,7 @@ public class PolloptionFragment extends Fragment {
                     @Override
                     public void onTimeSet(TimePicker timePicker, int hour, int minute) {
                         String time = hour + ":" + minute;
-                        localTime = LocalTime.parse(time);
+                        localTime = LocalTime.of(hour, minute);
                         test.setText(test.getText() + time);
                     }
                 }, hour, minute, true);
@@ -261,7 +261,7 @@ public class PolloptionFragment extends Fragment {
                     public void onDateSet(DatePicker datePicker, int year, int month, int day) {
                         month = month + 1;
                         String date = year+"-"+month+"-"+day + " ";
-                        localDate = LocalDate.parse(year +"-"+month+"-"+day);
+                        localDate = LocalDate.of(year, month, day);
                         test.setText(date);
                     }
                 }, year,month, day);
