@@ -384,6 +384,8 @@ public class PolloptionFragment extends Fragment {
                                 id = PollManager.createCustomPoll(Pollname.getText().toString(), new PollDescription(description.getText().toString()), localDateTime, pollOptions, saving.getUserArrayVoting(), saving.getUserArrayObserving());
                                 break;
                             case "GEOFENCE":
+                                long latitude = 0L;     //TODO
+                                long longitude = 0L;    //TODO
                                 id = PollManager.createGeofencePoll(Pollname.getText().toString(), new PollDescription(description.getText().toString()), localDateTime , pollOptions, new Area(latitude, longitude, Double.parseDouble(geofenceBtn.getText().toString())));
                                 break;
                             default:
