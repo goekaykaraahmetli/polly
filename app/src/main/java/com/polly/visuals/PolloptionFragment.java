@@ -378,10 +378,10 @@ public class PolloptionFragment extends Fragment {
                                 id = PollManager.createPublicPoll(Pollname.getText().toString(), new PollDescription(description.getText().toString()), localDateTime, pollOptions);
                                 break;
                             case "PRIVATE":
-                                id = PollManager.createPrivatePoll(Pollname.getText().toString(), new PollDescription(description.getText().toString()), localDateTime, pollOptions, saving.getUsergroupName());
+                                id = PollManager.createPrivatePoll(Pollname.getText().toString(), new PollDescription(description.getText().toString()), localDateTime, pollOptions, saving.getUserGroupId());
                                 break;
                             case "CUSTOM":
-                                id = PollManager.createCustomPoll(Pollname.getText().toString(), new PollDescription(description.getText().toString()), localDateTime, pollOptions, saving.getUserArrayVoting(), saving.getUserArrayObserving());
+                                id = PollManager.createCustomPoll(Pollname.getText().toString(), new PollDescription(description.getText().toString()), localDateTime, pollOptions, saving.getCanSeeList(), saving.getCanSeeAndVoteList());
                                 break;
                             case "GEOFENCE":
                                 long latitude = 0L;     //TODO
@@ -392,7 +392,7 @@ public class PolloptionFragment extends Fragment {
                                 throw new IllegalStateException("Unexpected value: " + "switch statement can't work with the given cases");
                         }
                         Toast.makeText(getActivity(), "Poll ID is: " + id, Toast.LENGTH_SHORT).show();
-                    } catch (InterruptedException | IOException e) {
+                    } catch (IOException e) {
                         e.printStackTrace();
                         Toast.makeText(getActivity(), "No connection to the server!", Toast.LENGTH_SHORT).show();
                     }

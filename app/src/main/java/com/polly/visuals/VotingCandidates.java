@@ -23,8 +23,12 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.polly.R;
+import com.polly.utils.user.UserManager;
+import com.polly.utils.wrapper.UserWrapper;
 
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
 public class VotingCandidates extends Fragment {
     private RecyclerView mRecyclerView;
@@ -32,6 +36,7 @@ public class VotingCandidates extends Fragment {
     private RecyclerView.LayoutManager mLayoutManager;
     private boolean pressedSelected = false;
     ArrayList<SearchListItemUser> exampleList = new ArrayList<>();
+    List<UserWrapper> list;
 
     @Nullable
     @Override
@@ -43,8 +48,17 @@ public class VotingCandidates extends Fragment {
         setHasOptionsMenu(true);
         SavingClass saving = new ViewModelProvider(getActivity()).get(SavingClass.class);
 
+        try {
+            list = UserManager.findUsers();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
         if(saving.getUserArrayVoting() == null) {
-            exampleList.add(new SearchListItemUser(R.drawable.ic_usergroup, "User 1", false));
+            for(int i = 0; i< list.size(); i++) {
+                exampleList.add(new SearchListItemUser(R.drawable.ic_usergroup, list.get(i).getName(), false));
+            }
+            /**exampleList.add(new SearchListItemUser(R.drawable.ic_usergroup, "User 1", false));
             exampleList.add(new SearchListItemUser(R.drawable.ic_usergroup, "User 2", false));
             exampleList.add(new SearchListItemUser(R.drawable.ic_usergroup, "User 3", false));
             exampleList.add(new SearchListItemUser(R.drawable.ic_usergroup, "User 4", false));
@@ -61,7 +75,7 @@ public class VotingCandidates extends Fragment {
             exampleList.add(new SearchListItemUser(R.drawable.ic_usergroup, "User 15", false));
             exampleList.add(new SearchListItemUser(R.drawable.ic_usergroup, "User 16", false));
             exampleList.add(new SearchListItemUser(R.drawable.ic_usergroup, "User 17", false));
-            exampleList.add(new SearchListItemUser(R.drawable.ic_usergroup, "User 18", false));
+            exampleList.add(new SearchListItemUser(R.drawable.ic_usergroup, "User 18", false));**/
         }else{
             exampleList = saving.getUserArrayVoting();
         }
@@ -150,6 +164,13 @@ public class VotingCandidates extends Fragment {
         root.findViewById(R.id.saveAndBackVoting).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                List<String> canSeeList = new ArrayList<>();
+                for(int i = 0; i < exampleList.size(); i++){
+                    if(exampleList.get(i).isCheckbox()){
+                        canSeeList.add(exampleList.get(i).getmText1());
+                    }
+                }
+                saving.setCanSeeList(canSeeList);
                 saving.setUserArrayVoting(exampleList);
                 Navigation.findNavController(getActivity(), R.id.nav_host_fragment).navigate(R.id.polloptionFragment);
             }
