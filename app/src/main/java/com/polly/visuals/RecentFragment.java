@@ -9,6 +9,7 @@ import android.widget.LinearLayout;
 
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.data.PieData;
@@ -24,7 +25,7 @@ import java.util.List;
 import java.util.Map;
 
 public class RecentFragment extends Fragment {
-
+    SavingClass saving;
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater,
@@ -36,6 +37,7 @@ public class RecentFragment extends Fragment {
 
         List<PollResultsWrapper> participatedPolls = new ArrayList<>(); //TODO: insert useful values
         List<PollResultsWrapper> myPolls = new ArrayList<>(); //TODO: insert useful values
+        saving = new ViewModelProvider(getActivity()).get(SavingClass.class);
 
         /**try {
             // get participatedPolls
@@ -76,7 +78,7 @@ public class RecentFragment extends Fragment {
     }
 
     private void showPollResults(PollResultsWrapper p) {
-        ShowPollPage.showPollResultsPage(p);
+        //ShowPollPage.showPollResultsPage(p);
     }
 
     private PieChart createPieChart(Map<String, Integer> data, String centerText){
