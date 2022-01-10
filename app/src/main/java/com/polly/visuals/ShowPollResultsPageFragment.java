@@ -24,6 +24,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.Navigation;
 
 import com.github.mikephil.charting.charts.PieChart;
 import com.polly.config.Config;
@@ -43,12 +44,17 @@ public class ShowPollResultsPageFragment extends Fragment {
     private PieChart pieChart;
     private ImageView qrCode;
     PollResultsWrapper pollResults;
-    long id;
+    static Long id;
     private Button voteButton;
     private Communicator communicator = initialiseCommunicator();
     private boolean hasRunningPollChangeListener = false;
 
     SavingClass saving;
+
+    public static void open(long id) {
+        Navigation.findNavController(MainActivity.mainActivity, R.id.nav_host_fragment).navigate(R.id.showPollResultsPageFragment);
+        ShowPollResultsPageFragment.id = id;
+    }
 
     @Override
     public void onDestroy() {
@@ -62,6 +68,7 @@ public class ShowPollResultsPageFragment extends Fragment {
                 Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
             }
         }
+        id = null;
     }
 
     @Nullable
