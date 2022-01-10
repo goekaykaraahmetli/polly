@@ -49,9 +49,6 @@ public class EnterViaCodeFragment extends Fragment {
                     } catch (IllegalStateException | IllegalArgumentException e){
                         Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
                         e.printStackTrace();
-                    } catch (CanNotEnterPollException e) {
-                        Toast.makeText(getContext(), "You are not allowed to Enter this Poll!", Toast.LENGTH_SHORT).show();
-                        e.printStackTrace();
                     }
                 }
             }
