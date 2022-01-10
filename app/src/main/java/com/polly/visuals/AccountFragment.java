@@ -25,12 +25,39 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.polly.R;
+import com.polly.config.Config;
+import com.polly.utils.command.user.GetMyUsergroupsCommand;
+import com.polly.utils.command.user.GetUsernameCommand;
+import com.polly.utils.communicator.Communicator;
+import com.polly.utils.communicator.ResponseCommunicator;
+import com.polly.utils.wrapper.ErrorWrapper;
+import com.polly.utils.wrapper.Message;
+
+import java.io.IOException;
 
 public class AccountFragment extends Fragment {
     private FirebaseAuth mAuth;
     TextView emailInfo;
     TextView fullnameInfo;
     TextView usernameInfo;
+
+    private static ResponseCommunicator communicator = initialiseCommunicator();
+    private static ResponseCommunicator initialiseCommunicator(){
+        return new ResponseCommunicator() {
+            @Override
+            public void handleInput(Message message) {
+                System.out.println("AccountFragment received message from " + message.getSender() + " with responseId " + message.getResponseId());
+                System.out.println("from type: " + message.getDataType().getName());
+
+                for(Long l : communicator.responseIds){
+                    System.out.println(l);
+                }
+
+                // no default input handling
+            }
+        };
+    }
+
     @Nullable
     public View onCreateView(LayoutInflater inflater,
                              @Nullable ViewGroup container,
@@ -40,7 +67,6 @@ public class AccountFragment extends Fragment {
             Navigation.findNavController(getActivity(), R.id.nav_host_fragment).navigate(R.id.loginFragment);
         }
         emailInfo = (TextView) view.findViewById(R.id.email_text);
-        fullnameInfo = (TextView) view.findViewById(R.id.fullname_text);
         usernameInfo = (TextView) view.findViewById(R.id.username_text);
         mAuth = FirebaseAuth.getInstance();
         Button logout = (Button) view.findViewById(R.id.logout_button);
@@ -57,14 +83,12 @@ public class AccountFragment extends Fragment {
                 if(mAuth.getCurrentUser() != null) {
                     FirebaseAuth.getInstance().signOut();
                     Toast.makeText(getActivity(), "You are now signed out", Toast.LENGTH_SHORT).show();
-                    emailInfo.setText("");
-                    fullnameInfo.setText("");
-                    usernameInfo.setText("");
                     LoginManager.getInstance().logOut();
                     GoogleSignInOptions googleSignInOptions = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestIdToken(getString(R.string.default_web_client_id)).requestEmail().build();
                     GoogleSignInClient googleSignInClient = GoogleSignIn.getClient(getActivity(), googleSignInOptions);
                     googleSignInClient.signOut();
-                    view.findViewById(R.id.logout_button).setVisibility(View.INVISIBLE);
+                    Navigation.findNavController(getActivity(), R.id.nav_host_fragment).navigate(R.id.loginFragment);
+
                 }
             }
         });
@@ -81,44 +105,24 @@ public class AccountFragment extends Fragment {
             Toast.makeText(getActivity(), "Please sign in first", Toast.LENGTH_SHORT).show();
         }
         else{
-            FirebaseDatabase.getInstance("https://polly-abdd4-default-rtdb.europe-west1.firebasedatabase.app/").getReference("Users").child(firebaseUser.getUid()).child("fullname").addValueEventListener(new ValueEventListener() {
-                @Override
-                public void onDataChange(@NonNull DataSnapshot snapshot) {
-                    String fullname = snapshot.getValue(String.class);
-                    fullnameInfo.setText(fullname);
-                }
-
-                @Override
-                public void onCancelled(@NonNull DatabaseError error) {
-                   Toast.makeText(getContext(), "Something went wrong, I can feel it", Toast.LENGTH_SHORT);
-                }
-            });
-
-            FirebaseDatabase.getInstance("https://polly-abdd4-default-rtdb.europe-west1.firebasedatabase.app/").getReference("Users").child(firebaseUser.getUid()).child("email").addValueEventListener(new ValueEventListener() {
-                @Override
-                public void onDataChange(@NonNull DataSnapshot snapshot) {
-                    String email = snapshot.getValue(String.class);
+                    String email = FirebaseAuth.getInstance().getCurrentUser().getEmail();
                     emailInfo.setText(email);
-                }
+                    try {
+                        Message usernameMessage = communicator.sendWithResponse(Config.serverCommunicationId, new GetUsernameCommand());
+                        if(usernameMessage.getDataType().equals(String.class))
+                            usernameInfo.setText(((String)usernameMessage.getData()));
+                        else if(usernameMessage.getDataType().equals(ErrorWrapper.class)){
+                            Toast.makeText(getActivity(), "Server communication failed", Toast.LENGTH_SHORT).show();
+                        }
+                        else{
+                            Toast.makeText(getActivity(), "Something went wrong", Toast.LENGTH_SHORT).show();
+                        }
 
-                @Override
-                public void onCancelled(@NonNull DatabaseError error) {
-                    Toast.makeText(getContext(), "Something went wrong, I can feel it", Toast.LENGTH_SHORT);
-                }
-            });
 
-            FirebaseDatabase.getInstance("https://polly-abdd4-default-rtdb.europe-west1.firebasedatabase.app/").getReference("Users").child(firebaseUser.getUid()).child("username").addValueEventListener(new ValueEventListener() {
-                @Override
-                public void onDataChange(@NonNull DataSnapshot snapshot) {
-                    String username = snapshot.getValue(String.class);
-                    usernameInfo.setText(username);
-                }
-
-                @Override
-                public void onCancelled(@NonNull DatabaseError error) {
-                    Toast.makeText(getContext(), "Something went wrong, I can feel it", Toast.LENGTH_SHORT);
-                }
-            });
+                    }
+                    catch (IOException e){
+                        usernameInfo.setText("Could not find username");
+                    }
 
         }
     }

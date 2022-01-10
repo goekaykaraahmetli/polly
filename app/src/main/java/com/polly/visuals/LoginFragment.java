@@ -93,7 +93,6 @@ public class LoginFragment extends Fragment {
                              @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_login, container, false);
-        ((DrawerLocker)getActivity()).setDrawerLocked(true);
         Button b = (Button) view.findViewById(R.id.activity_login_button_sign_up);
         b.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -211,8 +210,10 @@ public class LoginFragment extends Fragment {
                                         else
                                             Toast.makeText(getContext(), "Login failed: " + loginAnswerWrapper.getMessage(), Toast.LENGTH_SHORT).show();
                                     }
-                                    else
+                                    else {
                                         Toast.makeText(getContext(), "Logged in successfully", Toast.LENGTH_SHORT).show();
+                                        Navigation.findNavController(getActivity(), R.id.nav_host_fragment).navigate(R.id.accountFragment);
+                                    }
                                 } else if(messageResponse.getDataType() == ErrorWrapper.class)
                                     Toast.makeText(getContext(), ((ErrorWrapper) messageResponse.getData()).getMessage(), Toast.LENGTH_SHORT).show();
                                 else
@@ -248,7 +249,7 @@ public class LoginFragment extends Fragment {
                                 LoginAnswerWrapper answer = (LoginAnswerWrapper) message.getData();
 
                                 if(answer.isSuccessful())
-                                    Navigation.findNavController(getActivity(), R.id.nav_host_fragment).navigate(R.id.startFragment);
+                                    Navigation.findNavController(getActivity(), R.id.nav_host_fragment).navigate(R.id.accountFragment);
                                 else
                                     Toast.makeText(getContext(), "Something went wrong, please try again", Toast.LENGTH_SHORT).show();
                             }

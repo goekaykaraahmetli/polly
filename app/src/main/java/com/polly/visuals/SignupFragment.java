@@ -27,7 +27,6 @@ import com.polly.R;
 
 public class SignupFragment extends Fragment {
     FirebaseAuth mAuth;
-    EditText editTextFullname;
     EditText editTextPasswordConf;
     EditText editTextPassword;
     EditText editTextUsername;
@@ -46,7 +45,6 @@ public class SignupFragment extends Fragment {
         editTextUsername = (EditText) root.findViewById(R.id.activity_sign_up_edittext_username);
         editTextPassword = (EditText) root.findViewById(R.id.activity_sign_up_edittext_password);
         editTextPasswordConf = (EditText) root.findViewById(R.id.activity_sign_up_edittext_password_confirm);
-        editTextFullname = (EditText) root.findViewById(R.id.activity_sign_up_edittext_fullname);
         checkbox = (CheckBox) root.findViewById(R.id.activity_sign_up_checkbox_accept_terms_of_service);
         TextView terms = (TextView) root.findViewById(R.id.acceptTerms);
         terms.setOnClickListener(new View.OnClickListener() {
@@ -82,7 +80,6 @@ public class SignupFragment extends Fragment {
     private void registerUser() {
         String email = editTextEmail.getText().toString();
         String password = editTextPassword.getText().toString();
-        String fullname = editTextFullname.getText().toString();
         String confirmPass = editTextPasswordConf.getText().toString();
         String username = editTextUsername.getText().toString();
 
