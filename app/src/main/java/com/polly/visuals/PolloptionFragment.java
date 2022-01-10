@@ -96,7 +96,7 @@ public class PolloptionFragment extends Fragment {
         int day = calendar.get(Calendar.DAY_OF_MONTH);
         int hour = calendar.get(Calendar.HOUR);
         int minute = calendar.get(Calendar.MINUTE);
-        if(saving.getNumberOfParticipants() != null){
+        if(saving.getNumberOfParticipants() != 0){
             ((EditText) root.findViewById(R.id.PollyRoomNumber)).setText(saving.getNumberOfParticipants());
         }
         AutoCompleteTextView test = (AutoCompleteTextView) root.findViewById(R.id.DatePicker);
@@ -109,7 +109,7 @@ public class PolloptionFragment extends Fragment {
         TextInputLayout oberserveCandidates = (TextInputLayout) root.findViewById(R.id.observingCandidatesLayout);
         TextInputLayout pollyRoom = (TextInputLayout) root.findViewById(R.id.PollRoomLayout);
         TextView pollyRoomInfo = (TextView) root.findViewById(R.id.PollyRoomInfo);
-        Button createPollBtn = (Button) root.findViewById(R.id.CreatePollOnMenu);
+        //Button createPollBtn = (Button) root.findViewById(R.id.CreatePollOnMenu);
         Button sendQRviaEmail = (Button) root.findViewById(R.id.SendQRviaEmailBtn);
         TextInputEditText geofenceBtn = root.findViewById(R.id.geofencing);
 
@@ -118,7 +118,7 @@ public class PolloptionFragment extends Fragment {
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
 
                 if (dropDownMenu.getText().toString().equals("GEOFENCE")) {
-                    createPollBtn.setText("CREATE POLL");
+                    //createPollBtn.setText("CREATE POLL");
                     geofence.setVisibility(View.VISIBLE);
                     userGroup.setVisibility(View.GONE);
                     votingCandidates.setVisibility(View.GONE);
@@ -128,7 +128,7 @@ public class PolloptionFragment extends Fragment {
                     datePicker.setVisibility(View.VISIBLE);
                     sendQRviaEmail.setVisibility(View.GONE);
                 } else if (dropDownMenu.getText().toString().equals("PRIVATE")) {
-                    createPollBtn.setText("CREATE POLL");
+                   // createPollBtn.setText("CREATE POLL");
                     geofence.setVisibility(View.GONE);
                     userGroup.setVisibility(View.VISIBLE);
                     votingCandidates.setVisibility(View.GONE);
@@ -138,7 +138,7 @@ public class PolloptionFragment extends Fragment {
                     datePicker.setVisibility(View.VISIBLE);
                     sendQRviaEmail.setVisibility(View.GONE);
                 } else if (dropDownMenu.getText().toString().equals("CUSTOM")) {
-                    createPollBtn.setText("CREATE POLL");
+                    //createPollBtn.setText("CREATE POLL");
                     geofence.setVisibility(View.GONE);
                     userGroup.setVisibility(View.GONE);
                     votingCandidates.setVisibility(View.VISIBLE);
@@ -148,7 +148,7 @@ public class PolloptionFragment extends Fragment {
                     datePicker.setVisibility(View.VISIBLE);
                     sendQRviaEmail.setVisibility(View.GONE);
                 } else if (dropDownMenu.getText().toString().equals("PUBLIC")) {
-                    createPollBtn.setText("CREATE POLL");
+                    //createPollBtn.setText("CREATE POLL");
                     geofence.setVisibility(View.GONE);
                     userGroup.setVisibility(View.GONE);
                     votingCandidates.setVisibility(View.GONE);
@@ -158,7 +158,7 @@ public class PolloptionFragment extends Fragment {
                     datePicker.setVisibility(View.VISIBLE);
                     sendQRviaEmail.setVisibility(View.GONE);
                 }else if(dropDownMenu.getText().toString().equals("POLLYROOM")){
-                    createPollBtn.setText("SCAN ROOM");
+                    //createPollBtn.setText("SCAN ROOM");
                     geofence.setVisibility(View.GONE);
                     userGroup.setVisibility(View.GONE);
                     votingCandidates.setVisibility(View.GONE);
@@ -178,7 +178,7 @@ public class PolloptionFragment extends Fragment {
         if(saving.getDropDownMenu() != null) {
             dropDownMenu.setText(saving.getDropDownMenu().toString());
             if (dropDownMenu.getText().toString().equals("GEOFENCE")) {
-                createPollBtn.setText("CREATE POLL");
+                //createPollBtn.setText("CREATE POLL");
                 geofence.setVisibility(View.VISIBLE);
                 userGroup.setVisibility(View.GONE);
                 votingCandidates.setVisibility(View.GONE);
@@ -188,7 +188,7 @@ public class PolloptionFragment extends Fragment {
                 datePicker.setVisibility(View.VISIBLE);
                 sendQRviaEmail.setVisibility(View.GONE);
             } else if (dropDownMenu.getText().toString().equals("PRIVATE")) {
-                createPollBtn.setText("CREATE POLL");
+                //createPollBtn.setText("CREATE POLL");
                 geofence.setVisibility(View.GONE);
                 userGroup.setVisibility(View.VISIBLE);
                 AutoCompleteTextView usergroupText = (AutoCompleteTextView) root.findViewById(R.id.usergroupNumber);
@@ -200,7 +200,7 @@ public class PolloptionFragment extends Fragment {
                 datePicker.setVisibility(View.VISIBLE);
                 sendQRviaEmail.setVisibility(View.GONE);
             } else if (dropDownMenu.getText().toString().equals("CUSTOM")) {
-                createPollBtn.setText("CREATE POLL");
+                //createPollBtn.setText("CREATE POLL");
                 geofence.setVisibility(View.GONE);
                 userGroup.setVisibility(View.GONE);
                 votingCandidates.setVisibility(View.VISIBLE);
@@ -218,7 +218,7 @@ public class PolloptionFragment extends Fragment {
                     observingCandidatesList.setText(saving.getUserArrayObserving().get(0).getmText1() + ", ...");
                 }
             }else if(dropDownMenu.getText().toString().equals("POLLYROOM")){
-                createPollBtn.setText("SCAN ROOM");
+                //createPollBtn.setText("SCAN ROOM");
                 geofence.setVisibility(View.GONE);
                 userGroup.setVisibility(View.GONE);
                 votingCandidates.setVisibility(View.GONE);
@@ -309,19 +309,35 @@ public class PolloptionFragment extends Fragment {
                 Navigation.findNavController(getActivity(), R.id.nav_host_fragment).navigate(R.id.observingCandidates2);
             }
         });
-        root.findViewById(R.id.EditOptions).setOnClickListener(new View.OnClickListener() {
+        root.findViewById(R.id.continueBtn).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Navigation.findNavController(getActivity(), R.id.nav_host_fragment).navigate(R.id.createPollFragment);
+                if (Pollname.getText().length() == 0) {
+                    Toast.makeText(getActivity(), "Please enter Pollname", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                if(!(test.getText().toString().contains("-") && test.getText().toString().contains(":"))){
+                    Toast.makeText(getActivity(), "Please choose a valid Expiration date", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                switch(dropDownMenu.getText().toString()){
+                    case "GEOFENCE":
+                        saving.setGeofence(geofenceBtn.getText());
+                    case "POLLYROOM":
+                        EditText participants = (EditText) root.findViewById(R.id.PollyRoomNumber);
+                        if(!participants.getText().toString().equals("")){
+                            int numberOfParticipants = Integer.parseInt(participants.getText().toString());
+                            saving.setNumberOfParticipants(numberOfParticipants);
+                        }
+                }
                 saving.setDescription(description.getText());
                 saving.setPollname(Pollname.getText());
                 saving.setCalendarText(test.getText());
                 saving.setDropDownMenu(dropDownMenu.getText());
-                saving.setGeofence(geofenceBtn.getText());
-
+                Navigation.findNavController(getActivity(), R.id.nav_host_fragment).navigate(R.id.createPollFragment);
             }
         });
-        root.findViewById(R.id.CreatePollOnMenu).setOnClickListener(new View.OnClickListener() {
+     /**   root.findViewById(R.id.CreatePollOnMenu).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 List<String> pollOptions = saving.getPollOptions();
@@ -411,7 +427,7 @@ public class PolloptionFragment extends Fragment {
                     }
                 }
             }
-        });
+        }); **/
 
         Button sendQRViaEmailBtn = root.findViewById(R.id.SendQRviaEmailBtn);
         sendQRViaEmailBtn.setOnClickListener(new View.OnClickListener() {

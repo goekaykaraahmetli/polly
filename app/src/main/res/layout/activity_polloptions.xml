@@ -96,24 +96,15 @@
         app:layout_constraintGuide_percent="0.5" />
 
     <Button
-        android:id="@+id/EditOptions"
-        android:layout_width="wrap_content"
+        android:id="@+id/continueBtn"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginBottom="20dp"
-        android:text="Edit options"
+        android:text="Continue"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/guideline44"
-        app:layout_constraintStart_toStartOf="parent" />
-
-    <Button
-        android:id="@+id/CreatePollOnMenu"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="20dp"
-        android:text="Create Poll"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="@+id/guideline44" />
+        app:layout_constraintEnd_toStartOf="@+id/guideline48"
+        app:layout_constraintHorizontal_bias="0.902"
+        app:layout_constraintStart_toStartOf="@+id/guideline49" />
 
     <LinearLayout
         android:id="@+id/optionLayout"

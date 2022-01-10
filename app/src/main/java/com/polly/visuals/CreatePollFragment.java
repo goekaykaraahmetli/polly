@@ -1,4 +1,6 @@
 package com.polly.visuals;
+import com.polly.utils.Area;
+import com.polly.utils.poll.PollDescription;
 import com.polly.utils.poll.PollManager;
 
 
@@ -25,6 +27,7 @@ import androidx.navigation.Navigation;
 import com.polly.R;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -137,7 +140,17 @@ public class CreatePollFragment extends Fragment {
         root.findViewById(R.id.goBack).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (!saving.isSaved()) {
+                List<String> pollOptions = new ArrayList<>();
+                boolean hinted = false;
+                for (int i = 0; i < optionCounter; i++) {
+                    if(map.get(i).getText().length() == 0){
+                        hinted = true;
+                        break;
+                    }
+                    pollOptions.add(map.get(i).getText().toString());
+                }
+
+                if (!hinted) {
                     androidx.appcompat.app.AlertDialog.Builder alert = new AlertDialog.Builder(getContext());
                     alert.setTitle("Options not saved");
                     alert.setMessage("Save before exit?");
@@ -145,6 +158,11 @@ public class CreatePollFragment extends Fragment {
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
                             saving.setSaved(true);
+                            saving.setPollOptions(pollOptions);
+                            saving.setMap(map);
+                            saving.setRemove(remove);
+                            saving.setOptionCounter(optionCounter);
+                            saving.setStart(start);
                             Navigation.findNavController(getActivity(), R.id.nav_host_fragment).navigate(R.id.polloptionFragment);
                         }
                     });
@@ -156,40 +174,52 @@ public class CreatePollFragment extends Fragment {
                         }
                     });
                     alert.create().show();
+                } else {
+                    Navigation.findNavController(getActivity(), R.id.nav_host_fragment).navigate(R.id.polloptionFragment);
                 }
             }
         });
         createPollBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                //Editable poll = pollName.getText();
-                //CharSequence poll1 = poll.toString();
                 List<String> pollOptions = new ArrayList<>();
                 boolean hinted = false;
                 for (int i = 0; i < optionCounter; i++) {
-                    if(map.get(i).getText().length() == 0){
+                    if (map.get(i).getText().length() == 0) {
                         hinted = true;
                         break;
                     }
                     pollOptions.add(map.get(i).getText().toString());
                 }
-                if(!hinted) {
-                    /*try {
-                        long id = PollManager.createPoll(poll.toString(), pollOptions);
+                if (!hinted) {
+                    try {
+                        long id;
+                        LocalDateTime localDateTime = LocalDateTime.of(saving.getLocalDate(), saving.getLocalTime());
+
+                        switch (saving.getDropDownMenu().toString()) {
+                            case "PUBLIC":
+                                id = PollManager.createPublicPoll(saving.getPollname().toString(), new PollDescription(saving.getDescription().toString()), localDateTime, pollOptions);
+                                break;
+                            case "PRIVATE":
+                                id = PollManager.createPrivatePoll(saving.getPollname().toString(), new PollDescription(saving.getDescription().toString()), localDateTime, pollOptions, saving.getUserGroupId());
+                                break;
+                            case "CUSTOM":
+                                id = PollManager.createCustomPoll(saving.getPollname().toString(), new PollDescription(saving.getDescription().toString()), localDateTime, pollOptions, saving.getCanSeeList(), saving.getCanSeeAndVoteList());
+                                break;
+                            case "GEOFENCE":
+                                long latitude = 0L;     //TODO
+                                long longitude = 0L;    //TODO
+                                id = PollManager.createGeofencePoll(saving.getPollname().toString(), new PollDescription(saving.getDescription().toString()), localDateTime, pollOptions, new Area(latitude, longitude, Double.parseDouble(saving.getGeofence().toString())));
+                                break;
+                            default:
+                                throw new IllegalStateException("Unexpected value: " + "switch statement can't work with the given cases");
+                        }
                         Toast.makeText(getActivity(), "Poll ID is: " + id, Toast.LENGTH_SHORT).show();
-                    } catch (InterruptedException | IOException e) {
+                    } catch (IOException e) {
                         e.printStackTrace();
                         Toast.makeText(getActivity(), "No connection to the server!", Toast.LENGTH_SHORT).show();
-                    }*/
-                    Toast.makeText(getActivity(), "Options saved", Toast.LENGTH_SHORT).show();
-                    saving.setPollOptions(pollOptions);
-                    saving.setOptionCounter(optionCounter);
-                    saving.setRemove(remove);
-                    saving.setMap(map);
-                    saving.setStart(start);
-                    Navigation.findNavController(getActivity(), R.id.nav_host_fragment).navigate(R.id.polloptionFragment);
-                }else{
+                    }
+                } else{
                     Toast.makeText(getActivity(), "Please edit all Options", Toast.LENGTH_SHORT).show();
                 }
 

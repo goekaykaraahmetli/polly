@@ -29,6 +29,7 @@ import androidx.navigation.Navigation;
 import com.github.mikephil.charting.charts.PieChart;
 import com.polly.config.Config;
 import com.polly.utils.QRCode;
+import com.polly.utils.ShowPollPage;
 import com.polly.utils.command.poll.RegisterPollChangeListenerCommand;
 import com.polly.utils.command.poll.RemovePollChangeListenerCommand;
 import com.polly.utils.communicator.Communicator;
@@ -149,7 +150,7 @@ public class ShowPollVotingPageFragment extends Fragment {
                 public void onClick(View v) {
                     voteButton.setVisibility(View.GONE);
                     try{
-                        PollManager.vote(pollOptions.getBasicPollInformation().getId(), option);
+                        boolean voteSuccessful = PollManager.vote(pollOptions.getBasicPollInformation().getId(), option);
 
 
 
@@ -157,11 +158,13 @@ public class ShowPollVotingPageFragment extends Fragment {
 
 
                         // show poll-results:
-                        pollOptions = PollManager.getPollOptions(pollOptions.getBasicPollInformation().getId());
+                        if(voteSuccessful){
+                            ShowPollPage.showPollResultsPage(id);
+                        }else{
+                            Toast.makeText(getContext(), "voting for Poll failed. Please try again!", Toast.LENGTH_SHORT).show();
+                        }
 
 
-                        pieChart.setVisibility(View.INVISIBLE);
-                        showPoll(getView());
 
                     } catch (IllegalArgumentException|IOException e) {
                         Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
