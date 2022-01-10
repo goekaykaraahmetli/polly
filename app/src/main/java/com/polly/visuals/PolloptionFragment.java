@@ -326,7 +326,7 @@ public class PolloptionFragment extends Fragment {
             public void onClick(View view) {
                 List<String> pollOptions = saving.getPollOptions();
                 if (dropDownMenu.getText().toString().equals("POLLYROOM")) {
-                 TextInputEditText participants = (TextInputEditText) root.findViewById(R.id.PollyRoomNumber);
+                 EditText participants = (EditText) root.findViewById(R.id.PollyRoomNumber);
                     if(!participants.getText().toString().equals(""))
                         numberOfParticipants = Integer.parseInt(participants.getText().toString());
                  else
