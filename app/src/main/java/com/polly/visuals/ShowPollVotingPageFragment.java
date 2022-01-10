@@ -116,7 +116,7 @@ public class ShowPollVotingPageFragment extends Fragment {
             }
         });
         try {
-            communicator.send(Config.serverCommunicationId, new RegisterPollChangeListenerCommand(pollOptions.getBasicPollInformation().getId(), true));
+            communicator.send(Config.serverCommunicationId, new RegisterPollChangeListenerCommand(pollOptions.getBasicPollInformation().getId(), false));
             hasRunningPollChangeListener = true;
         } catch (IOException e) {
             e.printStackTrace();
