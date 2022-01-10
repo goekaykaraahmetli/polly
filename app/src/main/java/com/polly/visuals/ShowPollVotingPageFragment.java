@@ -200,7 +200,7 @@ public class ShowPollVotingPageFragment extends Fragment {
         PieDataSet pieDataSet = new PieDataSet(options, "");
         pieDataSet.setColors(ColorTemplate.COLORFUL_COLORS);
         pieDataSet.setValueTextColor(Color.BLACK);
-        pieDataSet.setValueTextSize(16f);
+        pieDataSet.setValueTextSize(0f);
         PieData pieData = new PieData(pieDataSet);
 
         pieChart.setVisibility(View.INVISIBLE);
