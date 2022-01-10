@@ -76,7 +76,7 @@ public class RecentFragment extends Fragment {
             pieChart.setOnLongClickListener(view -> {
                 try {
                     showPollResults(p);
-                } catch (CanNotSeePollResultsException e) {
+                } catch (IOException e) {
                     e.printStackTrace();
                     return false;
                 }
@@ -86,7 +86,7 @@ public class RecentFragment extends Fragment {
         }
     }
 
-    private void showPollResults(PollResultsWrapper p) throws CanNotSeePollResultsException {
+    private void showPollResults(PollResultsWrapper p) throws IOException {
         ShowPollPage.showPollResultsPage(p.getBasicPollInformation().getId());
     }
 

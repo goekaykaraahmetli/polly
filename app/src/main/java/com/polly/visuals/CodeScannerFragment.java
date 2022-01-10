@@ -76,7 +76,7 @@ public class CodeScannerFragment extends Fragment {
                             Toast.makeText(activity, "\"" + result.getText() + "\" is not a valid poll id", Toast.LENGTH_SHORT).show();
                             e.printStackTrace();
                             restartScanner(2.5);
-                        } catch (IllegalStateException | IllegalArgumentException e){
+                        } catch (IllegalStateException | IllegalArgumentException | IOException e){
                             Toast.makeText(activity, e.getMessage(), Toast.LENGTH_SHORT).show();
                             e.printStackTrace();
                             restartScanner(2.5);

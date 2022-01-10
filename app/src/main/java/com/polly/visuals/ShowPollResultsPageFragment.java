@@ -37,16 +37,17 @@ import java.util.ArrayList;
 public class ShowPollResultsPageFragment extends Fragment {
     private PieChart pieChart;
     private ImageView qrCode;
-    PollResultsWrapper pollResults;
+    static PollResultsWrapper pollResults;
     static Long id;
     private Communicator communicator = initialiseCommunicator();
     private boolean hasRunningPollChangeListener = false;
 
     SavingClass saving;
 
-    public static void open(long id) {
-        Navigation.findNavController(MainActivity.mainActivity, R.id.nav_host_fragment).navigate(R.id.showPollResultsPageFragment);
+    public static void open(long id) throws IOException {
         ShowPollResultsPageFragment.id = id;
+        pollResults = PollManager.getPollResults(id);
+        Navigation.findNavController(MainActivity.mainActivity, R.id.nav_host_fragment).navigate(R.id.showPollResultsPageFragment);
     }
 
     @Override
@@ -72,13 +73,9 @@ public class ShowPollResultsPageFragment extends Fragment {
         pieChart = (PieChart) root.findViewById(R.id.pieChart);
         pieChart.setVisibility(View.GONE);
 
-        try {
-            pollResults = PollManager.getPollResults(id);
+        if(pollResults != null) {
             showPoll(root);
-        } catch (IOException e) {
-            e.printStackTrace();
         }
-
         return root;
     }
 

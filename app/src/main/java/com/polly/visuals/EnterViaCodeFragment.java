@@ -46,7 +46,7 @@ public class EnterViaCodeFragment extends Fragment {
 
                     try {
                         ShowPollPage.showPollVotingPage(id);
-                    } catch (IllegalStateException | IllegalArgumentException e){
+                    } catch (IllegalStateException | IllegalArgumentException | IOException e){
                         Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
                         e.printStackTrace();
                     }
