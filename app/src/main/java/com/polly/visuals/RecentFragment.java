@@ -41,12 +41,14 @@ public class RecentFragment extends Fragment {
         try {
             participatedPolls = PollManager.getParticipatedPolls();
         } catch (IOException e) {
+            System.err.println("Fehler");
             e.printStackTrace();
         }
         List<PollResultsWrapper> myPolls = new ArrayList<>();
         try {
             myPolls = PollManager.getMyPolls();
         } catch (IOException e) {
+            System.err.println("Fehler");
             e.printStackTrace();
         }
 
