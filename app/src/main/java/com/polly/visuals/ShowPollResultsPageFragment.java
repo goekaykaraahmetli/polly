@@ -93,7 +93,7 @@ public class ShowPollResultsPageFragment extends Fragment {
 
         try {
             pollResults = PollManager.getPollResults(id);
-            showPoll();
+            showPoll(root);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -101,9 +101,9 @@ public class ShowPollResultsPageFragment extends Fragment {
         return root;
     }
 
-        public void showPoll(){
+        public void showPoll(View root){
             updatePieChart(pollResults);
-            qrCode = (ImageView) getView().findViewById(R.id.qrCodeImageView);
+            qrCode = (ImageView) root.findViewById(R.id.qrCodeImageView);
             qrCode.setImageBitmap(QRCode.QRCode(""+ pollResults.getBasicPollInformation().getId()));
             qrCode.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
@@ -157,7 +157,7 @@ public class ShowPollResultsPageFragment extends Fragment {
 
 
                         pieChart.setVisibility(View.INVISIBLE);
-                        showPoll();
+                        showPoll(getView());
 
                     } catch (IllegalArgumentException|IOException e) {
                         Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
