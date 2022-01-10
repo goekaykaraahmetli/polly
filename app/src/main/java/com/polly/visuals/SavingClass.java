@@ -9,6 +9,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.polly.utils.wrapper.PollResultsWrapper;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -33,6 +35,24 @@ public class SavingClass extends ViewModel {
     private Editable geofence;
     private List<String> canSeeList;
     private List<String> canSeeAndVoteList;
+    private LocalDate localDate;
+    private LocalTime localTime;
+
+    public LocalTime getLocalTime() {
+        return localTime;
+    }
+
+    public void setLocalTime(LocalTime localTime) {
+        this.localTime = localTime;
+    }
+
+    public LocalDate getLocalDate() {
+        return localDate;
+    }
+
+    public void setLocalDate(LocalDate localDate) {
+        this.localDate = localDate;
+    }
 
     public List<String> getCanSeeAndVoteList() {
         return canSeeAndVoteList;

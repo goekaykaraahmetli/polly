@@ -251,6 +251,7 @@ public class PolloptionFragment extends Fragment {
                     public void onTimeSet(TimePicker timePicker, int hour, int minute) {
                         String time = hour + ":" + minute;
                         localTime = LocalTime.of(hour, minute);
+                        saving.setLocalTime(localTime);
                         test.setText(test.getText() + time);
                     }
                 }, hour, minute, true);
@@ -262,6 +263,7 @@ public class PolloptionFragment extends Fragment {
                         month = month + 1;
                         String date = year+"-"+month+"-"+day + " ";
                         localDate = LocalDate.of(year, month, day);
+                        saving.setLocalDate(localDate);
                         test.setText(date);
                     }
                 }, year,month, day);
@@ -324,7 +326,7 @@ public class PolloptionFragment extends Fragment {
             public void onClick(View view) {
                 List<String> pollOptions = saving.getPollOptions();
                 if (dropDownMenu.getText().toString().equals("POLLYROOM")) {
-                 TextInputEditText participants = root.findViewById(R.id.PollyRoomNumber);
+                 TextInputEditText participants = (TextInputEditText) root.findViewById(R.id.PollyRoomNumber);
                     if(!participants.getText().toString().equals(""))
                         numberOfParticipants = Integer.parseInt(participants.getText().toString());
                  else
@@ -360,20 +362,32 @@ public class PolloptionFragment extends Fragment {
                     //CharSequence poll1 = poll.toString();
                     if (pollOptions == null) {
                         Toast.makeText(getActivity(), "Please add some Options", Toast.LENGTH_SHORT).show();
+                        return;
                     }
                     if (Pollname.getText().length() == 0) {
                         Toast.makeText(getActivity(), "Please enter Pollname", Toast.LENGTH_SHORT).show();
+                        return;
                     }
 
                     if(!(test.getText().toString().contains("-") && test.getText().toString().contains(":"))){
-                    Toast.makeText(getActivity(), "Please choose a valid Expiration date", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getActivity(), "Please choose a valid Expiration date", Toast.LENGTH_SHORT).show();
+                        return;
                      }
 
                     try {
                         long id;
-                        localDateTime.of(localDate, localTime);
+                        localTime = saving.getLocalTime();
+                        localDate = saving.getLocalDate();
+                        localDateTime = LocalDateTime.of(localDate, localTime);
+                        System.out.println(localDateTime.toString());
                         switch(dropDownMenu.getText().toString()) {
                             case "PUBLIC":
+                                System.out.println(Pollname.getText().toString());
+                                System.out.println(description.getText().toString());
+                                System.out.println(localDateTime.toString());
+                                for(int i = 0; i<pollOptions.size(); i++){
+                                    System.out.println(pollOptions.get(i));
+                                }
                                 id = PollManager.createPublicPoll(Pollname.getText().toString(), new PollDescription(description.getText().toString()), localDateTime, pollOptions);
                                 break;
                             case "PRIVATE":
