@@ -61,7 +61,6 @@ public class PolloptionFragment extends Fragment {
     public static int numberOfParticipants;
     LocalTime localTime;
     LocalDate localDate;
-    LocalDateTime localDateTime;
     @Override
     public void onResume() {
         super.onResume();

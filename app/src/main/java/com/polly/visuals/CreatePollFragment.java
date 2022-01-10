@@ -5,6 +5,7 @@ import com.polly.utils.poll.PollManager;
 
 
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.view.LayoutInflater;
@@ -38,8 +39,11 @@ public class CreatePollFragment extends Fragment {
     int optionMax = 8;
     boolean start = true;
     boolean isSaved = true;
-    int numberOfParticipants;
-    int numberOfOptions;
+    public static String answer1;
+    public static String answer2;
+    public static String answer3;
+    public static String answer4;
+    public static int numberOfParticipants;
     HashMap<Integer, EditText> map = new HashMap<>();
     HashMap<Integer, Button> remove = new HashMap<>();
     @Nullable
@@ -211,6 +215,22 @@ public class CreatePollFragment extends Fragment {
                                 long longitude = 0L;    //TODO
                                 id = PollManager.createGeofencePoll(saving.getPollname().toString(), new PollDescription(saving.getDescription().toString()), localDateTime, pollOptions, new Area(latitude, longitude, Double.parseDouble(saving.getGeofence().toString())));
                                 break;
+                            case "POLLYROOM":
+                                numberOfParticipants = saving.getNumberOfParticipants();
+                                if(pollOptions.get(0) != null){
+                                    answer1 = pollOptions.get(0);
+                                }
+                                if(pollOptions.get(1) != null){
+                                    answer2 = pollOptions.get(1);
+                                }
+                                if(pollOptions.size() > 2 && pollOptions.get(2) != null){
+                                    answer3 = pollOptions.get(2);
+                                }
+                                if(pollOptions.size() > 3 && pollOptions.get(3) != null){
+                                    answer4 = pollOptions.get(3);
+                                }
+                                Intent intent = new Intent(getActivity(), BarcodeScannerActivity.class);
+                                startActivity(intent);
                             default:
                                 throw new IllegalStateException("Unexpected value: " + "switch statement can't work with the given cases");
                         }
