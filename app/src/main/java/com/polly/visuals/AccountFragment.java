@@ -78,7 +78,7 @@ public class AccountFragment extends Fragment {
     private void checkUser() {
         FirebaseUser firebaseUser = mAuth.getCurrentUser();
         if(firebaseUser == null){
-            Toast.makeText(getActivity(), "You are currently not signed in", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), "Please sign in first", Toast.LENGTH_SHORT).show();
         }
         else{
             FirebaseDatabase.getInstance("https://polly-abdd4-default-rtdb.europe-west1.firebasedatabase.app/").getReference("Users").child(firebaseUser.getUid()).child("fullname").addValueEventListener(new ValueEventListener() {
