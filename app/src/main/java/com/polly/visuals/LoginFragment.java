@@ -237,9 +237,10 @@ public class LoginFragment extends Fragment {
                                         });
                                         alert.show();
                                     }
+                                    else
+                                        System.out.println("No response from Server");
                                 }
-                                else
-                                    System.out.println("No response from Server");
+
                             } catch (IOException e) {
                                 System.out.println("HIER FEHLER ------------------");
                                 e.printStackTrace();
