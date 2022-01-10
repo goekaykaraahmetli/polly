@@ -216,8 +216,12 @@ public class SavingClass extends ViewModel {
         setUserArrayVoting(null);
         setUserGroupList(null);
         setUsergroupName(null);
-
-
+        setCanSeeAndVoteList(null);
+        setCanSeeList(null);
+        setSaved(true);
+        setLocalDate(null);
+        setLocalTime(null);
+        setGeofence(null);
     }
 
     public void setNumberOfParticipants(int number) {

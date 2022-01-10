@@ -96,7 +96,7 @@ public class PolloptionFragment extends Fragment {
         int hour = calendar.get(Calendar.HOUR);
         int minute = calendar.get(Calendar.MINUTE);
         if(saving.getNumberOfParticipants() != 0){
-            ((EditText) root.findViewById(R.id.PollyRoomNumber)).setText(saving.getNumberOfParticipants());
+            ((EditText) root.findViewById(R.id.PollyRoomNumber)).setText(String.valueOf(saving.getNumberOfParticipants()));
         }
         AutoCompleteTextView test = (AutoCompleteTextView) root.findViewById(R.id.DatePicker);
         AutoCompleteTextView dropDownMenu = (AutoCompleteTextView) root.findViewById(R.id.autoCompleteTextView);
