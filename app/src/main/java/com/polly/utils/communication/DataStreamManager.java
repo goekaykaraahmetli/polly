@@ -24,6 +24,7 @@ import com.polly.config.Config;
 import com.polly.utils.Area;
 import com.polly.utils.command.GetMyPollsCommand;
 import com.polly.utils.command.GetParticipatedPollsCommand;
+import com.polly.utils.command.GetUsernameCommand;
 import com.polly.utils.command.poll.GetPollOptionsCommand;
 import com.polly.utils.command.poll.GetPollResultsCommand;
 import com.polly.utils.command.poll.RegisterPollChangeListenerCommand;
@@ -198,6 +199,8 @@ public class DataStreamManager {
 			data = readCreatePrivatePollCommand();
 		else if(dataType.equals(CreateCustomPollCommand.class))
 			data = readCreateCustomPollCommand();
+		else if(dataType.equals(GetUsernameCommand.class))
+			data = readGetUsernameCommand();
 			
 			// default type:
 		else
@@ -394,6 +397,8 @@ public class DataStreamManager {
 			writeCreatePrivatePollCommand((CreatePrivatePollCommand) data);
 		else if(dataType.equals(CreateCustomPollCommand.class))
 			writeCreateCustomPollCommand((CreateCustomPollCommand) data);
+		else if(dataType.equals(GetUsernameCommand.class))
+			writeGetUsernameCommand((GetUsernameCommand) data);
 		
 			// default type:
 		else
@@ -1023,5 +1028,13 @@ public class DataStreamManager {
 			canSeeResults.add(readString());
 		}
 		return new CreateCustomPollCommand(name, description, expirationTime, options, canSee, canSeeResults);
+	}
+	
+	private void writeGetUsernameCommand(GetUsernameCommand data) throws IOException {
+		// nothing to do
+	}
+	
+	private GetUsernameCommand readGetUsernameCommand() throws IOException {
+		return new GetUsernameCommand();
 	}
 }

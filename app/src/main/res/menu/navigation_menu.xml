@@ -23,10 +23,7 @@
             android:id="@+id/nav_account"
             android:icon="@drawable/ic_account"
             android:title="My Account" />
-        <item
-            android:id="@+id/nav_signin_signup"
-            android:icon="@drawable/ic_baseline_login_24"
-            android:title="Sign In/Sign Up" />
+
 
     </group>
 </menu>

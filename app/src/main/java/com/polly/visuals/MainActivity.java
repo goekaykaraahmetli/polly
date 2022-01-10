@@ -78,13 +78,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             case R.id.nav_recentpolls:
                 Navigation.findNavController(this, R.id.nav_host_fragment).navigate(R.id.recentFragment);
                 break;
-            case R.id.nav_signin_signup:
-                if(FirebaseAuth.getInstance().getCurrentUser() == null) {
-                    Navigation.findNavController(this, R.id.nav_host_fragment).navigate(R.id.loginFragment);
-                }
-                else
-                    Toast.makeText(this, "You are already signed in. You can log out through the account page", Toast.LENGTH_SHORT).show();
-                break;
         }
 
         drawerLayout.closeDrawer(GravityCompat.START);

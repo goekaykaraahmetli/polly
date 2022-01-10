@@ -11,6 +11,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.Navigation;
 
 import com.facebook.login.LoginManager;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
@@ -35,6 +36,9 @@ public class AccountFragment extends Fragment {
                              @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_account, container, false);
+        if(FirebaseAuth.getInstance().getCurrentUser() == null){
+            Navigation.findNavController(getActivity(), R.id.nav_host_fragment).navigate(R.id.loginFragment);
+        }
         emailInfo = (TextView) view.findViewById(R.id.email_text);
         fullnameInfo = (TextView) view.findViewById(R.id.fullname_text);
         usernameInfo = (TextView) view.findViewById(R.id.username_text);
@@ -74,7 +78,7 @@ public class AccountFragment extends Fragment {
     private void checkUser() {
         FirebaseUser firebaseUser = mAuth.getCurrentUser();
         if(firebaseUser == null){
-            Toast.makeText(getActivity(), "You are currently not signed in", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), "Please sign in first", Toast.LENGTH_SHORT).show();
         }
         else{
             FirebaseDatabase.getInstance("https://polly-abdd4-default-rtdb.europe-west1.firebasedatabase.app/").getReference("Users").child(firebaseUser.getUid()).child("fullname").addValueEventListener(new ValueEventListener() {
