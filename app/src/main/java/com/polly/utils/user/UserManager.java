@@ -4,6 +4,7 @@ import com.polly.config.Config;
 import com.polly.utils.command.user.FindUsersCommand;
 import com.polly.utils.command.user.GetMyUsergroupsCommand;
 import com.polly.utils.communicator.ResponseCommunicator;
+import com.polly.utils.wrapper.ErrorWrapper;
 import com.polly.utils.wrapper.Message;
 import com.polly.utils.wrapper.UserListWrapper;
 import com.polly.utils.wrapper.UserWrapper;
@@ -32,10 +33,20 @@ public class UserManager {
     }
 
     public static List<UsergroupWrapper> getMyUsergroups() throws IOException {
-        return ((UsergroupListWrapper) communicator.sendWithResponse(Config.serverCommunicationId, new GetMyUsergroupsCommand()).getData()).getUsergroupList();
+        Message response = communicator.sendWithResponse(Config.serverCommunicationId, new GetMyUsergroupsCommand());
+        if(response.getDataType() == UsergroupListWrapper.class)
+            return ((UsergroupListWrapper) response.getData()).getUsergroupList();
+        if(response.getDataType() == ErrorWrapper.class)
+            throw new IOException(((ErrorWrapper) response.getData()).getMessage());
+        throw new IOException("Something went wrong!");
     }
 
     public static List<UserWrapper> findUsers() throws IOException {
-        return ((UserListWrapper) communicator.sendWithResponse(Config.serverCommunicationId, new FindUsersCommand()).getData()).getUserList();
+        Message response = communicator.sendWithResponse(Config.serverCommunicationId, new FindUsersCommand());
+        if(response.getDataType() == UserListWrapper.class)
+            return ((UserListWrapper) response.getData()).getUserList();
+        if(response.getDataType() == ErrorWrapper.class)
+            throw new IOException(((ErrorWrapper) response.getData()).getMessage());
+        throw new IOException("Something went wrong!");
     }
 }
