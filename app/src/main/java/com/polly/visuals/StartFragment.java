@@ -11,7 +11,7 @@ import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 
 import com.polly.R;
-import com.polly.testclasses.p2pTest;
+//import com.polly.testclasses.p2pTest;
 
 
 public class StartFragment extends Fragment {
@@ -24,8 +24,8 @@ public class StartFragment extends Fragment {
         root.findViewById(R.id.imageViewLogo).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent i = new Intent(getActivity(), p2pTest.class);
-                startActivity(i);
+ //               Intent i = new Intent(getActivity(), p2pTest.class);
+ //               startActivity(i);
             }
         });
 
