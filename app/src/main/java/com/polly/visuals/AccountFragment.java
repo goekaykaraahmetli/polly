@@ -57,14 +57,12 @@ public class AccountFragment extends Fragment {
                 if(mAuth.getCurrentUser() != null) {
                     FirebaseAuth.getInstance().signOut();
                     Toast.makeText(getActivity(), "You are now signed out", Toast.LENGTH_SHORT).show();
-                    emailInfo.setText("");
-                    fullnameInfo.setText("");
-                    usernameInfo.setText("");
                     LoginManager.getInstance().logOut();
                     GoogleSignInOptions googleSignInOptions = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestIdToken(getString(R.string.default_web_client_id)).requestEmail().build();
                     GoogleSignInClient googleSignInClient = GoogleSignIn.getClient(getActivity(), googleSignInOptions);
                     googleSignInClient.signOut();
-                    view.findViewById(R.id.logout_button).setVisibility(View.INVISIBLE);
+                    Navigation.findNavController(getActivity(), R.id.nav_host_fragment).navigate(R.id.loginFragment);
+
                 }
             }
         });
