@@ -1,9 +1,12 @@
 package com.polly.utils.user;
 
 import com.polly.config.Config;
+import com.polly.utils.command.user.FindUsersCommand;
 import com.polly.utils.command.user.GetMyUsergroupsCommand;
 import com.polly.utils.communicator.ResponseCommunicator;
 import com.polly.utils.wrapper.Message;
+import com.polly.utils.wrapper.UserListWrapper;
+import com.polly.utils.wrapper.UserWrapper;
 import com.polly.utils.wrapper.UsergroupListWrapper;
 import com.polly.utils.wrapper.UsergroupWrapper;
 
@@ -30,5 +33,9 @@ public class UserManager {
 
     public static List<UsergroupWrapper> getMyUsergroups() throws IOException {
         return ((UsergroupListWrapper) communicator.sendWithResponse(Config.serverCommunicationId, new GetMyUsergroupsCommand()).getData()).getUsergroupList();
+    }
+
+    public static List<UserWrapper> findUsers() throws IOException {
+        return ((UserListWrapper) communicator.sendWithResponse(Config.serverCommunicationId, new FindUsersCommand()).getData()).getUserList();
     }
 }

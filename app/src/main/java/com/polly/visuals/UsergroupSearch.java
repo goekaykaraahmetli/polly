@@ -20,14 +20,20 @@ import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.firebase.firestore.auth.User;
 import com.polly.R;
+import com.polly.utils.user.UserManager;
+import com.polly.utils.wrapper.UsergroupWrapper;
 
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
 public class UsergroupSearch extends Fragment {
     private RecyclerView mRecyclerView;
     private ListAdapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
+    private List<UsergroupWrapper> usergroups;
 
     @Nullable
     @Override
@@ -38,8 +44,21 @@ public class UsergroupSearch extends Fragment {
         View root = inflater.inflate(R.layout.usergroup_layout, container, false);
         setHasOptionsMenu(true);
         SavingClass saving = new ViewModelProvider(getActivity()).get(SavingClass.class);
+        try {
+            usergroups = UserManager.getMyUsergroups();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+
         ArrayList<SearchListItem> exampleList = new ArrayList<>();
-        exampleList.add(new SearchListItem(R.drawable.ic_usergroup, "Usergroup 1"));
+        if(usergroups != null){
+            for(int i = 0; i< usergroups.size() ; i ++){
+                exampleList.add(new SearchListItem(R.drawable.ic_usergroup, usergroups.get(0).getName()));
+            }
+        }
+
+/**        exampleList.add(new SearchListItem(R.drawable.ic_usergroup, "Usergroup 1"));
         exampleList.add(new SearchListItem(R.drawable.ic_usergroup, "Usergroup 2"));
         exampleList.add(new SearchListItem(R.drawable.ic_usergroup, "Usergroup 3"));
         exampleList.add(new SearchListItem(R.drawable.ic_usergroup, "Usergroup 4"));
@@ -56,7 +75,7 @@ public class UsergroupSearch extends Fragment {
         exampleList.add(new SearchListItem(R.drawable.ic_usergroup, "Usergroup 15"));
         exampleList.add(new SearchListItem(R.drawable.ic_usergroup, "Usergroup 16"));
         exampleList.add(new SearchListItem(R.drawable.ic_usergroup, "Usergroup 17"));
-        exampleList.add(new SearchListItem(R.drawable.ic_usergroup, "Usergroup 18"));
+        exampleList.add(new SearchListItem(R.drawable.ic_usergroup, "Usergroup 18")); **/
 
 
         mRecyclerView = root.findViewById(R.id.usergroupRecyclerView);
@@ -77,6 +96,7 @@ public class UsergroupSearch extends Fragment {
                 alert.setPositiveButton("YES", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
+                        saving.setUserGroupId(usergroups.get(position).getId());
                         saving.setUsergroupName(exampleList.get(position).getmText1());
                         Navigation.findNavController(getActivity(), R.id.nav_host_fragment).navigate(R.id.polloptionFragment);
                     }
@@ -111,6 +131,7 @@ public class UsergroupSearch extends Fragment {
 
             @Override
             public boolean onQueryTextChange(String newText) {
+                if(mAdapter == null)return false;
                 mAdapter.getFilter().filter(newText);
                 return false;
             }

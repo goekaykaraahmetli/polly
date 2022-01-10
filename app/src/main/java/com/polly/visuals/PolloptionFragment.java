@@ -250,7 +250,8 @@ public class PolloptionFragment extends Fragment {
                     @Override
                     public void onTimeSet(TimePicker timePicker, int hour, int minute) {
                         String time = hour + ":" + minute;
-                        localTime = LocalTime.parse(time);
+                        localTime = LocalTime.of(hour, minute);
+                        saving.setLocalTime(localTime);
                         test.setText(test.getText() + time);
                     }
                 }, hour, minute, true);
@@ -261,7 +262,8 @@ public class PolloptionFragment extends Fragment {
                     public void onDateSet(DatePicker datePicker, int year, int month, int day) {
                         month = month + 1;
                         String date = year+"-"+month+"-"+day + " ";
-                        localDate = LocalDate.parse(year +"-"+month+"-"+day);
+                        localDate = LocalDate.of(year, month, day);
+                        saving.setLocalDate(localDate);
                         test.setText(date);
                     }
                 }, year,month, day);
@@ -322,15 +324,14 @@ public class PolloptionFragment extends Fragment {
         root.findViewById(R.id.CreatePollOnMenu).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                TextInputEditText participants = root.findViewById(R.id.PollyRoomNumber);
-                if(!participants.getText().toString().equals(""))
-                    numberOfParticipants = Integer.parseInt(participants.getText().toString());
-                else
-                    numberOfParticipants = 0;
                 List<String> pollOptions = saving.getPollOptions();
-
-                name = ((EditText) root.findViewById(R.id.Name)).getText().toString();
                 if (dropDownMenu.getText().toString().equals("POLLYROOM")) {
+                 EditText participants = (EditText) root.findViewById(R.id.PollyRoomNumber);
+                    if(!participants.getText().toString().equals(""))
+                        numberOfParticipants = Integer.parseInt(participants.getText().toString());
+                 else
+                     numberOfParticipants = 0;
+                     name = ((EditText) root.findViewById(R.id.Name)).getText().toString();
                     if (pollOptions == null) {
                         Toast.makeText(getActivity(), "Please add some Options", Toast.LENGTH_SHORT).show();
                     }
@@ -361,27 +362,39 @@ public class PolloptionFragment extends Fragment {
                     //CharSequence poll1 = poll.toString();
                     if (pollOptions == null) {
                         Toast.makeText(getActivity(), "Please add some Options", Toast.LENGTH_SHORT).show();
+                        return;
                     }
                     if (Pollname.getText().length() == 0) {
                         Toast.makeText(getActivity(), "Please enter Pollname", Toast.LENGTH_SHORT).show();
+                        return;
                     }
 
                     if(!(test.getText().toString().contains("-") && test.getText().toString().contains(":"))){
-                    Toast.makeText(getActivity(), "Please choose a valid Expiration date", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getActivity(), "Please choose a valid Expiration date", Toast.LENGTH_SHORT).show();
+                        return;
                      }
 
                     try {
                         long id;
-                        localDateTime.of(localDate, localTime);
+                        localTime = saving.getLocalTime();
+                        localDate = saving.getLocalDate();
+                        localDateTime = LocalDateTime.of(localDate, localTime);
+                        System.out.println(localDateTime.toString());
                         switch(dropDownMenu.getText().toString()) {
                             case "PUBLIC":
+                                System.out.println(Pollname.getText().toString());
+                                System.out.println(description.getText().toString());
+                                System.out.println(localDateTime.toString());
+                                for(int i = 0; i<pollOptions.size(); i++){
+                                    System.out.println(pollOptions.get(i));
+                                }
                                 id = PollManager.createPublicPoll(Pollname.getText().toString(), new PollDescription(description.getText().toString()), localDateTime, pollOptions);
                                 break;
                             case "PRIVATE":
-                                //id = PollManager.createPrivatePoll(Pollname.getText().toString(), new PollDescription(description.getText().toString()), localDateTime, pollOptions, saving.getUsergroupName());
+                                id = PollManager.createPrivatePoll(Pollname.getText().toString(), new PollDescription(description.getText().toString()), localDateTime, pollOptions, saving.getUserGroupId());
                                 break;
                             case "CUSTOM":
-                                //id = PollManager.createCustomPoll(Pollname.getText().toString(), new PollDescription(description.getText().toString()), localDateTime, pollOptions, saving.getUserArrayVoting(), saving.getUserArrayObserving());
+                                id = PollManager.createCustomPoll(Pollname.getText().toString(), new PollDescription(description.getText().toString()), localDateTime, pollOptions, saving.getCanSeeList(), saving.getCanSeeAndVoteList());
                                 break;
                             case "GEOFENCE":
                                 long latitude = 0L;     //TODO
@@ -391,8 +404,7 @@ public class PolloptionFragment extends Fragment {
                             default:
                                 throw new IllegalStateException("Unexpected value: " + "switch statement can't work with the given cases");
                         }
-                        //Toast.makeText(getActivity(), "Poll ID is: " + id, Toast.LENGTH_SHORT).show();
-                        //Deleted catch Interrupted Exception
+                        Toast.makeText(getActivity(), "Poll ID is: " + id, Toast.LENGTH_SHORT).show();
                     } catch (IOException e) {
                         e.printStackTrace();
                         Toast.makeText(getActivity(), "No connection to the server!", Toast.LENGTH_SHORT).show();

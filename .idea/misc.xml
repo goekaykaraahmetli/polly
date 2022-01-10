@@ -26,17 +26,22 @@
         <entry key="..\:/Users/willi/StudioProjects/polly/app/src/main/res/layout/fragment_sign_up.xml" value="0.33" />
         <entry key="..\:/Users/willi/StudioProjects/polly/app/src/main/res/layout/fragment_start.xml" value="0.25" />
         <entry key="..\:/Users/willi/StudioProjects/polly/app/src/main/res/layout/nav_header.xml" value="0.3625" />
-        <entry key="..\:/Users/willi/StudioProjects/polly/app/src/main/res/layout/p2p_test.xml" value="0.24270833333333333" />
         <entry key="..\:/Users/willi/StudioProjects/polly/app/src/main/res/layout/termsofservice.xml" value="0.33" />
         <entry key="..\:/Users/willi/StudioProjects/polly/app/src/main/res/menu/menu_main.xml" value="0.3625" />
         <entry key="..\:/Users/willi/StudioProjects/polly/app/src/main/res/menu/navigation_menu.xml" value="0.3625" />
+        <entry key="..\:/polly/app/src/main/res/drawable/ic_description.xml" value="0.2361111111111111" />
+        <entry key="..\:/polly/app/src/main/res/layout/activity_bar.xml" value="0.371875" />
+        <entry key="..\:/polly/app/src/main/res/layout/activity_login.xml" value="0.20885416666666667" />
+        <entry key="..\:/polly/app/src/main/res/layout/activity_main.xml" value="0.371875" />
         <entry key="..\:/polly/app/src/main/res/layout/activity_polloptions.xml" value="0.24320652173913043" />
         <entry key="..\:/polly/app/src/main/res/layout/activity_qrpie.xml" value="0.371875" />
         <entry key="..\:/polly/app/src/main/res/layout/activity_settings.xml" value="0.33" />
         <entry key="..\:/polly/app/src/main/res/layout/dropdown_item.xml" value="0.371875" />
         <entry key="..\:/polly/app/src/main/res/layout/fragment_account.xml" value="0.33" />
         <entry key="..\:/polly/app/src/main/res/layout/fragment_login.xml" value="0.20885416666666667" />
+        <entry key="..\:/polly/app/src/main/res/layout/fragment_recent.xml" value="0.371875" />
         <entry key="..\:/polly/app/src/main/res/layout/fragment_roomscanner_start.xml" value="0.18085106382978725" />
+        <entry key="..\:/polly/app/src/main/res/layout/fragment_showpoll.xml" value="0.3804347826086957" />
         <entry key="..\:/polly/app/src/main/res/layout/fragment_sign_up.xml" value="0.20885416666666667" />
         <entry key="..\:/polly/app/src/main/res/layout/fragment_start.xml" value="0.18085106382978725" />
         <entry key="..\:/polly/app/src/main/res/layout/user_layout.xml" value="0.24320652173913043" />
