@@ -24,6 +24,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.Navigation;
 
 import com.github.mikephil.charting.charts.PieChart;
 import com.polly.config.Config;
@@ -45,12 +46,17 @@ public class ShowPollVotingPageFragment extends Fragment {
     private PieChart pieChart;
     private ImageView qrCode;
     PollOptionsWrapper pollOptions;
-    long id;
+    static Long id;
     private Button voteButton;
     private Communicator communicator = initialiseCommunicator();
     private boolean hasRunningPollChangeListener = false;
 
     SavingClass saving;
+
+    public static void open(long id) {
+        Navigation.findNavController(MainActivity.mainActivity, R.id.nav_host_fragment).navigate(R.id.showPollVotingPageFragment);
+        ShowPollVotingPageFragment.id = id;
+    }
 
     @Override
     public void onDestroy() {
@@ -64,6 +70,7 @@ public class ShowPollVotingPageFragment extends Fragment {
                 Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
             }
         }
+        id = null;
     }
 
     @Nullable
@@ -88,7 +95,7 @@ public class ShowPollVotingPageFragment extends Fragment {
 
         try {
             pollOptions = PollManager.getPollOptions(id);
-            showPoll();
+            showPoll(root);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -96,9 +103,9 @@ public class ShowPollVotingPageFragment extends Fragment {
         return root;
     }
 
-    public void showPoll(){
+    public void showPoll(View root){
         updatePieChart(pollOptions);
-        qrCode = (ImageView) getView().findViewById(R.id.qrCodeImageView);
+        qrCode = (ImageView) root.findViewById(R.id.qrCodeImageView);
         qrCode.setImageBitmap(QRCode.QRCode(""+ pollOptions.getBasicPollInformation().getId()));
         qrCode.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
@@ -109,7 +116,7 @@ public class ShowPollVotingPageFragment extends Fragment {
             }
         });
         try {
-            communicator.send(Config.serverCommunicationId, new RegisterPollChangeListenerCommand(pollOptions.getBasicPollInformation().getId(), true));
+            communicator.send(Config.serverCommunicationId, new RegisterPollChangeListenerCommand(pollOptions.getBasicPollInformation().getId(), false));
             hasRunningPollChangeListener = true;
         } catch (IOException e) {
             e.printStackTrace();
@@ -154,7 +161,7 @@ public class ShowPollVotingPageFragment extends Fragment {
 
 
                         pieChart.setVisibility(View.INVISIBLE);
-                        showPoll();
+                        showPoll(getView());
 
                     } catch (IllegalArgumentException|IOException e) {
                         Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
@@ -171,7 +178,7 @@ public class ShowPollVotingPageFragment extends Fragment {
             @Override
             public void handleInput(Message message) {
                 System.out.println("PollActivity received message from type: " + message.getDataType().getName());
-                if (message.getDataType().equals(pollOptions.getClass())) {
+                if (message.getDataType().equals(PollOptionsWrapper.class)) {
                     PollOptionsWrapper updatePoll = (PollOptionsWrapper) message.getData();
                     updatePieChart(updatePoll);
                 }

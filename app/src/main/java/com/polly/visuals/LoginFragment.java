@@ -16,7 +16,6 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 
@@ -224,10 +223,16 @@ public class LoginFragment extends Fragment {
                                                     Boolean isFree = (Boolean) communicator.sendWithResponse(Config.serverCommunicationId, com).getData();
                                                     if (isFree) {
                                                         Message message = communicator.sendWithResponse(Config.serverCommunicationId, new RegisterCommand(idToken, usernameInput.getText().toString()));
-                                                        if (message.getData().equals("Success")) {
-                                                            Navigation.findNavController(getActivity(), R.id.nav_host_fragment).navigate(R.id.startFragment);
-                                                        } else
+                                                        if(message.getDataType() == LoginAnswerWrapper.class) {
+                                                            LoginAnswerWrapper answer = (LoginAnswerWrapper) message.getData();
+
+                                                            if(answer.isSuccessful())
+                                                                Navigation.findNavController(getActivity(), R.id.nav_host_fragment).navigate(R.id.startFragment);
+                                                            else
+                                                                Toast.makeText(getContext(), "Something went wrong, please try again", Toast.LENGTH_SHORT).show();
+                                                        } else {
                                                             Toast.makeText(getContext(), "Something went wrong, please try again", Toast.LENGTH_SHORT).show();
+                                                        }
                                                     }
                                                 } catch (IOException e) {
                                                     e.printStackTrace();

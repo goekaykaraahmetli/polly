@@ -5,6 +5,7 @@ import com.polly.utils.Area;
 import com.polly.utils.command.GetMyPollsCommand;
 import com.polly.utils.command.GetParticipatedPollsCommand;
 import com.polly.utils.command.poll.GetPollResultsCommand;
+import com.polly.utils.wrapper.ErrorWrapper;
 import com.polly.utils.wrapper.Message;
 import com.polly.utils.command.poll.GetPollOptionsCommand;
 import com.polly.utils.wrapper.PollListWrapper;
@@ -82,11 +83,19 @@ public class PollManager {
 
     public static List<PollResultsWrapper> getMyPolls() throws IOException {
         Message response = communicator.sendWithResponse(Config.serverCommunicationId, new GetMyPollsCommand());
-        return ((PollListWrapper) response.getData()).getList();
+        if(response.getDataType() == PollListWrapper.class)
+            return ((PollListWrapper) response.getData()).getList();
+        if(response.getDataType() == ErrorWrapper.class)
+            throw new IOException(((ErrorWrapper) response.getData()).getMessage());
+        throw new IOException("Something went wrong!");
     }
 
     public static List<PollResultsWrapper> getParticipatedPolls() throws IOException {
         Message response = communicator.sendWithResponse(Config.serverCommunicationId, new GetParticipatedPollsCommand());
-        return ((PollListWrapper) response.getData()).getList();
+        if(response.getDataType() == PollListWrapper.class)
+            return ((PollListWrapper) response.getData()).getList();
+        if(response.getDataType() == ErrorWrapper.class)
+            throw new IOException(((ErrorWrapper) response.getData()).getMessage());
+        throw new IOException("Something went wrong!");
     }
 }

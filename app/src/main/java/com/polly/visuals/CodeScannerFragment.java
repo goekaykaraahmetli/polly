@@ -80,10 +80,6 @@ public class CodeScannerFragment extends Fragment {
                             Toast.makeText(activity, e.getMessage(), Toast.LENGTH_SHORT).show();
                             e.printStackTrace();
                             restartScanner(2.5);
-                        } catch (CanNotEnterPollException e) {
-                            Toast.makeText(activity, "Something went wrong, please try again!", Toast.LENGTH_SHORT).show();
-                            e.printStackTrace();
-                            restartScanner(2.5);
                         }
                     }
                 });

@@ -117,4 +117,12 @@
         android:id="@+id/scanRoomStart"
         android:name="com.polly.visuals.ScanRoomStart"
         android:label="ScanRoomStart" />
+    <fragment
+        android:id="@+id/showPollResultsPageFragment"
+        android:name="com.polly.visuals.ShowPollResultsPageFragment"
+        android:label="ShowPollResultsPageFragment" />
+    <fragment
+        android:id="@+id/showPollVotingPageFragment"
+        android:name="com.polly.visuals.ShowPollVotingPageFragment"
+        android:label="ShowPollVotingPageFragment" />
 </navigation>

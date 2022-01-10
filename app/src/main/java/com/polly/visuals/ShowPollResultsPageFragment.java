@@ -24,6 +24,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.Navigation;
 
 import com.github.mikephil.charting.charts.PieChart;
 import com.polly.config.Config;
@@ -43,12 +44,17 @@ public class ShowPollResultsPageFragment extends Fragment {
     private PieChart pieChart;
     private ImageView qrCode;
     PollResultsWrapper pollResults;
-    long id;
+    static Long id;
     private Button voteButton;
     private Communicator communicator = initialiseCommunicator();
     private boolean hasRunningPollChangeListener = false;
 
     SavingClass saving;
+
+    public static void open(long id) {
+        Navigation.findNavController(MainActivity.mainActivity, R.id.nav_host_fragment).navigate(R.id.showPollResultsPageFragment);
+        ShowPollResultsPageFragment.id = id;
+    }
 
     @Override
     public void onDestroy() {
@@ -62,6 +68,7 @@ public class ShowPollResultsPageFragment extends Fragment {
                 Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
             }
         }
+        id = null;
     }
 
     @Nullable
@@ -86,7 +93,7 @@ public class ShowPollResultsPageFragment extends Fragment {
 
         try {
             pollResults = PollManager.getPollResults(id);
-            showPoll();
+            showPoll(root);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -94,9 +101,9 @@ public class ShowPollResultsPageFragment extends Fragment {
         return root;
     }
 
-        public void showPoll(){
+        public void showPoll(View root){
             updatePieChart(pollResults);
-            qrCode = (ImageView) getView().findViewById(R.id.qrCodeImageView);
+            qrCode = (ImageView) root.findViewById(R.id.qrCodeImageView);
             qrCode.setImageBitmap(QRCode.QRCode(""+ pollResults.getBasicPollInformation().getId()));
             qrCode.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
@@ -150,7 +157,7 @@ public class ShowPollResultsPageFragment extends Fragment {
 
 
                         pieChart.setVisibility(View.INVISIBLE);
-                        showPoll();
+                        showPoll(getView());
 
                     } catch (IllegalArgumentException|IOException e) {
                         Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
@@ -167,7 +174,7 @@ public class ShowPollResultsPageFragment extends Fragment {
             @Override
             public void handleInput(Message message) {
                 System.out.println("PollActivity received message from type: " + message.getDataType().getName());
-                if (message.getDataType().equals(pollResults.getClass())) {
+                if (message.getDataType().equals(PollResultsWrapper.class)) {
                     PollResultsWrapper updatePoll = (PollResultsWrapper) message.getData();
                     updatePieChart(updatePoll);
                 }
