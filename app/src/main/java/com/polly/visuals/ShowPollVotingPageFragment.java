@@ -212,7 +212,7 @@ public class ShowPollVotingPageFragment extends Fragment {
         pieChart.getDescription().setEnabled(!updatePoll.getBasicPollInformation().getDescription().getDescription().equals(""));
         pieChart.setCenterText(updatePoll.getBasicPollInformation().getName());
 
-        pieChart.setUsePercentValues(true);
+        pieChart.setUsePercentValues(false);
         pieChart.animate();
         pieChart.setVisibility(View.VISIBLE);
     }
