@@ -46,7 +46,7 @@ import java.util.Map;
 public class ShowPollVotingPageFragment extends Fragment {
     private PieChart pieChart;
     private ImageView qrCode;
-    PollOptionsWrapper pollOptions;
+    static PollOptionsWrapper pollOptions;
     static Long id;
     private Button voteButton;
     private Communicator communicator = initialiseCommunicator();
@@ -54,9 +54,10 @@ public class ShowPollVotingPageFragment extends Fragment {
 
     SavingClass saving;
 
-    public static void open(long id) {
-        Navigation.findNavController(MainActivity.mainActivity, R.id.nav_host_fragment).navigate(R.id.showPollVotingPageFragment);
+    public static void open(long id) throws IOException{
         ShowPollVotingPageFragment.id = id;
+        pollOptions = PollManager.getPollOptions(id);
+        Navigation.findNavController(MainActivity.mainActivity, R.id.nav_host_fragment).navigate(R.id.showPollVotingPageFragment);
     }
 
     @Override
@@ -94,13 +95,9 @@ public class ShowPollVotingPageFragment extends Fragment {
         voteButton = (Button) root.findViewById(R.id.vote_button);
         voteButton.setVisibility(View.GONE);
 
-        try {
-            pollOptions = PollManager.getPollOptions(id);
+        if(pollOptions != null) {
             showPoll(root);
-        } catch (IOException e) {
-            e.printStackTrace();
         }
-
         return root;
     }
 
