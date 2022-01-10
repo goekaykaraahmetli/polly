@@ -166,11 +166,6 @@ public class PolloptionFragment extends Fragment {
                     pollyRoom.setVisibility(View.VISIBLE);
                     saving.setCalendarText(null);
                     datePicker.setVisibility(View.GONE);
-                    if(saving.getPollOptions() == null || saving.getPollOptions().size() < 2){
-                        sendQRviaEmail.setVisibility(View.GONE);
-                    }else{
-                        sendQRviaEmail.setVisibility(View.VISIBLE);
-                    }
                 }
             }
         });
@@ -315,10 +310,13 @@ public class PolloptionFragment extends Fragment {
                     Toast.makeText(getActivity(), "Please enter Pollname", Toast.LENGTH_SHORT).show();
                     return;
                 }
-                if(!(test.getText().toString().contains("-") && test.getText().toString().contains(":"))){
-                    Toast.makeText(getActivity(), "Please choose a valid Expiration date", Toast.LENGTH_SHORT).show();
-                    return;
+                if(!dropDownMenu.getText().toString().equals("POLLYROOM")){
+                    if(!(test.getText().toString().contains("-") && test.getText().toString().contains(":"))){
+                        Toast.makeText(getActivity(), "Please choose a valid Expiration date", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
                 }
+
                 switch(dropDownMenu.getText().toString()){
                     case "GEOFENCE":
                         saving.setGeofence(geofenceBtn.getText());
@@ -327,6 +325,8 @@ public class PolloptionFragment extends Fragment {
                         if(!participants.getText().toString().equals("")){
                             int numberOfParticipants = Integer.parseInt(participants.getText().toString());
                             saving.setNumberOfParticipants(numberOfParticipants);
+                        }else{
+                            Toast.makeText(getActivity(), "Please enter number of Participants", Toast.LENGTH_SHORT).show();
                         }
                 }
                 saving.setDescription(description.getText());

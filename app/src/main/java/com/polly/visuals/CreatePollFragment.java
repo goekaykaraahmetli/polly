@@ -44,6 +44,7 @@ public class CreatePollFragment extends Fragment {
     public static String answer3;
     public static String answer4;
     public static int numberOfParticipants;
+    LocalDateTime localDateTime;
     HashMap<Integer, EditText> map = new HashMap<>();
     HashMap<Integer, Button> remove = new HashMap<>();
     @Nullable
@@ -197,8 +198,10 @@ public class CreatePollFragment extends Fragment {
                 }
                 if (!hinted) {
                     try {
-                        long id;
-                        LocalDateTime localDateTime = LocalDateTime.of(saving.getLocalDate(), saving.getLocalTime());
+                        long id = 10;
+                        if(saving.getLocalDate() != null && saving.getLocalTime() != null){
+                            localDateTime = LocalDateTime.of(saving.getLocalDate(), saving.getLocalTime());
+                        }
 
                         switch (saving.getDropDownMenu().toString()) {
                             case "PUBLIC":
@@ -216,23 +219,38 @@ public class CreatePollFragment extends Fragment {
                                 id = PollManager.createGeofencePoll(saving.getPollname().toString(), new PollDescription(saving.getDescription().toString()), localDateTime, pollOptions, new Area(latitude, longitude, Double.parseDouble(saving.getGeofence().toString())));
                                 break;
                             case "POLLYROOM":
-                                numberOfParticipants = saving.getNumberOfParticipants();
-                                if(pollOptions.get(0) != null){
-                                    answer1 = pollOptions.get(0);
+                                {
+                                    numberOfParticipants = saving.getNumberOfParticipants();
+                                    if(pollOptions.get(0) != null){
+                                        answer1 = pollOptions.get(0);
+                                    }
+                                    if(pollOptions.get(1) != null){
+                                        answer2 = pollOptions.get(1);
+                                    }
+                                    if(pollOptions.size() > 2 && pollOptions.get(2) != null){
+                                        answer3 = pollOptions.get(2);
+                                    }
+                                    if(pollOptions.size() > 3 && pollOptions.get(3) != null){
+                                        answer4 = pollOptions.get(3);
+                                    }
+                                    androidx.appcompat.app.AlertDialog.Builder alert = new AlertDialog.Builder(getContext());
+                                    alert.setTitle("QR Codes");
+                                    alert.setMessage("Send QR codes via E-Mail?");
+                                    alert.setPositiveButton("YES", new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialogInterface, int i) {
+                                            Intent intent = new Intent(getActivity(), BarcodeScannerActivity.class);
+                                            startActivity(intent);
+                                        }
+                                    });
+                                    alert.setNegativeButton("NO", new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialogInterface, int i) {
+
+                                        }
+                                    });
+                                    alert.create().show();
                                 }
-                                if(pollOptions.get(1) != null){
-                                    answer2 = pollOptions.get(1);
-                                }
-                                if(pollOptions.size() > 2 && pollOptions.get(2) != null){
-                                    answer3 = pollOptions.get(2);
-                                }
-                                if(pollOptions.size() > 3 && pollOptions.get(3) != null){
-                                    answer4 = pollOptions.get(3);
-                                }
-                                Intent intent = new Intent(getActivity(), BarcodeScannerActivity.class);
-                                startActivity(intent);
-                            default:
-                                throw new IllegalStateException("Unexpected value: " + "switch statement can't work with the given cases");
                         }
                         Toast.makeText(getActivity(), "Poll ID is: " + id, Toast.LENGTH_SHORT).show();
                     } catch (IOException e) {
