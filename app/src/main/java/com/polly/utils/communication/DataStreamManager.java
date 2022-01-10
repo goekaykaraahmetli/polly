@@ -24,7 +24,7 @@ import com.polly.config.Config;
 import com.polly.utils.Area;
 import com.polly.utils.command.GetMyPollsCommand;
 import com.polly.utils.command.GetParticipatedPollsCommand;
-import com.polly.utils.command.GetUsernameCommand;
+import com.polly.utils.command.user.GetUsernameCommand;
 import com.polly.utils.command.poll.GetPollOptionsCommand;
 import com.polly.utils.command.poll.GetPollResultsCommand;
 import com.polly.utils.command.poll.RegisterPollChangeListenerCommand;

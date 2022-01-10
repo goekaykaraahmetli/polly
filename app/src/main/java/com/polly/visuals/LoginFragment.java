@@ -249,7 +249,7 @@ public class LoginFragment extends Fragment {
                                 LoginAnswerWrapper answer = (LoginAnswerWrapper) message.getData();
 
                                 if(answer.isSuccessful())
-                                    Navigation.findNavController(getActivity(), R.id.nav_host_fragment).navigate(R.id.loginFragment);
+                                    Navigation.findNavController(getActivity(), R.id.nav_host_fragment).navigate(R.id.accountFragment);
                                 else
                                     Toast.makeText(getContext(), "Something went wrong, please try again", Toast.LENGTH_SHORT).show();
                             }
