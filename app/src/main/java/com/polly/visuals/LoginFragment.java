@@ -89,7 +89,6 @@ public class LoginFragment extends Fragment {
     public void onDestroyView() {
         super.onDestroyView();
         ((DrawerLocker)getActivity()).setDrawerLocked(false);
-        ((DrawerLayout) view.findViewById(R.id.my_drawer_layout)).setVisibility(View.VISIBLE);
     }
 
     @Nullable
@@ -106,7 +105,6 @@ public class LoginFragment extends Fragment {
                 Navigation.findNavController(getActivity(), R.id.nav_host_fragment).navigate(R.id.signupFragment);
             }
         });
-        ((DrawerLayout) view.findViewById(R.id.my_drawer_layout)).setVisibility(View.GONE);
         Button signInBtn = (Button) view.findViewById(R.id.activity_login_button_login);
         emailInput = (EditText) view.findViewById(R.id.activity_login_edittext_username);
         passwordInput = (EditText) view.findViewById(R.id.activity_login_edittext_password);
@@ -114,7 +112,7 @@ public class LoginFragment extends Fragment {
 
 
 
-        GoogleSignInOptions googleSignInOptions = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestIdToken("163467661096-gk0vsogu94m484ochd3m5mei8nq6esjr.apps.googleusercontent.com").requestEmail().build();
+        GoogleSignInOptions googleSignInOptions = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestIdToken(getString(R.string.default_web_client_id)).requestEmail().build();
         googleSignInClient = GoogleSignIn.getClient(getActivity(),googleSignInOptions);
         ImageButton googleBtn = (ImageButton) view.findViewById(R.id.imageButtonGoogle);
         googleBtn.setOnClickListener(v -> {
@@ -211,8 +209,8 @@ public class LoginFragment extends Fragment {
                                 Message messageResponse = communicator.sendWithResponse(Config.serverCommunicationId, loginCommand);
                                 if(!messageResponse.getDataType().equals(LoginAnswerWrapper.class))
                                     System.err.println("Wrong Datatype");
-                                if(!((LoginAnswerWrapper) messageResponse.getData()).isSuccessful())
-                                    if(((LoginAnswerWrapper) messageResponse.getData()).getMessage().equals("User does not exist")){
+                                if(!((LoginAnswerWrapper) messageResponse.getData()).isSuccessful()) {
+                                    if (((LoginAnswerWrapper) messageResponse.getData()).getMessage().equals("User does not exist")) {
                                         AlertDialog.Builder alert = new AlertDialog.Builder(getContext());
                                         alert.setTitle("Select Username");
                                         alert.setMessage("You are new here, please enter an username");
@@ -224,12 +222,11 @@ public class LoginFragment extends Fragment {
                                                 IsUsernameAvailableCommand com = new IsUsernameAvailableCommand(usernameInput.getText().toString());
                                                 try {
                                                     Boolean isFree = (Boolean) communicator.sendWithResponse(Config.serverCommunicationId, com).getData();
-                                                    if(isFree){
+                                                    if (isFree) {
                                                         Message message = communicator.sendWithResponse(Config.serverCommunicationId, new RegisterCommand(idToken, usernameInput.getText().toString()));
-                                                        if(message.getData().equals("Success")){
+                                                        if (message.getData().equals("Success")) {
                                                             Navigation.findNavController(getActivity(), R.id.nav_host_fragment).navigate(R.id.startFragment);
-                                                        }
-                                                        else
+                                                        } else
                                                             Toast.makeText(getContext(), "Something went wrong, please try again", Toast.LENGTH_SHORT).show();
                                                     }
                                                 } catch (IOException e) {
@@ -240,7 +237,11 @@ public class LoginFragment extends Fragment {
                                         });
                                         alert.show();
                                     }
+                                }
+                                else
+                                    System.out.println("No response from Server");
                             } catch (IOException e) {
+                                System.out.println("HIER FEHLER ------------------");
                                 e.printStackTrace();
                             }
                         } else {
