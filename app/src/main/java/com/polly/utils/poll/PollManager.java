@@ -45,40 +45,65 @@ public class PollManager {
 
     public static long createPublicPoll(String name, PollDescription description, LocalDateTime expirationTime, List<String> options) throws IOException {
         Message response = communicator.sendWithResponse(Config.serverCommunicationId, new CreatePublicPollCommand(name, description, expirationTime, options));
-        return (long) response.getData();
+        if(response.getDataType() == Long.class)
+            return (long) response.getData();
+        if(response.getDataType() == ErrorWrapper.class)
+            throw new IOException(((ErrorWrapper) response.getData()).getMessage());
+        throw new IOException("Something went wrong!");
     }
 
     public static long createGeofencePoll(String name, PollDescription description, LocalDateTime expirationTime, List<String> options, Area area) throws IOException {
         Message response = communicator.sendWithResponse(Config.serverCommunicationId, new CreateGeofencePollCommand(name, description, expirationTime, options, area));
-        return (long) response.getData();
+        if(response.getDataType() == Long.class)
+            return (long) response.getData();
+        if(response.getDataType() == ErrorWrapper.class)
+            throw new IOException(((ErrorWrapper) response.getData()).getMessage());
+        throw new IOException("Something went wrong!");
     }
 
     public static long createCustomPoll(String name, PollDescription description, LocalDateTime expirationTime, List<String> options, List<String> canSee, List<String> canSeeResults) throws IOException {
         Message response = communicator.sendWithResponse(Config.serverCommunicationId, new CreateCustomPollCommand(name, description, expirationTime, options, canSee, canSeeResults));
-        return (long) response.getData();
+        if(response.getDataType() == Long.class)
+            return (long) response.getData();
+        if(response.getDataType() == ErrorWrapper.class)
+            throw new IOException(((ErrorWrapper) response.getData()).getMessage());
+        throw new IOException("Something went wrong!");
     }
 
     public static long createPrivatePoll(String name, PollDescription description, LocalDateTime expirationTime, List<String> options, long usergroup) throws IOException {
         Message response = communicator.sendWithResponse(Config.serverCommunicationId, new CreatePrivatePollCommand(name, description, expirationTime, options, usergroup));
-        return (long) response.getData();
+        if(response.getDataType() == Long.class)
+            return (long) response.getData();
+        if(response.getDataType() == ErrorWrapper.class)
+            throw new IOException(((ErrorWrapper) response.getData()).getMessage());
+        throw new IOException("Something went wrong!");
     }
 
     public static boolean vote(long id, String option) throws IOException {
         Message response = communicator.sendWithResponse(Config.serverCommunicationId, new VoteCommand(id, option));
-        if(response.getDataType().equals(boolean.class))
+        if(response.getDataType().equals(Boolean.class))
             return (boolean) response.getData();
-
-        return false;
+        if(response.getDataType() == ErrorWrapper.class)
+            throw new IOException(((ErrorWrapper) response.getData()).getMessage());
+        throw new IOException("Something went wrong!");
     }
 
     public static PollOptionsWrapper getPollOptions(long id) throws IOException {
         Message response = communicator.sendWithResponse(Config.serverCommunicationId, new GetPollOptionsCommand(id));
-        return (PollOptionsWrapper) response.getData();
+        if(response.getDataType() == PollOptionsWrapper.class)
+            return (PollOptionsWrapper) response.getData();
+        if(response.getDataType() == ErrorWrapper.class)
+            throw new IOException(((ErrorWrapper) response.getData()).getMessage());
+        throw new IOException("Something went wrong!");
     }
 
     public static PollResultsWrapper getPollResults(long id) throws IOException {
         Message response = communicator.sendWithResponse(Config.serverCommunicationId, new GetPollResultsCommand(id));
-        return (PollResultsWrapper) response.getData();
+        if(response.getDataType() == PollResultsWrapper.class)
+            return (PollResultsWrapper) response.getData();
+        if(response.getDataType() == ErrorWrapper.class)
+            throw new IOException(((ErrorWrapper) response.getData()).getMessage());
+        throw new IOException("Something went wrong!");
     }
 
     public static List<PollResultsWrapper> getMyPolls() throws IOException {

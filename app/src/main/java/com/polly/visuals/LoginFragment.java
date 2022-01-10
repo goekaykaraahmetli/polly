@@ -207,15 +207,20 @@ public class LoginFragment extends Fragment {
                             LoginCommand loginCommand = new LoginCommand(idToken);
                             try {
                                 Message messageResponse = communicator.sendWithResponse(Config.serverCommunicationId, loginCommand);
-                                if(!messageResponse.getDataType().equals(LoginAnswerWrapper.class))
-                                    System.err.println("Wrong Datatype");
-                                if(!((LoginAnswerWrapper) messageResponse.getData()).isSuccessful()) {
-                                    if (((LoginAnswerWrapper) messageResponse.getData()).getMessage().equals("User does not exist"))
-                                        chooseUsernameAlert(idToken);
+                                if(messageResponse.getDataType() == LoginAnswerWrapper.class) {
+                                    LoginAnswerWrapper loginAnswerWrapper = ((LoginAnswerWrapper) messageResponse.getData());
+                                    if(!loginAnswerWrapper.isSuccessful()) {
+                                        if (loginAnswerWrapper.getMessage().equals("User does not exist"))
+                                            chooseUsernameAlert(idToken);
+                                        else
+                                            Toast.makeText(getContext(), "Login failed: " + loginAnswerWrapper.getMessage(), Toast.LENGTH_SHORT).show();
+                                    }
                                     else
-                                        System.out.println("No response from Server");
-                                }
-
+                                        Toast.makeText(getContext(), "Logged in successfully", Toast.LENGTH_SHORT).show();
+                                } else if(messageResponse.getDataType() == ErrorWrapper.class)
+                                    Toast.makeText(getContext(), ((ErrorWrapper) messageResponse.getData()).getMessage(), Toast.LENGTH_SHORT).show();
+                                else
+                                    Toast.makeText(getContext(), "Something went wrong", Toast.LENGTH_SHORT).show();
                             } catch (IOException e) {
                                 System.out.println("HIER FEHLER ------------------");
                                 e.printStackTrace();
@@ -250,7 +255,11 @@ public class LoginFragment extends Fragment {
                                     Navigation.findNavController(getActivity(), R.id.nav_host_fragment).navigate(R.id.startFragment);
                                 else
                                     Toast.makeText(getContext(), "Something went wrong, please try again", Toast.LENGTH_SHORT).show();
-                            } else {
+                            }
+                            else if(message.getDataType() == ErrorWrapper.class) {
+                                Toast.makeText(getContext(), ((ErrorWrapper) message.getData()).getMessage(), Toast.LENGTH_SHORT).show();
+                            }
+                            else {
                                 Toast.makeText(getContext(), "Something went wrong, please try again", Toast.LENGTH_SHORT).show();
                             }
                         } else {
