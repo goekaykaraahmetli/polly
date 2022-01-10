@@ -53,6 +53,7 @@ import com.polly.utils.command.user.IsUsernameAvailableCommand;
 import com.polly.utils.command.user.LoginCommand;
 import com.polly.utils.command.user.RegisterCommand;
 import com.polly.utils.communicator.ResponseCommunicator;
+import com.polly.utils.wrapper.ErrorWrapper;
 import com.polly.utils.wrapper.LoginAnswerWrapper;
 import com.polly.utils.wrapper.Message;
 
@@ -209,39 +210,8 @@ public class LoginFragment extends Fragment {
                                 if(!messageResponse.getDataType().equals(LoginAnswerWrapper.class))
                                     System.err.println("Wrong Datatype");
                                 if(!((LoginAnswerWrapper) messageResponse.getData()).isSuccessful()) {
-                                    if (((LoginAnswerWrapper) messageResponse.getData()).getMessage().equals("User does not exist")) {
-                                        AlertDialog.Builder alert = new AlertDialog.Builder(getContext());
-                                        alert.setTitle("Select Username");
-                                        alert.setMessage("You are new here, please enter an username");
-                                        EditText usernameInput = new EditText(getContext());
-                                        alert.setView(usernameInput);
-                                        alert.setPositiveButton("Enter", new DialogInterface.OnClickListener() {
-                                            @Override
-                                            public void onClick(DialogInterface dialog, int which) {
-                                                IsUsernameAvailableCommand com = new IsUsernameAvailableCommand(usernameInput.getText().toString());
-                                                try {
-                                                    Boolean isFree = (Boolean) communicator.sendWithResponse(Config.serverCommunicationId, com).getData();
-                                                    if (isFree) {
-                                                        Message message = communicator.sendWithResponse(Config.serverCommunicationId, new RegisterCommand(idToken, usernameInput.getText().toString()));
-                                                        if(message.getDataType() == LoginAnswerWrapper.class) {
-                                                            LoginAnswerWrapper answer = (LoginAnswerWrapper) message.getData();
-
-                                                            if(answer.isSuccessful())
-                                                                Navigation.findNavController(getActivity(), R.id.nav_host_fragment).navigate(R.id.startFragment);
-                                                            else
-                                                                Toast.makeText(getContext(), "Something went wrong, please try again", Toast.LENGTH_SHORT).show();
-                                                        } else {
-                                                            Toast.makeText(getContext(), "Something went wrong, please try again", Toast.LENGTH_SHORT).show();
-                                                        }
-                                                    }
-                                                } catch (IOException e) {
-                                                    e.printStackTrace();
-                                                }
-                                            }
-
-                                        });
-                                        alert.show();
-                                    }
+                                    if (((LoginAnswerWrapper) messageResponse.getData()).getMessage().equals("User does not exist"))
+                                        chooseUsernameAlert(idToken);
                                     else
                                         System.out.println("No response from Server");
                                 }
@@ -255,6 +225,53 @@ public class LoginFragment extends Fragment {
                         }
                     }
                 });
+    }
+
+    private void chooseUsernameAlert(String idToken) {
+        AlertDialog.Builder alert = new AlertDialog.Builder(getContext());
+        alert.setTitle("Select Username");
+        alert.setMessage("You are new here, please enter an username");
+        EditText usernameInput = new EditText(getContext());
+        alert.setView(usernameInput);
+        alert.setPositiveButton("Enter", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                IsUsernameAvailableCommand com = new IsUsernameAvailableCommand(usernameInput.getText().toString());
+                try {
+                    Message booleanMessage = communicator.sendWithResponse(Config.serverCommunicationId, com);
+                    if(booleanMessage.getDataType() == Boolean.class) {
+                        boolean isFree = (Boolean) booleanMessage.getData();
+                        if (isFree) {
+                            Message message = communicator.sendWithResponse(Config.serverCommunicationId, new RegisterCommand(idToken, usernameInput.getText().toString()));
+                            if(message.getDataType() == LoginAnswerWrapper.class) {
+                                LoginAnswerWrapper answer = (LoginAnswerWrapper) message.getData();
+
+                                if(answer.isSuccessful())
+                                    Navigation.findNavController(getActivity(), R.id.nav_host_fragment).navigate(R.id.startFragment);
+                                else
+                                    Toast.makeText(getContext(), "Something went wrong, please try again", Toast.LENGTH_SHORT).show();
+                            } else {
+                                Toast.makeText(getContext(), "Something went wrong, please try again", Toast.LENGTH_SHORT).show();
+                            }
+                        } else {
+                            Toast.makeText(getContext(), "This username already exists", Toast.LENGTH_SHORT).show();
+                            chooseUsernameAlert(idToken);
+                        }
+                    } else if (booleanMessage.getDataType() == ErrorWrapper.class) {
+                        Toast.makeText(getContext(), ((ErrorWrapper) booleanMessage.getData()).getMessage(), Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(getContext(), "Something went wrong, please try again", Toast.LENGTH_SHORT).show();
+                    }
+
+
+
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+
+        });
+        alert.show();
     }
 
     @Override
