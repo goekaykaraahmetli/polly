@@ -2,6 +2,7 @@ package com.polly.visuals;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 import android.widget.Toast;
 
@@ -58,6 +59,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
         }
 
+        if(FirebaseAuth.getInstance().getCurrentUser() != null){
+            LoginFragment.sendTokenToServer(true);
+        }
     }
 
 
@@ -83,6 +87,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         drawerLayout.closeDrawer(GravityCompat.START);
         return true;
     }
+
+
 
 
     @Override

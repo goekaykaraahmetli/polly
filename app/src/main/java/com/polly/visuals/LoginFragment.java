@@ -180,7 +180,7 @@ public class LoginFragment extends Fragment {
             if(task.isSuccessful()){
                 FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
                 if(user.isEmailVerified()) {
-                    sendTokenToServer();
+                    sendTokenToServer(false);
                 }
                 else{
                     user.sendEmailVerification();
@@ -192,7 +192,7 @@ public class LoginFragment extends Fragment {
         });
     }
 
-    public void sendTokenToServer(){
+    public static void sendTokenToServer(boolean starting){
         FirebaseUser mUser = FirebaseAuth.getInstance().getCurrentUser();
         mUser.getIdToken(true)
                 .addOnCompleteListener(new OnCompleteListener<GetTokenResult>() {
@@ -208,16 +208,19 @@ public class LoginFragment extends Fragment {
                                         if (loginAnswerWrapper.getMessage().equals("User does not exist"))
                                             chooseUsernameAlert(idToken);
                                         else
-                                            Toast.makeText(getContext(), "Login failed: " + loginAnswerWrapper.getMessage(), Toast.LENGTH_SHORT).show();
+                                            Toast.makeText(MainActivity.mainActivity, "Login failed: " + loginAnswerWrapper.getMessage(), Toast.LENGTH_SHORT).show();
                                     }
-                                    else {
-                                        Toast.makeText(getContext(), "Logged in successfully", Toast.LENGTH_SHORT).show();
-                                        Navigation.findNavController(getActivity(), R.id.nav_host_fragment).navigate(R.id.accountFragment);
+                                    else if(!starting){
+                                        Toast.makeText(MainActivity.mainActivity, "Logged in successfully", Toast.LENGTH_SHORT).show();
+                                        Navigation.findNavController(MainActivity.mainActivity, R.id.nav_host_fragment).navigate(R.id.accountFragment);
+                                    }
+                                    else{
+
                                     }
                                 } else if(messageResponse.getDataType() == ErrorWrapper.class)
-                                    Toast.makeText(getContext(), ((ErrorWrapper) messageResponse.getData()).getMessage(), Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(MainActivity.mainActivity, ((ErrorWrapper) messageResponse.getData()).getMessage(), Toast.LENGTH_SHORT).show();
                                 else
-                                    Toast.makeText(getContext(), "Something went wrong", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(MainActivity.mainActivity, "Something went wrong", Toast.LENGTH_SHORT).show();
                             } catch (IOException e) {
                                 System.out.println("HIER FEHLER ------------------");
                                 e.printStackTrace();
@@ -229,11 +232,11 @@ public class LoginFragment extends Fragment {
                 });
     }
 
-    private void chooseUsernameAlert(String idToken) {
-        AlertDialog.Builder alert = new AlertDialog.Builder(getContext());
+    private static void chooseUsernameAlert(String idToken) {
+        AlertDialog.Builder alert = new AlertDialog.Builder(MainActivity.mainActivity);
         alert.setTitle("Select Username");
         alert.setMessage("You are new here, please enter an username");
-        EditText usernameInput = new EditText(getContext());
+        EditText usernameInput = new EditText(MainActivity.mainActivity);
         alert.setView(usernameInput);
         alert.setPositiveButton("Enter", new DialogInterface.OnClickListener() {
             @Override
@@ -249,24 +252,24 @@ public class LoginFragment extends Fragment {
                                 LoginAnswerWrapper answer = (LoginAnswerWrapper) message.getData();
 
                                 if(answer.isSuccessful())
-                                    Navigation.findNavController(getActivity(), R.id.nav_host_fragment).navigate(R.id.accountFragment);
+                                    Navigation.findNavController(MainActivity.mainActivity, R.id.nav_host_fragment).navigate(R.id.accountFragment);
                                 else
-                                    Toast.makeText(getContext(), "Something went wrong, please try again", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(MainActivity.mainActivity, "Something went wrong, please try again", Toast.LENGTH_SHORT).show();
                             }
                             else if(message.getDataType() == ErrorWrapper.class) {
-                                Toast.makeText(getContext(), ((ErrorWrapper) message.getData()).getMessage(), Toast.LENGTH_SHORT).show();
+                                Toast.makeText(MainActivity.mainActivity, ((ErrorWrapper) message.getData()).getMessage(), Toast.LENGTH_SHORT).show();
                             }
                             else {
-                                Toast.makeText(getContext(), "Something went wrong, please try again", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(MainActivity.mainActivity, "Something went wrong, please try again", Toast.LENGTH_SHORT).show();
                             }
                         } else {
-                            Toast.makeText(getContext(), "This username already exists", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(MainActivity.mainActivity, "This username already exists", Toast.LENGTH_SHORT).show();
                             chooseUsernameAlert(idToken);
                         }
                     } else if (booleanMessage.getDataType() == ErrorWrapper.class) {
-                        Toast.makeText(getContext(), ((ErrorWrapper) booleanMessage.getData()).getMessage(), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(MainActivity.mainActivity, ((ErrorWrapper) booleanMessage.getData()).getMessage(), Toast.LENGTH_SHORT).show();
                     } else {
-                        Toast.makeText(getContext(), "Something went wrong, please try again", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(MainActivity.mainActivity, "Something went wrong, please try again", Toast.LENGTH_SHORT).show();
                     }
 
 
@@ -359,7 +362,7 @@ public class LoginFragment extends Fragment {
                 });
 
             **/
-                sendTokenToServer();
+                sendTokenToServer(false);
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
@@ -379,7 +382,7 @@ public class LoginFragment extends Fragment {
                         if (task.isSuccessful()) {
                             // Sign in success, update UI with the signed-in user's information
                             Log.d(TAG, "signInWithCredential:success");
-                            sendTokenToServer();
+                            sendTokenToServer(false);
                             /**
                             FirebaseUser user = mAuth.getCurrentUser();
                             FirebaseDatabase.getInstance("https://polly-abdd4-default-rtdb.europe-west1.firebasedatabase.app/").getReference("Users").addValueEventListener(new ValueEventListener() {
