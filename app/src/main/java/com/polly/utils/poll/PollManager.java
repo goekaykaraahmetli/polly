@@ -5,6 +5,7 @@ import com.polly.utils.Area;
 import com.polly.utils.command.GetMyPollsCommand;
 import com.polly.utils.command.GetParticipatedPollsCommand;
 import com.polly.utils.command.poll.GetPollResultsCommand;
+import com.polly.utils.command.poll.VoteCommand;
 import com.polly.utils.wrapper.ErrorWrapper;
 import com.polly.utils.wrapper.Message;
 import com.polly.utils.command.poll.GetPollOptionsCommand;
