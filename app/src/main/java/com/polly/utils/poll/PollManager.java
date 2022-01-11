@@ -11,7 +11,6 @@ import com.polly.utils.command.poll.GetPollOptionsCommand;
 import com.polly.utils.wrapper.PollListWrapper;
 import com.polly.utils.wrapper.PollOptionsWrapper;
 import com.polly.utils.wrapper.PollResultsWrapper;
-import com.polly.utils.command.poll.VoteCommand;
 import com.polly.utils.command.poll.create.CreateCustomPollCommand;
 import com.polly.utils.command.poll.create.CreateGeofencePollCommand;
 import com.polly.utils.command.poll.create.CreatePrivatePollCommand;
@@ -21,7 +20,6 @@ import com.polly.utils.communicator.ResponseCommunicator;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Map;
 
 public class PollManager {
     private static ResponseCommunicator communicator = initialiseCommunicator();

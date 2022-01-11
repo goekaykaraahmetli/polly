@@ -22,9 +22,9 @@ import java.util.TreeMap;
 
 import com.polly.config.Config;
 import com.polly.utils.Area;
+import com.polly.utils.Location;
 import com.polly.utils.command.GetMyPollsCommand;
 import com.polly.utils.command.GetParticipatedPollsCommand;
-import com.polly.utils.command.user.GetUsernameCommand;
 import com.polly.utils.command.poll.GetPollOptionsCommand;
 import com.polly.utils.command.poll.GetPollResultsCommand;
 import com.polly.utils.command.poll.RegisterPollChangeListenerCommand;
@@ -36,6 +36,7 @@ import com.polly.utils.command.poll.create.CreatePrivatePollCommand;
 import com.polly.utils.command.poll.create.CreatePublicPollCommand;
 import com.polly.utils.command.user.FindUsersCommand;
 import com.polly.utils.command.user.GetMyUsergroupsCommand;
+import com.polly.utils.command.user.GetUsernameCommand;
 import com.polly.utils.command.user.IsUsernameAvailableCommand;
 import com.polly.utils.command.user.LoginCommand;
 import com.polly.utils.command.user.RegisterCommand;
@@ -201,6 +202,8 @@ public class DataStreamManager {
 			data = readCreateCustomPollCommand();
 		else if(dataType.equals(GetUsernameCommand.class))
 			data = readGetUsernameCommand();
+		else if(dataType.equals(Location.class))
+			data = readLocation();
 			
 			// default type:
 		else
@@ -399,7 +402,8 @@ public class DataStreamManager {
 			writeCreateCustomPollCommand((CreateCustomPollCommand) data);
 		else if(dataType.equals(GetUsernameCommand.class))
 			writeGetUsernameCommand((GetUsernameCommand) data);
-		
+		else if(dataType.equals(Location.class))
+			writeLocation((Location) data);
 			// default type:
 		else
 			writeString((String) data);
@@ -587,12 +591,19 @@ public class DataStreamManager {
 	
 	// own read/write methods
 	private void writeVoteCommand(VoteCommand data) throws IOException {
+		boolean locationExists = data.getLocation() != null;
+		writeBoolean(locationExists);
+		
 		writeLong(data.getId());
 		writeString(data.getOption());
+		if(locationExists)
+			writeLocation(data.getLocation());
 	}
 	
 	private VoteCommand readVoteCommand() throws IOException{
-		return new VoteCommand(readLong(), readString());
+		if(readBoolean())
+			return new VoteCommand(readLong(), readString());
+		return new VoteCommand(readLong(), readString(), readLocation());
 	}
 	
 	private void writeRegisterPollChangeListenerCommand(RegisterPollChangeListenerCommand data) throws IOException{
@@ -1036,5 +1047,14 @@ public class DataStreamManager {
 	
 	private GetUsernameCommand readGetUsernameCommand() throws IOException {
 		return new GetUsernameCommand();
+	}
+	
+	private void writeLocation(Location data) throws IOException {
+		writeDouble(data.getLatitude());
+		writeDouble(data.getLongitude());
+	}
+	
+	private Location readLocation() throws IOException {
+		return new Location(readDouble(), readDouble());
 	}
 }
