@@ -211,15 +211,15 @@ public class PolloptionFragment extends Fragment {
                 pollyRoomInfo.setVisibility(View.GONE);
                 datePicker.setVisibility(View.VISIBLE);
                 sendQRviaEmail.setVisibility(View.GONE);
-                if(saving.getCanVoteList() != null){
+                if(saving.getCanVoteList() != null && !saving.getCanVoteList().isEmpty()){
                     votingCandidatesList.setText(saving.getCanVoteList().get(0).toString() + ", ...");
-                    if(saving.getCanVoteList().get(1) != null){
+                    if(saving.getCanVoteList().get(1) != null && !(saving.getCanVoteList().size() < 3)){
                         votingCandidatesList.setText(saving.getCanVoteList().get(0).toString() + saving.getCanVoteList().get(0).toString() + ", ...");
                     }
                 }
-                if(saving.getCanSeeAndVoteList() != null){
+                if(saving.getCanSeeAndVoteList() != null && !saving.getCanSeeAndVoteList().isEmpty()){
                     observingCandidatesList.setText(saving.getCanSeeAndVoteList().get(0) + ", ...");
-                    if(saving.getCanSeeAndVoteList().get(1) != null){
+                    if(saving.getCanSeeAndVoteList().get(1) != null && !(saving.getCanSeeAndVoteList().size() < 3)){
                         observingCandidatesList.setText(saving.getCanSeeAndVoteList().get(0) + saving.getCanSeeAndVoteList().get(1) + ", ...");
                     }
                 }
