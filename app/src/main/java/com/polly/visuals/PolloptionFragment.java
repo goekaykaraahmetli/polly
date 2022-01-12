@@ -345,7 +345,7 @@ public class PolloptionFragment extends Fragment {
                     }
                 }
                 if(!dropDownMenu.getText().toString().equals("POLLYROOM")){
-                    if(timeDiffInString(getDifferenceInMS(convertToDate(LocalDateTime.now(ZoneId.of("Europe/Berlin"))), convertToDate(LocalDateTime.of(localDate, localTime))))){
+                    if(timeDiffInString(getDifferenceInMS(convertToDate(LocalDateTime.now(ZoneId.of("Europe/Berlin"))), convertToDate(LocalDateTime.of(saving.getLocalDate(), saving.getLocalTime()))))){
                         Toast.makeText(getActivity(), "Polls must only last up to 1 year", Toast.LENGTH_SHORT).show();
                         return;
                     }
