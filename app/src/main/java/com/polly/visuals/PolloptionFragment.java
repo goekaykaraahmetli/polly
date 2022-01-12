@@ -325,7 +325,7 @@ public class PolloptionFragment extends Fragment {
                     case "POLLYROOM":
                         EditText participants = (EditText) root.findViewById(R.id.PollyRoomNumber);
                         if(!participants.getText().toString().equals("")){
-                            int numberOfParticipants = Integer.parseInt(participants.getText().toString());
+                            numberOfParticipants = Integer.parseInt(participants.getText().toString());
                             saving.setNumberOfParticipants(numberOfParticipants);
                         }else{
                             Toast.makeText(getActivity(), "Please enter number of Participants", Toast.LENGTH_SHORT).show();
