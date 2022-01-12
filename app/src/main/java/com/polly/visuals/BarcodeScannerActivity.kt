@@ -5,7 +5,9 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Color
 import android.os.Bundle
+import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.camera.core.CameraSelector
@@ -59,7 +61,10 @@ class BarcodeScannerActivity : AppCompatActivity() {
         addContentView(barcodeBoxView, ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT))
 
         checkCameraPermission()
-
+        var button = findViewById<Button>(R.id.buttonRoom)
+        button.setOnClickListener {
+            Toast.makeText(this, "TEST", Toast.LENGTH_SHORT).show()
+    }
     }
 
 
