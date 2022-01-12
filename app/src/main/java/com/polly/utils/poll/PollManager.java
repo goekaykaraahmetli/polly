@@ -80,6 +80,7 @@ public class PollManager {
 
     public static boolean vote(long id, String option) throws IOException {
         Message response = communicator.sendWithResponse(Config.serverCommunicationId, new VoteCommand(id, option));
+        System.err.println("Got response for vote!");
         if(response.getDataType().equals(Boolean.class))
             return (boolean) response.getData();
         if(response.getDataType() == ErrorWrapper.class)

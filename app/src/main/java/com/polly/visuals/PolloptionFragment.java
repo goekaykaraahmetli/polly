@@ -47,6 +47,7 @@ import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -312,7 +313,7 @@ public class PolloptionFragment extends Fragment {
                 }
                 if(!dropDownMenu.getText().toString().equals("POLLYROOM")){
                     LocalDateTime localDateTime = LocalDateTime.of(saving.getLocalDate(), saving.getLocalTime());
-                    if(!(test.getText().toString().contains("-") && test.getText().toString().contains(":")) || localDateTime.isBefore(LocalDateTime.now())){
+                    if(!(test.getText().toString().contains("-") && test.getText().toString().contains(":")) || localDateTime.isBefore(LocalDateTime.now(ZoneId.of("Europe/Berlin")))){
                         Toast.makeText(getActivity(), "Please choose a valid Expiration date", Toast.LENGTH_SHORT).show();
                         return;
                     }

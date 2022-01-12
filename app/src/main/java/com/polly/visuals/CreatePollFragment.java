@@ -423,23 +423,6 @@ public class CreatePollFragment extends Fragment {
 
             }
         });
-        System.out.println(getDifferenceInMS(convertToDate(LocalDateTime.now()), convertToDate(localDateTime)));
-        testDiff = getDifferenceInMS(convertToDate(LocalDateTime.now()), convertToDate(localDateTime));
-        TextView countDownView = (TextView) root.findViewById(R.id.testClock);
-
-        countDownTimer = new CountDownTimer(testDiff, 1000) {
-            @Override
-            public void onTick(long millisUntilFinished) {
-                testDiff = millisUntilFinished;
-                countDownView.setText(timeDiffInString(testDiff));
-            }
-
-            @Override
-            public void onFinish() {
-
-            }
-        }.start();
-
         return root;
     }
     public <Integer, Button>  Integer getKey(HashMap<Integer, Button> map, Button b) {
@@ -450,38 +433,5 @@ public class CreatePollFragment extends Fragment {
         }
         return null;
     }
-    public Date convertToDate(LocalDateTime data){
-        return Date.from(data.atZone(ZoneId.systemDefault()).toInstant());
-    }
-    public static long getDifferenceInMS(Date date1, Date date2){
-        if(date2.getTime() - date1.getTime() > 0)
-            return (date2.getTime() - date1.getTime());
-        else
-            return 0l;
-    }
-    public String timeDiffInString(long difference_In_Time){
-       System.out.println(difference_In_Time + "testtest");
-        long diffSeconds = TimeUnit
-                .MILLISECONDS
-                .toSeconds(difference_In_Time)
-                % 60;
-        long diffMinutes = TimeUnit
-                .MILLISECONDS
-                .toMinutes(difference_In_Time)
-                % 60;
-        long diffHours = TimeUnit
-                .MILLISECONDS
-                .toHours(difference_In_Time)
-                % 24;
-        long diffDays = TimeUnit
-                .MILLISECONDS
-                .toDays(difference_In_Time)
-                % 365;
-        //long diffMonths = (long) (difference_In_Time / (60 * 60 * 1000 * 24 * 30.41666666));
-        long diffYears = TimeUnit
-                .MILLISECONDS
-                .toDays(difference_In_Time)
-                / 365l;
-        return diffYears + " y, " + diffDays + " d  " + diffHours + " h: " + diffMinutes + " m: " + diffSeconds + " s";
-    }
+
 }

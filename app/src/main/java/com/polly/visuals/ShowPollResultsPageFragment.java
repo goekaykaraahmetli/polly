@@ -2,11 +2,13 @@ package com.polly.visuals;
 
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.provider.MediaStore;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -32,15 +34,21 @@ import com.polly.utils.wrapper.Message;
 import com.polly.utils.wrapper.PollResultsWrapper;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.concurrent.TimeUnit;
 
 public class ShowPollResultsPageFragment extends Fragment {
     private PieChart pieChart;
     private ImageView qrCode;
     static PollResultsWrapper pollResults;
     static Long id;
+    private long testDiff;
     private Communicator communicator = initialiseCommunicator();
     private boolean hasRunningPollChangeListener = false;
+    private CountDownTimer countDownTimer;
 
     SavingClass saving;
 
@@ -76,6 +84,23 @@ public class ShowPollResultsPageFragment extends Fragment {
         if(pollResults != null) {
             showPoll(root);
         }
+        LocalDateTime localDateTime = pollResults.getBasicPollInformation().getExpirationTime();
+        testDiff = getDifferenceInMS(convertToDate(LocalDateTime.now(ZoneId.of("Europe/Berlin"))), convertToDate(localDateTime));
+        TextView countDownView = (TextView) root.findViewById(R.id.expirationDateTimer);
+        String expirationDate = "Expires in: ";
+
+        countDownTimer = new CountDownTimer(testDiff, 1000) {
+            @Override
+            public void onTick(long millisUntilFinished) {
+                testDiff = millisUntilFinished;
+                countDownView.setText(expirationDate + timeDiffInString(testDiff));
+            }
+
+            @Override
+            public void onFinish() {
+                countDownView.setText("Poll is expired");
+            }
+        }.start();
         return root;
     }
 
@@ -139,5 +164,29 @@ public class ShowPollResultsPageFragment extends Fragment {
             pieChart.setUsePercentValues(true);
             pieChart.animate();
             pieChart.setVisibility(View.VISIBLE);
+    }
+    public Date convertToDate(LocalDateTime data){
+        return Date.from(data.atZone(ZoneId.systemDefault()).toInstant());
+    }
+    public static long getDifferenceInMS(Date date1, Date date2){
+        if(date2.getTime() - date1.getTime() > 0)
+            return (date2.getTime() - date1.getTime());
+        else
+            return 0l;
+    }
+    public String timeDiffInString(long difference_In_Time){
+        long diffMinutes = TimeUnit
+                .MILLISECONDS
+                .toMinutes(difference_In_Time)
+                % 60;
+        long diffHours = TimeUnit
+                .MILLISECONDS
+                .toHours(difference_In_Time)
+                % 24;
+        long diffDays = TimeUnit
+                .MILLISECONDS
+                .toDays(difference_In_Time)
+                % 365;
+        return diffDays + "d " + diffHours + "h : " + diffMinutes + "m";
     }
 }
