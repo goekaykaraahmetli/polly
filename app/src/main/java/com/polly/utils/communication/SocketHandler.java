@@ -21,10 +21,15 @@ public class SocketHandler {
 	private DataStreamManager dataStreamManager;
 
 	public SocketHandler(String ip, int port) throws IOException, FailedKeyGenerationException, InvalidKeySpecException, NoSuchAlgorithmException, FailedDecryptionException, FailedEncryptionException {
-		connect(ip, port);
+		connect(ip, port, 7500);
 		init();
 	}
-	
+
+	public SocketHandler(String ip, int port, int timeout) throws IOException, FailedKeyGenerationException, InvalidKeySpecException, NoSuchAlgorithmException, FailedDecryptionException, FailedEncryptionException {
+		connect(ip, port, timeout);
+		init();
+	}
+
 	private void init() throws IOException, FailedKeyGenerationException, InvalidKeySpecException, NoSuchAlgorithmException, FailedEncryptionException, FailedDecryptionException {
 		dataStreamManager = new DataStreamManager(socket.getInputStream(), socket.getOutputStream());
         inputHandler = new InputHandler(dataStreamManager);
@@ -46,7 +51,7 @@ public class SocketHandler {
 		outputHandler.stopHandler();
 	}
 	
-	private void connect(String ip, int port) throws IOException {
+	private void connect(String ip, int port, int timeout) throws IOException {
 		AtomicBoolean connecting = new AtomicBoolean(true);
 		new Thread(() -> {
 			new Timer().schedule(new TimerTask() {
@@ -54,7 +59,7 @@ public class SocketHandler {
 				public void run() {
 					connecting.set(false);
 				}
-			}, 7500);
+			}, timeout);
 
 
 			try {
@@ -73,7 +78,8 @@ public class SocketHandler {
 
 		//connect(ip, port, 0);
     }
-	
+
+    /**
 	private void connect(String ip, int port, int tryCounter) throws IOException {
 		if(tryCounter > 1) {
 			throw new IOException("could not connect to the given server!");
@@ -94,7 +100,7 @@ public class SocketHandler {
         if(socket == null){
             connect(ip, port, tryCounter+1);
         }
-    }
+    }*/
 	
 	public <T> boolean send(long sender, long receiver, long responseId, T data) {
 		return outputHandler.send(sender, receiver, responseId, data);
