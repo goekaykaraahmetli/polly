@@ -274,8 +274,6 @@ public class CreatePollFragment extends Fragment {
         });
 
 
-
-
         Button addOption = (Button) root.findViewById(R.id.addOption);
 
         addOption.setOnClickListener(new View.OnClickListener() {

@@ -329,6 +329,7 @@ public class PolloptionFragment extends Fragment {
                             saving.setNumberOfParticipants(numberOfParticipants);
                         }else{
                             Toast.makeText(getActivity(), "Please enter number of Participants", Toast.LENGTH_SHORT).show();
+                            return;
                         }
                 }
                 saving.setDescription(description.getText());
