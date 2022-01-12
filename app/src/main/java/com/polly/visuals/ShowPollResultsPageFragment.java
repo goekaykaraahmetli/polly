@@ -1,18 +1,30 @@
 package com.polly.visuals;
 
+import android.Manifest;
+import android.app.Dialog;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.IntentSender;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.os.Looper;
 import android.provider.MediaStore;
+import android.provider.Settings;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
+import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
@@ -23,8 +35,38 @@ import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
 import com.github.mikephil.charting.utils.ColorTemplate;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GoogleApiAvailability;
+import com.google.android.gms.common.api.ApiException;
+import com.google.android.gms.common.api.ResolvableApiException;
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationCallback;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationResult;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.location.LocationSettingsRequest;
+import com.google.android.gms.location.LocationSettingsResponse;
+import com.google.android.gms.location.LocationSettingsStatusCodes;
+import com.google.android.gms.maps.CameraUpdate;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.CircleOptions;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.karumi.dexter.Dexter;
+import com.karumi.dexter.PermissionToken;
+import com.karumi.dexter.listener.PermissionDeniedResponse;
+import com.karumi.dexter.listener.PermissionGrantedResponse;
+import com.karumi.dexter.listener.PermissionRequest;
+import com.karumi.dexter.listener.single.PermissionListener;
 import com.polly.R;
 import com.polly.config.Config;
+import com.polly.utils.Location;
 import com.polly.utils.QRCode;
 import com.polly.utils.command.poll.RegisterPollChangeListenerCommand;
 import com.polly.utils.command.poll.RemovePollChangeListenerCommand;
@@ -41,7 +83,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
-public class ShowPollResultsPageFragment extends Fragment {
+public class ShowPollResultsPageFragment extends Fragment implements OnMapReadyCallback{
     private PieChart pieChart;
     private ImageView qrCode;
     static PollResultsWrapper pollResults;
@@ -50,6 +92,14 @@ public class ShowPollResultsPageFragment extends Fragment {
     private Communicator communicator = initialiseCommunicator();
     private boolean hasRunningPollChangeListener = false;
     private CountDownTimer countDownTimer;
+    private boolean isGeofencePoll;
+
+    private GoogleMap googleMap;
+    private boolean alertActive;
+    private boolean locationPermissionGranted;
+
+    private LocationRequest locationRequest;
+    private FusedLocationProviderClient fusedLocationProviderClient;
 
     SavingClass saving;
 
@@ -82,9 +132,12 @@ public class ShowPollResultsPageFragment extends Fragment {
         pieChart = (PieChart) root.findViewById(R.id.pieChart);
         pieChart.setVisibility(View.GONE);
 
-        if(pollResults != null) {
-            showPoll(root);
+        if(id < 0) {
+            isGeofencePoll = true;
+            createForGeofencePoll(root);
         }
+
+        showPoll(root);
         LocalDateTime localDateTime = pollResults.getBasicPollInformation().getExpirationTime();
         testDiff = getDifferenceInMS(convertToDate(LocalDateTime.now(ZoneId.of("Europe/Berlin"))), convertToDate(localDateTime));
         TextView countDownView = (TextView) root.findViewById(R.id.expirationDateTimer);
@@ -198,5 +251,201 @@ public class ShowPollResultsPageFragment extends Fragment {
                 .toDays(difference_In_Time)
                 % 365;
         return diffDays + "d " + diffHours + "h : " + diffMinutes + "m";
+    }
+
+    private void createForGeofencePoll(View view) {
+        if (!checkGooglePlayServices()) {
+            Toast.makeText(getContext(), "No Google Play Services Available!", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        if(!locationPermissionGranted)
+            checkLocationPermission();
+
+
+        SupportMapFragment supportMapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.fragmentMapShowPoll);
+        view.findViewById(R.id.fragmentMapShowPoll).setVisibility(View.VISIBLE);
+        supportMapFragment.getMapAsync(this);
+
+        checkGps();
+    }
+
+    private boolean checkGooglePlayServices() {
+        GoogleApiAvailability googleApiAvailability = GoogleApiAvailability.getInstance();
+        int result = googleApiAvailability.isGooglePlayServicesAvailable(getContext());
+        if (result == ConnectionResult.SUCCESS)
+            return true;
+        else if (googleApiAvailability.isUserResolvableError(result)) {
+            Dialog dialog = googleApiAvailability.getErrorDialog(getActivity(), result, 201, new DialogInterface.OnCancelListener() {
+                @Override
+                public void onCancel(DialogInterface dialog) {
+                    Toast.makeText(getContext(), "User canceled dialog", Toast.LENGTH_SHORT).show();
+                }
+            });
+            dialog.show();
+        }
+        return false;
+    }
+
+    private void checkLocationPermission() {
+        System.out.println("checking location permission");
+
+        Dexter.withContext(getContext()).withPermission(Manifest.permission.ACCESS_FINE_LOCATION).withListener(new PermissionListener() {
+            @Override
+            public void onPermissionGranted(PermissionGrantedResponse permissionGrantedResponse) {
+                System.out.println("permission granted");
+                locationPermissionGranted = true;
+            }
+
+            @Override
+            public void onPermissionDenied(PermissionDeniedResponse permissionDeniedResponse) {
+                System.out.println("permission denied");
+
+                onLocationPermissionDenied();
+            }
+
+            @Override
+            public void onPermissionRationaleShouldBeShown(PermissionRequest permissionRequest, PermissionToken permissionToken) {
+                System.out.println("permission rationale should be shown");
+                permissionToken.continuePermissionRequest();
+            }
+        }).check();
+    }
+
+    private void initMap(LatLng center, double radius) {
+        googleMap.getUiSettings().setZoomControlsEnabled(true);
+        googleMap.getUiSettings().setCompassEnabled(true);
+        googleMap.getUiSettings().setMyLocationButtonEnabled(true);
+
+        if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            Toast.makeText(getContext(), "Please grant permission to use your locaiton!", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        googleMap.setMyLocationEnabled(true);
+
+        googleMap.clear();
+
+        CircleOptions circle = new CircleOptions();
+        circle.center(center);
+        circle.radius(radius);
+        circle.strokeColor(Color.argb(255, 100, 255, 255));
+        circle.fillColor(Color.argb(100, 100, 255, 255));
+
+        MarkerOptions markerOptions = new MarkerOptions();
+        markerOptions.title("Poll Area");
+        markerOptions.position(center);
+
+        googleMap.addMarker(markerOptions);
+        googleMap.addCircle(circle);
+
+        moveCameraToCurrentLocation();
+    }
+
+    private void checkGps() {
+        locationRequest = LocationRequest.create();
+        locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+
+        LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder().addLocationRequest(locationRequest).setAlwaysShow(true);
+
+        Task<LocationSettingsResponse> locationSettingsResponseTask = LocationServices.getSettingsClient(getContext()).checkLocationSettings(builder.build());
+
+        locationSettingsResponseTask.addOnCompleteListener(new OnCompleteListener<LocationSettingsResponse>() {
+            @Override
+            public void onComplete(@NonNull Task<LocationSettingsResponse> task) {
+                try {
+                    LocationSettingsResponse response = task.getResult(ApiException.class);
+                } catch (ApiException e) {
+                    if (e.getStatusCode() == LocationSettingsStatusCodes.RESOLUTION_REQUIRED) {
+                        ResolvableApiException resolvableApiException = (ResolvableApiException) e;
+
+                        try {
+                            resolvableApiException.startResolutionForResult(getActivity(), 101);
+                        } catch (IntentSender.SendIntentException sendIntentException) {
+                            sendIntentException.printStackTrace();
+                        }
+                    }
+
+                    if (e.getStatusCode() == LocationSettingsStatusCodes.SETTINGS_CHANGE_UNAVAILABLE) {
+                        Toast.makeText(getContext(), "No Gps Available", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            }
+        });
+    }
+
+    private void moveCameraToCurrentLocation() {
+        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(getActivity());
+        if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            return;
+        }
+
+        fusedLocationProviderClient.requestLocationUpdates(locationRequest, new LocationCallback() {
+            @Override
+            public void onLocationResult(@NonNull LocationResult locationResult) {
+                super.onLocationResult(locationResult);
+
+                Location usersLocation = new Location(locationResult.getLastLocation().getLatitude(), locationResult.getLastLocation().getLongitude());
+                CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(new LatLng(usersLocation.getLatitude(), usersLocation.getLongitude()), 5);
+                googleMap.animateCamera(cameraUpdate);
+            }
+        }, Looper.myLooper());
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        if(isGeofencePoll) {
+            if (!alertActive)
+                checkLocationPermission();
+
+            if (locationPermissionGranted) {
+                SupportMapFragment supportMapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.fragmentMap);
+                supportMapFragment.getMapAsync(this);
+
+                checkGps();
+            }
+        }
+    }
+
+    private void onLocationPermissionDenied() {
+        alertActive = true;
+
+        AlertDialog.Builder alert = new AlertDialog.Builder(getContext());
+        alert.setTitle("Grant permission");
+        alert.setMessage("Do you want to grant LOCATION_ACCESS_PERMISSION?");
+        alert.setPositiveButton("YES", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                Intent intent = new Intent();
+                intent.setAction(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+                Uri uri = Uri.fromParts("package", MainActivity.mainActivity.getPackageName(), "");
+                intent.setData(uri);
+                startActivity(intent);
+                alertActive = false;
+            }
+        });
+        alert.setNegativeButton("NO", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                alertActive = false;
+                Navigation.findNavController(getActivity(), R.id.nav_host_fragment).navigate(R.id.polloptionFragment);
+            }
+        });
+        alert.create().show();
+    }
+
+    @Override
+    public void onMapReady(@NonNull GoogleMap googleMap) {
+        if(!isGeofencePoll)
+            return;
+
+
+        this.googleMap = googleMap;
+        //TODO
+        LatLng center = new LatLng(0,0);
+        double radius = 1000;
+
+        initMap(center, radius);
     }
 }

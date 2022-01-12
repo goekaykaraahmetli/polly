@@ -166,7 +166,7 @@ public class ChooseAreaFragment extends Fragment implements OnMapReadyCallback {
         googleMap.getUiSettings().setMyLocationButtonEnabled(true);
 
         if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            Toast.makeText(getContext(), "Please grant permission to user your locaiton!", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), "Please grant permission to use your locaiton!", Toast.LENGTH_SHORT).show();
             return;
         }
         googleMap.setMyLocationEnabled(true);
