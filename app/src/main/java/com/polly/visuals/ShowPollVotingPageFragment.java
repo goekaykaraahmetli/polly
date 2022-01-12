@@ -216,6 +216,13 @@ public class ShowPollVotingPageFragment extends Fragment {
                 if (message.getDataType().equals(PollOptionsWrapper.class)) {
                     PollOptionsWrapper updatePoll = (PollOptionsWrapper) message.getData();
                     updatePieChart(updatePoll);
+
+                    getActivity().runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            updatePieChart(updatePoll);
+                        }
+                    });
                 }
             }
         };
