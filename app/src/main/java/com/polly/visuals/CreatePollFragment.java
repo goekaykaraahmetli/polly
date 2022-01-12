@@ -302,8 +302,11 @@ public class CreatePollFragment extends Fragment {
                                     alert.create().show();
                                 }
                         }
-                        Toast.makeText(getActivity(), "Poll ID is: " + id, Toast.LENGTH_SHORT).show();
-                        saving.reset();
+                        if(!saving.getDropDownMenu().toString().equals("POLLYROOM")){
+                            Toast.makeText(getActivity(), "Poll ID is: " + id, Toast.LENGTH_SHORT).show();
+                            saving.reset();
+                        }
+
                     } catch (IOException e) {
                         e.printStackTrace();
                         Toast.makeText(getActivity(), "No connection to the server!", Toast.LENGTH_SHORT).show();
