@@ -29,6 +29,7 @@ import com.polly.utils.QRCode;
 import com.polly.utils.command.poll.RegisterPollChangeListenerCommand;
 import com.polly.utils.command.poll.RemovePollChangeListenerCommand;
 import com.polly.utils.communicator.Communicator;
+import com.polly.utils.communicator.CommunicatorManager;
 import com.polly.utils.poll.PollManager;
 import com.polly.utils.wrapper.Message;
 import com.polly.utils.wrapper.PollResultsWrapper;
@@ -126,7 +127,7 @@ public class ShowPollResultsPageFragment extends Fragment {
             }
 
     private Communicator initialiseCommunicator() {
-        return new Communicator() {
+        Communicator communicator = new Communicator() {
             @Override
             public void handleInput(Message message) {
                 System.out.println("ShowPollResultsPageFragment received message from type: " + message.getDataType().getName());
@@ -137,6 +138,8 @@ public class ShowPollResultsPageFragment extends Fragment {
                 }
             }
         };
+        communicator.start();
+        return communicator;
     }
 
 

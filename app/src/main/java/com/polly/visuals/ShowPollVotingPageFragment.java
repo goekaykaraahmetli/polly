@@ -36,6 +36,7 @@ import com.polly.utils.ShowPollPage;
 import com.polly.utils.command.poll.RegisterPollChangeListenerCommand;
 import com.polly.utils.command.poll.RemovePollChangeListenerCommand;
 import com.polly.utils.communicator.Communicator;
+import com.polly.utils.communicator.CommunicatorManager;
 import com.polly.utils.poll.PollManager;
 import com.polly.utils.wrapper.Message;
 import com.polly.utils.wrapper.PollOptionsWrapper;
@@ -208,7 +209,7 @@ public class ShowPollVotingPageFragment extends Fragment {
     }
 
     private Communicator initialiseCommunicator() {
-        return new Communicator() {
+        Communicator communicator = new Communicator() {
             @Override
             public void handleInput(Message message) {
                 System.out.println("ShowPollVotingPageFragment received message from type: " + message.getDataType().getName());
@@ -218,6 +219,8 @@ public class ShowPollVotingPageFragment extends Fragment {
                 }
             }
         };
+        communicator.start();
+        return communicator;
     }
 
 

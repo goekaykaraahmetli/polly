@@ -17,6 +17,18 @@ public abstract class Communicator{
         registerCommunicator();
     }
 
+    public void start() {
+        new Thread(() -> {
+            while(true) {
+                try {
+                    handleInput(getInput());
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        }).start();
+    }
+
     private void registerCommunicator() {
         CommunicatorManager.registerCommunicator(this);
     }
