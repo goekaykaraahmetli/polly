@@ -71,8 +71,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         switch(item.getItemId()){
             case R.id.nav_account:
-                //Navigation.findNavController(this, R.id.nav_host_fragment).navigate(R.id.accountFragment);
-                Navigation.findNavController(this, R.id.nav_host_fragment).navigate(R.id.chooseAreaFragment);
+                Navigation.findNavController(this, R.id.nav_host_fragment).navigate(R.id.accountFragment);
                 break;
             case R.id.nav_startpoll:
                 Navigation.findNavController(this, R.id.nav_host_fragment).navigate(R.id.polloptionFragment);
