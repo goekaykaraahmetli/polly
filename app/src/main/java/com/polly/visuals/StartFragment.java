@@ -24,8 +24,8 @@ public class StartFragment extends Fragment {
         root.findViewById(R.id.imageViewLogo).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
- //               Intent i = new Intent(getActivity(), p2pTest.class);
- //               startActivity(i);
+          //Intent i = new Intent(getActivity(), MainActivity2.class);
+            //  startActivity(i);
             }
         });
 

@@ -74,7 +74,6 @@ dependencies {
     implementation "androidx.camera:camera-lifecycle:$camerax_version"
     implementation "androidx.camera:camera-view:1.0.0-alpha28"
     //implementation "org.jetbrains.kotlin:kotlin-gradle-plugin:1.6.10"
-
 }
 apply plugin: 'com.android.application'
 apply plugin: 'com.google.gms.google-services'

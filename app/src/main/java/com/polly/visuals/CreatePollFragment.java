@@ -254,7 +254,8 @@ public class CreatePollFragment extends Fragment {
                                     alert.setNegativeButton("NO", new DialogInterface.OnClickListener() {
                                         @Override
                                         public void onClick(DialogInterface dialogInterface, int i) {
-
+                                            Intent intent = new Intent(getActivity(), BarcodeScannerActivity.class);
+                                            startActivity(intent);
                                         }
                                     });
                                     alert.create().show();
