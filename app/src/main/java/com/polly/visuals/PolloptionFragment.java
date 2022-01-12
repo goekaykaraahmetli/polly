@@ -338,17 +338,20 @@ public class PolloptionFragment extends Fragment {
                     return;
                 }
                 if(!dropDownMenu.getText().toString().equals("POLLYROOM")){
+                    if(saving.getLocalDate() == null || saving.getLocalTime() == null) {
+                        Toast.makeText(getActivity(), "Please choose a date and a time!", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
                     LocalDateTime localDateTime = LocalDateTime.of(saving.getLocalDate(), saving.getLocalTime());
                     if(!(test.getText().toString().contains("-") && test.getText().toString().contains(":")) || localDateTime.isBefore(LocalDateTime.now(ZoneId.of("Europe/Berlin")))){
                         Toast.makeText(getActivity(), "Please choose a valid Expiration date", Toast.LENGTH_SHORT).show();
                         return;
                     }
-                }
-                if(!dropDownMenu.getText().toString().equals("POLLYROOM")){
                     if(timeDiffInString(getDifferenceInMS(convertToDate(LocalDateTime.now(ZoneId.of("Europe/Berlin"))), convertToDate(LocalDateTime.of(saving.getLocalDate(), saving.getLocalTime()))))){
                         Toast.makeText(getActivity(), "Polls must only last up to 1 year", Toast.LENGTH_SHORT).show();
                         return;
                     }
+
                 }
                 switch(dropDownMenu.getText().toString()){
                     case "GEOFENCE":
