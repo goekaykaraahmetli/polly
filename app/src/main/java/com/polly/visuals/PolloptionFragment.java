@@ -336,6 +336,7 @@ public class PolloptionFragment extends Fragment {
                 saving.setPollname(Pollname.getText());
                 saving.setCalendarText(test.getText());
                 saving.setDropDownMenu(dropDownMenu.getText());
+                saving.setNumberOfParticipants(numberOfParticipants);
                 Navigation.findNavController(getActivity(), R.id.nav_host_fragment).navigate(R.id.createPollFragment);
             }
         });
