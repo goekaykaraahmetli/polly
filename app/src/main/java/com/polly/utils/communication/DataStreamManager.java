@@ -602,8 +602,8 @@ public class DataStreamManager {
 	
 	private VoteCommand readVoteCommand() throws IOException{
 		if(readBoolean())
-			return new VoteCommand(readLong(), readString());
-		return new VoteCommand(readLong(), readString(), readLocation());
+			return new VoteCommand(readLong(), readString(), readLocation());
+		return new VoteCommand(readLong(), readString());
 	}
 	
 	private void writeRegisterPollChangeListenerCommand(RegisterPollChangeListenerCommand data) throws IOException{

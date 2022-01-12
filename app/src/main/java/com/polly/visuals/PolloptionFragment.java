@@ -47,6 +47,7 @@ import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -312,7 +313,7 @@ public class PolloptionFragment extends Fragment {
                 }
                 if(!dropDownMenu.getText().toString().equals("POLLYROOM")){
                     LocalDateTime localDateTime = LocalDateTime.of(saving.getLocalDate(), saving.getLocalTime());
-                    if(!(test.getText().toString().contains("-") && test.getText().toString().contains(":")) || localDateTime.isBefore(LocalDateTime.now())){
+                    if(!(test.getText().toString().contains("-") && test.getText().toString().contains(":")) || localDateTime.isBefore(LocalDateTime.now(ZoneId.of("Europe/Berlin")))){
                         Toast.makeText(getActivity(), "Please choose a valid Expiration date", Toast.LENGTH_SHORT).show();
                         return;
                     }
@@ -324,16 +325,18 @@ public class PolloptionFragment extends Fragment {
                     case "POLLYROOM":
                         EditText participants = (EditText) root.findViewById(R.id.PollyRoomNumber);
                         if(!participants.getText().toString().equals("")){
-                            int numberOfParticipants = Integer.parseInt(participants.getText().toString());
+                            numberOfParticipants = Integer.parseInt(participants.getText().toString());
                             saving.setNumberOfParticipants(numberOfParticipants);
                         }else{
                             Toast.makeText(getActivity(), "Please enter number of Participants", Toast.LENGTH_SHORT).show();
+                            return;
                         }
                 }
                 saving.setDescription(description.getText());
                 saving.setPollname(Pollname.getText());
                 saving.setCalendarText(test.getText());
                 saving.setDropDownMenu(dropDownMenu.getText());
+                saving.setNumberOfParticipants(numberOfParticipants);
                 Navigation.findNavController(getActivity(), R.id.nav_host_fragment).navigate(R.id.createPollFragment);
             }
         });

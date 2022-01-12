@@ -63,19 +63,18 @@ class BarcodeScannerActivity : AppCompatActivity() {
     }
 
 
-    override fun onDestroy() {
-        super.onDestroy()
+    override fun onBackPressed() {
         cameraExecutor.shutdown()
         if (numberOfParticipants == votes1 + votes2 + votes3 + votes4) {
             val results = HashMap<String, Int>()
-            results.put(PolloptionFragment.answer1, votes1)
-            results.put(PolloptionFragment.answer2, votes2)
-            results.put(PolloptionFragment.answer3, votes3)
-            results.put(PolloptionFragment.answer4, votes4)
+            results.put(CreatePollFragment.answer1, votes1)
+            results.put(CreatePollFragment.answer2, votes2)
+            results.put(CreatePollFragment.answer3, votes3)
+            results.put(CreatePollFragment.answer4, votes4)
             val intent = Intent(this, DisplayQRCodePie::class.java).apply {
                 putExtra("THE_PIE", results)
                 putExtra("PARTICIPANTS", numberOfParticipants)
-                putExtra("DESCRIPTION", PolloptionFragment.name)
+                putExtra("DESCRIPTION", CreatePollFragment.name)
             }
             startActivity(intent)
         } else {

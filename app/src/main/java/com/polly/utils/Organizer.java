@@ -26,7 +26,9 @@ public class Organizer {
 		super();
 		while(!initialised);
 	}
-	
+	/*private static void sendNotifications(){
+
+	}*/
 	private static void createSocketHandler(){
 		new Thread(() -> {
 			try {
