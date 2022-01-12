@@ -5,13 +5,13 @@ import com.polly.utils.Area;
 import com.polly.utils.command.GetMyPollsCommand;
 import com.polly.utils.command.GetParticipatedPollsCommand;
 import com.polly.utils.command.poll.GetPollResultsCommand;
+import com.polly.utils.command.poll.VoteCommand;
 import com.polly.utils.wrapper.ErrorWrapper;
 import com.polly.utils.wrapper.Message;
 import com.polly.utils.command.poll.GetPollOptionsCommand;
 import com.polly.utils.wrapper.PollListWrapper;
 import com.polly.utils.wrapper.PollOptionsWrapper;
 import com.polly.utils.wrapper.PollResultsWrapper;
-import com.polly.utils.command.poll.VoteCommand;
 import com.polly.utils.command.poll.create.CreateCustomPollCommand;
 import com.polly.utils.command.poll.create.CreateGeofencePollCommand;
 import com.polly.utils.command.poll.create.CreatePrivatePollCommand;
@@ -21,7 +21,6 @@ import com.polly.utils.communicator.ResponseCommunicator;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Map;
 
 public class PollManager {
     private static ResponseCommunicator communicator = initialiseCommunicator();
@@ -81,6 +80,7 @@ public class PollManager {
 
     public static boolean vote(long id, String option) throws IOException {
         Message response = communicator.sendWithResponse(Config.serverCommunicationId, new VoteCommand(id, option));
+        System.err.println("Got response for vote!");
         if(response.getDataType().equals(Boolean.class))
             return (boolean) response.getData();
         if(response.getDataType() == ErrorWrapper.class)
