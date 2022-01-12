@@ -1,13 +1,18 @@
 package com.polly.visuals;
+import com.google.android.material.textfield.TextInputEditText;
 import com.polly.utils.Area;
+import com.polly.utils.QRCode;
 import com.polly.utils.poll.PollDescription;
 import com.polly.utils.poll.PollManager;
 
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.provider.MediaStore;
 import android.text.Editable;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -30,6 +35,7 @@ import com.polly.R;
 
 import org.w3c.dom.Text;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -198,6 +204,8 @@ public class CreatePollFragment extends Fragment {
         if(saving.getLocalDate() != null && saving.getLocalTime() != null){
             localDateTime = LocalDateTime.of(saving.getLocalDate(), saving.getLocalTime());
         }
+
+
         createPollBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -249,8 +257,39 @@ public class CreatePollFragment extends Fragment {
                                     alert.setPositiveButton("YES", new DialogInterface.OnClickListener() {
                                         @Override
                                         public void onClick(DialogInterface dialogInterface, int i) {
-                                            Intent intent = new Intent(getActivity(), BarcodeScannerActivity.class);
-                                            startActivity(intent);
+                                            AlertDialog.Builder alert = new AlertDialog.Builder(getContext());
+                                            alert.setTitle("Enter the E-Mail address you want the QR-Codes sent to");
+                                            alert.setMessage("Please enter an E-Mail");
+                                            EditText usernameInput = new EditText(getContext());
+                                            alert.setView(usernameInput);
+                                            alert.setPositiveButton("Enter", new DialogInterface.OnClickListener() {
+                                                @Override
+                                                public void onClick(DialogInterface dialog, int which) {
+                                                    ArrayList<Uri> uris = new ArrayList<>();
+                                                    Intent emailIntent = new Intent(Intent.ACTION_SEND_MULTIPLE);
+                                                    // set the type to 'email'
+                                                    emailIntent.setType("vnd.android.cursor.dir/email");
+                                                    String to[] = {"willimowski4@gmail.com"};
+                                                    emailIntent.putExtra(Intent.EXTRA_EMAIL, to);
+                                                    emailIntent .putExtra(Intent.EXTRA_SUBJECT, "Subject");
+                                                    for(int i = 1; i <= optionCounter; i++){
+                                                        for(int j = 97; j <= 96 + numberOfParticipants; j++){
+                                                            Bitmap inImage = QRCode.QRCode("" + i + (char) j);
+                                                            ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+                                                            inImage.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
+                                                            String path = MediaStore.Images.Media.insertImage(getContext().getContentResolver(), inImage, "Answer_" + i + "_Participant_"+ (j-96), null);
+                                                            Uri uri = Uri.parse(path);
+                                                            uris.add(uri);
+
+                                                        }
+                                                    }
+                                                    // the attachment
+                                                    emailIntent.putParcelableArrayListExtra(Intent.EXTRA_STREAM, uris);
+                                                    startActivity(Intent.createChooser(emailIntent , "Send email..."));
+                                                }
+
+                                            });
+                                            alert.show();
                                         }
                                     });
                                     alert.setNegativeButton("NO", new DialogInterface.OnClickListener() {
