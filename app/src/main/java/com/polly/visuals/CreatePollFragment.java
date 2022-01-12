@@ -305,6 +305,7 @@ public class CreatePollFragment extends Fragment {
                                         }
                                     });
                                     alert.create().show();
+                                    break;
                                 }
                         }
                         if(!saving.getDropDownMenu().toString().equals("POLLYROOM")){
