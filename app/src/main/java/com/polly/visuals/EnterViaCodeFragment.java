@@ -30,7 +30,6 @@ public class EnterViaCodeFragment extends Fragment {
         View root = inflater.inflate(R.layout.enter_via_code, container, false);
         Button enterPollBtn = (Button) root.findViewById(R.id.enterpollbtn);
         EditText codeInput = (EditText) root.findViewById(R.id.polly_code);
-        codeInput.setInputType(InputType.TYPE_CLASS_NUMBER);
 
         enterPollBtn.setOnClickListener(new View.OnClickListener() {
             @Override
