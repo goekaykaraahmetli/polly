@@ -72,11 +72,12 @@ public class CreatePollFragment extends Fragment {
         super.onCreate(savedInstanceState);
         View root = inflater.inflate(R.layout.activity_create_poll, container, false);
         SavingClass saving = new ViewModelProvider(getActivity()).get(SavingClass.class);
-        if(saving.getDropDownMenu() != null) {
+        if(saving.getDropDownMenu() == null){
+            Navigation.findNavController(getActivity(), R.id.nav_host_fragment).navigate(R.id.polloptionFragment);
+        }
             if(saving.getDropDownMenu().toString().equals("POLLYROOM")){
                 optionMax = 4;
             }
-        }
         Button createPollBtn = (Button) root.findViewById(R.id.createPollBtn);
         TextView pollName = (TextView) root.findViewById(R.id.PollName);
         pollName.setText(saving.getPollname());
