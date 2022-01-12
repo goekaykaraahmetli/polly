@@ -359,6 +359,7 @@ public class PolloptionFragment extends Fragment {
                             Toast.makeText(getActivity(), "Please set a Geofence Area", Toast.LENGTH_SHORT).show();
                             return;
                         }
+                        break;
                     case "POLLYROOM":
                         EditText participants = (EditText) root.findViewById(R.id.PollyRoomNumber);
                         if(!participants.getText().toString().equals("")){
@@ -368,6 +369,7 @@ public class PolloptionFragment extends Fragment {
                             Toast.makeText(getActivity(), "Please enter number of Participants", Toast.LENGTH_SHORT).show();
                             return;
                         }
+                        break;
                 }
                 saving.setDescription(description.getText());
                 saving.setPollname(Pollname.getText());
