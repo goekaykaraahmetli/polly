@@ -23,6 +23,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.Navigation;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
@@ -63,7 +65,7 @@ public class ChooseAreaFragment extends Fragment implements OnMapReadyCallback {
     private FusedLocationProviderClient fusedLocationProviderClient;
     private SeekBar seekBar;
     private TextView textView;
-
+    private SavingClass saving;
     private LatLng markerLocation;
 
 
@@ -72,7 +74,7 @@ public class ChooseAreaFragment extends Fragment implements OnMapReadyCallback {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_choosearea, container, false);
-
+        saving = new ViewModelProvider(getActivity()).get(SavingClass.class);
         seekBar = root.findViewById(R.id.mapSeekBar);
         textView = root.findViewById(R.id.mapTextView);
         Button button = root.findViewById(R.id.mapButton);
@@ -241,7 +243,8 @@ public class ChooseAreaFragment extends Fragment implements OnMapReadyCallback {
     private void saveArea() {
         double radius = seekBar.getProgress() * 1000;
         Area area = new Area(markerLocation.latitude, markerLocation.longitude, radius);
-
+        saving.setArea(area);
+        Navigation.findNavController(getActivity(), R.id.nav_host_fragment).navigate(R.id.polloptionFragment);
         // save area to savings
         // navigate back to create poll
     }

@@ -180,17 +180,18 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Radius"
-            app:endIconMode="clear_text"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/optionLayout"
             app:startIconDrawable="@drawable/ic_geofence">
 
-            <com.google.android.material.textfield.TextInputEditText
+            <AutoCompleteTextView
                 android:id="@+id/geofencing"
                 android:layout_width="match_parent"
+                android:focusable="false"
                 android:layout_height="wrap_content"
-                android:inputType="numberDecimal" />
+                android:inputType="none"
+                android:textSize="14sp"/>
         </com.google.android.material.textfield.TextInputLayout>
 
         <TextView

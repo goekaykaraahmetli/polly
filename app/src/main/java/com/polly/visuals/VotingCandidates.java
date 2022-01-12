@@ -169,14 +169,14 @@ public class VotingCandidates extends Fragment {
         root.findViewById(R.id.saveAndBackVoting).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                List<String> canSeeList = new ArrayList<>();
+                List<String> canVoteList = new ArrayList<>();
                 if (exampleList != null){
                     for(int i = 0; i < exampleList.size(); i++){
                         if(exampleList.get(i).isCheckbox()){
-                            canSeeList.add(exampleList.get(i).getmText1());
+                            canVoteList.add(exampleList.get(i).getmText1());
                         }
                     }
-                    saving.setCanSeeList(canSeeList);
+                    saving.setCanVoteList(canVoteList);
                     saving.setUserArrayVoting(exampleList);
                 }
 

@@ -80,6 +80,12 @@
         <action
             android:id="@+id/action_polloptionFragment_to_votingCandidates2"
             app:destination="@id/votingCandidates2" />
+        <action
+            android:id="@+id/action_polloptionFragment_to_chooseAreaFragment"
+            app:destination="@id/chooseAreaFragment" />
+        <action
+            android:id="@+id/action_polloptionFragment_to_observingCandidates2"
+            app:destination="@id/observingCandidates2" />
     </fragment>
     <fragment
         android:id="@+id/usergroupSearch"
@@ -96,17 +102,14 @@
         <action
             android:id="@+id/action_votingCandidates2_to_polloptionFragment"
             app:destination="@id/polloptionFragment" />
-        <action
-            android:id="@+id/action_votingCandidates2_to_observingCandidates2"
-            app:destination="@id/observingCandidates2" />
     </fragment>
     <fragment
         android:id="@+id/observingCandidates2"
         android:name="com.polly.visuals.ObservingCandidates"
         android:label="ObservingCandidates" >
         <action
-            android:id="@+id/action_observingCandidates2_to_votingCandidates2"
-            app:destination="@id/votingCandidates2" />
+            android:id="@+id/action_observingCandidates2_to_polloptionFragment"
+            app:destination="@id/polloptionFragment" />
     </fragment>
     <fragment android:id="@+id/placeholder3" />
     <fragment
@@ -128,5 +131,9 @@
     <fragment
         android:id="@+id/chooseAreaFragment"
         android:name="com.polly.visuals.ChooseAreaFragment"
-        android:label="ChooseAreaFragment" />
+        android:label="ChooseAreaFragment" >
+        <action
+            android:id="@+id/action_chooseAreaFragment_to_polloptionFragment"
+            app:destination="@id/polloptionFragment" />
+    </fragment>
 </navigation>

@@ -50,7 +50,9 @@ import java.time.LocalTime;
 import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 public class PolloptionFragment extends Fragment {
     public static String name;
@@ -99,6 +101,9 @@ public class PolloptionFragment extends Fragment {
         if(saving.getNumberOfParticipants() != 0){
             ((EditText) root.findViewById(R.id.PollyRoomNumber)).setText(String.valueOf(saving.getNumberOfParticipants()));
         }
+        if(saving.getArea() != null){
+            ((AutoCompleteTextView)root.findViewById(R.id.geofencing)).setText(saving.getArea().toString());
+        }
         AutoCompleteTextView test = (AutoCompleteTextView) root.findViewById(R.id.DatePicker);
         AutoCompleteTextView dropDownMenu = (AutoCompleteTextView) root.findViewById(R.id.autoCompleteTextView);
 
@@ -111,7 +116,7 @@ public class PolloptionFragment extends Fragment {
         TextView pollyRoomInfo = (TextView) root.findViewById(R.id.PollyRoomInfo);
         //Button createPollBtn = (Button) root.findViewById(R.id.CreatePollOnMenu);
         Button sendQRviaEmail = (Button) root.findViewById(R.id.SendQRviaEmailBtn);
-        TextInputEditText geofenceBtn = root.findViewById(R.id.geofencing);
+        AutoCompleteTextView geofenceBtn = (AutoCompleteTextView) root.findViewById(R.id.geofencing);
 
         dropDownMenu.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -206,11 +211,17 @@ public class PolloptionFragment extends Fragment {
                 pollyRoomInfo.setVisibility(View.GONE);
                 datePicker.setVisibility(View.VISIBLE);
                 sendQRviaEmail.setVisibility(View.GONE);
-                if(saving.getUserArrayVoting() != null){
-                    votingCandidatesList.setText(saving.getUserArrayVoting().get(0).getmText1() + ", ...");
+                if(saving.getCanVoteList() != null){
+                    votingCandidatesList.setText(saving.getCanVoteList().get(0).toString() + ", ...");
+                    if(saving.getCanVoteList().get(1) != null){
+                        votingCandidatesList.setText(saving.getCanVoteList().get(0).toString() + saving.getCanVoteList().get(0).toString() + ", ...");
+                    }
                 }
-                if(saving.getUserArrayObserving() != null){
-                    observingCandidatesList.setText(saving.getUserArrayObserving().get(0).getmText1() + ", ...");
+                if(saving.getCanSeeAndVoteList() != null){
+                    observingCandidatesList.setText(saving.getCanSeeAndVoteList().get(0) + ", ...");
+                    if(saving.getCanSeeAndVoteList().get(1) != null){
+                        observingCandidatesList.setText(saving.getCanSeeAndVoteList().get(0) + saving.getCanSeeAndVoteList().get(1) + ", ...");
+                    }
                 }
             }else if(dropDownMenu.getText().toString().equals("POLLYROOM")){
                 //createPollBtn.setText("SCAN ROOM");
@@ -299,9 +310,18 @@ public class PolloptionFragment extends Fragment {
                 saving.setPollname(Pollname.getText());
                 saving.setCalendarText(test.getText());
                 saving.setDropDownMenu(dropDownMenu.getText());
-                saving.setGeofence(geofenceBtn.getText());
                 System.out.println(dropDownMenu.getText());
                 Navigation.findNavController(getActivity(), R.id.nav_host_fragment).navigate(R.id.observingCandidates2);
+            }
+        });
+        geofenceBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                saving.setPollname(Pollname.getText());
+                saving.setCalendarText(test.getText());
+                saving.setDescription(description.getText());
+                saving.setDropDownMenu(dropDownMenu.getText());
+                Navigation.findNavController(getActivity(), R.id.nav_host_fragment).navigate(R.id.chooseAreaFragment);
             }
         });
         root.findViewById(R.id.continueBtn).setOnClickListener(new View.OnClickListener() {
@@ -318,10 +338,18 @@ public class PolloptionFragment extends Fragment {
                         return;
                     }
                 }
-
+                if(!dropDownMenu.getText().toString().equals("POLLYROOM")){
+                    if(timeDiffInString(getDifferenceInMS(convertToDate(LocalDateTime.now(ZoneId.of("Europe/Berlin"))), convertToDate(LocalDateTime.of(localDate, localTime))))){
+                        Toast.makeText(getActivity(), "Polls must only last up to 1 year", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+                }
                 switch(dropDownMenu.getText().toString()){
                     case "GEOFENCE":
-                        saving.setGeofence(geofenceBtn.getText());
+                        if(saving.getArea() == null){
+                            Toast.makeText(getActivity(), "Please set a Geofence Area", Toast.LENGTH_SHORT).show();
+                            return;
+                        }
                     case "POLLYROOM":
                         EditText participants = (EditText) root.findViewById(R.id.PollyRoomNumber);
                         if(!participants.getText().toString().equals("")){
@@ -475,5 +503,21 @@ public class PolloptionFragment extends Fragment {
             }
         });
         return root;
+    }
+    public Date convertToDate(LocalDateTime data){
+        return Date.from(data.atZone(ZoneId.systemDefault()).toInstant());
+    }
+    public static long getDifferenceInMS(Date date1, Date date2){
+        if(date2.getTime() - date1.getTime() > 0)
+            return (date2.getTime() - date1.getTime());
+        else
+            return 0l;
+    }
+    public boolean timeDiffInString(long difference_In_Time){
+        long diffYears = TimeUnit
+                .MILLISECONDS
+                .toDays(difference_In_Time)
+                / 365l;
+        return diffYears > 0;
     }
 }

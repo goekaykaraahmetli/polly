@@ -13,7 +13,6 @@
         <entry key="..\:/Users/Gaming/AndroidStudioProjects/polly/app/src/main/res/layout/fragment_recent.xml" value="0.38697916666666665" />
         <entry key="..\:/Users/Gaming/AndroidStudioProjects/polly/app/src/main/res/layout/fragment_showpoll.xml" value="0.38697916666666665" />
         <entry key="..\:/Users/Gaming/AndroidStudioProjects/polly/app/src/main/res/layout/fragment_startpoll.xml" value="0.38697916666666665" />
-        <entry key="..\:/Users/Gaming/AndroidStudioProjects/polly/app/src/main/res/menu/googlemap_manu.xml" value="0.38697916666666665" />
         <entry key="..\:/Users/Gaming/AndroidStudioProjects/polly/app/src/main/res/menu/menu_main.xml" value="0.38697916666666665" />
         <entry key="..\:/Users/Gaming/AndroidStudioProjects/polly/app/src/main/res/menu/navigation_menu.xml" value="0.21875" />
         <entry key="..\:/Users/willi/StudioProjects/polly/app/src/main/res/drawable/ic_enterpoll.xml" value="0.37864583333333335" />
@@ -49,6 +48,7 @@
         <entry key="..\:/polly/app/src/main/res/layout/activity_settings.xml" value="0.33" />
         <entry key="..\:/polly/app/src/main/res/layout/dropdown_item.xml" value="0.371875" />
         <entry key="..\:/polly/app/src/main/res/layout/fragment_account.xml" value="0.33" />
+        <entry key="..\:/polly/app/src/main/res/layout/fragment_choosearea.xml" value="0.31666666666666665" />
         <entry key="..\:/polly/app/src/main/res/layout/fragment_login.xml" value="0.20885416666666667" />
         <entry key="..\:/polly/app/src/main/res/layout/fragment_recent.xml" value="0.371875" />
         <entry key="..\:/polly/app/src/main/res/layout/fragment_roomscanner_start.xml" value="0.18085106382978725" />

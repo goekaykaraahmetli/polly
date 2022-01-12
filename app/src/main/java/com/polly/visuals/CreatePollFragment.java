@@ -229,12 +229,11 @@ public class CreatePollFragment extends Fragment {
                                 id = PollManager.createPrivatePoll(saving.getPollname().toString(), new PollDescription(saving.getDescription().toString()), localDateTime, pollOptions, saving.getUserGroupId());
                                 break;
                             case "CUSTOM":
-                                id = PollManager.createCustomPoll(saving.getPollname().toString(), new PollDescription(saving.getDescription().toString()), localDateTime, pollOptions, saving.getCanSeeList(), saving.getCanSeeAndVoteList());
+                                id = PollManager.createCustomPoll(saving.getPollname().toString(), new PollDescription(saving.getDescription().toString()), localDateTime, pollOptions, saving.getCanVoteList(), saving.getCanSeeAndVoteList());
                                 break;
                             case "GEOFENCE":
-                                long latitude = 0L;     //TODO
-                                long longitude = 0L;    //TODO
-                                id = PollManager.createGeofencePoll(saving.getPollname().toString(), new PollDescription(saving.getDescription().toString()), localDateTime, pollOptions, new Area(latitude, longitude, Double.parseDouble(saving.getGeofence().toString())));
+                                    //TODO
+                                id = PollManager.createGeofencePoll(saving.getPollname().toString(), new PollDescription(saving.getDescription().toString()), localDateTime, pollOptions, saving.getArea());
                                 break;
                             case "POLLYROOM":
                                 {

@@ -7,6 +7,7 @@ import android.widget.EditText;
 import androidx.lifecycle.ViewModel;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.polly.utils.Area;
 import com.polly.utils.wrapper.PollResultsWrapper;
 
 import java.time.LocalDate;
@@ -33,10 +34,19 @@ public class SavingClass extends ViewModel {
     private ArrayList<SearchListItemUser> userArrayObserving;
     private boolean isSaved = true;
     private Editable geofence;
-    private List<String> canSeeList;
+    private List<String> canVoteList;
     private List<String> canSeeAndVoteList;
     private LocalDate localDate;
     private LocalTime localTime;
+    private Area area;
+
+    public Area getArea() {
+        return area;
+    }
+
+    public void setArea(Area area) {
+        this.area = area;
+    }
 
     public LocalTime getLocalTime() {
         return localTime;
@@ -62,12 +72,12 @@ public class SavingClass extends ViewModel {
         this.canSeeAndVoteList = canSeeAndVoteList;
     }
 
-    public List<String> getCanSeeList() {
-        return canSeeList;
+    public List<String> getCanVoteList() {
+        return canVoteList;
     }
 
-    public void setCanSeeList(List<String> canSeeList) {
-        this.canSeeList = canSeeList;
+    public void setCanVoteList(List<String> canVoteList) {
+        this.canVoteList = canVoteList;
     }
 
     public void setUserGroupId(long userGroupId) {
@@ -217,7 +227,7 @@ public class SavingClass extends ViewModel {
         setUserGroupList(null);
         setUsergroupName(null);
         setCanSeeAndVoteList(null);
-        setCanSeeList(null);
+        setCanVoteList(null);
         setSaved(true);
         setLocalDate(null);
         setLocalTime(null);
