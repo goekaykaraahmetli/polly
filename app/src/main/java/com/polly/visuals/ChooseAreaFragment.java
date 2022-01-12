@@ -21,8 +21,10 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.Navigation;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
@@ -55,6 +57,7 @@ import com.karumi.dexter.listener.single.PermissionListener;
 import com.polly.R;
 import com.polly.utils.Area;
 import com.polly.utils.Location;
+import com.polly.utils.Organizer;
 
 public class ChooseAreaFragment extends Fragment implements OnMapReadyCallback {
     private boolean locationPermissionGranted;
@@ -65,6 +68,8 @@ public class ChooseAreaFragment extends Fragment implements OnMapReadyCallback {
     private TextView textView;
 
     private LatLng markerLocation;
+
+    private boolean alertActive;
 
 
     @Nullable
@@ -87,15 +92,18 @@ public class ChooseAreaFragment extends Fragment implements OnMapReadyCallback {
             }
         });
 
-        while (!locationPermissionGranted)
-            checkLocationPermission();
         if (!checkGooglePlayServices()) {
             Toast.makeText(getContext(), "No Google Play Services Available!", Toast.LENGTH_SHORT).show();
             return root;
         }
 
+        if(!locationPermissionGranted)
+            checkLocationPermission();
+
+
         SupportMapFragment supportMapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.fragmentMap);
         supportMapFragment.getMapAsync(this);
+
         checkGps();
 
         return root;
@@ -119,23 +127,25 @@ public class ChooseAreaFragment extends Fragment implements OnMapReadyCallback {
     }
 
     private void checkLocationPermission() {
+        System.out.println("checking location permission");
+
         Dexter.withContext(getContext()).withPermission(Manifest.permission.ACCESS_FINE_LOCATION).withListener(new PermissionListener() {
             @Override
             public void onPermissionGranted(PermissionGrantedResponse permissionGrantedResponse) {
+                System.out.println("permission granted");
                 locationPermissionGranted = true;
             }
 
             @Override
             public void onPermissionDenied(PermissionDeniedResponse permissionDeniedResponse) {
-                Intent intent = new Intent();
-                intent.setAction(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
-                Uri uri = Uri.fromParts("package", MainActivity.mainActivity.getPackageName(), "");
-                intent.setData(uri);
-                startActivity(intent);
+                System.out.println("permission denied");
+
+                onLocationPermissionDenied();
             }
 
             @Override
             public void onPermissionRationaleShouldBeShown(PermissionRequest permissionRequest, PermissionToken permissionToken) {
+                System.out.println("permission rationale should be shown");
                 permissionToken.continuePermissionRequest();
             }
         }).check();
@@ -173,7 +183,7 @@ public class ChooseAreaFragment extends Fragment implements OnMapReadyCallback {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 showArea();
-                textView.setText(String.valueOf(progress+1));
+                textView.setText(String.valueOf(progress+1) + "km");
             }
 
             @Override
@@ -264,5 +274,46 @@ public class ChooseAreaFragment extends Fragment implements OnMapReadyCallback {
             googleMap.addMarker(markerOptions);
             googleMap.addCircle(circle);
         }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if(!alertActive)
+            checkLocationPermission();
+
+        if(locationPermissionGranted) {
+            SupportMapFragment supportMapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.fragmentMap);
+            supportMapFragment.getMapAsync(this);
+
+            checkGps();
+        }
+    }
+
+    private void onLocationPermissionDenied() {
+        alertActive = true;
+
+        AlertDialog.Builder alert = new AlertDialog.Builder(getContext());
+        alert.setTitle("Grant permission");
+        alert.setMessage("Do you want to grant LOCATION_ACCESS_PERMISSION?");
+        alert.setPositiveButton("YES", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                Intent intent = new Intent();
+                intent.setAction(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+                Uri uri = Uri.fromParts("package", MainActivity.mainActivity.getPackageName(), "");
+                intent.setData(uri);
+                startActivity(intent);
+                alertActive = false;
+            }
+        });
+        alert.setNegativeButton("NO", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                alertActive = false;
+                Navigation.findNavController(getActivity(), R.id.nav_host_fragment).navigate(R.id.polloptionFragment);
+            }
+        });
+        alert.create().show();
     }
 }
