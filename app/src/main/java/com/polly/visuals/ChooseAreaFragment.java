@@ -15,13 +15,14 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.karumi.dexter.Dexter;
 import com.karumi.dexter.PermissionToken;
 import com.karumi.dexter.listener.PermissionDeniedResponse;
@@ -29,10 +30,11 @@ import com.karumi.dexter.listener.PermissionGrantedResponse;
 import com.karumi.dexter.listener.PermissionRequest;
 import com.karumi.dexter.listener.single.PermissionListener;
 import com.polly.R;
+import com.polly.utils.Area;
 
 public class ChooseAreaFragment extends Fragment implements OnMapReadyCallback {
     private boolean locationPermissionGranted;
-
+    private GoogleMap googleMap;
 
     @Nullable
     @Override
@@ -97,6 +99,24 @@ public class ChooseAreaFragment extends Fragment implements OnMapReadyCallback {
 
     @Override
     public void onMapReady(@NonNull GoogleMap googleMap) {
+        this.googleMap = googleMap;
 
+        googleMap.setOnMapLongClickListener(new GoogleMap.OnMapLongClickListener() {
+            @Override
+            public void onMapLongClick(@NonNull LatLng latLng) {
+                MarkerOptions markerOptions = new MarkerOptions();
+                markerOptions.title("Choosen Position");
+                markerOptions.position(latLng);
+                googleMap.addMarker(markerOptions);
+            }
+        });
+
+    }
+
+
+
+    private void saveArea(Area area) {
+        // save area to savings
+        // navigate back to create poll
     }
 }
