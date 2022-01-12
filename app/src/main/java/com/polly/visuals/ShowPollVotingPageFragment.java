@@ -215,7 +215,6 @@ public class ShowPollVotingPageFragment extends Fragment {
                 System.out.println("ShowPollVotingPageFragment received message from type: " + message.getDataType().getName());
                 if (message.getDataType().equals(PollOptionsWrapper.class)) {
                     PollOptionsWrapper updatePoll = (PollOptionsWrapper) message.getData();
-                    updatePieChart(updatePoll);
 
                     getActivity().runOnUiThread(new Runnable() {
                         @Override
