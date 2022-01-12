@@ -2,6 +2,7 @@ package com.polly.visuals;
 import com.google.android.material.textfield.TextInputEditText;
 import com.polly.utils.Area;
 import com.polly.utils.QRCode;
+import com.polly.utils.ShowPollPage;
 import com.polly.utils.poll.PollDescription;
 import com.polly.utils.poll.PollManager;
 
@@ -303,6 +304,7 @@ public class CreatePollFragment extends Fragment {
                         }
                         if(!saving.getDropDownMenu().toString().equals("POLLYROOM")){
                             Toast.makeText(getActivity(), "Poll ID is: " + id, Toast.LENGTH_SHORT).show();
+                            ShowPollPage.showPollVotingPage(id);
                             saving.reset();
                         }
 
