@@ -290,8 +290,6 @@ public class CreatePollFragment extends Fragment {
 
                                             });
                                             alert.show();
-                                            Intent intent = new Intent(getActivity(), BarcodeScannerActivity.class);
-                                            startActivity(intent);
                                         }
                                     });
                                     alert.setNegativeButton("NO", new DialogInterface.OnClickListener() {
