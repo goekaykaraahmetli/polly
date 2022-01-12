@@ -27,7 +27,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     protected DrawerLayout drawerLayout;
     private ActionBarDrawerToggle actionBarDrawerToggle;
 
-    public static Activity mainActivity;
+    public static AppCompatActivity mainActivity;
 
 
 

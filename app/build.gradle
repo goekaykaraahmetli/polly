@@ -33,14 +33,12 @@ android {
     buildFeatures {
         viewBinding true
     }
-
-
-
 }
 
 dependencies {
     implementation 'com.google.android.material:material:1.1.0'
     implementation 'androidx.recyclerview:recyclerview-selection:1.0.0'
+    implementation 'com.google.android.gms:play-services-maps:18.0.1'
     implementation 'androidx.cardview:cardview:1.0.0'
     implementation 'com.journeyapps:zxing-android-embedded:3.0.2@aar'
     implementation 'com.google.zxing:core:3.3.3'
@@ -74,6 +72,8 @@ dependencies {
     implementation "androidx.camera:camera-lifecycle:$camerax_version"
     implementation "androidx.camera:camera-view:1.0.0-alpha28"
     //implementation "org.jetbrains.kotlin:kotlin-gradle-plugin:1.6.10"
+
+    implementation 'com.karumi:dexter:6.2.3'
 }
 apply plugin: 'com.android.application'
 apply plugin: 'com.google.gms.google-services'

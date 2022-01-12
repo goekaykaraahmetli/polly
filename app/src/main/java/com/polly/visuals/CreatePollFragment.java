@@ -58,6 +58,7 @@ public class CreatePollFragment extends Fragment {
     public static String answer3;
     public static String answer4;
     public static int numberOfParticipants;
+    public static String name;
     private CountDownTimer countDownTimer;
     LocalDateTime localDateTime;
     HashMap<Integer, EditText> map = new HashMap<>();
@@ -76,6 +77,7 @@ public class CreatePollFragment extends Fragment {
         Button createPollBtn = (Button) root.findViewById(R.id.createPollBtn);
         TextView pollName = (TextView) root.findViewById(R.id.PollName);
         pollName.setText(saving.getPollname());
+        name = pollName.getText().toString();
         if(saving.getMap() != null){
             map = saving.getMap();
         }

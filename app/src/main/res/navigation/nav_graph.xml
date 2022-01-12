@@ -125,4 +125,8 @@
         android:id="@+id/showPollVotingPageFragment"
         android:name="com.polly.visuals.ShowPollVotingPageFragment"
         android:label="ShowPollVotingPageFragment" />
+    <fragment
+        android:id="@+id/chooseAreaFragment"
+        android:name="com.polly.visuals.ChooseAreaFragment"
+        android:label="ChooseAreaFragment" />
 </navigation>
