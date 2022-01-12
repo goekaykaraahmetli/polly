@@ -186,6 +186,7 @@ public class ShowPollVotingPageFragment extends Fragment {
 
                         // show poll-results:
                         if(voteSuccessful){
+                            communicator.send(Config.serverCommunicationId, new RemovePollChangeListenerCommand(id));
                             ShowPollPage.showPollResultsPage(id);
                         }else{
                             Toast.makeText(getContext(), "voting for Poll failed. Please try again!", Toast.LENGTH_SHORT).show();
