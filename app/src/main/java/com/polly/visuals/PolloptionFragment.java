@@ -214,13 +214,13 @@ public class PolloptionFragment extends Fragment {
                 if(saving.getCanVoteList() != null && !saving.getCanVoteList().isEmpty()){
                     votingCandidatesList.setText(saving.getCanVoteList().get(0).toString() + ", ...");
                     if(!(saving.getCanVoteList().size() < 2) && saving.getCanVoteList().get(1) != null){
-                        votingCandidatesList.setText(saving.getCanVoteList().get(0).toString() + saving.getCanVoteList().get(0).toString() + ", ...");
+                        votingCandidatesList.setText(saving.getCanVoteList().get(0).toString() + "," + saving.getCanVoteList().get(1).toString() + ", ...");
                     }
                 }
                 if(saving.getCanSeeAndVoteList() != null && !saving.getCanSeeAndVoteList().isEmpty()){
                     observingCandidatesList.setText(saving.getCanSeeAndVoteList().get(0) + ", ...");
                     if(!(saving.getCanSeeAndVoteList().size() < 2) && saving.getCanSeeAndVoteList().get(1) != null){
-                        observingCandidatesList.setText(saving.getCanSeeAndVoteList().get(0) + saving.getCanSeeAndVoteList().get(1) + ", ...");
+                        observingCandidatesList.setText(saving.getCanSeeAndVoteList().get(0) + "," + saving.getCanSeeAndVoteList().get(1) + ", ...");
                     }
                 }
             }else if(dropDownMenu.getText().toString().equals("POLLYROOM")){
