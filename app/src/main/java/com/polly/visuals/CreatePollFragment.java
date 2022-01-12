@@ -7,6 +7,7 @@ import com.polly.utils.poll.PollManager;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.text.Editable;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -27,14 +28,21 @@ import androidx.navigation.Navigation;
 
 import com.polly.R;
 
+import org.w3c.dom.Text;
+
 import java.io.IOException;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
+import java.util.concurrent.TimeUnit;
 
 public class CreatePollFragment extends Fragment {
+    long testDiff;
     int optionCounter = 0;
     int optionMax = 8;
     boolean start = true;
@@ -44,6 +52,7 @@ public class CreatePollFragment extends Fragment {
     public static String answer3;
     public static String answer4;
     public static int numberOfParticipants;
+    private CountDownTimer countDownTimer;
     LocalDateTime localDateTime;
     HashMap<Integer, EditText> map = new HashMap<>();
     HashMap<Integer, Button> remove = new HashMap<>();
@@ -184,6 +193,9 @@ public class CreatePollFragment extends Fragment {
                 }
             }
         });
+        if(saving.getLocalDate() != null && saving.getLocalTime() != null){
+            localDateTime = LocalDateTime.of(saving.getLocalDate(), saving.getLocalTime());
+        }
         createPollBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -199,10 +211,6 @@ public class CreatePollFragment extends Fragment {
                 if (!hinted) {
                     try {
                         long id = 10;
-                        if(saving.getLocalDate() != null && saving.getLocalTime() != null){
-                            localDateTime = LocalDateTime.of(saving.getLocalDate(), saving.getLocalTime());
-                        }
-
                         switch (saving.getDropDownMenu().toString()) {
                             case "PUBLIC":
                                 id = PollManager.createPublicPoll(saving.getPollname().toString(), new PollDescription(saving.getDescription().toString()), localDateTime, pollOptions);
@@ -415,6 +423,22 @@ public class CreatePollFragment extends Fragment {
 
             }
         });
+        System.out.println(getDifferenceInMS(convertToDate(LocalDateTime.now()), convertToDate(localDateTime)));
+        testDiff = getDifferenceInMS(convertToDate(LocalDateTime.now()), convertToDate(localDateTime));
+        TextView countDownView = (TextView) root.findViewById(R.id.testClock);
+
+        countDownTimer = new CountDownTimer(testDiff, 1000) {
+            @Override
+            public void onTick(long millisUntilFinished) {
+                testDiff = millisUntilFinished;
+                countDownView.setText(timeDiffInString(testDiff));
+            }
+
+            @Override
+            public void onFinish() {
+
+            }
+        }.start();
 
         return root;
     }
@@ -426,5 +450,38 @@ public class CreatePollFragment extends Fragment {
         }
         return null;
     }
-
+    public Date convertToDate(LocalDateTime data){
+        return Date.from(data.atZone(ZoneId.systemDefault()).toInstant());
+    }
+    public static long getDifferenceInMS(Date date1, Date date2){
+        if(date2.getTime() - date1.getTime() > 0)
+            return (date2.getTime() - date1.getTime());
+        else
+            return 0l;
+    }
+    public String timeDiffInString(long difference_In_Time){
+       System.out.println(difference_In_Time + "testtest");
+        long diffSeconds = TimeUnit
+                .MILLISECONDS
+                .toSeconds(difference_In_Time)
+                % 60;
+        long diffMinutes = TimeUnit
+                .MILLISECONDS
+                .toMinutes(difference_In_Time)
+                % 60;
+        long diffHours = TimeUnit
+                .MILLISECONDS
+                .toHours(difference_In_Time)
+                % 24;
+        long diffDays = TimeUnit
+                .MILLISECONDS
+                .toDays(difference_In_Time)
+                % 365;
+        //long diffMonths = (long) (difference_In_Time / (60 * 60 * 1000 * 24 * 30.41666666));
+        long diffYears = TimeUnit
+                .MILLISECONDS
+                .toDays(difference_In_Time)
+                / 365l;
+        return diffYears + " y, " + diffDays + " d  " + diffHours + " h: " + diffMinutes + " m: " + diffSeconds + " s";
+    }
 }

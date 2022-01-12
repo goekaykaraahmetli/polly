@@ -150,26 +150,15 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         app:layout_constraintGuide_percent="0.5" />
-    <![CDATA[
 
-
-
-
-
-
-
-
-
-
-
-
-
-    />
-
-
-
-
-
-
-]]>
+    <TextView
+        android:id="@+id/testClock"
+        android:layout_width="281dp"
+        android:layout_height="52dp"
+        android:text="Counter"
+        android:gravity="center"
+        app:layout_constraintBottom_toTopOf="@+id/PollName"
+        app:layout_constraintEnd_toStartOf="@+id/guideline10"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>

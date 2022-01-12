@@ -311,7 +311,8 @@ public class PolloptionFragment extends Fragment {
                     return;
                 }
                 if(!dropDownMenu.getText().toString().equals("POLLYROOM")){
-                    if(!(test.getText().toString().contains("-") && test.getText().toString().contains(":"))){
+                    LocalDateTime localDateTime = LocalDateTime.of(saving.getLocalDate(), saving.getLocalTime());
+                    if(!(test.getText().toString().contains("-") && test.getText().toString().contains(":")) || localDateTime.isBefore(LocalDateTime.now())){
                         Toast.makeText(getActivity(), "Please choose a valid Expiration date", Toast.LENGTH_SHORT).show();
                         return;
                     }
