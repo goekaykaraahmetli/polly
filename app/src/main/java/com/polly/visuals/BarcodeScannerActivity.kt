@@ -63,7 +63,8 @@ class BarcodeScannerActivity : AppCompatActivity() {
     }
 
 
-    override fun onBackPressed() {
+    override fun onDestroy() {
+        super.onDestroy()
         cameraExecutor.shutdown()
         if (numberOfParticipants == votes1 + votes2 + votes3 + votes4) {
             val results = HashMap<String, Int>()
