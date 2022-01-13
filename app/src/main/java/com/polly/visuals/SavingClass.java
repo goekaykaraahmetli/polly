@@ -39,6 +39,24 @@ public class SavingClass extends ViewModel {
     private LocalDate localDate;
     private LocalTime localTime;
     private Area area;
+    private String editedPollname;
+    private String editedPolldescription;
+
+    public void setEditedPolldescription(String setEditedPolldescription) {
+        this.editedPolldescription = setEditedPolldescription;
+    }
+
+    public String getEditedPolldescription() {
+        return editedPolldescription;
+    }
+
+    public String getEditedPollname() {
+        return editedPollname;
+    }
+
+    public void setEditedPollname(String editedPollname) {
+        this.editedPollname = editedPollname;
+    }
 
     public Area getArea() {
         return area;
@@ -233,6 +251,8 @@ public class SavingClass extends ViewModel {
         setLocalTime(null);
         setGeofence(null);
         setArea(null);
+        setEditedPollname(null);
+        setEditedPolldescription(null);
     }
 
     public void setNumberOfParticipants(int number) {
