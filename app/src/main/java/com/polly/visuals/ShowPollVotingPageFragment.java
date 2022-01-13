@@ -111,10 +111,11 @@ public class ShowPollVotingPageFragment extends Fragment implements OnMapReadyCa
 
     private LocationRequest locationRequest;
     private FusedLocationProviderClient fusedLocationProviderClient;
+    Location usersLocation;
 
     SavingClass saving;
 
-    public static void open(long id) throws IOException{
+    public static void open(long id) throws IOException {
         ShowPollVotingPageFragment.id = id;
         pollOptions = PollManager.getPollOptions(id);
         Navigation.findNavController(MainActivity.mainActivity, R.id.nav_host_fragment).navigate(R.id.showPollVotingPageFragment);
@@ -123,7 +124,7 @@ public class ShowPollVotingPageFragment extends Fragment implements OnMapReadyCa
     @Override
     public void onDestroy() {
         super.onDestroy();
-        if(hasRunningPollChangeListener){
+        if (hasRunningPollChangeListener) {
             try {
                 communicator.send(Config.serverCommunicationId, new RemovePollChangeListenerCommand(id));
                 hasRunningPollChangeListener = false;
@@ -168,19 +169,20 @@ public class ShowPollVotingPageFragment extends Fragment implements OnMapReadyCa
             }
         }.start();
 
-        if(id < 0) {
+        if (id < 0) {
             isGeofencePoll = true;
             root.findViewById(R.id.mapLayout).setVisibility(View.VISIBLE);
             createForGeofencePoll(root);
+            updateUsersLocation();
         }
 
         return root;
     }
 
-    public void showPoll(View root){
+    public void showPoll(View root) {
         updatePieChart(pollOptions);
         qrCode = (ImageView) root.findViewById(R.id.qrCodeImageView);
-        qrCode.setImageBitmap(QRCode.QRCode(""+ pollOptions.getBasicPollInformation().getId()));
+        qrCode.setImageBitmap(QRCode.QRCode("" + pollOptions.getBasicPollInformation().getId()));
         qrCode.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
@@ -211,8 +213,8 @@ public class ShowPollVotingPageFragment extends Fragment implements OnMapReadyCa
         });
     }
 
-    public void showVoteButton(String option){
-        if(option == null){
+    public void showVoteButton(String option) {
+        if (option == null) {
             // remove existing button:
             voteButton.setVisibility(View.GONE);
         } else {
@@ -221,33 +223,36 @@ public class ShowPollVotingPageFragment extends Fragment implements OnMapReadyCa
                 @Override
                 public void onClick(View v) {
                     voteButton.setVisibility(View.GONE);
-                    try{
-                        boolean voteSuccessful = PollManager.vote(pollOptions.getBasicPollInformation().getId(), option);
-
+                    try {
+                        boolean voteSuccessful;
+                        if (isGeofencePoll) {
+                            voteSuccessful = PollManager.vote(pollOptions.getBasicPollInformation().getId(), option, usersLocation);
+                        } else {
+                            voteSuccessful = PollManager.vote(pollOptions.getBasicPollInformation().getId(), option);
+                        }
 
 
                         //TODO Zeit mit loading-screen überbrücken:
 
 
                         // show poll-results:
-                        if(voteSuccessful){
+                        if (voteSuccessful) {
                             communicator.send(Config.serverCommunicationId, new RemovePollChangeListenerCommand(id));
                             ShowPollPage.showPollResultsPage(id);
-                        }else{
+                        } else {
                             Toast.makeText(getContext(), "voting for Poll failed. Please try again!", Toast.LENGTH_SHORT).show();
                         }
 
 
-
-                    } catch (IllegalArgumentException|IOException e) {
+                    } catch (IllegalArgumentException | IOException e) {
                         Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
                         e.printStackTrace();
                     }
                 }
             });
-            if(isExpired){
+            if (isExpired) {
                 voteButton.setVisibility(View.GONE);
-            }else{
+            } else {
                 voteButton.setVisibility(View.VISIBLE);
             }
 
@@ -276,10 +281,10 @@ public class ShowPollVotingPageFragment extends Fragment implements OnMapReadyCa
     }
 
 
-    private void updatePieChart(PollOptionsWrapper updatePoll){
+    private void updatePieChart(PollOptionsWrapper updatePoll) {
         pollOptions = updatePoll;
         ArrayList<PieEntry> options = new ArrayList<>();
-        for(String option : pollOptions.getPollOptions()){
+        for (String option : pollOptions.getPollOptions()) {
             options.add(new PieEntry(Integer.valueOf(1), option));
         }
 
@@ -303,16 +308,18 @@ public class ShowPollVotingPageFragment extends Fragment implements OnMapReadyCa
         pieChart.setVisibility(View.VISIBLE);
     }
 
-    public Date convertToDate(LocalDateTime data){
+    public Date convertToDate(LocalDateTime data) {
         return Date.from(data.atZone(ZoneId.systemDefault()).toInstant());
     }
-    public static long getDifferenceInMS(Date date1, Date date2){
-        if(date2.getTime() - date1.getTime() > 0)
+
+    public static long getDifferenceInMS(Date date1, Date date2) {
+        if (date2.getTime() - date1.getTime() > 0)
             return (date2.getTime() - date1.getTime());
         else
             return 0l;
     }
-    public String timeDiffInString(long difference_In_Time){
+
+    public String timeDiffInString(long difference_In_Time) {
         long diffMinutes = TimeUnit
                 .MILLISECONDS
                 .toMinutes(difference_In_Time)
@@ -334,7 +341,7 @@ public class ShowPollVotingPageFragment extends Fragment implements OnMapReadyCa
             return;
         }
 
-        if(!locationPermissionGranted)
+        if (!locationPermissionGranted)
             checkLocationPermission();
 
 
@@ -458,9 +465,26 @@ public class ShowPollVotingPageFragment extends Fragment implements OnMapReadyCa
             public void onLocationResult(@NonNull LocationResult locationResult) {
                 super.onLocationResult(locationResult);
 
-                Location usersLocation = new Location(locationResult.getLastLocation().getLatitude(), locationResult.getLastLocation().getLongitude());
+                usersLocation = new Location(locationResult.getLastLocation().getLatitude(), locationResult.getLastLocation().getLongitude());
                 CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(new LatLng(usersLocation.getLatitude(), usersLocation.getLongitude()), 5);
                 googleMap.animateCamera(cameraUpdate);
+            }
+        }, Looper.myLooper());
+    }
+
+    private void updateUsersLocation() {
+        locationRequest.setInterval(5000);
+        locationRequest.setFastestInterval(3000);
+        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(getActivity());
+        if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            return;
+        }
+        fusedLocationProviderClient.requestLocationUpdates(locationRequest, new LocationCallback() {
+            @Override
+            public void onLocationResult(@NonNull LocationResult locationResult) {
+                super.onLocationResult(locationResult);
+
+                usersLocation = new Location(locationResult.getLastLocation().getLatitude(), locationResult.getLastLocation().getLongitude());
             }
         }, Looper.myLooper());
     }

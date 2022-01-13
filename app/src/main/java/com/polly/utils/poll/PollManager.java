@@ -2,6 +2,7 @@ package com.polly.utils.poll;
 
 import com.polly.config.Config;
 import com.polly.utils.Area;
+import com.polly.utils.Location;
 import com.polly.utils.command.GetMyPollsCommand;
 import com.polly.utils.command.GetParticipatedPollsCommand;
 import com.polly.utils.command.poll.GetGeofencePollArea;
@@ -89,6 +90,16 @@ public class PollManager {
 
     public static boolean vote(long id, String option) throws IOException {
         Message response = communicator.sendWithResponse(Config.serverCommunicationId, new VoteCommand(id, option));
+        System.err.println("Got response for vote!");
+        if(response.getDataType().equals(Boolean.class))
+            return (boolean) response.getData();
+        if(response.getDataType() == ErrorWrapper.class)
+            throw new IOException(((ErrorWrapper) response.getData()).getMessage());
+        throw new IOException("Something went wrong!");
+    }
+
+    public static boolean vote(long id, String option, Location location) throws IOException {
+        Message response = communicator.sendWithResponse(Config.serverCommunicationId, new VoteCommand(id, option, location));
         System.err.println("Got response for vote!");
         if(response.getDataType().equals(Boolean.class))
             return (boolean) response.getData();

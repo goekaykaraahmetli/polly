@@ -251,7 +251,7 @@ public class ChooseAreaFragment extends Fragment implements OnMapReadyCallback {
     }
 
     private void saveArea() {
-        double radius = seekBar.getProgress() * 1000;
+        double radius = (seekBar.getProgress()+1) * 1000;
         Area area = new Area(markerLocation.latitude, markerLocation.longitude, radius);
         saving.setArea(area);
         Navigation.findNavController(getActivity(), R.id.nav_host_fragment).navigate(R.id.polloptionFragment);
