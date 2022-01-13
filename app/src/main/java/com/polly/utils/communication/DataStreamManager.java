@@ -30,6 +30,7 @@ import com.polly.utils.command.poll.EditPollNameCommand;
 import com.polly.utils.command.poll.GetGeofencePollArea;
 import com.polly.utils.command.poll.GetPollOptionsCommand;
 import com.polly.utils.command.poll.GetPollResultsCommand;
+import com.polly.utils.command.poll.IsMyPollCommand;
 import com.polly.utils.command.poll.RegisterPollChangeListenerCommand;
 import com.polly.utils.command.poll.RemovePollChangeListenerCommand;
 import com.polly.utils.command.poll.VoteCommand;
@@ -214,6 +215,9 @@ public class DataStreamManager {
 			data = readEditPollDescriptionCommand();
 		else if(dataType.equals(EditPollNameCommand.class))
 			data = readEditPollNameCommand();
+		else if(dataType.equals(IsMyPollCommand.class))
+			data = readIsMyPollCommand();
+		
 			
 			// default type:
 		else
@@ -420,6 +424,8 @@ public class DataStreamManager {
 			writeEditPollDescriptionCommand((EditPollDescriptionCommand) data);
 		else if(dataType.equals(EditPollNameCommand.class))
 			writeEditPollNameCommand((EditPollNameCommand) data);
+		else if(dataType.equals(IsMyPollCommand.class))
+			writeIsMyPollCommand((IsMyPollCommand) data);
 		
 		
 			// default type:
@@ -1100,5 +1106,13 @@ public class DataStreamManager {
 	
 	private EditPollNameCommand readEditPollNameCommand() throws IOException {
 		return new EditPollNameCommand(readLong(), readString());
+	}
+	
+	private void writeIsMyPollCommand(IsMyPollCommand data) throws IOException {
+		writeLong(data.getId());
+	}
+	
+	private IsMyPollCommand readIsMyPollCommand() throws IOException {
+		return new IsMyPollCommand(readLong());
 	}
 }
