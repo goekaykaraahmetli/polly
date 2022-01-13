@@ -148,6 +148,21 @@ public class ShowPollVotingPageFragment extends Fragment implements OnMapReadyCa
         voteButton = (Button) root.findViewById(R.id.vote_button);
         voteButton.setVisibility(View.GONE);
 
+        try {
+            if(PollManager.isMyPoll(id)) {
+                Button editButton = (Button) root.findViewById(R.id.edit_poll_button);
+                editButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        editPoll();
+                    }
+                });
+                editButton.setVisibility(View.VISIBLE);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
 
         showPoll(root);
         LocalDateTime localDateTime = pollOptions.getBasicPollInformation().getExpirationTime();
@@ -547,9 +562,12 @@ public class ShowPollVotingPageFragment extends Fragment implements OnMapReadyCa
 
         try{
             Area area = PollManager.getGeofencePollArea(id);
-        initMap(new LatLng(area.getLatitude(),area.getLongitude()), area.getRadius());
+            initMap(new LatLng(area.getLatitude(),area.getLongitude()), area.getRadius());
         } catch(IOException e){
-            Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_LONG).show();
+            if(e.getMessage() != null)
+                Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_LONG).show();
+            else
+                Toast.makeText(getContext(), "Something went wrong!", Toast.LENGTH_LONG).show();
         }
     }
 
@@ -558,9 +576,24 @@ public class ShowPollVotingPageFragment extends Fragment implements OnMapReadyCa
         String newName = "";
         PollDescription newDescription = new PollDescription("");
 
-        // wenn es newName gibt:
+        // TODO wenn es newName gibt:
+        try {
+            PollManager.editPollName(id, newName);
+        } catch (IOException e) {
+            if(e.getMessage() != null)
+                Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_LONG).show();
+            else
+                Toast.makeText(getContext(), "Something went wrong!", Toast.LENGTH_LONG).show();
+        }
 
-
-        // wenn es newDescription gibt:
+        // TODO wenn es newDescription gibt:
+        try {
+            PollManager.editPollDescription(id, newDescription);
+        } catch (IOException e) {
+            if(e.getMessage() != null)
+                Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_LONG).show();
+            else
+                Toast.makeText(getContext(), "Something went wrong!", Toast.LENGTH_LONG).show();
+        }
     }
 }

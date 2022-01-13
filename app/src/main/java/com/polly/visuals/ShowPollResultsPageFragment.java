@@ -16,6 +16,7 @@ import android.provider.Settings;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.TextView;
@@ -73,6 +74,7 @@ import com.polly.utils.command.poll.RegisterPollChangeListenerCommand;
 import com.polly.utils.command.poll.RemovePollChangeListenerCommand;
 import com.polly.utils.communicator.Communicator;
 import com.polly.utils.communicator.CommunicatorManager;
+import com.polly.utils.poll.PollDescription;
 import com.polly.utils.poll.PollManager;
 import com.polly.utils.wrapper.Message;
 import com.polly.utils.wrapper.PollResultsWrapper;
@@ -133,7 +135,20 @@ public class ShowPollResultsPageFragment extends Fragment implements OnMapReadyC
         pieChart = (PieChart) root.findViewById(R.id.pieChart);
         pieChart.setVisibility(View.GONE);
 
-
+        try {
+            if(PollManager.isMyPoll(id)) {
+                Button editButton = (Button) root.findViewById(R.id.edit_poll_button);
+                editButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        editPoll();
+                    }
+                });
+                editButton.setVisibility(View.VISIBLE);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
         showPoll(root);
         LocalDateTime localDateTime = pollResults.getBasicPollInformation().getExpirationTime();
@@ -455,6 +470,31 @@ public class ShowPollResultsPageFragment extends Fragment implements OnMapReadyC
             initMap(new LatLng(area.getLatitude(),area.getLongitude()), area.getRadius());
         } catch(IOException e){
             Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_LONG).show();
+        }
+    }
+
+    private void editPoll() {
+        String newName = "";
+        PollDescription newDescription = new PollDescription("");
+
+        // TODO wenn es newName gibt:
+        try {
+            PollManager.editPollName(id, newName);
+        } catch (IOException e) {
+            if(e.getMessage() != null)
+                Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_LONG).show();
+            else
+                Toast.makeText(getContext(), "Something went wrong!", Toast.LENGTH_LONG).show();
+        }
+
+        // TODO wenn es newDescription gibt:
+        try {
+            PollManager.editPollDescription(id, newDescription);
+        } catch (IOException e) {
+            if(e.getMessage() != null)
+                Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_LONG).show();
+            else
+                Toast.makeText(getContext(), "Something went wrong!", Toast.LENGTH_LONG).show();
         }
     }
 }

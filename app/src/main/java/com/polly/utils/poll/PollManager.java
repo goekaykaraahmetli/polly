@@ -147,7 +147,7 @@ public class PollManager {
         throw new IOException("Something went wrong!");
     }
 
-    private static boolean isMyPoll(long id) throws IOException {
+    public static boolean isMyPoll(long id) throws IOException {
         Message response = communicator.sendWithResponse(Config.serverCommunicationId, new IsMyPollCommand(id));
         if(response.getDataType() == Boolean.class)
             return ((boolean) response.getData());
@@ -156,7 +156,7 @@ public class PollManager {
         throw new IOException("Something went wrong!");
     }
 
-    private static boolean editPollName(long id, String name) throws IOException {
+    public static boolean editPollName(long id, String name) throws IOException {
         Message response = communicator.sendWithResponse(Config.serverCommunicationId, new EditPollNameCommand(id, name));
         if(response.getDataType() == Boolean.class)
             return ((boolean) response.getData());
@@ -165,7 +165,7 @@ public class PollManager {
         throw new IOException("Something went wrong!");
     }
 
-    private static boolean editPollDescription(long id, PollDescription description) throws IOException {
+    public static boolean editPollDescription(long id, PollDescription description) throws IOException {
         Message response = communicator.sendWithResponse(Config.serverCommunicationId, new EditPollDescriptionCommand(id, description));
         if(response.getDataType() == Boolean.class)
             return ((boolean) response.getData());
