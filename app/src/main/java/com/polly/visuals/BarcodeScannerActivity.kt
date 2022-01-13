@@ -44,6 +44,7 @@ class BarcodeScannerActivity : AppCompatActivity() {
         var votes3 = 0
         var votes4 = 0
         var numberOfParticipants = PolloptionFragment.numberOfParticipants;
+        lateinit var results : HashMap<String, Int>
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -61,33 +62,36 @@ class BarcodeScannerActivity : AppCompatActivity() {
         addContentView(barcodeBoxView, ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT))
 
         checkCameraPermission()
+        binding.pollyRoomBtn.setOnClickListener(View.OnClickListener {
+            cameraExecutor.shutdown()
+            if (numberOfParticipants == votes1 + votes2 + votes3 + votes4) {
+                results = HashMap<String, Int>()
+                results.put(CreatePollFragment.answer1, votes1)
+                results.put(CreatePollFragment.answer2, votes2)
+                results.put(CreatePollFragment.answer3, votes3)
+                results.put(CreatePollFragment.answer4, votes4)
+                val intent = Intent(this, DisplayQRCodePie::class.java).apply {
+                    putExtra("THE_PIE", results)
+                    putExtra("PARTICIPANTS", numberOfParticipants)
+                    putExtra("NAME", CreatePollFragment.name)
+                    putExtra("DESCRIPTION", CreatePollFragment.description)
+                }
+                startActivity(intent)
+            } else {
+                Toast.makeText(
+                    this,
+                    "Not all QR-Codes have been scanned, please try again",
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+        })
 
     }
 
 
     override fun onDestroy() {
         super.onDestroy()
-        cameraExecutor.shutdown()
-        if (numberOfParticipants == votes1 + votes2 + votes3 + votes4) {
-            val results = HashMap<String, Int>()
-            results.put(CreatePollFragment.answer1, votes1)
-            results.put(CreatePollFragment.answer2, votes2)
-            results.put(CreatePollFragment.answer3, votes3)
-            results.put(CreatePollFragment.answer4, votes4)
-            val intent = Intent(this, DisplayQRCodePie::class.java).apply {
-                putExtra("THE_PIE", results)
-                putExtra("PARTICIPANTS", numberOfParticipants)
-                putExtra("NAME", CreatePollFragment.name)
-                putExtra("DESCRIPTION", CreatePollFragment.description)
-            }
-            startActivity(intent)
-        } else {
-            Toast.makeText(
-                this,
-                "Not all QR-Codes have been scanned, please try again",
-                Toast.LENGTH_SHORT
-            ).show()
-        }
+
     }
 
     /**
