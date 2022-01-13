@@ -572,9 +572,19 @@ public class ShowPollVotingPageFragment extends Fragment implements OnMapReadyCa
     }
 
 
+    public void openDialog(){
+        EditPollOptionsDialog editPollOptionsDialog = new EditPollOptionsDialog();
+        editPollOptionsDialog.show(getActivity().getSupportFragmentManager(), "edit Polloption dialog");
+
+    }
     private void editPoll() {
+        openDialog();
         String newName = "";
         PollDescription newDescription = new PollDescription("");
+
+
+
+
 
         // TODO wenn es newName gibt:
         try {
