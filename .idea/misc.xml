@@ -19,10 +19,12 @@
         <entry key="..\:/Users/willi/StudioProjects/polly/app/src/main/res/drawable/ic_recent.xml" value="0.37864583333333335" />
         <entry key="..\:/Users/willi/StudioProjects/polly/app/src/main/res/drawable/ic_signin_signup.xml" value="0.37864583333333335" />
         <entry key="..\:/Users/willi/StudioProjects/polly/app/src/main/res/layout/activity_bar.xml" value="0.3625" />
+        <entry key="..\:/Users/willi/StudioProjects/polly/app/src/main/res/layout/activity_barcode_scanner.xml" value="0.2608695652173913" />
         <entry key="..\:/Users/willi/StudioProjects/polly/app/src/main/res/layout/activity_create_poll.xml" value="0.3625" />
         <entry key="..\:/Users/willi/StudioProjects/polly/app/src/main/res/layout/activity_enter_poll.xml" value="0.3625" />
         <entry key="..\:/Users/willi/StudioProjects/polly/app/src/main/res/layout/activity_login.xml" value="0.3625" />
         <entry key="..\:/Users/willi/StudioProjects/polly/app/src/main/res/layout/activity_main.xml" value="0.3625" />
+        <entry key="..\:/Users/willi/StudioProjects/polly/app/src/main/res/layout/activity_qrpie.xml" value="0.2608695652173913" />
         <entry key="..\:/Users/willi/StudioProjects/polly/app/src/main/res/layout/content_main.xml" value="0.3625" />
         <entry key="..\:/Users/willi/StudioProjects/polly/app/src/main/res/layout/dropdown_item.xml" value="0.2864583333333333" />
         <entry key="..\:/Users/willi/StudioProjects/polly/app/src/main/res/layout/example_item.xml" value="0.2864583333333333" />
@@ -31,6 +33,7 @@
         <entry key="..\:/Users/willi/StudioProjects/polly/app/src/main/res/layout/fragment_login.xml" value="0.20260416666666667" />
         <entry key="..\:/Users/willi/StudioProjects/polly/app/src/main/res/layout/fragment_recent.xml" value="0.3625" />
         <entry key="..\:/Users/willi/StudioProjects/polly/app/src/main/res/layout/fragment_roomscanner.xml" value="0.2630208333333333" />
+        <entry key="..\:/Users/willi/StudioProjects/polly/app/src/main/res/layout/fragment_showpoll.xml" value="0.29010416666666666" />
         <entry key="..\:/Users/willi/StudioProjects/polly/app/src/main/res/layout/fragment_sign_up.xml" value="0.33" />
         <entry key="..\:/Users/willi/StudioProjects/polly/app/src/main/res/layout/fragment_start.xml" value="0.25" />
         <entry key="..\:/Users/willi/StudioProjects/polly/app/src/main/res/layout/nav_header.xml" value="0.3625" />

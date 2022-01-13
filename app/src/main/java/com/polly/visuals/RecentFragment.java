@@ -119,6 +119,7 @@ public class RecentFragment extends Fragment {
 
         pieChart.setMinimumHeight(600);
         pieChart.setMinimumWidth(600);
+        pieChart.setCenterTextSize(17f);
         return pieChart;
     }
 }

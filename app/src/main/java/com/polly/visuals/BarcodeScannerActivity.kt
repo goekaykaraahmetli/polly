@@ -61,10 +61,7 @@ class BarcodeScannerActivity : AppCompatActivity() {
         addContentView(barcodeBoxView, ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT))
 
         checkCameraPermission()
-        var button = findViewById<Button>(R.id.buttonRoom)
-        button.setOnClickListener {
-            Toast.makeText(this, "TEST", Toast.LENGTH_SHORT).show()
-    }
+
     }
 
 
@@ -80,7 +77,8 @@ class BarcodeScannerActivity : AppCompatActivity() {
             val intent = Intent(this, DisplayQRCodePie::class.java).apply {
                 putExtra("THE_PIE", results)
                 putExtra("PARTICIPANTS", numberOfParticipants)
-                putExtra("DESCRIPTION", CreatePollFragment.name)
+                putExtra("NAME", CreatePollFragment.name)
+                putExtra("DESCRIPTION", CreatePollFragment.description)
             }
             startActivity(intent)
         } else {

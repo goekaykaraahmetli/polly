@@ -59,6 +59,7 @@ public class CreatePollFragment extends Fragment {
     public static String answer4;
     public static int numberOfParticipants;
     public static String name;
+    public static String description;
     private CountDownTimer countDownTimer;
     LocalDateTime localDateTime;
     HashMap<Integer, EditText> map = new HashMap<>();
@@ -94,6 +95,7 @@ public class CreatePollFragment extends Fragment {
         Button remove2 = new Button(getContext());
         remove2.setText("remove Option");
         remove2.setVisibility(View.INVISIBLE);
+        description = saving.getDescription().toString();
         ((LinearLayout) root.findViewById(R.id.linear_layout)).addView(remove2);
 
             map.put(0, option1);
@@ -303,7 +305,7 @@ public class CreatePollFragment extends Fragment {
                                 }
                         }
                         Toast.makeText(getActivity(), "Poll ID is: " + id, Toast.LENGTH_SHORT).show();
-                        saving.reset();
+                        //saving.reset();
                     } catch (IOException e) {
                         e.printStackTrace();
                         Toast.makeText(getActivity(), "No connection to the server!", Toast.LENGTH_SHORT).show();
