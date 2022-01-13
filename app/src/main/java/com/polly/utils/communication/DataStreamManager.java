@@ -25,6 +25,8 @@ import com.polly.utils.Area;
 import com.polly.utils.Location;
 import com.polly.utils.command.GetMyPollsCommand;
 import com.polly.utils.command.GetParticipatedPollsCommand;
+import com.polly.utils.command.poll.EditPollDescriptionCommand;
+import com.polly.utils.command.poll.EditPollNameCommand;
 import com.polly.utils.command.poll.GetGeofencePollArea;
 import com.polly.utils.command.poll.GetPollOptionsCommand;
 import com.polly.utils.command.poll.GetPollResultsCommand;
@@ -65,6 +67,7 @@ import com.polly.utils.wrapper.UsergroupWrapper;
 
 import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
+import javax.swing.event.UndoableEditEvent;
 
 public class DataStreamManager {
 	private static final int REFRESH_DELAY = Config.DATA_STREAM_MANAGER_REFRESH_DELAY;
@@ -207,6 +210,10 @@ public class DataStreamManager {
 			data = readLocation();
 		else if(dataType.equals(GetGeofencePollArea.class))
 			data = readGetGeofencePollArea();
+		else if(dataType.equals(EditPollDescriptionCommand.class))
+			data = readEditPollDescriptionCommand();
+		else if(dataType.equals(EditPollNameCommand.class))
+			data = readEditPollNameCommand();
 			
 			// default type:
 		else
@@ -409,6 +416,11 @@ public class DataStreamManager {
 			writeLocation((Location) data);
 		else if(dataType.equals(GetGeofencePollArea.class))
 			writeGetGeofencePollArea((GetGeofencePollArea) data);
+		else if(dataType.equals(EditPollDescriptionCommand.class))
+			writeEditPollDescriptionCommand((EditPollDescriptionCommand) data);
+		else if(dataType.equals(EditPollNameCommand.class))
+			writeEditPollNameCommand((EditPollNameCommand) data);
+		
 		
 			// default type:
 		else
@@ -1072,5 +1084,21 @@ public class DataStreamManager {
 		return new GetGeofencePollArea(readLong());
 	}
 	
+	private void writeEditPollDescriptionCommand(EditPollDescriptionCommand data) throws IOException {
+		writeLong(data.getId());
+		writePollDescription(data.getDescription());
+	}
 	
+	private EditPollDescriptionCommand readEditPollDescriptionCommand() throws IOException {
+		return new EditPollDescriptionCommand(readLong(), readPollDescription());
+	}
+	
+	private void writeEditPollNameCommand(EditPollNameCommand data) throws IOException {
+		writeLong(data.getId());
+		writeString(data.getName());
+	}
+	
+	private EditPollNameCommand readEditPollNameCommand() throws IOException {
+		return new EditPollNameCommand(readLong(), readString());
+	}
 }
