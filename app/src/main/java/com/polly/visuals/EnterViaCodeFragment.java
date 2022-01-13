@@ -40,14 +40,15 @@ public class EnterViaCodeFragment extends Fragment {
                     Toast.makeText(getActivity(), "The entered code has the wrong size. Try again", Toast.LENGTH_SHORT).show();
                 else {
                     //Toast.makeText(getActivity(), "Code has the right format. Your code is: " + code, Toast.LENGTH_SHORT).show();
-
-                    long id = Long.valueOf((String) code);
-
                     try {
-                        ShowPollPage.showPollVotingPage(id);
-                    } catch (IllegalStateException | IllegalArgumentException | IOException e){
-                        Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
-                        e.printStackTrace();
+                        long id = Long.valueOf((String) code);
+                        ShowPollPage.enterPoll(getContext(), id);
+                    }
+                     catch (IllegalStateException | IllegalArgumentException e){
+                        if(e.getMessage() == null)
+                            Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
+                        else
+                            Toast.makeText(getContext(), "Illegal Argument!", Toast.LENGTH_SHORT).show();
                     }
                 }
             }
