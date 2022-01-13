@@ -64,6 +64,7 @@ public class PolloptionFragment extends Fragment {
     public static int numberOfParticipants;
     LocalTime localTime;
     LocalDate localDate;
+
     @Override
     public void onResume() {
         super.onResume();
@@ -98,11 +99,11 @@ public class PolloptionFragment extends Fragment {
         int day = calendar.get(Calendar.DAY_OF_MONTH);
         int hour = calendar.get(Calendar.HOUR);
         int minute = calendar.get(Calendar.MINUTE);
-        if(saving.getNumberOfParticipants() != 0){
+        if (saving.getNumberOfParticipants() != 0) {
             ((EditText) root.findViewById(R.id.PollyRoomNumber)).setText(String.valueOf(saving.getNumberOfParticipants()));
         }
-        if(saving.getArea() != null){
-            ((AutoCompleteTextView)root.findViewById(R.id.geofencing)).setText(saving.getArea().toString());
+        if (saving.getArea() != null) {
+            ((AutoCompleteTextView) root.findViewById(R.id.geofencing)).setText(saving.getArea().toString());
         }
         AutoCompleteTextView test = (AutoCompleteTextView) root.findViewById(R.id.DatePicker);
         AutoCompleteTextView dropDownMenu = (AutoCompleteTextView) root.findViewById(R.id.autoCompleteTextView);
@@ -115,7 +116,6 @@ public class PolloptionFragment extends Fragment {
         TextInputLayout pollyRoom = (TextInputLayout) root.findViewById(R.id.PollRoomLayout);
         TextView pollyRoomInfo = (TextView) root.findViewById(R.id.PollyRoomInfo);
         //Button createPollBtn = (Button) root.findViewById(R.id.CreatePollOnMenu);
-        Button sendQRviaEmail = (Button) root.findViewById(R.id.SendQRviaEmailBtn);
         AutoCompleteTextView geofenceBtn = (AutoCompleteTextView) root.findViewById(R.id.geofencing);
 
         dropDownMenu.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -131,9 +131,8 @@ public class PolloptionFragment extends Fragment {
                     pollyRoom.setVisibility(View.GONE);
                     pollyRoomInfo.setVisibility(View.GONE);
                     datePicker.setVisibility(View.VISIBLE);
-                    sendQRviaEmail.setVisibility(View.GONE);
                 } else if (dropDownMenu.getText().toString().equals("PRIVATE")) {
-                   // createPollBtn.setText("CREATE POLL");
+                    // createPollBtn.setText("CREATE POLL");
                     geofence.setVisibility(View.GONE);
                     userGroup.setVisibility(View.VISIBLE);
                     votingCandidates.setVisibility(View.GONE);
@@ -141,7 +140,6 @@ public class PolloptionFragment extends Fragment {
                     pollyRoom.setVisibility(View.GONE);
                     pollyRoomInfo.setVisibility(View.GONE);
                     datePicker.setVisibility(View.VISIBLE);
-                    sendQRviaEmail.setVisibility(View.GONE);
                 } else if (dropDownMenu.getText().toString().equals("CUSTOM")) {
                     //createPollBtn.setText("CREATE POLL");
                     geofence.setVisibility(View.GONE);
@@ -151,7 +149,6 @@ public class PolloptionFragment extends Fragment {
                     pollyRoom.setVisibility(View.GONE);
                     pollyRoomInfo.setVisibility(View.GONE);
                     datePicker.setVisibility(View.VISIBLE);
-                    sendQRviaEmail.setVisibility(View.GONE);
                 } else if (dropDownMenu.getText().toString().equals("PUBLIC")) {
                     //createPollBtn.setText("CREATE POLL");
                     geofence.setVisibility(View.GONE);
@@ -161,8 +158,7 @@ public class PolloptionFragment extends Fragment {
                     pollyRoom.setVisibility(View.GONE);
                     pollyRoomInfo.setVisibility(View.GONE);
                     datePicker.setVisibility(View.VISIBLE);
-                    sendQRviaEmail.setVisibility(View.GONE);
-                }else if(dropDownMenu.getText().toString().equals("POLLYROOM")){
+                } else if (dropDownMenu.getText().toString().equals("POLLYROOM")) {
                     //createPollBtn.setText("SCAN ROOM");
                     geofence.setVisibility(View.GONE);
                     userGroup.setVisibility(View.GONE);
@@ -175,7 +171,7 @@ public class PolloptionFragment extends Fragment {
                 }
             }
         });
-        if(saving.getDropDownMenu() != null) {
+        if (saving.getDropDownMenu() != null) {
             dropDownMenu.setText(saving.getDropDownMenu().toString());
             if (dropDownMenu.getText().toString().equals("GEOFENCE")) {
                 //createPollBtn.setText("CREATE POLL");
@@ -186,7 +182,6 @@ public class PolloptionFragment extends Fragment {
                 pollyRoom.setVisibility(View.GONE);
                 pollyRoomInfo.setVisibility(View.GONE);
                 datePicker.setVisibility(View.VISIBLE);
-                sendQRviaEmail.setVisibility(View.GONE);
             } else if (dropDownMenu.getText().toString().equals("PRIVATE")) {
                 //createPollBtn.setText("CREATE POLL");
                 geofence.setVisibility(View.GONE);
@@ -198,7 +193,6 @@ public class PolloptionFragment extends Fragment {
                 pollyRoom.setVisibility(View.GONE);
                 pollyRoomInfo.setVisibility(View.GONE);
                 datePicker.setVisibility(View.VISIBLE);
-                sendQRviaEmail.setVisibility(View.GONE);
             } else if (dropDownMenu.getText().toString().equals("CUSTOM")) {
                 //createPollBtn.setText("CREATE POLL");
                 geofence.setVisibility(View.GONE);
@@ -210,26 +204,25 @@ public class PolloptionFragment extends Fragment {
                 pollyRoom.setVisibility(View.GONE);
                 pollyRoomInfo.setVisibility(View.GONE);
                 datePicker.setVisibility(View.VISIBLE);
-                sendQRviaEmail.setVisibility(View.GONE);
-                if(saving.getCanVoteList() != null && !saving.getCanVoteList().isEmpty()){
+                if (saving.getCanVoteList() != null && !saving.getCanVoteList().isEmpty()) {
                     votingCandidatesList.setText(saving.getCanVoteList().get(0).toString());
-                    if(!(saving.getCanVoteList().size() < 2) && saving.getCanVoteList().get(1) != null){
+                    if (!(saving.getCanVoteList().size() < 2) && saving.getCanVoteList().get(1) != null) {
                         votingCandidatesList.setText(saving.getCanVoteList().get(0).toString() + "," + saving.getCanVoteList().get(1).toString());
                     }
-                    if(saving.getCanVoteList().size() > 2) {
+                    if (saving.getCanVoteList().size() > 2) {
                         votingCandidatesList.setText(saving.getCanVoteList().get(0).toString() + "," + saving.getCanVoteList().get(1).toString() + ", ...");
                     }
                 }
-                if(saving.getCanSeeAndVoteList() != null && !saving.getCanSeeAndVoteList().isEmpty()){
+                if (saving.getCanSeeAndVoteList() != null && !saving.getCanSeeAndVoteList().isEmpty()) {
                     observingCandidatesList.setText(saving.getCanSeeAndVoteList().get(0));
-                    if(!(saving.getCanSeeAndVoteList().size() < 2) && saving.getCanSeeAndVoteList().get(1) != null){
+                    if (!(saving.getCanSeeAndVoteList().size() < 2) && saving.getCanSeeAndVoteList().get(1) != null) {
                         observingCandidatesList.setText(saving.getCanSeeAndVoteList().get(0) + "," + saving.getCanSeeAndVoteList().get(1));
                     }
-                    if(saving.getCanSeeAndVoteList().size() > 2) {
+                    if (saving.getCanSeeAndVoteList().size() > 2) {
                         observingCandidatesList.setText(saving.getCanSeeAndVoteList().get(0) + "," + saving.getCanSeeAndVoteList().get(1) + ", ...");
                     }
                 }
-            }else if(dropDownMenu.getText().toString().equals("POLLYROOM")){
+            } else if (dropDownMenu.getText().toString().equals("POLLYROOM")) {
                 //createPollBtn.setText("SCAN ROOM");
                 geofence.setVisibility(View.GONE);
                 userGroup.setVisibility(View.GONE);
@@ -239,11 +232,6 @@ public class PolloptionFragment extends Fragment {
                 pollyRoom.setVisibility(View.VISIBLE);
                 saving.setCalendarText(null);
                 datePicker.setVisibility(View.GONE);
-                if(saving.getPollOptions() == null){
-                    sendQRviaEmail.setVisibility(View.GONE);
-                }else{
-                    sendQRviaEmail.setVisibility(View.VISIBLE);
-                }
             }
         }
 
@@ -251,9 +239,9 @@ public class PolloptionFragment extends Fragment {
         TextInputEditText description = (TextInputEditText) root.findViewById(R.id.description);
         Pollname.setText(saving.getPollname());
         description.setText(saving.getDescription());
-        if(saving.getCalendarText() != null)
+        if (saving.getCalendarText() != null)
             test.setText(saving.getCalendarText());
-        if(saving.getDropDownMenu() != null)
+        if (saving.getDropDownMenu() != null)
             dropDownMenu.setText(saving.getDropDownMenu());
         test.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -273,12 +261,12 @@ public class PolloptionFragment extends Fragment {
                     @Override
                     public void onDateSet(DatePicker datePicker, int year, int month, int day) {
                         month = month + 1;
-                        String date = year+"-"+month+"-"+day + " ";
+                        String date = year + "-" + month + "-" + day + " ";
                         localDate = LocalDate.of(year, month, day);
                         saving.setLocalDate(localDate);
                         test.setText(date);
                     }
-                }, year,month, day);
+                }, year, month, day);
                 datePickerDialog.show();
             }
         });
@@ -337,35 +325,35 @@ public class PolloptionFragment extends Fragment {
                     Toast.makeText(getActivity(), "Please enter Pollname", Toast.LENGTH_SHORT).show();
                     return;
                 }
-                if(!dropDownMenu.getText().toString().equals("POLLYROOM")){
-                    if(saving.getLocalDate() == null || saving.getLocalTime() == null) {
+                if (!dropDownMenu.getText().toString().equals("POLLYROOM")) {
+                    if (saving.getLocalDate() == null || saving.getLocalTime() == null) {
                         Toast.makeText(getActivity(), "Please choose a date and a time!", Toast.LENGTH_SHORT).show();
                         return;
                     }
                     LocalDateTime localDateTime = LocalDateTime.of(saving.getLocalDate(), saving.getLocalTime());
-                    if(localDateTime.isBefore(LocalDateTime.now(ZoneId.of("Europe/Berlin")))){
+                    if (localDateTime.isBefore(LocalDateTime.now(ZoneId.of("Europe/Berlin")))) {
                         Toast.makeText(getActivity(), "Please choose a date in the future!", Toast.LENGTH_SHORT).show();
                         return;
                     }
-                    if(timeDiffInString(getDifferenceInMS(convertToDate(LocalDateTime.now(ZoneId.of("Europe/Berlin"))), convertToDate(LocalDateTime.of(saving.getLocalDate(), saving.getLocalTime()))))){
+                    if (timeDiffInString(getDifferenceInMS(convertToDate(LocalDateTime.now(ZoneId.of("Europe/Berlin"))), convertToDate(LocalDateTime.of(saving.getLocalDate(), saving.getLocalTime()))))) {
                         Toast.makeText(getActivity(), "Polls must only last up to 1 year", Toast.LENGTH_SHORT).show();
                         return;
                     }
 
                 }
-                switch(dropDownMenu.getText().toString()){
+                switch (dropDownMenu.getText().toString()) {
                     case "GEOFENCE":
-                        if(saving.getArea() == null){
+                        if (saving.getArea() == null) {
                             Toast.makeText(getActivity(), "Please set a Geofence Area", Toast.LENGTH_SHORT).show();
                             return;
                         }
                         break;
                     case "POLLYROOM":
                         EditText participants = (EditText) root.findViewById(R.id.PollyRoomNumber);
-                        if(!participants.getText().toString().equals("")){
+                        if (!participants.getText().toString().equals("")) {
                             numberOfParticipants = Integer.parseInt(participants.getText().toString());
                             saving.setNumberOfParticipants(numberOfParticipants);
-                        }else{
+                        } else {
                             Toast.makeText(getActivity(), "Please enter number of Participants", Toast.LENGTH_SHORT).show();
                             return;
                         }
@@ -379,152 +367,113 @@ public class PolloptionFragment extends Fragment {
                 Navigation.findNavController(getActivity(), R.id.nav_host_fragment).navigate(R.id.createPollFragment);
             }
         });
-     /**   root.findViewById(R.id.CreatePollOnMenu).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                List<String> pollOptions = saving.getPollOptions();
-                if (dropDownMenu.getText().toString().equals("POLLYROOM")) {
-                 EditText participants = (EditText) root.findViewById(R.id.PollyRoomNumber);
-                    if(!participants.getText().toString().equals(""))
-                        numberOfParticipants = Integer.parseInt(participants.getText().toString());
-                 else
-                     numberOfParticipants = 0;
-                     name = ((EditText) root.findViewById(R.id.Name)).getText().toString();
-                    if (pollOptions == null) {
-                        Toast.makeText(getActivity(), "Please add some Options", Toast.LENGTH_SHORT).show();
-                    }
-                    else if (Pollname.getText().length() == 0) {
-                        Toast.makeText(getActivity(), "Please enter Pollname", Toast.LENGTH_SHORT).show();
-                    }
-                    else if (numberOfParticipants == 0){
-                        Toast.makeText(getActivity(), "Please increase the number of participants", Toast.LENGTH_SHORT).show();
-                    }
-                    else{
-                    List<String> options = saving.getPollOptions();
-                    if(options.get(0) != null){
-                        answer1 = options.get(0);
-                    }
-                    if(options.get(1) != null){
-                        answer2 = options.get(1);
-                    }
-                    if(options.size() > 2 && options.get(2) != null){
-                        answer3 = options.get(2);
-                    }
-                    if(options.size() > 3 && options.get(3) != null){
-                        answer4 = options.get(3);
-                    }
-                    Intent intent = new Intent(getActivity(), BarcodeScannerActivity.class);
-                    startActivity(intent);}
-                } else {
-                    //Editable poll = pollName.getText();
-                    //CharSequence poll1 = poll.toString();
-                    if (pollOptions == null) {
-                        Toast.makeText(getActivity(), "Please add some Options", Toast.LENGTH_SHORT).show();
-                        return;
-                    }
-                    if (Pollname.getText().length() == 0) {
-                        Toast.makeText(getActivity(), "Please enter Pollname", Toast.LENGTH_SHORT).show();
-                        return;
-                    }
+        /**   root.findViewById(R.id.CreatePollOnMenu).setOnClickListener(new View.OnClickListener() {
+        @Override public void onClick(View view) {
+        List<String> pollOptions = saving.getPollOptions();
+        if (dropDownMenu.getText().toString().equals("POLLYROOM")) {
+        EditText participants = (EditText) root.findViewById(R.id.PollyRoomNumber);
+        if(!participants.getText().toString().equals(""))
+        numberOfParticipants = Integer.parseInt(participants.getText().toString());
+        else
+        numberOfParticipants = 0;
+        name = ((EditText) root.findViewById(R.id.Name)).getText().toString();
+        if (pollOptions == null) {
+        Toast.makeText(getActivity(), "Please add some Options", Toast.LENGTH_SHORT).show();
+        }
+        else if (Pollname.getText().length() == 0) {
+        Toast.makeText(getActivity(), "Please enter Pollname", Toast.LENGTH_SHORT).show();
+        }
+        else if (numberOfParticipants == 0){
+        Toast.makeText(getActivity(), "Please increase the number of participants", Toast.LENGTH_SHORT).show();
+        }
+        else{
+        List<String> options = saving.getPollOptions();
+        if(options.get(0) != null){
+        answer1 = options.get(0);
+        }
+        if(options.get(1) != null){
+        answer2 = options.get(1);
+        }
+        if(options.size() > 2 && options.get(2) != null){
+        answer3 = options.get(2);
+        }
+        if(options.size() > 3 && options.get(3) != null){
+        answer4 = options.get(3);
+        }
+        Intent intent = new Intent(getActivity(), BarcodeScannerActivity.class);
+        startActivity(intent);}
+        } else {
+        //Editable poll = pollName.getText();
+        //CharSequence poll1 = poll.toString();
+        if (pollOptions == null) {
+        Toast.makeText(getActivity(), "Please add some Options", Toast.LENGTH_SHORT).show();
+        return;
+        }
+        if (Pollname.getText().length() == 0) {
+        Toast.makeText(getActivity(), "Please enter Pollname", Toast.LENGTH_SHORT).show();
+        return;
+        }
 
-                    if(!(test.getText().toString().contains("-") && test.getText().toString().contains(":"))){
-                        Toast.makeText(getActivity(), "Please choose a valid Expiration date", Toast.LENGTH_SHORT).show();
-                        return;
-                     }
+        if(!(test.getText().toString().contains("-") && test.getText().toString().contains(":"))){
+        Toast.makeText(getActivity(), "Please choose a valid Expiration date", Toast.LENGTH_SHORT).show();
+        return;
+        }
 
-                    try {
-                        long id;
-                        localTime = saving.getLocalTime();
-                        localDate = saving.getLocalDate();
-                        localDateTime = LocalDateTime.of(localDate, localTime);
-                        System.out.println(localDateTime.toString());
-                        switch(dropDownMenu.getText().toString()) {
-                            case "PUBLIC":
-                                System.out.println(Pollname.getText().toString());
-                                System.out.println(description.getText().toString());
-                                System.out.println(localDateTime.toString());
-                                for(int i = 0; i<pollOptions.size(); i++){
-                                    System.out.println(pollOptions.get(i));
-                                }
-                                id = PollManager.createPublicPoll(Pollname.getText().toString(), new PollDescription(description.getText().toString()), localDateTime, pollOptions);
-                                break;
-                            case "PRIVATE":
-                                id = PollManager.createPrivatePoll(Pollname.getText().toString(), new PollDescription(description.getText().toString()), localDateTime, pollOptions, saving.getUserGroupId());
-                                break;
-                            case "CUSTOM":
-                                id = PollManager.createCustomPoll(Pollname.getText().toString(), new PollDescription(description.getText().toString()), localDateTime, pollOptions, saving.getCanSeeList(), saving.getCanSeeAndVoteList());
-                                break;
-                            case "GEOFENCE":
-                                long latitude = 0L;     //TODO
-                                long longitude = 0L;    //TODO
-                                id = PollManager.createGeofencePoll(Pollname.getText().toString(), new PollDescription(description.getText().toString()), localDateTime , pollOptions, new Area(latitude, longitude, Double.parseDouble(geofenceBtn.getText().toString())));
-                                break;
-                            default:
-                                throw new IllegalStateException("Unexpected value: " + "switch statement can't work with the given cases");
-                        }
-                        Toast.makeText(getActivity(), "Poll ID is: " + id, Toast.LENGTH_SHORT).show();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                        Toast.makeText(getActivity(), "No connection to the server!", Toast.LENGTH_SHORT).show();
-                    }
-                }
-            }
+        try {
+        long id;
+        localTime = saving.getLocalTime();
+        localDate = saving.getLocalDate();
+        localDateTime = LocalDateTime.of(localDate, localTime);
+        System.out.println(localDateTime.toString());
+        switch(dropDownMenu.getText().toString()) {
+        case "PUBLIC":
+        System.out.println(Pollname.getText().toString());
+        System.out.println(description.getText().toString());
+        System.out.println(localDateTime.toString());
+        for(int i = 0; i<pollOptions.size(); i++){
+        System.out.println(pollOptions.get(i));
+        }
+        id = PollManager.createPublicPoll(Pollname.getText().toString(), new PollDescription(description.getText().toString()), localDateTime, pollOptions);
+        break;
+        case "PRIVATE":
+        id = PollManager.createPrivatePoll(Pollname.getText().toString(), new PollDescription(description.getText().toString()), localDateTime, pollOptions, saving.getUserGroupId());
+        break;
+        case "CUSTOM":
+        id = PollManager.createCustomPoll(Pollname.getText().toString(), new PollDescription(description.getText().toString()), localDateTime, pollOptions, saving.getCanSeeList(), saving.getCanSeeAndVoteList());
+        break;
+        case "GEOFENCE":
+        long latitude = 0L;     //TODO
+        long longitude = 0L;    //TODO
+        id = PollManager.createGeofencePoll(Pollname.getText().toString(), new PollDescription(description.getText().toString()), localDateTime , pollOptions, new Area(latitude, longitude, Double.parseDouble(geofenceBtn.getText().toString())));
+        break;
+        default:
+        throw new IllegalStateException("Unexpected value: " + "switch statement can't work with the given cases");
+        }
+        Toast.makeText(getActivity(), "Poll ID is: " + id, Toast.LENGTH_SHORT).show();
+        } catch (IOException e) {
+        e.printStackTrace();
+        Toast.makeText(getActivity(), "No connection to the server!", Toast.LENGTH_SHORT).show();
+        }
+        }
+        }
         }); **/
 
-        Button sendQRViaEmailBtn = root.findViewById(R.id.SendQRviaEmailBtn);
-        sendQRViaEmailBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                TextInputEditText participants = root.findViewById(R.id.PollyRoomNumber);
-                numberOfParticipants = Integer.parseInt(participants.getText().toString());
-                int numberOfOptions = saving.getOptionCounter();
-                AlertDialog.Builder alert = new AlertDialog.Builder(getContext());
-                alert.setTitle("Enter the E-Mail address you want the QR-Codes sent to");
-                alert.setMessage("Please enter an E-Mail");
-                EditText usernameInput = new EditText(getContext());
-                alert.setView(usernameInput);
-                alert.setPositiveButton("Enter", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        ArrayList<Uri> uris = new ArrayList<>();
-                        Intent emailIntent = new Intent(Intent.ACTION_SEND_MULTIPLE);
-                        // set the type to 'email'
-                        emailIntent.setType("vnd.android.cursor.dir/email");
-                        String to[] = {"willimowski4@gmail.com"};
-                        emailIntent.putExtra(Intent.EXTRA_EMAIL, to);
-                        emailIntent .putExtra(Intent.EXTRA_SUBJECT, "Subject");
-                        for(int i = 1; i <= numberOfOptions; i++){
-                            for(int j = 97; j <= 96 + numberOfParticipants; j++){
-                                Bitmap inImage = QRCode.QRCode("" + i + (char) j);
-                                ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-                                inImage.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
-                                String path = MediaStore.Images.Media.insertImage(getContext().getContentResolver(), inImage, "Answer_" + i + "_Participant_"+ (j-96), null);
-                                Uri uri = Uri.parse(path);
-                                uris.add(uri);
 
-                            }
-                        }
-                        // the attachment
-                        emailIntent.putParcelableArrayListExtra(Intent.EXTRA_STREAM, uris);
-                        startActivity(Intent.createChooser(emailIntent , "Send email..."));
-                    }
-
-                });
-                alert.show();
-            }
-        });
         return root;
     }
-    public Date convertToDate(LocalDateTime data){
+
+    public Date convertToDate(LocalDateTime data) {
         return Date.from(data.atZone(ZoneId.systemDefault()).toInstant());
     }
-    public static long getDifferenceInMS(Date date1, Date date2){
-        if(date2.getTime() - date1.getTime() > 0)
+
+    public static long getDifferenceInMS(Date date1, Date date2) {
+        if (date2.getTime() - date1.getTime() > 0)
             return (date2.getTime() - date1.getTime());
         else
             return 0l;
     }
-    public boolean timeDiffInString(long difference_In_Time){
+
+    public boolean timeDiffInString(long difference_In_Time) {
         long diffYears = TimeUnit
                 .MILLISECONDS
                 .toDays(difference_In_Time)

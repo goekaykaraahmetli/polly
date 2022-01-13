@@ -225,14 +225,6 @@
                 android:textSize="14sp" />
         </com.google.android.material.textfield.TextInputLayout>
 
-        <Button
-            android:id="@+id/SendQRviaEmailBtn"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Send QR-Codes Via Email"
-            android:visibility="gone">
-
-        </Button>
     </LinearLayout>
 
     <androidx.constraintlayout.widget.Guideline
