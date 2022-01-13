@@ -71,12 +71,12 @@ public class CodeScannerFragment extends Fragment {
                     public void run() {
                         try {
                             long id = Long.valueOf(result.getText());
-                            ShowPollPage.showPollVotingPage(id);
+                            ShowPollPage.enterPoll(getContext(), id);
                         }catch (NumberFormatException e){
                             Toast.makeText(activity, "\"" + result.getText() + "\" is not a valid poll id", Toast.LENGTH_SHORT).show();
                             e.printStackTrace();
                             restartScanner(2.5);
-                        } catch (IllegalStateException | IllegalArgumentException | IOException e){
+                        } catch (IllegalStateException | IllegalArgumentException e){
                             Toast.makeText(activity, e.getMessage(), Toast.LENGTH_SHORT).show();
                             e.printStackTrace();
                             restartScanner(2.5);
