@@ -8,6 +8,7 @@ import android.content.IntentSender;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Looper;
@@ -28,6 +29,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.core.app.ActivityCompat;
+import androidx.core.app.NotificationCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
@@ -226,6 +228,10 @@ public class ShowPollResultsPageFragment extends Fragment implements OnMapReadyC
 
 
     private void updatePieChart(PollResultsWrapper updatePoll) {
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(getContext(), "channel_id")
+                .setSmallIcon(R.drawable.ic_logo).setContentTitle("Polly Notification")
+                .setContentText("Someone has voted for your poll")
+                .setPriority(NotificationCompat.PRIORITY_DEFAULT);
         pollResults = updatePoll;
         ArrayList<PieEntry> options = new ArrayList<>();
         for (String option : updatePoll.getPollResults().keySet()) {
@@ -250,6 +256,10 @@ public class ShowPollResultsPageFragment extends Fragment implements OnMapReadyC
         pieChart.setUsePercentValues(true);
         pieChart.animate();
         pieChart.setVisibility(View.VISIBLE);
+    }
+
+    public void createNotificationChannel() {
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
     }
 
     public Date convertToDate(LocalDateTime data) {

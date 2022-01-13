@@ -39,13 +39,7 @@ public class DisplayQRCodePie extends AppCompatActivity {
         pieChart.setCenterTextSize(17f);
         pieChart.setDescription(description);
         pieChart.setUsePercentValues(true);
-        findViewById(R.id.displayQRBtn).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                DisplayQRCodePie.super.onPostResume();
-                Navigation.findNavController(MainActivity.mainActivity, R.id.nav_host_fragment).navigate(R.id.startFragment);
-            }
-        });
+
 
     }
 

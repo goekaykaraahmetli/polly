@@ -241,44 +241,44 @@ public class LoginFragment extends Fragment {
         alert.setPositiveButton("Enter", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                IsUsernameAvailableCommand com = new IsUsernameAvailableCommand(usernameInput.getText().toString());
-                try {
-                    Message booleanMessage = communicator.sendWithResponse(Config.serverCommunicationId, com);
-                    if(booleanMessage.getDataType() == Boolean.class) {
-                        boolean isFree = (Boolean) booleanMessage.getData();
-                        if (isFree) {
-                            Message message = communicator.sendWithResponse(Config.serverCommunicationId, new RegisterCommand(idToken, usernameInput.getText().toString()));
-                            if(message.getDataType() == LoginAnswerWrapper.class) {
-                                LoginAnswerWrapper answer = (LoginAnswerWrapper) message.getData();
+                if (usernameInput.getText().toString() == "")
+                    Toast.makeText(MainActivity.mainActivity, "Please enter at least one character", Toast.LENGTH_SHORT).show();
+                else {
+                    IsUsernameAvailableCommand com = new IsUsernameAvailableCommand(usernameInput.getText().toString());
+                    try {
+                        Message booleanMessage = communicator.sendWithResponse(Config.serverCommunicationId, com);
+                        if (booleanMessage.getDataType() == Boolean.class) {
+                            boolean isFree = (Boolean) booleanMessage.getData();
+                            if (isFree) {
+                                Message message = communicator.sendWithResponse(Config.serverCommunicationId, new RegisterCommand(idToken, usernameInput.getText().toString()));
+                                if (message.getDataType() == LoginAnswerWrapper.class) {
+                                    LoginAnswerWrapper answer = (LoginAnswerWrapper) message.getData();
 
-                                if(answer.isSuccessful())
-                                    Navigation.findNavController(MainActivity.mainActivity, R.id.nav_host_fragment).navigate(R.id.accountFragment);
-                                else
+                                    if (answer.isSuccessful())
+                                        Navigation.findNavController(MainActivity.mainActivity, R.id.nav_host_fragment).navigate(R.id.accountFragment);
+                                    else
+                                        Toast.makeText(MainActivity.mainActivity, "Something went wrong, please try again", Toast.LENGTH_SHORT).show();
+                                } else if (message.getDataType() == ErrorWrapper.class) {
+                                    Toast.makeText(MainActivity.mainActivity, ((ErrorWrapper) message.getData()).getMessage(), Toast.LENGTH_SHORT).show();
+                                } else {
                                     Toast.makeText(MainActivity.mainActivity, "Something went wrong, please try again", Toast.LENGTH_SHORT).show();
+                                }
+                            } else {
+                                Toast.makeText(MainActivity.mainActivity, "This username already exists", Toast.LENGTH_SHORT).show();
+                                chooseUsernameAlert(idToken);
                             }
-                            else if(message.getDataType() == ErrorWrapper.class) {
-                                Toast.makeText(MainActivity.mainActivity, ((ErrorWrapper) message.getData()).getMessage(), Toast.LENGTH_SHORT).show();
-                            }
-                            else {
-                                Toast.makeText(MainActivity.mainActivity, "Something went wrong, please try again", Toast.LENGTH_SHORT).show();
-                            }
+                        } else if (booleanMessage.getDataType() == ErrorWrapper.class) {
+                            Toast.makeText(MainActivity.mainActivity, ((ErrorWrapper) booleanMessage.getData()).getMessage(), Toast.LENGTH_SHORT).show();
                         } else {
-                            Toast.makeText(MainActivity.mainActivity, "This username already exists", Toast.LENGTH_SHORT).show();
-                            chooseUsernameAlert(idToken);
+                            Toast.makeText(MainActivity.mainActivity, "Something went wrong, please try again", Toast.LENGTH_SHORT).show();
                         }
-                    } else if (booleanMessage.getDataType() == ErrorWrapper.class) {
-                        Toast.makeText(MainActivity.mainActivity, ((ErrorWrapper) booleanMessage.getData()).getMessage(), Toast.LENGTH_SHORT).show();
-                    } else {
-                        Toast.makeText(MainActivity.mainActivity, "Something went wrong, please try again", Toast.LENGTH_SHORT).show();
+
+
+                    } catch (IOException e) {
+                        e.printStackTrace();
                     }
-
-
-
-                } catch (IOException e) {
-                    e.printStackTrace();
                 }
             }
-
         });
         alert.show();
     }
