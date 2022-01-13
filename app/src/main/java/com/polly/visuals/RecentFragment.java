@@ -11,6 +11,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.github.mikephil.charting.charts.PieChart;
+import com.github.mikephil.charting.components.Description;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
@@ -71,7 +72,7 @@ public class RecentFragment extends Fragment {
 
     private void addPieChartsToLayout(LinearLayout layout, List<PollResultsWrapper> pollResults) {
         for(PollResultsWrapper p : pollResults) {
-            PieChart pieChart = createPieChart(p.getPollResults(), p.getBasicPollInformation().getName());
+            PieChart pieChart = createPieChart(p.getPollResults(), p.getBasicPollInformation().getName(), p.getBasicPollInformation().getDescription().getDescription());
 
             pieChart.setOnLongClickListener(view -> {
                 try {
@@ -90,7 +91,7 @@ public class RecentFragment extends Fragment {
         ShowPollPage.showPollResultsPage(p.getBasicPollInformation().getId());
     }
 
-    private PieChart createPieChart(Map<String, Integer> data, String centerText) {
+    private PieChart createPieChart(Map<String, Integer> data, String centerText, String descriptionText) {
         PieChart pieChart = new PieChart(getContext());
 
         ArrayList<PieEntry> options = new ArrayList<>();
@@ -115,6 +116,11 @@ public class RecentFragment extends Fragment {
 
         pieChart.setUsePercentValues(true);
         pieChart.animate();
+
+        Description pieChartDescription = new Description();
+        pieChartDescription.setText(descriptionText);
+
+        pieChart.setDescription(pieChartDescription);
 
 
         pieChart.setMinimumHeight(600);
