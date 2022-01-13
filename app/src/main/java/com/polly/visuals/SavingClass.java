@@ -232,6 +232,7 @@ public class SavingClass extends ViewModel {
         setLocalDate(null);
         setLocalTime(null);
         setGeofence(null);
+        setArea(null);
     }
 
     public void setNumberOfParticipants(int number) {
