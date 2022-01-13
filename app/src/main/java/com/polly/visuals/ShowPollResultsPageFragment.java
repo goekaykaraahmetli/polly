@@ -256,6 +256,9 @@ public class ShowPollResultsPageFragment extends Fragment implements OnMapReadyC
                 .MILLISECONDS
                 .toDays(difference_In_Time)
                 % 365;
+        if(diffDays == 0l && diffMinutes == 0l && diffHours == 0l){
+            return "less than a minute";
+        }
         return diffDays + "d " + diffHours + "h : " + diffMinutes + "m";
     }
 
