@@ -46,21 +46,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         SavingClass saving = new ViewModelProvider(this).get(SavingClass.class);
 
 
-
-
-
-    new Organizer();
-
-        try {
-            Organizer.send(0L, 0L, "connected!");
-        } catch (IOException e) {
-            e.printStackTrace();
-            Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
-        }
-
-        if(FirebaseAuth.getInstance().getCurrentUser() != null){
-            LoginFragment.sendTokenToServer(true);
-        }
+        new Organizer();
     }
 
 

@@ -5,12 +5,16 @@ import java.security.KeyPair;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
 
+import com.google.firebase.auth.FirebaseAuth;
 import com.polly.config.Config;
 import com.polly.utils.communication.SocketHandler;
+import com.polly.utils.communicator.CommunicatorManager;
+import com.polly.utils.communicator.DefaultCommunicator;
 import com.polly.utils.encryption.exceptions.FailedDecryptionException;
 import com.polly.utils.encryption.exceptions.FailedEncryptionException;
 import com.polly.utils.encryption.exceptions.FailedKeyGenerationException;
 import com.polly.utils.encryption.utils.CipherKeyGenerator;
+import com.polly.visuals.LoginFragment;
 import com.polly.visuals.MainActivity;
 
 import javax.crypto.SecretKey;
@@ -27,10 +31,12 @@ public class Organizer {
 		while(!initialised) {
 			emptyMethode();
 		}
-	}
-	/*private static void sendNotifications(){
 
-	}*/
+		if(FirebaseAuth.getInstance().getCurrentUser() != null){
+			LoginFragment.sendTokenToServer(true);
+		}
+	}
+
 	private static void createSocketHandler(int timeout){
 		new Thread(() -> {
 			try {
@@ -62,6 +68,11 @@ public class Organizer {
 		createSocketHandler(500);
 		while(!initialised){
 			emptyMethode();
+		}
+		if(socketHandler != null){
+			CommunicatorManager.getDefaultCommunicator().connecting();
+			if(FirebaseAuth.getInstance().getCurrentUser() != null)
+				LoginFragment.sendTokenToServer(true);
 		}
 	}
 
