@@ -23,10 +23,9 @@ import com.polly.utils.Organizer;
 import java.io.IOException;
 
 
-public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, DrawerLocker {
+public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, DrawerLocker{
     protected DrawerLayout drawerLayout;
     private ActionBarDrawerToggle actionBarDrawerToggle;
-
     public static AppCompatActivity mainActivity;
 
 
