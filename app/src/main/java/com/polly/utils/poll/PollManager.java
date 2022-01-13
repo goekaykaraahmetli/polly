@@ -5,8 +5,11 @@ import com.polly.utils.Area;
 import com.polly.utils.Location;
 import com.polly.utils.command.GetMyPollsCommand;
 import com.polly.utils.command.GetParticipatedPollsCommand;
+import com.polly.utils.command.poll.EditPollDescriptionCommand;
+import com.polly.utils.command.poll.EditPollNameCommand;
 import com.polly.utils.command.poll.GetGeofencePollArea;
 import com.polly.utils.command.poll.GetPollResultsCommand;
+import com.polly.utils.command.poll.IsMyPollCommand;
 import com.polly.utils.command.poll.VoteCommand;
 import com.polly.utils.wrapper.ErrorWrapper;
 import com.polly.utils.wrapper.Message;
@@ -139,6 +142,33 @@ public class PollManager {
         Message response = communicator.sendWithResponse(Config.serverCommunicationId, new GetParticipatedPollsCommand());
         if(response.getDataType() == PollListWrapper.class)
             return ((PollListWrapper) response.getData()).getList();
+        if(response.getDataType() == ErrorWrapper.class)
+            throw new IOException(((ErrorWrapper) response.getData()).getMessage());
+        throw new IOException("Something went wrong!");
+    }
+
+    private static boolean isMyPoll(long id) throws IOException {
+        Message response = communicator.sendWithResponse(Config.serverCommunicationId, new IsMyPollCommand(id));
+        if(response.getDataType() == Boolean.class)
+            return ((boolean) response.getData());
+        if(response.getDataType() == ErrorWrapper.class)
+            throw new IOException(((ErrorWrapper) response.getData()).getMessage());
+        throw new IOException("Something went wrong!");
+    }
+
+    private static boolean editPollName(long id, String name) throws IOException {
+        Message response = communicator.sendWithResponse(Config.serverCommunicationId, new EditPollNameCommand(id, name));
+        if(response.getDataType() == Boolean.class)
+            return ((boolean) response.getData());
+        if(response.getDataType() == ErrorWrapper.class)
+            throw new IOException(((ErrorWrapper) response.getData()).getMessage());
+        throw new IOException("Something went wrong!");
+    }
+
+    private static boolean editPollDescription(long id, PollDescription description) throws IOException {
+        Message response = communicator.sendWithResponse(Config.serverCommunicationId, new EditPollDescriptionCommand(id, description));
+        if(response.getDataType() == Boolean.class)
+            return ((boolean) response.getData());
         if(response.getDataType() == ErrorWrapper.class)
             throw new IOException(((ErrorWrapper) response.getData()).getMessage());
         throw new IOException("Something went wrong!");

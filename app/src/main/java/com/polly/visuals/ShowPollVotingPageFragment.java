@@ -78,6 +78,7 @@ import com.polly.utils.command.poll.RegisterPollChangeListenerCommand;
 import com.polly.utils.command.poll.RemovePollChangeListenerCommand;
 import com.polly.utils.communicator.Communicator;
 import com.polly.utils.communicator.CommunicatorManager;
+import com.polly.utils.poll.PollDescription;
 import com.polly.utils.poll.PollManager;
 import com.polly.utils.wrapper.Message;
 import com.polly.utils.wrapper.PollOptionsWrapper;
@@ -550,5 +551,16 @@ public class ShowPollVotingPageFragment extends Fragment implements OnMapReadyCa
         } catch(IOException e){
             Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_LONG).show();
         }
+    }
+
+
+    private void editPoll() {
+        String newName = "";
+        PollDescription newDescription = new PollDescription("");
+
+        // wenn es newName gibt:
+
+
+        // wenn es newDescription gibt:
     }
 }
