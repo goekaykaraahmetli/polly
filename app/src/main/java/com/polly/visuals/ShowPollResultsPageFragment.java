@@ -13,10 +13,12 @@ import android.os.CountDownTimer;
 import android.os.Looper;
 import android.provider.MediaStore;
 import android.provider.Settings;
+import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.TextView;
@@ -86,7 +88,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
-public class ShowPollResultsPageFragment extends Fragment implements OnMapReadyCallback{
+public class ShowPollResultsPageFragment extends Fragment implements OnMapReadyCallback {
     private PieChart pieChart;
     private ImageView qrCode;
     static PollResultsWrapper pollResults;
@@ -115,7 +117,7 @@ public class ShowPollResultsPageFragment extends Fragment implements OnMapReadyC
     @Override
     public void onDestroy() {
         super.onDestroy();
-        if(hasRunningPollChangeListener){
+        if (hasRunningPollChangeListener) {
             try {
                 communicator.send(Config.serverCommunicationId, new RemovePollChangeListenerCommand(id));
                 hasRunningPollChangeListener = false;
@@ -136,7 +138,7 @@ public class ShowPollResultsPageFragment extends Fragment implements OnMapReadyC
         pieChart.setVisibility(View.GONE);
 
         try {
-            if(PollManager.isMyPoll(id)) {
+            if (PollManager.isMyPoll(id)) {
                 Button editButton = (Button) root.findViewById(R.id.edit_poll_button);
                 editButton.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -169,7 +171,7 @@ public class ShowPollResultsPageFragment extends Fragment implements OnMapReadyC
             }
         }.start();
 
-        if(id < 0) {
+        if (id < 0) {
             isGeofencePoll = true;
             root.findViewById(R.id.mapLayout).setVisibility(View.VISIBLE);
             createForGeofencePoll(root);
@@ -179,26 +181,26 @@ public class ShowPollResultsPageFragment extends Fragment implements OnMapReadyC
         return root;
     }
 
-        public void showPoll(View root){
-            updatePieChart(pollResults);
-            qrCode = (ImageView) root.findViewById(R.id.qrCodeImageView);
-            qrCode.setImageBitmap(QRCode.QRCode(""+ pollResults.getBasicPollInformation().getId()));
-            qrCode.setOnLongClickListener(new View.OnLongClickListener() {
-                @Override
-                public boolean onLongClick(View v) {
-                    MediaStore.Images.Media.insertImage(getContext().getContentResolver(), QRCode.QRCode("" + pollResults.getBasicPollInformation().getId()), "QRCode: " + pollResults.getBasicPollInformation().getName(), pollResults.getBasicPollInformation().getDescription().getDescription());
-                    Toast.makeText(getContext(), "The QR-Code has been saved to your camera roll!", Toast.LENGTH_SHORT).show();
-                    return true;
-                }
-            });
-                try {
-                    communicator.send(Config.serverCommunicationId, new RegisterPollChangeListenerCommand(pollResults.getBasicPollInformation().getId(), true));
-                    hasRunningPollChangeListener = true;
-                } catch (IOException e) {
-                    e.printStackTrace();
-                    Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
-                }
+    public void showPoll(View root) {
+        updatePieChart(pollResults);
+        qrCode = (ImageView) root.findViewById(R.id.qrCodeImageView);
+        qrCode.setImageBitmap(QRCode.QRCode("" + pollResults.getBasicPollInformation().getId()));
+        qrCode.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                MediaStore.Images.Media.insertImage(getContext().getContentResolver(), QRCode.QRCode("" + pollResults.getBasicPollInformation().getId()), "QRCode: " + pollResults.getBasicPollInformation().getName(), pollResults.getBasicPollInformation().getDescription().getDescription());
+                Toast.makeText(getContext(), "The QR-Code has been saved to your camera roll!", Toast.LENGTH_SHORT).show();
+                return true;
             }
+        });
+        try {
+            communicator.send(Config.serverCommunicationId, new RegisterPollChangeListenerCommand(pollResults.getBasicPollInformation().getId(), true));
+            hasRunningPollChangeListener = true;
+        } catch (IOException e) {
+            e.printStackTrace();
+            Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
+        }
+    }
 
     private Communicator initialiseCommunicator() {
         Communicator communicator = new Communicator() {
@@ -223,42 +225,45 @@ public class ShowPollResultsPageFragment extends Fragment implements OnMapReadyC
     }
 
 
-    private void updatePieChart(PollResultsWrapper updatePoll){
-            pollResults = updatePoll;
-            ArrayList<PieEntry> options = new ArrayList<>();
-            for(String option : updatePoll.getPollResults().keySet()){
-                options.add(new PieEntry(updatePoll.getPollResults().get(option), option));
-            }
+    private void updatePieChart(PollResultsWrapper updatePoll) {
+        pollResults = updatePoll;
+        ArrayList<PieEntry> options = new ArrayList<>();
+        for (String option : updatePoll.getPollResults().keySet()) {
+            options.add(new PieEntry(updatePoll.getPollResults().get(option), option));
+        }
 
-            PieDataSet pieDataSet = new PieDataSet(options, "");
-            pieDataSet.setColors(ColorTemplate.COLORFUL_COLORS);
-            pieDataSet.setValueTextColor(Color.BLACK);
-            pieDataSet.setValueTextSize(17f);
-            PieData pieData = new PieData(pieDataSet);
-            pieData.setValueTextSize(17f);
-            pieChart.setVisibility(View.INVISIBLE);
+        PieDataSet pieDataSet = new PieDataSet(options, "");
+        pieDataSet.setColors(ColorTemplate.COLORFUL_COLORS);
+        pieDataSet.setValueTextColor(Color.BLACK);
+        pieDataSet.setValueTextSize(17f);
+        PieData pieData = new PieData(pieDataSet);
+        pieData.setValueTextSize(17f);
+        pieChart.setVisibility(View.INVISIBLE);
 
-            pieChart.setData(pieData);
-            Description description = new Description();
-            description.setText(updatePoll.getBasicPollInformation().getDescription().getDescription());
-            pieChart.setDescription(description);
-            pieChart.getDescription().setEnabled(!updatePoll.getBasicPollInformation().getDescription().getDescription().equals(""));
-            pieChart.setCenterText(updatePoll.getBasicPollInformation().getName());
+        pieChart.setData(pieData);
+        Description description = new Description();
+        description.setText(updatePoll.getBasicPollInformation().getDescription().getDescription());
+        pieChart.setDescription(description);
+        pieChart.getDescription().setEnabled(!updatePoll.getBasicPollInformation().getDescription().getDescription().equals(""));
+        pieChart.setCenterText(updatePoll.getBasicPollInformation().getName());
 
-            pieChart.setUsePercentValues(true);
-            pieChart.animate();
-            pieChart.setVisibility(View.VISIBLE);
+        pieChart.setUsePercentValues(true);
+        pieChart.animate();
+        pieChart.setVisibility(View.VISIBLE);
     }
-    public Date convertToDate(LocalDateTime data){
+
+    public Date convertToDate(LocalDateTime data) {
         return Date.from(data.atZone(ZoneId.systemDefault()).toInstant());
     }
-    public static long getDifferenceInMS(Date date1, Date date2){
-        if(date2.getTime() - date1.getTime() > 0)
+
+    public static long getDifferenceInMS(Date date1, Date date2) {
+        if (date2.getTime() - date1.getTime() > 0)
             return (date2.getTime() - date1.getTime());
         else
             return 0l;
     }
-    public String timeDiffInString(long difference_In_Time){
+
+    public String timeDiffInString(long difference_In_Time) {
         long diffMinutes = TimeUnit
                 .MILLISECONDS
                 .toMinutes(difference_In_Time)
@@ -271,7 +276,7 @@ public class ShowPollResultsPageFragment extends Fragment implements OnMapReadyC
                 .MILLISECONDS
                 .toDays(difference_In_Time)
                 % 365;
-        if(diffDays == 0l && diffMinutes == 0l && diffHours == 0l){
+        if (diffDays == 0l && diffMinutes == 0l && diffHours == 0l) {
             return "less than a minute";
         }
         return diffDays + "d " + diffHours + "h : " + diffMinutes + "m";
@@ -283,7 +288,7 @@ public class ShowPollResultsPageFragment extends Fragment implements OnMapReadyC
             return;
         }
 
-        if(!locationPermissionGranted)
+        if (!locationPermissionGranted)
             checkLocationPermission();
 
 
@@ -418,7 +423,7 @@ public class ShowPollResultsPageFragment extends Fragment implements OnMapReadyC
     public void onResume() {
         super.onResume();
 
-        if(isGeofencePoll) {
+        if (isGeofencePoll) {
             if (!alertActive)
                 checkLocationPermission();
 
@@ -460,41 +465,82 @@ public class ShowPollResultsPageFragment extends Fragment implements OnMapReadyC
 
     @Override
     public void onMapReady(@NonNull GoogleMap googleMap) {
-        if(!isGeofencePoll)
+        if (!isGeofencePoll)
             return;
 
         this.googleMap = googleMap;
 
-        try{
+        try {
             Area area = PollManager.getGeofencePollArea(id);
-            initMap(new LatLng(area.getLatitude(),area.getLongitude()), area.getRadius());
-        } catch(IOException e){
+            initMap(new LatLng(area.getLatitude(), area.getLongitude()), area.getRadius());
+        } catch (IOException e) {
             Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_LONG).show();
         }
     }
 
     private void editPoll() {
-        String newName = "";
         PollDescription newDescription = new PollDescription("");
+        AlertDialog.Builder alert = new AlertDialog.Builder(getContext());
+        alert.setTitle("Edit your Pollname");
+        alert.setMessage("Set your new Pollinformation here!");
+        final EditText newPollname = new EditText(getContext());
+        newPollname.setInputType(InputType.TYPE_CLASS_TEXT);
+        newPollname.setHint("new Pollname");
+        alert.setView(newPollname);
+        alert.setPositiveButton("Confirm", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                String newName = newPollname.getText().toString();
+                try {
+                    PollManager.editPollName(id, newName);
+                } catch (IOException e) {
+                    if (e.getMessage() != null)
+                        Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_LONG).show();
+                    else
+                        Toast.makeText(getContext(), "Something went wrong!", Toast.LENGTH_LONG).show();
+                }
+                editPollDescription();
+            }
+        });
+        alert.setNegativeButton("NO", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                editPollDescription();
+            }
+        });
+        alert.create().show();
 
-        // TODO wenn es newName gibt:
-        try {
-            PollManager.editPollName(id, newName);
-        } catch (IOException e) {
-            if(e.getMessage() != null)
-                Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_LONG).show();
-            else
-                Toast.makeText(getContext(), "Something went wrong!", Toast.LENGTH_LONG).show();
-        }
 
-        // TODO wenn es newDescription gibt:
-        try {
-            PollManager.editPollDescription(id, newDescription);
-        } catch (IOException e) {
-            if(e.getMessage() != null)
-                Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_LONG).show();
-            else
-                Toast.makeText(getContext(), "Something went wrong!", Toast.LENGTH_LONG).show();
-        }
+    }
+
+    private void editPollDescription() {
+        AlertDialog.Builder alert = new AlertDialog.Builder(getContext());
+        alert.setTitle("Edit your Polldescription");
+        alert.setMessage("Set your new Pollinformation here!");
+        final EditText newPollname = new EditText(getContext());
+        newPollname.setInputType(InputType.TYPE_CLASS_TEXT);
+        newPollname.setHint("new Polldescription");
+        alert.setView(newPollname);
+        alert.setPositiveButton("Confirm", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                String newName = newPollname.getText().toString();
+                try {
+                    PollManager.editPollDescription(id, new PollDescription(newName));
+                } catch (IOException e) {
+                    if (e.getMessage() != null)
+                        Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_LONG).show();
+                    else
+                        Toast.makeText(getContext(), "Something went wrong!", Toast.LENGTH_LONG).show();
+                }
+            }
+        });
+        alert.setNegativeButton("NO", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+
+            }
+        });
+        alert.create().show();
     }
 }
