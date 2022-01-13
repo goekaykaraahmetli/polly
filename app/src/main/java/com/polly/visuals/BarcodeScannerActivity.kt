@@ -5,7 +5,9 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Color
 import android.os.Bundle
+import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.camera.core.CameraSelector
@@ -63,7 +65,8 @@ class BarcodeScannerActivity : AppCompatActivity() {
     }
 
 
-    override fun onBackPressed() {
+    override fun onDestroy() {
+        super.onDestroy()
         cameraExecutor.shutdown()
         if (numberOfParticipants == votes1 + votes2 + votes3 + votes4) {
             val results = HashMap<String, Int>()
@@ -74,7 +77,8 @@ class BarcodeScannerActivity : AppCompatActivity() {
             val intent = Intent(this, DisplayQRCodePie::class.java).apply {
                 putExtra("THE_PIE", results)
                 putExtra("PARTICIPANTS", numberOfParticipants)
-                putExtra("DESCRIPTION", CreatePollFragment.name)
+                putExtra("NAME", CreatePollFragment.name)
+                putExtra("DESCRIPTION", CreatePollFragment.description)
             }
             startActivity(intent)
         } else {

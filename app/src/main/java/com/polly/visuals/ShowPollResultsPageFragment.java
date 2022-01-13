@@ -233,9 +233,9 @@ public class ShowPollResultsPageFragment extends Fragment implements OnMapReadyC
             PieDataSet pieDataSet = new PieDataSet(options, "");
             pieDataSet.setColors(ColorTemplate.COLORFUL_COLORS);
             pieDataSet.setValueTextColor(Color.BLACK);
-            pieDataSet.setValueTextSize(16f);
+            pieDataSet.setValueTextSize(17f);
             PieData pieData = new PieData(pieDataSet);
-
+            pieData.setValueTextSize(17f);
             pieChart.setVisibility(View.INVISIBLE);
 
             pieChart.setData(pieData);

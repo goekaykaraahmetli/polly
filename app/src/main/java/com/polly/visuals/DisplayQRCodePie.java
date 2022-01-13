@@ -24,23 +24,25 @@ public class DisplayQRCodePie extends AppCompatActivity {
     private int numberOfParticipants;
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
+        setTheme(R.style.Theme_Polly);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_qrpie);
-        setTheme(R.style.Theme_Polly);
-        LinearLayout linearLayout = findViewById(R.id.linearLayoutQRPie);
+        PieChart layoutPie = findViewById(R.id.pieChartQr);
         numberOfParticipants = (int) getIntent().getExtras().get("PARTICIPANTS");
         HashMap<String, Integer> hashMap = (HashMap<String, Integer>) getIntent().getExtras().get("THE_PIE");
-        PieChart pieChart = createPieChart(hashMap);
+        PieChart pieChart = createPieChart(hashMap, layoutPie);
         pieChart.setVisibility(View.VISIBLE);
         Description description = new Description();
         description.setText((String) getIntent().getExtras().get("DESCRIPTION"));
+        pieChart.setCenterText((String) getIntent().getExtras().get("NAME"));
+        pieChart.setCenterTextSize(17f);
         pieChart.setDescription(description);
-        linearLayout.addView(pieChart);
+        pieChart.setUsePercentValues(true);
+
 
     }
 
-    private PieChart createPieChart(HashMap<String, Integer> hashMap){
-        PieChart pieChart = new PieChart(this);
+    private PieChart createPieChart(HashMap<String, Integer> hashMap, PieChart pieChart){
         ArrayList<PieEntry> options = new ArrayList<>();
         for(String option : hashMap.keySet()){
             if(hashMap.get(option) != 0)
@@ -55,10 +57,9 @@ public class DisplayQRCodePie extends AppCompatActivity {
         pieDataSet.setSelectionShift(5f);
         PieData pieData = new PieData(pieDataSet);
         pieData.setValueFormatter(new PercentFormatter());
-        pieData.setValueTextSize(11f);
-        pieData.setValueTextSize(Color.WHITE);
+        pieData.setValueTextSize(17f);
+        pieData.setValueTextColor(Color.WHITE);
         pieChart.setData(pieData);
-        pieChart.setCenterText("Results");
         pieChart.setUsePercentValues(true);
         pieChart.animate();
 

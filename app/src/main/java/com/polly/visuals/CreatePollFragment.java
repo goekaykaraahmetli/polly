@@ -60,6 +60,7 @@ public class CreatePollFragment extends Fragment {
     public static String answer4;
     public static int numberOfParticipants;
     public static String name;
+    public static String description;
     private CountDownTimer countDownTimer;
     LocalDateTime localDateTime;
     HashMap<Integer, EditText> map = new HashMap<>();
