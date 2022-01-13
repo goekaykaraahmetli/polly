@@ -25,6 +25,7 @@ import com.polly.utils.Area;
 import com.polly.utils.Location;
 import com.polly.utils.command.GetMyPollsCommand;
 import com.polly.utils.command.GetParticipatedPollsCommand;
+import com.polly.utils.command.poll.GetGeofencePollArea;
 import com.polly.utils.command.poll.GetPollOptionsCommand;
 import com.polly.utils.command.poll.GetPollResultsCommand;
 import com.polly.utils.command.poll.RegisterPollChangeListenerCommand;
@@ -204,6 +205,8 @@ public class DataStreamManager {
 			data = readGetUsernameCommand();
 		else if(dataType.equals(Location.class))
 			data = readLocation();
+		else if(dataType.equals(GetGeofencePollArea.class))
+			data = readGetGeofencePollArea();
 			
 			// default type:
 		else
@@ -404,6 +407,9 @@ public class DataStreamManager {
 			writeGetUsernameCommand((GetUsernameCommand) data);
 		else if(dataType.equals(Location.class))
 			writeLocation((Location) data);
+		else if(dataType.equals(GetGeofencePollArea.class))
+			writeGetGeofencePollArea((GetGeofencePollArea) data);
+		
 			// default type:
 		else
 			writeString((String) data);
@@ -1057,4 +1063,14 @@ public class DataStreamManager {
 	private Location readLocation() throws IOException {
 		return new Location(readDouble(), readDouble());
 	}
+	
+	private void writeGetGeofencePollArea(GetGeofencePollArea data) throws IOException {
+		writeLong(data.getId());
+	}
+	
+	private GetGeofencePollArea readGetGeofencePollArea() throws IOException {
+		return new GetGeofencePollArea(readLong());
+	}
+	
+	
 }

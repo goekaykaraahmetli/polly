@@ -132,10 +132,7 @@ public class ShowPollResultsPageFragment extends Fragment implements OnMapReadyC
         pieChart = (PieChart) root.findViewById(R.id.pieChart);
         pieChart.setVisibility(View.GONE);
 
-        if(id < 0) {
-            isGeofencePoll = true;
-            createForGeofencePoll(root);
-        }
+
 
         showPoll(root);
         LocalDateTime localDateTime = pollResults.getBasicPollInformation().getExpirationTime();
@@ -155,6 +152,14 @@ public class ShowPollResultsPageFragment extends Fragment implements OnMapReadyC
                 countDownView.setText("Poll is expired");
             }
         }.start();
+
+        if(id < 0) {
+            isGeofencePoll = true;
+            root.findViewById(R.id.mapLayout).setVisibility(View.VISIBLE);
+            createForGeofencePoll(root);
+        }
+
+
         return root;
     }
 
@@ -264,7 +269,6 @@ public class ShowPollResultsPageFragment extends Fragment implements OnMapReadyC
 
 
         SupportMapFragment supportMapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.fragmentMapShowPoll);
-        view.findViewById(R.id.fragmentMapShowPoll).setVisibility(View.VISIBLE);
         supportMapFragment.getMapAsync(this);
 
         checkGps();
@@ -400,7 +404,7 @@ public class ShowPollResultsPageFragment extends Fragment implements OnMapReadyC
                 checkLocationPermission();
 
             if (locationPermissionGranted) {
-                SupportMapFragment supportMapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.fragmentMap);
+                SupportMapFragment supportMapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.fragmentMapShowPoll);
                 supportMapFragment.getMapAsync(this);
 
                 checkGps();

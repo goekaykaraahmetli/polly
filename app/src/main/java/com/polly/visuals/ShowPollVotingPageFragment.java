@@ -70,6 +70,7 @@ import androidx.navigation.Navigation;
 
 import com.github.mikephil.charting.charts.PieChart;
 import com.polly.config.Config;
+import com.polly.utils.Area;
 import com.polly.utils.Location;
 import com.polly.utils.QRCode;
 import com.polly.utils.ShowPollPage;
@@ -145,10 +146,6 @@ public class ShowPollVotingPageFragment extends Fragment implements OnMapReadyCa
         voteButton = (Button) root.findViewById(R.id.vote_button);
         voteButton.setVisibility(View.GONE);
 
-        if(id < 0) {
-            isGeofencePoll = true;
-            createForGeofencePoll(root);
-        }
 
         showPoll(root);
         LocalDateTime localDateTime = pollOptions.getBasicPollInformation().getExpirationTime();
@@ -170,6 +167,12 @@ public class ShowPollVotingPageFragment extends Fragment implements OnMapReadyCa
                 countDownView.setText("Poll is expired");
             }
         }.start();
+
+        if(id < 0) {
+            isGeofencePoll = true;
+            root.findViewById(R.id.mapLayout).setVisibility(View.VISIBLE);
+            createForGeofencePoll(root);
+        }
 
         return root;
     }
@@ -336,7 +339,6 @@ public class ShowPollVotingPageFragment extends Fragment implements OnMapReadyCa
 
 
         SupportMapFragment supportMapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.fragmentMapShowPoll);
-        view.findViewById(R.id.fragmentMapShowPoll).setVisibility(View.VISIBLE);
         supportMapFragment.getMapAsync(this);
 
         checkGps();
@@ -472,7 +474,7 @@ public class ShowPollVotingPageFragment extends Fragment implements OnMapReadyCa
                 checkLocationPermission();
 
             if (locationPermissionGranted) {
-                SupportMapFragment supportMapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.fragmentMap);
+                SupportMapFragment supportMapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.fragmentMapShowPoll);
                 supportMapFragment.getMapAsync(this);
 
                 checkGps();
@@ -514,10 +516,12 @@ public class ShowPollVotingPageFragment extends Fragment implements OnMapReadyCa
 
 
         this.googleMap = googleMap;
-        //TODO
-        LatLng center = new LatLng(0,0);
-        double radius = 1000;
 
-        initMap(center, radius);
+        try{
+            Area area = PollManager.getGeofencePollArea(id);
+        initMap(new LatLng(area.getLatitude(),area.getLongitude()), area.getRadius());
+        } catch(IOException e){
+            Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_LONG).show();
+        }
     }
 }

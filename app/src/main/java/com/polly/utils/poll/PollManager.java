@@ -4,6 +4,7 @@ import com.polly.config.Config;
 import com.polly.utils.Area;
 import com.polly.utils.command.GetMyPollsCommand;
 import com.polly.utils.command.GetParticipatedPollsCommand;
+import com.polly.utils.command.poll.GetGeofencePollArea;
 import com.polly.utils.command.poll.GetPollResultsCommand;
 import com.polly.utils.command.poll.VoteCommand;
 import com.polly.utils.wrapper.ErrorWrapper;
@@ -40,6 +41,14 @@ public class PollManager {
         };
     }
 
+    public static Area getGeofencePollArea(long id) throws IOException {
+        Message response = communicator.sendWithResponse(Config.serverCommunicationId, new GetGeofencePollArea(id));
+        if(response.getDataType() == Area.class)
+            return (Area) response.getData();
+        if(response.getDataType() == ErrorWrapper.class)
+            throw new IOException(((ErrorWrapper) response.getData()).getMessage());
+        throw new IOException("Something went wrong!");
+    }
 
 
     public static long createPublicPoll(String name, PollDescription description, LocalDateTime expirationTime, List<String> options) throws IOException {
