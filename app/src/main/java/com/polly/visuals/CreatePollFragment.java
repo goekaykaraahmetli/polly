@@ -244,6 +244,7 @@ public class CreatePollFragment extends Fragment {
                                 break;
                             case "POLLYROOM":
                                 {
+                                    description = saving.getDescription().toString();
                                     numberOfParticipants = saving.getNumberOfParticipants();
                                     if(pollOptions.get(0) != null){
                                         answer1 = pollOptions.get(0);

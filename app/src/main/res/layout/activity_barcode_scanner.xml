@@ -7,6 +7,7 @@
     tools:context=".visuals.BarcodeScannerActivity">
 
     <Button
+        android:id="@+id/pollyRoomBtn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="press this button to show results after scanning"
@@ -19,8 +20,8 @@
 
     <androidx.camera.view.PreviewView
         android:id="@+id/preview_view"
-        android:layout_width="394dp"
-        android:layout_height="789dp"
+        android:layout_width="415dp"
+        android:layout_height="792dp"
         tools:layout_editor_absoluteX="-2dp"
         tools:layout_editor_absoluteY="0dp"></androidx.camera.view.PreviewView>
 

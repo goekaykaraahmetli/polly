@@ -136,4 +136,8 @@
             android:id="@+id/action_chooseAreaFragment_to_polloptionFragment"
             app:destination="@id/polloptionFragment" />
     </fragment>
+    <fragment
+        android:id="@+id/displayQRCodePie"
+        android:name="com.polly.visuals.DisplayQRCodePie"
+        android:label="DisplayQRCodePie" />
 </navigation>
