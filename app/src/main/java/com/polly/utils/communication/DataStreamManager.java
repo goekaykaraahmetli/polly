@@ -25,8 +25,12 @@ import com.polly.utils.Area;
 import com.polly.utils.Location;
 import com.polly.utils.command.GetMyPollsCommand;
 import com.polly.utils.command.GetParticipatedPollsCommand;
+import com.polly.utils.command.poll.EditPollDescriptionCommand;
+import com.polly.utils.command.poll.EditPollNameCommand;
+import com.polly.utils.command.poll.GetGeofencePollArea;
 import com.polly.utils.command.poll.GetPollOptionsCommand;
 import com.polly.utils.command.poll.GetPollResultsCommand;
+import com.polly.utils.command.poll.IsMyPollCommand;
 import com.polly.utils.command.poll.RegisterPollChangeListenerCommand;
 import com.polly.utils.command.poll.RemovePollChangeListenerCommand;
 import com.polly.utils.command.poll.VoteCommand;
@@ -204,6 +208,15 @@ public class DataStreamManager {
 			data = readGetUsernameCommand();
 		else if(dataType.equals(Location.class))
 			data = readLocation();
+		else if(dataType.equals(GetGeofencePollArea.class))
+			data = readGetGeofencePollArea();
+		else if(dataType.equals(EditPollDescriptionCommand.class))
+			data = readEditPollDescriptionCommand();
+		else if(dataType.equals(EditPollNameCommand.class))
+			data = readEditPollNameCommand();
+		else if(dataType.equals(IsMyPollCommand.class))
+			data = readIsMyPollCommand();
+		
 			
 			// default type:
 		else
@@ -404,6 +417,16 @@ public class DataStreamManager {
 			writeGetUsernameCommand((GetUsernameCommand) data);
 		else if(dataType.equals(Location.class))
 			writeLocation((Location) data);
+		else if(dataType.equals(GetGeofencePollArea.class))
+			writeGetGeofencePollArea((GetGeofencePollArea) data);
+		else if(dataType.equals(EditPollDescriptionCommand.class))
+			writeEditPollDescriptionCommand((EditPollDescriptionCommand) data);
+		else if(dataType.equals(EditPollNameCommand.class))
+			writeEditPollNameCommand((EditPollNameCommand) data);
+		else if(dataType.equals(IsMyPollCommand.class))
+			writeIsMyPollCommand((IsMyPollCommand) data);
+		
+		
 			// default type:
 		else
 			writeString((String) data);
@@ -1056,5 +1079,39 @@ public class DataStreamManager {
 	
 	private Location readLocation() throws IOException {
 		return new Location(readDouble(), readDouble());
+	}
+	
+	private void writeGetGeofencePollArea(GetGeofencePollArea data) throws IOException {
+		writeLong(data.getId());
+	}
+	
+	private GetGeofencePollArea readGetGeofencePollArea() throws IOException {
+		return new GetGeofencePollArea(readLong());
+	}
+	
+	private void writeEditPollDescriptionCommand(EditPollDescriptionCommand data) throws IOException {
+		writeLong(data.getId());
+		writePollDescription(data.getDescription());
+	}
+	
+	private EditPollDescriptionCommand readEditPollDescriptionCommand() throws IOException {
+		return new EditPollDescriptionCommand(readLong(), readPollDescription());
+	}
+	
+	private void writeEditPollNameCommand(EditPollNameCommand data) throws IOException {
+		writeLong(data.getId());
+		writeString(data.getName());
+	}
+	
+	private EditPollNameCommand readEditPollNameCommand() throws IOException {
+		return new EditPollNameCommand(readLong(), readString());
+	}
+	
+	private void writeIsMyPollCommand(IsMyPollCommand data) throws IOException {
+		writeLong(data.getId());
+	}
+	
+	private IsMyPollCommand readIsMyPollCommand() throws IOException {
+		return new IsMyPollCommand(readLong());
 	}
 }

@@ -1,9 +1,18 @@
 package com.polly.visuals;
 
+import android.Manifest;
+import android.app.Dialog;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.IntentSender;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.os.Looper;
 import android.provider.MediaStore;
+import android.provider.Settings;
 import android.text.Editable;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,21 +30,55 @@ import com.github.mikephil.charting.data.PieEntry;
 import com.github.mikephil.charting.highlight.Highlight;
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 import com.github.mikephil.charting.utils.ColorTemplate;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GoogleApiAvailability;
+import com.google.android.gms.common.api.ApiException;
+import com.google.android.gms.common.api.ResolvableApiException;
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationCallback;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationResult;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.location.LocationSettingsRequest;
+import com.google.android.gms.location.LocationSettingsResponse;
+import com.google.android.gms.location.LocationSettingsStatusCodes;
+import com.google.android.gms.maps.CameraUpdate;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.CircleOptions;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.karumi.dexter.Dexter;
+import com.karumi.dexter.PermissionToken;
+import com.karumi.dexter.listener.PermissionDeniedResponse;
+import com.karumi.dexter.listener.PermissionGrantedResponse;
+import com.karumi.dexter.listener.PermissionRequest;
+import com.karumi.dexter.listener.single.PermissionListener;
 import com.polly.R;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
+import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 
 import com.github.mikephil.charting.charts.PieChart;
 import com.polly.config.Config;
+import com.polly.utils.Area;
+import com.polly.utils.Location;
 import com.polly.utils.QRCode;
 import com.polly.utils.ShowPollPage;
 import com.polly.utils.command.poll.RegisterPollChangeListenerCommand;
 import com.polly.utils.command.poll.RemovePollChangeListenerCommand;
 import com.polly.utils.communicator.Communicator;
+import com.polly.utils.communicator.CommunicatorManager;
+import com.polly.utils.poll.PollDescription;
 import com.polly.utils.poll.PollManager;
 import com.polly.utils.wrapper.Message;
 import com.polly.utils.wrapper.PollOptionsWrapper;
@@ -50,7 +93,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
-public class ShowPollVotingPageFragment extends Fragment {
+public class ShowPollVotingPageFragment extends Fragment implements OnMapReadyCallback {
     private PieChart pieChart;
     private ImageView qrCode;
     static PollOptionsWrapper pollOptions;
@@ -61,10 +104,19 @@ public class ShowPollVotingPageFragment extends Fragment {
     long testDiff;
     private CountDownTimer countDownTimer;
     boolean isExpired = false;
+    private boolean isGeofencePoll;
+
+    private GoogleMap googleMap;
+    private boolean alertActive;
+    private boolean locationPermissionGranted;
+
+    private LocationRequest locationRequest;
+    private FusedLocationProviderClient fusedLocationProviderClient;
+    Location usersLocation;
 
     SavingClass saving;
 
-    public static void open(long id) throws IOException{
+    public static void open(long id) throws IOException {
         ShowPollVotingPageFragment.id = id;
         pollOptions = PollManager.getPollOptions(id);
         Navigation.findNavController(MainActivity.mainActivity, R.id.nav_host_fragment).navigate(R.id.showPollVotingPageFragment);
@@ -73,7 +125,7 @@ public class ShowPollVotingPageFragment extends Fragment {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        if(hasRunningPollChangeListener){
+        if (hasRunningPollChangeListener) {
             try {
                 communicator.send(Config.serverCommunicationId, new RemovePollChangeListenerCommand(id));
                 hasRunningPollChangeListener = false;
@@ -91,23 +143,28 @@ public class ShowPollVotingPageFragment extends Fragment {
         View root = inflater.inflate(R.layout.fragment_showpoll, container, false);
         saving = new ViewModelProvider(getActivity()).get(SavingClass.class);
 
-        /** new Thread(() -> {
-         while(true){
-         try {
-         communicator.handleInput(communicator.getInput());
-         } catch (InterruptedException e) {
-         e.printStackTrace();
-         }
-         }
-         }).start();**/
         pieChart = (PieChart) root.findViewById(R.id.pieChart);
         pieChart.setVisibility(View.GONE);
         voteButton = (Button) root.findViewById(R.id.vote_button);
         voteButton.setVisibility(View.GONE);
 
-        if(pollOptions != null) {
-            showPoll(root);
+        try {
+            if(PollManager.isMyPoll(id)) {
+                Button editButton = (Button) root.findViewById(R.id.edit_poll_button);
+                editButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        editPoll();
+                    }
+                });
+                editButton.setVisibility(View.VISIBLE);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
         }
+
+
+        showPoll(root);
         LocalDateTime localDateTime = pollOptions.getBasicPollInformation().getExpirationTime();
 
         testDiff = getDifferenceInMS(convertToDate(LocalDateTime.now(ZoneId.of("Europe/Berlin"))), convertToDate(localDateTime));
@@ -128,13 +185,20 @@ public class ShowPollVotingPageFragment extends Fragment {
             }
         }.start();
 
+        if (id < 0) {
+            isGeofencePoll = true;
+            root.findViewById(R.id.mapLayout).setVisibility(View.VISIBLE);
+            createForGeofencePoll(root);
+            updateUsersLocation();
+        }
+
         return root;
     }
 
-    public void showPoll(View root){
+    public void showPoll(View root) {
         updatePieChart(pollOptions);
         qrCode = (ImageView) root.findViewById(R.id.qrCodeImageView);
-        qrCode.setImageBitmap(QRCode.QRCode(""+ pollOptions.getBasicPollInformation().getId()));
+        qrCode.setImageBitmap(QRCode.QRCode("" + pollOptions.getBasicPollInformation().getId()));
         qrCode.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
@@ -165,8 +229,8 @@ public class ShowPollVotingPageFragment extends Fragment {
         });
     }
 
-    public void showVoteButton(String option){
-        if(option == null){
+    public void showVoteButton(String option) {
+        if (option == null) {
             // remove existing button:
             voteButton.setVisibility(View.GONE);
         } else {
@@ -175,32 +239,36 @@ public class ShowPollVotingPageFragment extends Fragment {
                 @Override
                 public void onClick(View v) {
                     voteButton.setVisibility(View.GONE);
-                    try{
-                        boolean voteSuccessful = PollManager.vote(pollOptions.getBasicPollInformation().getId(), option);
-
+                    try {
+                        boolean voteSuccessful;
+                        if (isGeofencePoll) {
+                            voteSuccessful = PollManager.vote(pollOptions.getBasicPollInformation().getId(), option, usersLocation);
+                        } else {
+                            voteSuccessful = PollManager.vote(pollOptions.getBasicPollInformation().getId(), option);
+                        }
 
 
                         //TODO Zeit mit loading-screen überbrücken:
 
 
                         // show poll-results:
-                        if(voteSuccessful){
+                        if (voteSuccessful) {
+                            communicator.send(Config.serverCommunicationId, new RemovePollChangeListenerCommand(id));
                             ShowPollPage.showPollResultsPage(id);
-                        }else{
+                        } else {
                             Toast.makeText(getContext(), "voting for Poll failed. Please try again!", Toast.LENGTH_SHORT).show();
                         }
 
 
-
-                    } catch (IllegalArgumentException|IOException e) {
+                    } catch (IllegalArgumentException | IOException e) {
                         Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
                         e.printStackTrace();
                     }
                 }
             });
-            if(isExpired){
+            if (isExpired) {
                 voteButton.setVisibility(View.GONE);
-            }else{
+            } else {
                 voteButton.setVisibility(View.VISIBLE);
             }
 
@@ -208,23 +276,31 @@ public class ShowPollVotingPageFragment extends Fragment {
     }
 
     private Communicator initialiseCommunicator() {
-        return new Communicator() {
+        Communicator communicator = new Communicator() {
             @Override
             public void handleInput(Message message) {
-                System.out.println("PollActivity received message from type: " + message.getDataType().getName());
+                System.out.println("ShowPollVotingPageFragment received message from type: " + message.getDataType().getName());
                 if (message.getDataType().equals(PollOptionsWrapper.class)) {
                     PollOptionsWrapper updatePoll = (PollOptionsWrapper) message.getData();
-                    updatePieChart(updatePoll);
+
+                    getActivity().runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            updatePieChart(updatePoll);
+                        }
+                    });
                 }
             }
         };
+        communicator.start();
+        return communicator;
     }
 
 
-    private void updatePieChart(PollOptionsWrapper updatePoll){
+    private void updatePieChart(PollOptionsWrapper updatePoll) {
         pollOptions = updatePoll;
         ArrayList<PieEntry> options = new ArrayList<>();
-        for(String option : pollOptions.getPollOptions()){
+        for (String option : pollOptions.getPollOptions()) {
             options.add(new PieEntry(Integer.valueOf(1), option));
         }
 
@@ -248,16 +324,18 @@ public class ShowPollVotingPageFragment extends Fragment {
         pieChart.setVisibility(View.VISIBLE);
     }
 
-    public Date convertToDate(LocalDateTime data){
+    public Date convertToDate(LocalDateTime data) {
         return Date.from(data.atZone(ZoneId.systemDefault()).toInstant());
     }
-    public static long getDifferenceInMS(Date date1, Date date2){
-        if(date2.getTime() - date1.getTime() > 0)
+
+    public static long getDifferenceInMS(Date date1, Date date2) {
+        if (date2.getTime() - date1.getTime() > 0)
             return (date2.getTime() - date1.getTime());
         else
             return 0l;
     }
-    public String timeDiffInString(long difference_In_Time){
+
+    public String timeDiffInString(long difference_In_Time) {
         long diffMinutes = TimeUnit
                 .MILLISECONDS
                 .toMinutes(difference_In_Time)
@@ -270,6 +348,252 @@ public class ShowPollVotingPageFragment extends Fragment {
                 .MILLISECONDS
                 .toDays(difference_In_Time)
                 % 365;
+        if(diffDays == 0l && diffMinutes == 0l && diffHours == 0l){
+            return "less than a minute";
+        }
         return diffDays + "d " + diffHours + "h : " + diffMinutes + "m";
+    }
+
+    private void createForGeofencePoll(View view) {
+        if (!checkGooglePlayServices()) {
+            Toast.makeText(getContext(), "No Google Play Services Available!", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        if (!locationPermissionGranted)
+            checkLocationPermission();
+
+
+        SupportMapFragment supportMapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.fragmentMapShowPoll);
+        supportMapFragment.getMapAsync(this);
+
+        checkGps();
+    }
+
+    private boolean checkGooglePlayServices() {
+        GoogleApiAvailability googleApiAvailability = GoogleApiAvailability.getInstance();
+        int result = googleApiAvailability.isGooglePlayServicesAvailable(getContext());
+        if (result == ConnectionResult.SUCCESS)
+            return true;
+        else if (googleApiAvailability.isUserResolvableError(result)) {
+            Dialog dialog = googleApiAvailability.getErrorDialog(getActivity(), result, 201, new DialogInterface.OnCancelListener() {
+                @Override
+                public void onCancel(DialogInterface dialog) {
+                    Toast.makeText(getContext(), "User canceled dialog", Toast.LENGTH_SHORT).show();
+                }
+            });
+            dialog.show();
+        }
+        return false;
+    }
+
+    private void checkLocationPermission() {
+        System.out.println("checking location permission");
+
+        Dexter.withContext(getContext()).withPermission(Manifest.permission.ACCESS_FINE_LOCATION).withListener(new PermissionListener() {
+            @Override
+            public void onPermissionGranted(PermissionGrantedResponse permissionGrantedResponse) {
+                System.out.println("permission granted");
+                locationPermissionGranted = true;
+            }
+
+            @Override
+            public void onPermissionDenied(PermissionDeniedResponse permissionDeniedResponse) {
+                System.out.println("permission denied");
+
+                onLocationPermissionDenied();
+            }
+
+            @Override
+            public void onPermissionRationaleShouldBeShown(PermissionRequest permissionRequest, PermissionToken permissionToken) {
+                System.out.println("permission rationale should be shown");
+                permissionToken.continuePermissionRequest();
+            }
+        }).check();
+    }
+
+    private void initMap(LatLng center, double radius) {
+        googleMap.getUiSettings().setZoomControlsEnabled(true);
+        googleMap.getUiSettings().setCompassEnabled(true);
+        googleMap.getUiSettings().setMyLocationButtonEnabled(true);
+
+        if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            Toast.makeText(getContext(), "Please grant permission to use your locaiton!", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        googleMap.setMyLocationEnabled(true);
+
+        googleMap.clear();
+
+        CircleOptions circle = new CircleOptions();
+        circle.center(center);
+        circle.radius(radius);
+        circle.strokeColor(Color.argb(255, 100, 255, 255));
+        circle.fillColor(Color.argb(100, 100, 255, 255));
+
+        MarkerOptions markerOptions = new MarkerOptions();
+        markerOptions.title("Poll Area");
+        markerOptions.position(center);
+
+        googleMap.addMarker(markerOptions);
+        googleMap.addCircle(circle);
+
+        moveCameraToCurrentLocation();
+    }
+
+    private void checkGps() {
+        locationRequest = LocationRequest.create();
+        locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+
+        LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder().addLocationRequest(locationRequest).setAlwaysShow(true);
+
+        Task<LocationSettingsResponse> locationSettingsResponseTask = LocationServices.getSettingsClient(getContext()).checkLocationSettings(builder.build());
+
+        locationSettingsResponseTask.addOnCompleteListener(new OnCompleteListener<LocationSettingsResponse>() {
+            @Override
+            public void onComplete(@NonNull Task<LocationSettingsResponse> task) {
+                try {
+                    LocationSettingsResponse response = task.getResult(ApiException.class);
+                } catch (ApiException e) {
+                    if (e.getStatusCode() == LocationSettingsStatusCodes.RESOLUTION_REQUIRED) {
+                        ResolvableApiException resolvableApiException = (ResolvableApiException) e;
+
+                        try {
+                            resolvableApiException.startResolutionForResult(getActivity(), 101);
+                        } catch (IntentSender.SendIntentException sendIntentException) {
+                            sendIntentException.printStackTrace();
+                        }
+                    }
+
+                    if (e.getStatusCode() == LocationSettingsStatusCodes.SETTINGS_CHANGE_UNAVAILABLE) {
+                        Toast.makeText(getContext(), "No Gps Available", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            }
+        });
+    }
+
+    private void moveCameraToCurrentLocation() {
+        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(getActivity());
+        if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            return;
+        }
+
+        fusedLocationProviderClient.requestLocationUpdates(locationRequest, new LocationCallback() {
+            @Override
+            public void onLocationResult(@NonNull LocationResult locationResult) {
+                super.onLocationResult(locationResult);
+
+                usersLocation = new Location(locationResult.getLastLocation().getLatitude(), locationResult.getLastLocation().getLongitude());
+                CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(new LatLng(usersLocation.getLatitude(), usersLocation.getLongitude()), 5);
+                googleMap.animateCamera(cameraUpdate);
+            }
+        }, Looper.myLooper());
+    }
+
+    private void updateUsersLocation() {
+        locationRequest.setInterval(5000);
+        locationRequest.setFastestInterval(3000);
+        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(getActivity());
+        if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            return;
+        }
+        fusedLocationProviderClient.requestLocationUpdates(locationRequest, new LocationCallback() {
+            @Override
+            public void onLocationResult(@NonNull LocationResult locationResult) {
+                super.onLocationResult(locationResult);
+
+                usersLocation = new Location(locationResult.getLastLocation().getLatitude(), locationResult.getLastLocation().getLongitude());
+            }
+        }, Looper.myLooper());
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        if(isGeofencePoll) {
+            if (!alertActive)
+                checkLocationPermission();
+
+            if (locationPermissionGranted) {
+                SupportMapFragment supportMapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.fragmentMapShowPoll);
+                supportMapFragment.getMapAsync(this);
+
+                checkGps();
+            }
+        }
+    }
+
+    private void onLocationPermissionDenied() {
+        alertActive = true;
+
+        AlertDialog.Builder alert = new AlertDialog.Builder(getContext());
+        alert.setTitle("Grant permission");
+        alert.setMessage("Do you want to grant LOCATION_ACCESS_PERMISSION?");
+        alert.setPositiveButton("YES", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                Intent intent = new Intent();
+                intent.setAction(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+                Uri uri = Uri.fromParts("package", MainActivity.mainActivity.getPackageName(), "");
+                intent.setData(uri);
+                startActivity(intent);
+                alertActive = false;
+            }
+        });
+        alert.setNegativeButton("NO", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                alertActive = false;
+                Navigation.findNavController(getActivity(), R.id.nav_host_fragment).navigate(R.id.polloptionFragment);
+            }
+        });
+        alert.create().show();
+    }
+
+    @Override
+    public void onMapReady(@NonNull GoogleMap googleMap) {
+        if(!isGeofencePoll)
+            return;
+
+
+        this.googleMap = googleMap;
+
+        try{
+            Area area = PollManager.getGeofencePollArea(id);
+            initMap(new LatLng(area.getLatitude(),area.getLongitude()), area.getRadius());
+        } catch(IOException e){
+            if(e.getMessage() != null)
+                Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_LONG).show();
+            else
+                Toast.makeText(getContext(), "Something went wrong!", Toast.LENGTH_LONG).show();
+        }
+    }
+
+
+    private void editPoll() {
+        String newName = "";
+        PollDescription newDescription = new PollDescription("");
+
+        // TODO wenn es newName gibt:
+        try {
+            PollManager.editPollName(id, newName);
+        } catch (IOException e) {
+            if(e.getMessage() != null)
+                Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_LONG).show();
+            else
+                Toast.makeText(getContext(), "Something went wrong!", Toast.LENGTH_LONG).show();
+        }
+
+        // TODO wenn es newDescription gibt:
+        try {
+            PollManager.editPollDescription(id, newDescription);
+        } catch (IOException e) {
+            if(e.getMessage() != null)
+                Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_LONG).show();
+            else
+                Toast.makeText(getContext(), "Something went wrong!", Toast.LENGTH_LONG).show();
+        }
     }
 }

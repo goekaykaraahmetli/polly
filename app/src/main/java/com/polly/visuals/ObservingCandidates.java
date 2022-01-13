@@ -175,7 +175,7 @@ public class ObservingCandidates extends Fragment {
                             canSeeAndVoteList.add(exampleList.get(i).getmText1());
                         }
                     }
-                    saving.setCanSeeList(canSeeAndVoteList);
+                    saving.setCanSeeAndVoteList(canSeeAndVoteList);
                     saving.setUserArrayObserving(exampleList);
                 }
 

@@ -19,20 +19,22 @@ public class Organizer {
 	private static SocketHandler socketHandler;
 	private static boolean initialised = false;
 	static {
-		createSocketHandler();
+		createSocketHandler(7500);
 	}
 
 	public Organizer(){
 		super();
-		while(!initialised);
+		while(!initialised) {
+			emptyMethode();
+		}
 	}
 	/*private static void sendNotifications(){
 
 	}*/
-	private static void createSocketHandler(){
+	private static void createSocketHandler(int timeout){
 		new Thread(() -> {
 			try {
-				socketHandler = new SocketHandler(Config.SERVER_IP_ADRESS, Config.SERVER_PORT);
+				socketHandler = new SocketHandler(Config.SERVER_IP_ADRESS, Config.SERVER_PORT, timeout);
 			} catch (IOException e) {
 				e.printStackTrace();
 			} catch (FailedKeyGenerationException e) {
@@ -51,14 +53,23 @@ public class Organizer {
 	}
 
 
-	//TODO nutzen
-	public static void connectToServer() throws IOException, FailedKeyGenerationException, InvalidKeySpecException, NoSuchAlgorithmException, FailedEncryptionException, FailedDecryptionException {
-		socketHandler = new SocketHandler(Config.SERVER_IP_ADRESS, Config.SERVER_PORT);
+	public static void tryReconnectToServer() {
+		if(initialised == false)
+			return;
+
+		initialised = false;
+		socketHandler = null;
+		createSocketHandler(500);
+		while(!initialised){
+			emptyMethode();
+		}
 	}
 
 	public static <T> boolean send(long sender, long receiver, long responseId, T data) throws IOException{
 		if(socketHandler == null){
-			throw new IOException("No connection to the server!");
+			tryReconnectToServer();
+			if(socketHandler == null)
+				throw new IOException("No connection to the server!");
 		}
 
 		return socketHandler.send(sender, receiver, responseId, data);
@@ -66,7 +77,9 @@ public class Organizer {
 
 	public static <T> boolean send(long sender, long receiver, T data) throws IOException{
 		if(socketHandler == null){
-			throw new IOException("No connection to the server!");
+			tryReconnectToServer();
+			if(socketHandler == null)
+				throw new IOException("No connection to the server!");
 		}
 
 		return socketHandler.send(sender, receiver, data);
@@ -88,5 +101,9 @@ public class Organizer {
 			e.printStackTrace();
 		}
 		return null;
+	}
+
+	public static void emptyMethode() {
+		// empty methode
 	}
 }

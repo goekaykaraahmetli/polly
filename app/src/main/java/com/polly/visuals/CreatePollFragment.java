@@ -2,6 +2,7 @@ package com.polly.visuals;
 import com.google.android.material.textfield.TextInputEditText;
 import com.polly.utils.Area;
 import com.polly.utils.QRCode;
+import com.polly.utils.ShowPollPage;
 import com.polly.utils.poll.PollDescription;
 import com.polly.utils.poll.PollManager;
 
@@ -72,8 +73,13 @@ public class CreatePollFragment extends Fragment {
         super.onCreate(savedInstanceState);
         View root = inflater.inflate(R.layout.activity_create_poll, container, false);
         SavingClass saving = new ViewModelProvider(getActivity()).get(SavingClass.class);
+        if(saving.getDropDownMenu() == null){
+            Navigation.findNavController(getActivity(), R.id.nav_host_fragment).navigate(R.id.polloptionFragment);
+            return root;
+        }
+
         if(saving.getDropDownMenu().toString().equals("POLLYROOM")){
-            optionMax = 4;
+                optionMax = 4;
         }
         Button createPollBtn = (Button) root.findViewById(R.id.createPollBtn);
         TextView pollName = (TextView) root.findViewById(R.id.PollName);
@@ -95,7 +101,6 @@ public class CreatePollFragment extends Fragment {
         Button remove2 = new Button(getContext());
         remove2.setText("remove Option");
         remove2.setVisibility(View.INVISIBLE);
-        description = saving.getDescription().toString();
         ((LinearLayout) root.findViewById(R.id.linear_layout)).addView(remove2);
 
             map.put(0, option1);
@@ -231,12 +236,11 @@ public class CreatePollFragment extends Fragment {
                                 id = PollManager.createPrivatePoll(saving.getPollname().toString(), new PollDescription(saving.getDescription().toString()), localDateTime, pollOptions, saving.getUserGroupId());
                                 break;
                             case "CUSTOM":
-                                id = PollManager.createCustomPoll(saving.getPollname().toString(), new PollDescription(saving.getDescription().toString()), localDateTime, pollOptions, saving.getCanSeeList(), saving.getCanSeeAndVoteList());
+                                id = PollManager.createCustomPoll(saving.getPollname().toString(), new PollDescription(saving.getDescription().toString()), localDateTime, pollOptions, saving.getCanVoteList(), saving.getCanSeeAndVoteList());
                                 break;
                             case "GEOFENCE":
-                                long latitude = 0L;     //TODO
-                                long longitude = 0L;    //TODO
-                                id = PollManager.createGeofencePoll(saving.getPollname().toString(), new PollDescription(saving.getDescription().toString()), localDateTime, pollOptions, new Area(latitude, longitude, Double.parseDouble(saving.getGeofence().toString())));
+                                    //TODO
+                                id = PollManager.createGeofencePoll(saving.getPollname().toString(), new PollDescription(saving.getDescription().toString()), localDateTime, pollOptions, saving.getArea());
                                 break;
                             case "POLLYROOM":
                                 {
@@ -302,10 +306,15 @@ public class CreatePollFragment extends Fragment {
                                         }
                                     });
                                     alert.create().show();
+                                    break;
                                 }
                         }
-                        Toast.makeText(getActivity(), "Poll ID is: " + id, Toast.LENGTH_SHORT).show();
-                        //saving.reset();
+                        if(!saving.getDropDownMenu().toString().equals("POLLYROOM")){
+                            Toast.makeText(getActivity(), "Poll ID is: " + id, Toast.LENGTH_SHORT).show();
+                            ShowPollPage.showPollVotingPage(id);
+                            saving.reset();
+                        }
+
                     } catch (IOException e) {
                         e.printStackTrace();
                         Toast.makeText(getActivity(), "No connection to the server!", Toast.LENGTH_SHORT).show();
