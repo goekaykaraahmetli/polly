@@ -14,10 +14,12 @@ import android.os.Looper;
 import android.provider.MediaStore;
 import android.provider.Settings;
 import android.text.Editable;
+import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -149,7 +151,7 @@ public class ShowPollVotingPageFragment extends Fragment implements OnMapReadyCa
         voteButton.setVisibility(View.GONE);
 
         try {
-            if(PollManager.isMyPoll(id)) {
+            if (PollManager.isMyPoll(id)) {
                 Button editButton = (Button) root.findViewById(R.id.edit_poll_button);
                 editButton.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -348,7 +350,7 @@ public class ShowPollVotingPageFragment extends Fragment implements OnMapReadyCa
                 .MILLISECONDS
                 .toDays(difference_In_Time)
                 % 365;
-        if(diffDays == 0l && diffMinutes == 0l && diffHours == 0l){
+        if (diffDays == 0l && diffMinutes == 0l && diffHours == 0l) {
             return "less than a minute";
         }
         return diffDays + "d " + diffHours + "h : " + diffMinutes + "m";
@@ -512,7 +514,7 @@ public class ShowPollVotingPageFragment extends Fragment implements OnMapReadyCa
     public void onResume() {
         super.onResume();
 
-        if(isGeofencePoll) {
+        if (isGeofencePoll) {
             if (!alertActive)
                 checkLocationPermission();
 
@@ -554,17 +556,17 @@ public class ShowPollVotingPageFragment extends Fragment implements OnMapReadyCa
 
     @Override
     public void onMapReady(@NonNull GoogleMap googleMap) {
-        if(!isGeofencePoll)
+        if (!isGeofencePoll)
             return;
 
 
         this.googleMap = googleMap;
 
-        try{
+        try {
             Area area = PollManager.getGeofencePollArea(id);
-            initMap(new LatLng(area.getLatitude(),area.getLongitude()), area.getRadius());
-        } catch(IOException e){
-            if(e.getMessage() != null)
+            initMap(new LatLng(area.getLatitude(), area.getLongitude()), area.getRadius());
+        } catch (IOException e) {
+            if (e.getMessage() != null)
                 Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_LONG).show();
             else
                 Toast.makeText(getContext(), "Something went wrong!", Toast.LENGTH_LONG).show();
@@ -573,32 +575,69 @@ public class ShowPollVotingPageFragment extends Fragment implements OnMapReadyCa
 
 
     private void editPoll() {
-        String newName = "";
         PollDescription newDescription = new PollDescription("");
+        AlertDialog.Builder alert = new AlertDialog.Builder(getContext());
+        alert.setTitle("Edit your Pollname");
+        alert.setMessage("Set your new Pollinformation here!");
+        final EditText newPollname = new EditText(getContext());
+        newPollname.setInputType(InputType.TYPE_CLASS_TEXT);
+        newPollname.setHint("new Pollname");
+        alert.setView(newPollname);
+        alert.setPositiveButton("Confirm", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                String newName = newPollname.getText().toString();
+                try {
+                    PollManager.editPollName(id, newName);
+                } catch (IOException e) {
+                    if (e.getMessage() != null)
+                        Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_LONG).show();
+                    else
+                        Toast.makeText(getContext(), "Something went wrong!", Toast.LENGTH_LONG).show();
+                }
+                editPollDescription();
+            }
+        });
+        alert.setNegativeButton("NO", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                editPollDescription();
+            }
+        });
+        alert.create().show();
 
 
+    }
 
+    private void editPollDescription() {
+        AlertDialog.Builder alert = new AlertDialog.Builder(getContext());
+        alert.setTitle("Edit your Polldescription");
+        alert.setMessage("Set your new Pollinformation here!");
+        final EditText newPollname = new EditText(getContext());
+        newPollname.setInputType(InputType.TYPE_CLASS_TEXT);
+        newPollname.setHint("new Polldescription");
+        alert.setView(newPollname);
+        alert.setPositiveButton("Confirm", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                String newName = newPollname.getText().toString();
+                try {
+                    PollManager.editPollDescription(id, new PollDescription(newName));
+                } catch (IOException e) {
+                    if (e.getMessage() != null)
+                        Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_LONG).show();
+                    else
+                        Toast.makeText(getContext(), "Something went wrong!", Toast.LENGTH_LONG).show();
+                }
+            }
+        });
+        alert.setNegativeButton("NO", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
 
-
-        // TODO wenn es newName gibt:
-        try {
-            PollManager.editPollName(id, newName);
-        } catch (IOException e) {
-            if(e.getMessage() != null)
-                Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_LONG).show();
-            else
-                Toast.makeText(getContext(), "Something went wrong!", Toast.LENGTH_LONG).show();
-        }
-
-        // TODO wenn es newDescription gibt:
-        try {
-            PollManager.editPollDescription(id, newDescription);
-        } catch (IOException e) {
-            if(e.getMessage() != null)
-                Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_LONG).show();
-            else
-                Toast.makeText(getContext(), "Something went wrong!", Toast.LENGTH_LONG).show();
-        }
+            }
+        });
+        alert.create().show();
     }
 
 }
