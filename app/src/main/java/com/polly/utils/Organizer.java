@@ -58,6 +58,7 @@ public class Organizer {
 			return;
 
 		initialised = false;
+		socketHandler = null;
 		createSocketHandler(500);
 		while(!initialised){
 			emptyMethode();

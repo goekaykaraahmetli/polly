@@ -74,33 +74,7 @@ public class SocketHandler {
 		if(socket == null){
 			throw new IOException("could not connect to the given server!");
 		}
-
-
-		//connect(ip, port, 0);
     }
-
-    /**
-	private void connect(String ip, int port, int tryCounter) throws IOException {
-		if(tryCounter > 1) {
-			throw new IOException("could not connect to the given server!");
-		}
-		
-        AtomicBoolean connecting = new AtomicBoolean(true);
-        Thread connectingThread = new Thread(() -> {
-            try {
-            	socket = new Socket(ip, port);
-            } catch (IOException e) {
-            	System.out.println("could not connect!");
-                e.printStackTrace();
-            }
-            connecting.set(false);
-        });
-        connectingThread.start();
-        while(connecting.get()){}
-        if(socket == null){
-            connect(ip, port, tryCounter+1);
-        }
-    }*/
 	
 	public <T> boolean send(long sender, long receiver, long responseId, T data) {
 		return outputHandler.send(sender, receiver, responseId, data);

@@ -1,9 +1,12 @@
 package com.polly.utils.communicator;
 
+import com.polly.utils.wrapper.ErrorWrapper;
 import com.polly.utils.wrapper.Message;
 import com.polly.utils.Organizer;
 
 import java.io.IOException;
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ArrayBlockingQueue;
@@ -41,7 +44,6 @@ public abstract class ResponseCommunicator extends Communicator{
         responseIds.add(responseId);
         Organizer.send(getCommunicationId(), receiver, responseId, data);
 
-        //TODO set timeout
         while(true) {
             try {
                 Message input = responseQueue.take();

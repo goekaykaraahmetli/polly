@@ -1,9 +1,11 @@
 package com.polly.utils.communication;
 
 import java.io.IOException;
+import java.net.SocketException;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 
+import com.polly.utils.Organizer;
 import com.polly.utils.wrapper.Message;
 
 class OutputHandler extends DataStreamHandler{
@@ -20,6 +22,7 @@ class OutputHandler extends DataStreamHandler{
 			dataStreamManager.send(handleQueue.take());
 		} catch (IOException | InterruptedException e) {
 			// TODO Auto-generated catch block
+			Organizer.tryReconnectToServer();
 			e.printStackTrace();
 		}
 	}
