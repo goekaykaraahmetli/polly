@@ -66,6 +66,7 @@ import com.karumi.dexter.listener.PermissionRequest;
 import com.karumi.dexter.listener.single.PermissionListener;
 import com.polly.R;
 import com.polly.config.Config;
+import com.polly.utils.Area;
 import com.polly.utils.Location;
 import com.polly.utils.QRCode;
 import com.polly.utils.command.poll.RegisterPollChangeListenerCommand;
@@ -444,12 +445,13 @@ public class ShowPollResultsPageFragment extends Fragment implements OnMapReadyC
         if(!isGeofencePoll)
             return;
 
-
         this.googleMap = googleMap;
-        //TODO
-        LatLng center = new LatLng(0,0);
-        double radius = 1000;
 
-        initMap(center, radius);
+        try{
+            Area area = PollManager.getGeofencePollArea(id);
+            initMap(new LatLng(area.getLatitude(),area.getLongitude()), area.getRadius());
+        } catch(IOException e){
+            Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_LONG).show();
+        }
     }
 }
