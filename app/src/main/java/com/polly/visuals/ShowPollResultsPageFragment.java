@@ -259,7 +259,9 @@ public class ShowPollResultsPageFragment extends Fragment implements OnMapReadyC
     }
 
     public void createNotificationChannel() {
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
+
+        }
     }
 
     public Date convertToDate(LocalDateTime data) {
