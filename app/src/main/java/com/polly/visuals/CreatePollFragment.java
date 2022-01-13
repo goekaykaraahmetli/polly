@@ -276,9 +276,9 @@ public class CreatePollFragment extends Fragment {
                                                     Intent emailIntent = new Intent(Intent.ACTION_SEND_MULTIPLE);
                                                     // set the type to 'email'
                                                     emailIntent.setType("vnd.android.cursor.dir/email");
-                                                    String to[] = {"willimowski4@gmail.com"};
+                                                    String to[] = {usernameInput.getText().toString()};
                                                     emailIntent.putExtra(Intent.EXTRA_EMAIL, to);
-                                                    emailIntent .putExtra(Intent.EXTRA_SUBJECT, "Subject");
+                                                    emailIntent.putExtra(Intent.EXTRA_SUBJECT, "Subject");
                                                     for(int i = 1; i <= optionCounter; i++){
                                                         for(int j = 97; j <= 96 + numberOfParticipants; j++){
                                                             Bitmap inImage = QRCode.QRCode("" + i + (char) j);
