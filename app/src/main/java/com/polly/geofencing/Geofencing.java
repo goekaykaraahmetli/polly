@@ -8,6 +8,7 @@ import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.os.Looper;
 
 import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
@@ -17,18 +18,28 @@ import com.google.android.gms.location.Geofence;
 import com.google.android.gms.location.GeofenceStatusCodes;
 import com.google.android.gms.location.GeofencingClient;
 import com.google.android.gms.location.GeofencingRequest;
+import com.google.android.gms.location.LocationCallback;
+import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.polly.utils.Area;
+
+import java.util.LinkedList;
+import java.util.List;
 
 public class Geofencing extends ContextWrapper {
+    private List<Area> geofences;
+
     GeofencingClient geofencingClient;
     GeofenceHelper geofenceHelper;
 
 
     public Geofencing(Context context) {
         super(context);
+
+        geofences = new LinkedList<>();
 
         geofencingClient = LocationServices.getGeofencingClient(this);
         geofenceHelper = new GeofenceHelper(this);
@@ -39,15 +50,15 @@ public class Geofencing extends ContextWrapper {
     private void test() {
         locationListener();
 
-
+        geofences.add(new Area(50.0027, 9.2252, 3000.0F));
 
         LatLng latLng = new LatLng(50.0027, 9.2252);
-        addGeofence(latLng, 3000.0F, geofencingClient, geofenceHelper, Geofence.NEVER_EXPIRE);
+        addGeofence(latLng, 3000.0F, Geofence.NEVER_EXPIRE);
     }
 
 
 
-    private void addGeofence(LatLng latLng, float radius, GeofencingClient geofencingClient, GeofenceHelper geofenceHelper, long expirationTime) {
+    private void addGeofence(LatLng latLng, float radius, long expirationTime) {
         Geofence geofence = geofenceHelper.getGeofence(latLng, radius, Geofence.GEOFENCE_TRANSITION_ENTER, expirationTime);
         GeofencingRequest req = geofenceHelper.getGeofencingRequest(geofence);
         PendingIntent penInt = geofenceHelper.getPendingIntent();
@@ -122,7 +133,12 @@ public class Geofencing extends ContextWrapper {
         LocationListener locationListener = new LocationListener() {
             @Override
             public void onLocationChanged(@NonNull Location location) {
-                // do nothing
+                com.polly.utils.Location loc = new com.polly.utils.Location(location.getLatitude(), location.getLongitude());
+                for(Area geofence : geofences) {
+                    if(loc.inArea(geofence)) {
+                        System.out.println("new geofence (own)");
+                    }
+                }
             }
         };
 
@@ -136,6 +152,9 @@ public class Geofencing extends ContextWrapper {
             // for ActivityCompat#requestPermissions for more details.
             return;
         }
-        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5000, 10, locationListener);
+
+        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 10, locationListener);
     }
+
+
 }

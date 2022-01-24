@@ -31,6 +31,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         setTheme(R.style.Theme_Polly);
         setContentView(R.layout.activity_main);
         drawerLayout = findViewById(R.id.my_drawer_layout);
+        drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
         actionBarDrawerToggle = new ActionBarDrawerToggle(this, drawerLayout, R.string.nav_open, R.string.nav_close);
         drawerLayout.addDrawerListener(actionBarDrawerToggle);
         actionBarDrawerToggle.syncState();
@@ -65,5 +66,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         drawerLayout.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        actionBarDrawerToggle.onOptionsItemSelected(item);
+        return super.onOptionsItemSelected(item);
     }
 }
