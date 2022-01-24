@@ -7,12 +7,12 @@
         <deviceKey>
           <Key>
             <type value="VIRTUAL_DEVICE_PATH" />
-            <value value="C:\Users\Gaming\.android\avd\Pixel_3a_API_30_PollyRoom_webcam_.avd" />
+            <value value="C:\Users\Gaming\.android\avd\Pixel_3a_API_30_2.avd" />
           </Key>
         </deviceKey>
       </Target>
     </targetSelectedWithDropDown>
-    <timeTargetWasSelectedWithDropDown value="2022-01-13T14:04:35.717673600Z" />
+    <timeTargetWasSelectedWithDropDown value="2022-01-24T18:07:50.667367900Z" />
     <targetsSelectedWithDialog>
       <Target>
         <type value="QUICK_BOOT_TARGET" />
