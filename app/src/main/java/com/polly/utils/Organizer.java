@@ -7,6 +7,7 @@ import java.security.spec.InvalidKeySpecException;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.polly.config.Config;
+import com.polly.geofencing.Geofencing;
 import com.polly.utils.communication.SocketHandler;
 import com.polly.utils.communicator.CommunicatorManager;
 import com.polly.utils.communicator.DefaultCommunicator;
@@ -22,15 +23,21 @@ import javax.crypto.SecretKey;
 public class Organizer {
 	private static SocketHandler socketHandler;
 	private static boolean initialised = false;
+	private static MainActivity mainActivity;
+	private static Geofencing geofencing;
+
 	static {
 		createSocketHandler(7500);
 	}
 
-	public Organizer(){
+	public Organizer(MainActivity mainActivity){
 		super();
+		Organizer.mainActivity = mainActivity;
 		while(!initialised) {
 			emptyMethode();
 		}
+
+		geofencing = new Geofencing(mainActivity);
 
 		if(FirebaseAuth.getInstance().getCurrentUser() != null){
 			LoginFragment.sendTokenToServer(true);
@@ -116,5 +123,13 @@ public class Organizer {
 
 	public static void emptyMethode() {
 		// empty methode
+	}
+
+	public static MainActivity getMainActivity() {
+		return mainActivity;
+	}
+
+	public static Geofencing getGeofencing() {
+		return geofencing;
 	}
 }

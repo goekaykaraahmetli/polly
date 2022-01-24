@@ -304,7 +304,7 @@ public class ChooseAreaFragment extends Fragment implements OnMapReadyCallback {
             public void onClick(DialogInterface dialogInterface, int i) {
                 Intent intent = new Intent();
                 intent.setAction(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
-                Uri uri = Uri.fromParts("package", MainActivity.mainActivity.getPackageName(), "");
+                Uri uri = Uri.fromParts("package", Organizer.getMainActivity().getPackageName(), "");
                 intent.setData(uri);
                 startActivity(intent);
                 alertActive = false;

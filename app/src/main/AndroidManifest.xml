@@ -20,10 +20,6 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/splashScreenTheme">
-        <receiver
-            android:name=".geofencing.GeofenceBroadcastReceiver"
-            android:enabled="true"
-            android:exported="true" />
 
         <!-- TODO brauchen wir den Provider hier? -->
        <provider

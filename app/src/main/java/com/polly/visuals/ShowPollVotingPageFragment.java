@@ -74,6 +74,7 @@ import com.github.mikephil.charting.charts.PieChart;
 import com.polly.config.Config;
 import com.polly.utils.Area;
 import com.polly.utils.Location;
+import com.polly.utils.Organizer;
 import com.polly.utils.QRCode;
 import com.polly.utils.ShowPollPage;
 import com.polly.utils.command.poll.RegisterPollChangeListenerCommand;
@@ -121,7 +122,7 @@ public class ShowPollVotingPageFragment extends Fragment implements OnMapReadyCa
     public static void open(long id) throws IOException {
         ShowPollVotingPageFragment.id = id;
         pollOptions = PollManager.getPollOptions(id);
-        Navigation.findNavController(MainActivity.mainActivity, R.id.nav_host_fragment).navigate(R.id.showPollVotingPageFragment);
+        Navigation.findNavController(Organizer.getMainActivity(), R.id.nav_host_fragment).navigate(R.id.showPollVotingPageFragment);
     }
 
     @Override
@@ -538,7 +539,7 @@ public class ShowPollVotingPageFragment extends Fragment implements OnMapReadyCa
             public void onClick(DialogInterface dialogInterface, int i) {
                 Intent intent = new Intent();
                 intent.setAction(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
-                Uri uri = Uri.fromParts("package", MainActivity.mainActivity.getPackageName(), "");
+                Uri uri = Uri.fromParts("package", Organizer.getMainActivity().getPackageName(), "");
                 intent.setData(uri);
                 startActivity(intent);
                 alertActive = false;

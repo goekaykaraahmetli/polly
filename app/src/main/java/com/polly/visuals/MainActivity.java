@@ -21,13 +21,11 @@ import com.polly.utils.Organizer;
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     protected DrawerLayout drawerLayout;
     private ActionBarDrawerToggle actionBarDrawerToggle;
-    public static AppCompatActivity mainActivity;
 
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mainActivity = this;
         setTheme(R.style.Theme_Polly);
         setContentView(R.layout.activity_main);
         drawerLayout = findViewById(R.id.my_drawer_layout);
@@ -41,7 +39,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         SavingClass saving = new ViewModelProvider(this).get(SavingClass.class);
 
 
-        new Organizer();
+        new Organizer(this);
 
         new Geofencing(this);
     }
