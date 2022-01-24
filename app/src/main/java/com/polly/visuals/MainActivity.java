@@ -1,10 +1,7 @@
 package com.polly.visuals;
 
-import android.app.Activity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.MenuItem;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -16,18 +13,15 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 
 import com.google.android.material.navigation.NavigationView;
-import com.google.firebase.auth.FirebaseAuth;
 import com.polly.R;
+import com.polly.geofencing.Geofencing;
 import com.polly.utils.Organizer;
 
-import java.io.IOException;
 
-
-public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, DrawerLocker{
+public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, DrawerLocker {
     protected DrawerLayout drawerLayout;
     private ActionBarDrawerToggle actionBarDrawerToggle;
     public static AppCompatActivity mainActivity;
-
 
 
     @Override
@@ -47,14 +41,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
 
         new Organizer();
+
+        new Geofencing(this);
     }
-
-
 
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-        switch(item.getItemId()){
+        switch (item.getItemId()) {
             case R.id.nav_account:
                 Navigation.findNavController(this, R.id.nav_host_fragment).navigate(R.id.accountFragment);
                 break;
@@ -73,23 +67,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         return true;
     }
 
-
-
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-
-        int id = item.getItemId();
-        if (actionBarDrawerToggle.onOptionsItemSelected(item))
-            return true;
-        return true;
-    }
-
     @Override
     public void setDrawerLocked(boolean shouldLock) {
-        if(shouldLock){
+        if (shouldLock) {
             drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
-        }else
+        } else
             drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
     }
 }
