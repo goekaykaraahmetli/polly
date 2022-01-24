@@ -19,12 +19,14 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/splashScreenTheme">
-        <provider
-            android:name="androidx.core.content.FileProvider"
-            android:authorities="com.polly.provider"
-            android:exported="false"
-            android:grantUriPermissions="true">
-            <!-- ressource file to create -->
+
+        <!-- TODO brauchen wir den Provider hier? -->
+       <provider
+           android:name="androidx.core.content.FileProvider"
+           android:authorities="com.polly.provider"
+           android:exported="false"
+           android:grantUriPermissions="true">
+           <!-- ressource file to create -->
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/file_paths">
