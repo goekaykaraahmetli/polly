@@ -33,9 +33,10 @@ public class DefaultCommunicator extends Communicator {
 	}
 
 	public void connect(Message message) {
-		connecting = false;
 		if(message.getDataType() != Long.class)
 			return;
+		connecting = false;
+
 
 		Long commId = (Long) message.getData();
 
