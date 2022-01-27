@@ -189,7 +189,7 @@ public class UserGroupSelect extends Fragment {
                     FirebaseDatabase.getInstance().getReference(userGroupName).child("Users").updateChildren(canVoteList);
                 }
 
-                Navigation.findNavController(getActivity(), R.id.nav_host_fragment).navigate(R.id.polloptionFragment);
+                Navigation.findNavController(getActivity(), R.id.nav_host_fragment).navigate(R.id.mainActivityChat);
             }
         });
         return root;
