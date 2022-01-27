@@ -4,12 +4,15 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.NoSuchElementException;
 
+import kotlin.random.Random;
+
 public class CommunicatorManager {
     private static long nextId = 0L;
     private static Map<Long, Communicator> communicators = new HashMap<>();
+    private static DefaultCommunicator defaultCommunicator;
 
     static {
-        new DefaultCommunicator();
+        defaultCommunicator = new DefaultCommunicator();
     }
 
     private CommunicatorManager() {
@@ -31,7 +34,16 @@ public class CommunicatorManager {
         return communicators.get(id);
     }
 
-    public static Communicator getDefaultCommunicator() {
-        return getCommunicatorById(0L);
+    public static void timedOut() {
+        for(Communicator communicator : communicators.values()) {
+            if(communicator instanceof ResponseCommunicator) {
+                ResponseCommunicator responseCommunicator = (ResponseCommunicator) communicator;
+                responseCommunicator.timedOut();
+            }
+        }
+    }
+
+    public static DefaultCommunicator getDefaultCommunicator() {
+        return defaultCommunicator;
     }
 }

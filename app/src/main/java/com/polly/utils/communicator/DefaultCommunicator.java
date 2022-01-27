@@ -1,22 +1,16 @@
 package com.polly.utils.communicator;
 
-import java.util.concurrent.ArrayBlockingQueue;
-
 import com.polly.config.Config;
 import com.polly.utils.wrapper.Message;
 
 public class DefaultCommunicator extends Communicator {
 	static final int MAX_QUEUE_LENGTH = 20;
-	final ArrayBlockingQueue<Message> inputQueue = new ArrayBlockingQueue<>(MAX_QUEUE_LENGTH);
+	private boolean connecting;
 
 	public DefaultCommunicator() {
 		super();
 		new Thread(() -> {
-			try {
-				Config.serverCommunicationId = getInput().getSender();
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
+			connecting = true;
 			while (true) {
 				try {
 					handleInput(getInput());
@@ -29,9 +23,27 @@ public class DefaultCommunicator extends Communicator {
 	}
 
 	public void handleInput(Message message) {
-		// TODO change!
-		System.out.println("Sender: " + message.getSender());
-		System.out.println("Receiver: " + message.getReceiver());
-		System.out.println(message.getDataType().getName());
+		if(connecting)
+			connect(message);
+		else {
+			System.out.println("Sender: " + message.getSender());
+			System.out.println("Receiver: " + message.getReceiver());
+			System.out.println(message.getDataType().getName());
+		}
+	}
+
+	public void connect(Message message) {
+		if(message.getDataType() != Long.class)
+			return;
+		connecting = false;
+
+
+		Long commId = (Long) message.getData();
+
+		Config.serverCommunicationId = commId;
+	}
+
+	public void connecting() {
+		connecting = true;
 	}
 }

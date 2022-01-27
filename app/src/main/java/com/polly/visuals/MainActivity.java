@@ -1,10 +1,7 @@
 package com.polly.visuals;
 
-import android.app.Activity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.MenuItem;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -16,27 +13,23 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 
 import com.google.android.material.navigation.NavigationView;
-import com.google.firebase.auth.FirebaseAuth;
 import com.polly.R;
+import com.polly.geofencing.Geofencing;
 import com.polly.utils.Organizer;
 
-import java.io.IOException;
 
-
-public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, DrawerLocker{
+public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     protected DrawerLayout drawerLayout;
     private ActionBarDrawerToggle actionBarDrawerToggle;
-    public static AppCompatActivity mainActivity;
-
 
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mainActivity = this;
         setTheme(R.style.Theme_Polly);
         setContentView(R.layout.activity_main);
         drawerLayout = findViewById(R.id.my_drawer_layout);
+        drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
         actionBarDrawerToggle = new ActionBarDrawerToggle(this, drawerLayout, R.string.nav_open, R.string.nav_close);
         drawerLayout.addDrawerListener(actionBarDrawerToggle);
         actionBarDrawerToggle.syncState();
@@ -46,23 +39,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         SavingClass saving = new ViewModelProvider(this).get(SavingClass.class);
 
 
-
-
-
-
-
-    new Organizer();
-
-        try {
-            Organizer.send(0L, 0L, "connected!");
-        } catch (IOException e) {
-            e.printStackTrace();
-            Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
-        }
-
-        if(FirebaseAuth.getInstance().getCurrentUser() != null){
-            LoginFragment.sendTokenToServer(true);
-        }
+        new Organizer(this);
     }
 
 
@@ -70,7 +47,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-        switch(item.getItemId()){
+        switch (item.getItemId()) {
             case R.id.nav_account:
                 Navigation.findNavController(this, R.id.nav_host_fragment).navigate(R.id.accountFragment);
                 break;
@@ -95,23 +72,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         return true;
     }
 
-
-
-
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-
-        int id = item.getItemId();
-        if (actionBarDrawerToggle.onOptionsItemSelected(item))
-            return true;
-        return true;
-    }
-
-    @Override
-    public void setDrawerLocked(boolean shouldLock) {
-        if(shouldLock){
-            drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
-        }else
-            drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        actionBarDrawerToggle.onOptionsItemSelected(item);
+        return super.onOptionsItemSelected(item);
     }
 }

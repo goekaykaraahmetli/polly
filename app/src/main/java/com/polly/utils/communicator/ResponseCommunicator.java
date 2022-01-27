@@ -1,22 +1,24 @@
 package com.polly.utils.communicator;
 
+import com.polly.utils.Organizer;
 import com.polly.utils.wrapper.ErrorWrapper;
 import com.polly.utils.wrapper.Message;
-import com.polly.utils.Organizer;
 
 import java.io.IOException;
-import java.time.Duration;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.concurrent.ArrayBlockingQueue;
-
 
 
 public abstract class ResponseCommunicator extends Communicator{
     final ArrayBlockingQueue<Message> responseQueue = new ArrayBlockingQueue<>(MAX_QUEUE_LENGTH);
     private long nextResponseId = 0L;
-    public final List<Long> responseIds = new ArrayList<>();
+    public final List<Long> responseIds = new LinkedList<>();
+    private final List<Long> gotResponseIds = new LinkedList<>();
+
+    private static Timer timer = new Timer();
 
     protected ResponseCommunicator() {
         super();
@@ -41,6 +43,17 @@ public abstract class ResponseCommunicator extends Communicator{
     public <T> Message sendWithResponse(long receiver, T data) throws IOException {
         long responseId = getNextResponseId();
 
+        TimerTask checkIfGotResponse = new TimerTask() {
+            @Override
+            public void run() {
+                if(!gotResponseWithId(responseId)) {
+                    CommunicatorManager.timedOut();
+                }
+            }
+        };
+
+        timer.schedule(checkIfGotResponse, 2000);
+
         responseIds.add(responseId);
         Organizer.send(getCommunicationId(), receiver, responseId, data);
 
@@ -48,6 +61,8 @@ public abstract class ResponseCommunicator extends Communicator{
             try {
                 Message input = responseQueue.take();
                 if(input.getResponseId() == responseId){
+                    responseIds.remove(responseId);
+                    gotResponseIds.add(responseId);
                     return input;
                 }
                 while(!responseQueue.offer(input));
@@ -59,5 +74,17 @@ public abstract class ResponseCommunicator extends Communicator{
 
     public long getNextResponseId() {
         return nextResponseId++;
+    }
+
+    private boolean gotResponseWithId(long id) {
+        return gotResponseIds.contains(id);
+    }
+
+    void timedOut() {
+        for(long id : responseIds) {
+            Message errorMessage = new Message(0L, 0L, id, ErrorWrapper.class, new ErrorWrapper("lost connection to server!"));
+
+            while(!responseQueue.offer(errorMessage));
+        }
     }
 }

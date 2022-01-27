@@ -76,6 +76,7 @@ import com.polly.R;
 import com.polly.config.Config;
 import com.polly.utils.Area;
 import com.polly.utils.Location;
+import com.polly.utils.Organizer;
 import com.polly.utils.QRCode;
 import com.polly.utils.command.poll.RegisterPollChangeListenerCommand;
 import com.polly.utils.command.poll.RemovePollChangeListenerCommand;
@@ -116,7 +117,7 @@ public class ShowPollResultsPageFragment extends Fragment implements OnMapReadyC
     public static void open(long id) throws IOException {
         ShowPollResultsPageFragment.id = id;
         pollResults = PollManager.getPollResults(id);
-        Navigation.findNavController(MainActivity.mainActivity, R.id.nav_host_fragment).navigate(R.id.showPollResultsPageFragment);
+        Navigation.findNavController(Organizer.getMainActivity(), R.id.nav_host_fragment).navigate(R.id.showPollResultsPageFragment);
     }
 
     @Override
@@ -472,7 +473,7 @@ public class ShowPollResultsPageFragment extends Fragment implements OnMapReadyC
             public void onClick(DialogInterface dialogInterface, int i) {
                 Intent intent = new Intent();
                 intent.setAction(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
-                Uri uri = Uri.fromParts("package", MainActivity.mainActivity.getPackageName(), "");
+                Uri uri = Uri.fromParts("package", Organizer.getMainActivity().getPackageName(), "");
                 intent.setData(uri);
                 startActivity(intent);
                 alertActive = false;
