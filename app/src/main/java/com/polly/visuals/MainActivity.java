@@ -40,8 +40,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
 
         new Organizer(this);
-
-        new Geofencing(this);
     }
 
 
