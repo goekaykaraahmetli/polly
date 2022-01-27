@@ -68,7 +68,11 @@
         <entry key="app/src/main/res/drawable/ic_account.xml" value="0.2526041666666667" />
         <entry key="app/src/main/res/drawable/ic_launcher_round.xml" value="0.1" />
         <entry key="app/src/main/res/drawable/ic_logo.xml" value="0.2526041666666667" />
+        <entry key="app/src/main/res/drawable/ic_startpoll.xml" value="0.3494791666666667" />
         <entry key="app/src/main/res/drawable/ic_usergroup.xml" value="0.3463541666666667" />
+        <entry key="app/src/main/res/drawable/ic_visibility.xml" value="0.3494791666666667" />
+        <entry key="app/src/main/res/drawable/ic_votinguser.xml" value="0.3494791666666667" />
+        <entry key="app/src/main/res/drawable/roundedbutton.xml" value="0.3494791666666667" />
         <entry key="app/src/main/res/drawable/splash_image.xml" value="0.165" />
         <entry key="app/src/main/res/layout/activity_bar.xml" value="0.13179347826086957" />
         <entry key="app/src/main/res/layout/activity_codescanner.xml" value="0.13179347826086957" />
@@ -82,6 +86,7 @@
         <entry key="app/src/main/res/layout/example_item.xml" value="0.2876404494382023" />
         <entry key="app/src/main/res/layout/fragment_account.xml" value="0.13179347826086957" />
         <entry key="app/src/main/res/layout/fragment_login.xml" value="0.13179347826086957" />
+        <entry key="app/src/main/res/layout/fragment_showpoll.xml" value="0.3333333333333333" />
         <entry key="app/src/main/res/layout/fragment_sign_up.xml" value="0.3302083333333333" />
         <entry key="app/src/main/res/layout/fragment_startpoll.xml" value="0.18125" />
         <entry key="app/src/main/res/layout/nav_header.xml" value="0.18125" />
