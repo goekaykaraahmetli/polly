@@ -9,9 +9,13 @@ import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.TextView;
 import com.polly.R;
+import com.polly.utils.user.UserManager;
+import com.polly.utils.wrapper.UserWrapper;
+
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,10 +38,13 @@ public class ListAdapterUser extends RecyclerView.Adapter<ListAdapterUser.ListVi
             }else{
                 String filterPattern = charSequence.toString().toLowerCase().trim();
 
-                for(SearchListItemUser item : exampleListFull){
-                    if(item.getmText1().toLowerCase().contains(filterPattern)){
-                        filteredList.add(item);
+                try {
+                    for(UserWrapper item : UserManager.findUsers(filterPattern)){
+                        SearchListItemUser userItem = new SearchListItemUser(R.drawable.ic_usergroup, item.getName(), false);
+                            filteredList.add(userItem);
                     }
+                } catch (IOException e) {
+                    e.printStackTrace();
                 }
 
             }

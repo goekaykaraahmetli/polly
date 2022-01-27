@@ -49,7 +49,7 @@ public class ObservingCandidates extends Fragment {
         SavingClass saving = new ViewModelProvider(getActivity()).get(SavingClass.class);
 
         try {
-            list = UserManager.findUsers();
+            list = UserManager.findUsers("");
         } catch (IOException e) {
             e.printStackTrace();
         }
