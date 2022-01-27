@@ -43,24 +43,7 @@ public class ObservingCandidates extends Fragment {
     private boolean pressedSelected = false;
     ArrayList<SearchListItemUser> exampleList = new ArrayList<>();
     List<UserWrapper> list;
-    String username;
-
-    private static ResponseCommunicator communicator = initialiseCommunicator();
-    private static ResponseCommunicator initialiseCommunicator(){
-        return new ResponseCommunicator() {
-            @Override
-            public void handleInput(Message message) {
-                System.out.println("PolloptionFragment received message from " + message.getSender() + " with responseId " + message.getResponseId());
-                System.out.println("from type: " + message.getDataType().getName());
-
-                for(Long l : communicator.responseIds){
-                    System.out.println(l);
-                }
-
-                // no default input handling
-            }
-        };
-    }
+    public static String username;
 
     @Nullable
     @Override
@@ -72,19 +55,10 @@ public class ObservingCandidates extends Fragment {
         setHasOptionsMenu(true);
         SavingClass saving = new ViewModelProvider(getActivity()).get(SavingClass.class);
 
-        Message usernameMessage = null;
         try {
-            usernameMessage = communicator.sendWithResponse(Config.serverCommunicationId, new GetUsernameCommand());
+            username = UserManager.getMyUsername();
         } catch (IOException e) {
             e.printStackTrace();
-        }
-        if(usernameMessage.getDataType().equals(String.class))
-            username = (String) usernameMessage.getData();
-        else if(usernameMessage.getDataType().equals(ErrorWrapper.class)){
-            Toast.makeText(getActivity(), "Server communication failed", Toast.LENGTH_SHORT).show();
-        }
-        else{
-            Toast.makeText(getActivity(), "Something went wrong", Toast.LENGTH_SHORT).show();
         }
 
         try {
@@ -95,7 +69,7 @@ public class ObservingCandidates extends Fragment {
 
         if(saving.getUserArrayObserving() == null && list != null) {
             for(int i = 0; i< list.size(); i++) {
-                if(!list.get(i).equals(usernameMessage))
+                if(!list.get(i).equals(username))
                     exampleList.add(new SearchListItemUser(R.drawable.ic_usergroup, list.get(i).getName(), false));
             }
            /* exampleList.add(new SearchListItemUser(R.drawable.ic_usergroup, "User 1", false));
