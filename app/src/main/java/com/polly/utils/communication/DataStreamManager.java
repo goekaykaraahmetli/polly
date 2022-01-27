@@ -770,11 +770,12 @@ public class DataStreamManager {
 	}
 	
 	private void writeFindUsersCommand(FindUsersCommand data) throws IOException {
-		// nothing to do
+		FindUsersCommand command = (FindUsersCommand) data;
+		writeString(command.getPrefix());
 	}
 	
 	private FindUsersCommand readFindUsersCommand() throws IOException {
-		return new FindUsersCommand();
+		return new FindUsersCommand(readString());
 	}
 	
 	private void writeGetPollResultsCommand(GetPollResultsCommand data) throws IOException {
