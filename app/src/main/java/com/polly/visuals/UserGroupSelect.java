@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -28,7 +29,12 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.encoders.ObjectEncoder;
 import com.polly.R;
+import com.polly.config.Config;
+import com.polly.utils.command.user.GetUsernameCommand;
+import com.polly.utils.communicator.ResponseCommunicator;
 import com.polly.utils.user.UserManager;
+import com.polly.utils.wrapper.ErrorWrapper;
+import com.polly.utils.wrapper.Message;
 import com.polly.utils.wrapper.UserWrapper;
 
 import java.io.IOException;
@@ -45,6 +51,25 @@ public class UserGroupSelect extends Fragment {
     private boolean pressedSelected = false;
     ArrayList<SearchListItemUser> exampleList;
     List<UserWrapper> list;
+    String username;
+
+    private static ResponseCommunicator communicator = initialiseCommunicator();
+    private static ResponseCommunicator initialiseCommunicator(){
+        return new ResponseCommunicator() {
+            @Override
+            public void handleInput(Message message) {
+                System.out.println("PolloptionFragment received message from " + message.getSender() + " with responseId " + message.getResponseId());
+                System.out.println("from type: " + message.getDataType().getName());
+
+                for(Long l : communicator.responseIds){
+                    System.out.println(l);
+                }
+
+                // no default input handling
+            }
+        };
+    }
+
     public static String myUsername;
     @Nullable
     @Override
@@ -56,6 +81,21 @@ public class UserGroupSelect extends Fragment {
         setHasOptionsMenu(true);
         SavingClass saving = new ViewModelProvider(getActivity()).get(SavingClass.class);
         exampleList = new ArrayList<>();
+
+        Message usernameMessage = null;
+        try {
+            usernameMessage = communicator.sendWithResponse(Config.serverCommunicationId, new GetUsernameCommand());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        if(usernameMessage.getDataType().equals(String.class))
+            username = (String) usernameMessage.getData();
+        else if(usernameMessage.getDataType().equals(ErrorWrapper.class)){
+            Toast.makeText(getActivity(), "Server communication failed", Toast.LENGTH_SHORT).show();
+        }
+        else{
+            Toast.makeText(getActivity(), "Something went wrong", Toast.LENGTH_SHORT).show();
+        }
 
         try {
             list = UserManager.findUsers("");
@@ -83,7 +123,8 @@ public class UserGroupSelect extends Fragment {
 
         if(list != null) {
             for(int i = 0; i< list.size(); i++) {
-                exampleList.add(new SearchListItemUser(R.drawable.ic_usergroup, list.get(i).getName(), false));
+                if(!list.get(i).getName().equals(username))
+                    exampleList.add(new SearchListItemUser(R.drawable.ic_usergroup, list.get(i).getName(), false));
             }
 
         }
