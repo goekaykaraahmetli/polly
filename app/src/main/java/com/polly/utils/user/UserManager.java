@@ -1,8 +1,11 @@
 package com.polly.utils.user;
 
+import android.widget.Toast;
+
 import com.polly.config.Config;
 import com.polly.utils.command.user.FindUsersCommand;
 import com.polly.utils.command.user.GetMyUsergroupsCommand;
+import com.polly.utils.command.user.GetUsernameCommand;
 import com.polly.utils.communicator.ResponseCommunicator;
 import com.polly.utils.wrapper.ErrorWrapper;
 import com.polly.utils.wrapper.Message;
@@ -41,12 +44,21 @@ public class UserManager {
         throw new IOException("Something went wrong!");
     }
 
-    public static List<UserWrapper> findUsers() throws IOException {
-        Message response = communicator.sendWithResponse(Config.serverCommunicationId, new FindUsersCommand());
+    public static List<UserWrapper> findUsers(String prefix) throws IOException {
+        Message response = communicator.sendWithResponse(Config.serverCommunicationId, new FindUsersCommand(prefix));
         if(response.getDataType() == UserListWrapper.class)
             return ((UserListWrapper) response.getData()).getUserList();
         if(response.getDataType() == ErrorWrapper.class)
             throw new IOException(((ErrorWrapper) response.getData()).getMessage());
         throw new IOException("Something went wrong!");
+    }
+
+    public static String getMyUsername() throws IOException{
+        Message response = communicator.sendWithResponse(Config.serverCommunicationId, new GetUsernameCommand());
+        if(response.getDataType().equals(String.class))
+            return (String)response.getData();
+        if(response.getDataType().equals(ErrorWrapper.class))
+            throw new IOException(((ErrorWrapper) response.getData()).getMessage());
+        throw new IOException("Something went wrong");
     }
 }
