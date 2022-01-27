@@ -74,6 +74,20 @@ public class VotingCandidates extends Fragment {
         SavingClass saving = new ViewModelProvider(getActivity()).get(SavingClass.class);
         exampleList = new ArrayList<>();
 
+        Message usernameMessage = null;
+        try {
+            usernameMessage = communicator.sendWithResponse(Config.serverCommunicationId, new GetUsernameCommand());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        if(usernameMessage.getDataType().equals(String.class))
+            username = (String) usernameMessage.getData();
+        else if(usernameMessage.getDataType().equals(ErrorWrapper.class)){
+            Toast.makeText(getActivity(), "Server communication failed", Toast.LENGTH_SHORT).show();
+        }
+        else{
+            Toast.makeText(getActivity(), "Something went wrong", Toast.LENGTH_SHORT).show();
+        }
 
         try {
             list = UserManager.findUsers("");
@@ -83,7 +97,8 @@ public class VotingCandidates extends Fragment {
 
         if(saving.getUserArrayVoting() == null && list != null) {
             for(int i = 0; i< list.size(); i++) {
-                exampleList.add(new SearchListItemUser(R.drawable.ic_usergroup, list.get(i).getName(), false));
+                if(!list.get(i).getName().equals(username))
+                    exampleList.add(new SearchListItemUser(R.drawable.ic_usergroup, list.get(i).getName(), false));
             }
         }else{
             exampleList = saving.getUserArrayVoting();
