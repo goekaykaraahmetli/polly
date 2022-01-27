@@ -49,6 +49,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
 
 
+
+
     new Organizer();
 
         try {
@@ -80,6 +82,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 break;
             case R.id.nav_recentpolls:
                 Navigation.findNavController(this, R.id.nav_host_fragment).navigate(R.id.recentFragment);
+                break;
+            case R.id.nav_groups:
+                if(FirebaseAuth.getInstance().getCurrentUser() == null)
+                    Toast.makeText(this, "Please sign in first", Toast.LENGTH_SHORT).show();
+                else
+                    Navigation.findNavController(this, R.id.nav_host_fragment).navigate(R.id.mainActivityChat);
                 break;
         }
 

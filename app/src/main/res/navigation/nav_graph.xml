@@ -64,10 +64,6 @@
         android:name="com.polly.visuals.TermsOfService"
         android:label="TermsOfService" />
     <fragment
-        android:id="@+id/scanRoom"
-        android:name="com.polly.visuals.ScanRoom"
-        android:label="ScanRoom" />
-    <fragment
         android:id="@+id/polloptionFragment"
         android:name="com.polly.visuals.PolloptionFragment"
         android:label="PolloptionFragment" >
@@ -113,14 +109,6 @@
     </fragment>
     <fragment android:id="@+id/placeholder3" />
     <fragment
-        android:id="@+id/scanRoomCreate"
-        android:name="com.polly.visuals.ScanRoomCreate"
-        android:label="ScanRoomCreate" />
-    <fragment
-        android:id="@+id/scanRoomStart"
-        android:name="com.polly.visuals.ScanRoomStart"
-        android:label="ScanRoomStart" />
-    <fragment
         android:id="@+id/showPollResultsPageFragment"
         android:name="com.polly.visuals.ShowPollResultsPageFragment"
         android:label="ShowPollResultsPageFragment" />
@@ -140,4 +128,13 @@
         android:id="@+id/displayQRCodePie"
         android:name="com.polly.visuals.DisplayQRCodePie"
         android:label="DisplayQRCodePie" />
+    <fragment
+        android:id="@+id/userGroupSelect"
+        android:name="com.polly.visuals.UserGroupSelect"
+        android:label="UserGroupSelect" />
+    <fragment
+        android:id="@+id/mainActivityChat"
+        android:name="com.polly.visuals.MainActivityChat"
+        android:label="activity_main23"
+        tools:layout="@layout/activity_main23" />
 </navigation>

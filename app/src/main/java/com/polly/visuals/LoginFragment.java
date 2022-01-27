@@ -205,8 +205,10 @@ public class LoginFragment extends Fragment {
                                 if(messageResponse.getDataType() == LoginAnswerWrapper.class) {
                                     LoginAnswerWrapper loginAnswerWrapper = ((LoginAnswerWrapper) messageResponse.getData());
                                     if(!loginAnswerWrapper.isSuccessful()) {
-                                        if (loginAnswerWrapper.getMessage().equals("User does not exist"))
+                                        if (loginAnswerWrapper.getMessage().equals("User does not exist")) {
                                             chooseUsernameAlert(idToken);
+
+                                        }
                                         else
                                             Toast.makeText(MainActivity.mainActivity, "Login failed: " + loginAnswerWrapper.getMessage(), Toast.LENGTH_SHORT).show();
                                     }
@@ -241,8 +243,10 @@ public class LoginFragment extends Fragment {
         alert.setPositiveButton("Enter", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                if (usernameInput.getText().toString() == "")
+                if (usernameInput.getText().toString() == "") {
                     Toast.makeText(MainActivity.mainActivity, "Please enter at least one character", Toast.LENGTH_SHORT).show();
+                    chooseUsernameAlert(idToken);
+                }
                 else {
                     IsUsernameAvailableCommand com = new IsUsernameAvailableCommand(usernameInput.getText().toString());
                     try {
@@ -254,8 +258,10 @@ public class LoginFragment extends Fragment {
                                 if (message.getDataType() == LoginAnswerWrapper.class) {
                                     LoginAnswerWrapper answer = (LoginAnswerWrapper) message.getData();
 
-                                    if (answer.isSuccessful())
+                                    if (answer.isSuccessful()){
+                                        FirebaseDatabase.getInstance("https://polly-abdd4-default-rtdb.europe-west1.firebasedatabase.app/").getReference("Users").setValue(usernameInput.getText().toString());
                                         Navigation.findNavController(MainActivity.mainActivity, R.id.nav_host_fragment).navigate(R.id.accountFragment);
+                                    }
                                     else
                                         Toast.makeText(MainActivity.mainActivity, "Something went wrong, please try again", Toast.LENGTH_SHORT).show();
                                 } else if (message.getDataType() == ErrorWrapper.class) {

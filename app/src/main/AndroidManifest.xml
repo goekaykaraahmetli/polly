@@ -34,6 +34,10 @@
         <activity android:name=".visuals.BarcodeScannerActivity"
             android:screenOrientation="portrait">
         </activity>
+
+        <activity android:name=".visuals.Chat_Room"
+            />
+
         <activity android:name=".visuals.DisplayQRCodePie"
             android:screenOrientation="portrait">
         </activity>
