@@ -147,9 +147,13 @@ public class MainActivityChat extends Fragment {
                 Iterator i = dataSnapshot.getChildren().iterator();
 
                 while (i.hasNext()){
-                    DataSnapshot next = (DataSnapshot) i.next();
-                    if(next.child("Users").hasChild(name))
-                        set.add(next.getKey());
+                    if(name==null)
+                        Toast.makeText(getActivity(), "You are not signed in", Toast.LENGTH_SHORT);
+                    else {
+                        DataSnapshot next = (DataSnapshot) i.next();
+                        if (next.child("Users").hasChild(name))
+                            set.add(next.getKey());
+                    }
                 }
 
                 list_of_rooms.clear();
