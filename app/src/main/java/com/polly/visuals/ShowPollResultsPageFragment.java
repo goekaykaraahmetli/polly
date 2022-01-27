@@ -2,6 +2,8 @@ package com.polly.visuals;
 
 import android.Manifest;
 import android.app.Dialog;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentSender;
@@ -30,6 +32,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.core.app.ActivityCompat;
 import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
@@ -229,10 +232,14 @@ public class ShowPollResultsPageFragment extends Fragment implements OnMapReadyC
 
 
     private void updatePieChart(PollResultsWrapper updatePoll) {
+        createNotificationChannel();
         NotificationCompat.Builder builder = new NotificationCompat.Builder(getContext(), "channel_id")
                 .setSmallIcon(R.drawable.ic_logo).setContentTitle("Polly Notification")
                 .setContentText("Someone has voted for your poll")
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT);
+        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(getContext());
+        notificationManager.notify(100, builder.build());
+        
         pollResults = updatePoll;
         ArrayList<PieEntry> options = new ArrayList<>();
         for (String option : updatePoll.getPollResults().keySet()) {
@@ -261,7 +268,13 @@ public class ShowPollResultsPageFragment extends Fragment implements OnMapReadyC
 
     public void createNotificationChannel() {
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
-
+            CharSequence name = "polly_Channel";
+            String description = "Channel for Push Notifications";
+            int importance = NotificationManager.IMPORTANCE_DEFAULT;
+            NotificationChannel channel = new NotificationChannel("channel_id", name,importance);
+            channel.setDescription(description);
+            NotificationManager notificationManager = getActivity().getSystemService(NotificationManager.class);
+            notificationManager.createNotificationChannel(channel);
         }
     }
 

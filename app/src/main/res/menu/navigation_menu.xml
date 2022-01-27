@@ -5,6 +5,11 @@
     <group android:checkableBehavior="single">
 
         <item
+            android:id="@+id/nav_account"
+            android:icon="@drawable/ic_account"
+            android:title="My Account" />
+
+        <item
             android:id="@+id/nav_startpoll"
             android:icon="@drawable/ic_startpoll"
             android:title="Start New Poll" />
@@ -20,9 +25,9 @@
             android:title="Recent Polls" />
 
         <item
-            android:id="@+id/nav_account"
-            android:icon="@drawable/ic_account"
-            android:title="My Account" />
+            android:id="@+id/nav_groups"
+            android:icon="@drawable/ic_usergroup"
+            android:title="Groups"/>
 
 
     </group>
