@@ -30,6 +30,7 @@ import com.polly.utils.command.user.GetMyUsergroupsCommand;
 import com.polly.utils.command.user.GetUsernameCommand;
 import com.polly.utils.communicator.Communicator;
 import com.polly.utils.communicator.ResponseCommunicator;
+import com.polly.utils.user.UserManager;
 import com.polly.utils.wrapper.ErrorWrapper;
 import com.polly.utils.wrapper.Message;
 
@@ -108,17 +109,7 @@ public class AccountFragment extends Fragment {
                     String email = FirebaseAuth.getInstance().getCurrentUser().getEmail();
                     emailInfo.setText(email);
                     try {
-                        Message usernameMessage = communicator.sendWithResponse(Config.serverCommunicationId, new GetUsernameCommand());
-                        if(usernameMessage.getDataType().equals(String.class))
-                            usernameInfo.setText(((String)usernameMessage.getData()));
-                        else if(usernameMessage.getDataType().equals(ErrorWrapper.class)){
-                            Toast.makeText(getActivity(), "Server communication failed", Toast.LENGTH_SHORT).show();
-                        }
-                        else{
-                            Toast.makeText(getActivity(), "Something went wrong", Toast.LENGTH_SHORT).show();
-                        }
-
-
+                        usernameInfo.setText(UserManager.getMyUsername());
                     }
                     catch (IOException e){
                         usernameInfo.setText("Could not find username");
