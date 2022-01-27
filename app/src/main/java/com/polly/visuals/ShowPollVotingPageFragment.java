@@ -19,6 +19,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -65,10 +66,13 @@ import com.polly.R;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.widget.SwitchCompat;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.github.mikephil.charting.charts.PieChart;
 import com.polly.config.Config;
@@ -108,16 +112,20 @@ public class ShowPollVotingPageFragment extends Fragment implements OnMapReadyCa
     private CountDownTimer countDownTimer;
     boolean isExpired = false;
     private boolean isGeofencePoll;
-
+    private SwitchCompat toggleView;
     private GoogleMap googleMap;
     private boolean alertActive;
     private boolean locationPermissionGranted;
-
+    private RecyclerView mRecyclerView;
+    private ListAdapter mAdapter;
+    private RecyclerView.LayoutManager mLayoutManager;
+    private ArrayList<SearchListItem> listOptions;
     private LocationRequest locationRequest;
     private FusedLocationProviderClient fusedLocationProviderClient;
     Location usersLocation;
+    private TextView listPollname;
 
-    SavingClass saving;
+    private SavingClass saving;
 
     public static void open(long id) throws IOException {
         ShowPollVotingPageFragment.id = id;
@@ -150,6 +158,11 @@ public class ShowPollVotingPageFragment extends Fragment implements OnMapReadyCa
         pieChart.setVisibility(View.GONE);
         voteButton = (Button) root.findViewById(R.id.vote_button);
         voteButton.setVisibility(View.GONE);
+        toggleView = (SwitchCompat) root.findViewById(R.id.toggleView);
+        mLayoutManager = new LinearLayoutManager(getContext());
+        mRecyclerView = root.findViewById(R.id.PollOptionRecyclerView);
+        mRecyclerView.setHasFixedSize(true); //Performance
+        listPollname = (TextView) root.findViewById(R.id.listviewName);
 
         try {
             if (PollManager.isMyPoll(id)) {
@@ -194,12 +207,24 @@ public class ShowPollVotingPageFragment extends Fragment implements OnMapReadyCa
             createForGeofencePoll(root);
             updateUsersLocation();
         }
+        toggleView.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
+                if(isChecked){
+                    root.findViewById(R.id.toggleViewLayout).setVisibility(View.VISIBLE);
+                    pieChart.setVisibility(View.INVISIBLE);
+                }else{
+                    root.findViewById(R.id.toggleViewLayout).setVisibility(View.INVISIBLE);
+                    pieChart.setVisibility(View.VISIBLE);
+                }
 
+            }
+        });
         return root;
     }
-
     public void showPoll(View root) {
         updatePieChart(pollOptions);
+        updateListView(pollOptions);
         qrCode = (ImageView) root.findViewById(R.id.qrCodeImageView);
         qrCode.setImageBitmap(QRCode.QRCode("" + pollOptions.getBasicPollInformation().getId()));
         qrCode.setOnLongClickListener(new View.OnLongClickListener() {
@@ -228,6 +253,13 @@ public class ShowPollVotingPageFragment extends Fragment implements OnMapReadyCa
             @Override
             public void onNothingSelected() {
                 showVoteButton(null);
+            }
+        });
+        //TODO recyclerview onClickListener
+        mAdapter.setOnItemClickListener(new ListAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(int position) {
+                showVoteButton(listOptions.get(position).getmText1());
             }
         });
     }
@@ -325,6 +357,18 @@ public class ShowPollVotingPageFragment extends Fragment implements OnMapReadyCa
         pieChart.setUsePercentValues(false);
         pieChart.animate();
         pieChart.setVisibility(View.VISIBLE);
+    }
+    private void updateListView(PollOptionsWrapper updatePoll) {
+        pollOptions = updatePoll;
+        ArrayList<SearchListItem> options = new ArrayList<>();
+        for (String option : pollOptions.getPollOptions()) {
+            options.add(new SearchListItem(R.drawable.ic_logo, option));
+        }
+        mAdapter = new ListAdapter(options);
+
+        mRecyclerView.setLayoutManager(mLayoutManager);
+        mRecyclerView.setAdapter(mAdapter);
+        listPollname.setText(updatePoll.getBasicPollInformation().getName());
     }
 
     public Date convertToDate(LocalDateTime data) {
