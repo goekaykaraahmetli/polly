@@ -27,6 +27,8 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.polly.R;
+import com.polly.utils.Organizer;
+
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -77,7 +79,7 @@ public class Chat_Room  extends AppCompatActivity {
                 map2.put("name",user_name);
                 map2.put("msg",input_msg.getText().toString());
                 if(input_msg.getText().toString().equals(""))
-                    Toast.makeText(MainActivity.mainActivity, "Please enter something", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(Organizer.getMainActivity(), "Please enter something", Toast.LENGTH_SHORT).show();
                 else{
                 message_root.updateChildren(map2);
                 input_msg.setText("");}
