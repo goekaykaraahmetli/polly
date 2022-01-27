@@ -21,6 +21,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.firestore.auth.User;
 import com.polly.R;
 import com.polly.config.Config;
 import com.polly.utils.command.user.GetUsernameCommand;
@@ -89,8 +90,10 @@ public class MainActivityChat extends Fragment {
 
         try {
             Message usernameMessage = communicator.sendWithResponse(Config.serverCommunicationId, new GetUsernameCommand());
-            if(usernameMessage.getDataType().equals(String.class))
-                name = ((String)usernameMessage.getData());
+            if(usernameMessage.getDataType().equals(String.class)) {
+                name = ((String) usernameMessage.getData());
+                UserGroupSelect.myUsername = name;
+            }
             else if(usernameMessage.getDataType().equals(ErrorWrapper.class)){
                 Toast.makeText(getActivity(), "Server communication failed", Toast.LENGTH_SHORT).show();
             }

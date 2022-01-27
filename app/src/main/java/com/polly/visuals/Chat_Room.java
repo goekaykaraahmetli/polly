@@ -28,6 +28,8 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.polly.R;
 import com.polly.utils.Organizer;
+import com.polly.utils.communicator.ResponseCommunicator;
+import com.polly.utils.wrapper.Message;
 
 import java.util.HashMap;
 import java.util.Iterator;
@@ -36,6 +38,22 @@ import java.util.Map;
 
 public class Chat_Room  extends AppCompatActivity {
 
+    private static ResponseCommunicator communicator = initialiseCommunicator();
+    private static ResponseCommunicator initialiseCommunicator(){
+        return new ResponseCommunicator() {
+            @Override
+            public void handleInput(Message message) {
+                System.out.println("AccountFragment received message from " + message.getSender() + " with responseId " + message.getResponseId());
+                System.out.println("from type: " + message.getDataType().getName());
+
+                for(Long l : communicator.responseIds){
+                    System.out.println(l);
+                }
+
+                // no default input handling
+            }
+        };
+    }
     private Button btn_send_msg;
     private EditText input_msg;
     private LinearLayout linearLayout;

@@ -70,6 +70,7 @@ public class UserGroupSelect extends Fragment {
         };
     }
 
+    public static String myUsername;
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater,
@@ -222,9 +223,10 @@ public class UserGroupSelect extends Fragment {
                     for(int i = 0; i < exampleList.size(); i++){
                         if(exampleList.get(i).isCheckbox()){
                             canVoteList.put(exampleList.get(i).getmText1(), "");
+                            canVoteList.put(myUsername, "");
                         }
                     }
-                    canVoteList.put(FirebaseAuth.getInstance().getCurrentUser().getDisplayName(), "");
+                    //canVoteList.put(myUsername, "");
                     FirebaseDatabase.getInstance().getReference(userGroupName).child("Users").updateChildren(canVoteList);
                 }
 
