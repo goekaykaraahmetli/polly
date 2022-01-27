@@ -43,7 +43,7 @@ public class ObservingCandidates extends Fragment {
     private boolean pressedSelected = false;
     ArrayList<SearchListItemUser> exampleList = new ArrayList<>();
     List<UserWrapper> list;
-    String username;
+    public static String username;
 
     private static ResponseCommunicator communicator = initialiseCommunicator();
     private static ResponseCommunicator initialiseCommunicator(){

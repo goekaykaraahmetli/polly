@@ -41,9 +41,9 @@ public class VotingCandidates extends Fragment {
     private ListAdapterUser mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
     private boolean pressedSelected = false;
-    ArrayList<SearchListItemUser> exampleList;
-    List<UserWrapper> list;
-    String username;
+    private ArrayList<SearchListItemUser> exampleList;
+    private List<UserWrapper> list;
+    public static String username;
 
 
     private static ResponseCommunicator communicator = initialiseCommunicator();

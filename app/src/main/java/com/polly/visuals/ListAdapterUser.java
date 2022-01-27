@@ -41,6 +41,7 @@ public class ListAdapterUser extends RecyclerView.Adapter<ListAdapterUser.ListVi
                 try {
                     for(UserWrapper item : UserManager.findUsers(filterPattern)){
                         SearchListItemUser userItem = new SearchListItemUser(R.drawable.ic_usergroup, item.getName(), false);
+                        if(!item.getName().equals(VotingCandidates.username))
                             filteredList.add(userItem);
                     }
                 } catch (IOException e) {
