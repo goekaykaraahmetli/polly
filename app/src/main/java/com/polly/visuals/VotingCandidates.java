@@ -50,7 +50,7 @@ public class VotingCandidates extends Fragment {
         exampleList = new ArrayList<>();
 
         try {
-            list = UserManager.findUsers();
+            list = UserManager.findUsers("");
         } catch (IOException e) {
             e.printStackTrace();
         }
