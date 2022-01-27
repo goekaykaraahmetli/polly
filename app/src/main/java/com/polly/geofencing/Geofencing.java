@@ -1,6 +1,8 @@
 package com.polly.geofencing;
 
 import android.Manifest;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.content.Context;
 import android.content.ContextWrapper;
 import android.content.pm.PackageManager;
@@ -10,20 +12,36 @@ import android.location.LocationManager;
 
 import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
 
+import com.polly.R;
 import com.polly.utils.Area;
 
 import java.util.LinkedList;
 import java.util.List;
 
 public class Geofencing extends ContextWrapper {
+    private static final String CHANNEL_ID = "channel_gjkasFLjkgjaksf";
     private List<GeofenceEntry> geofences;
 
     public Geofencing(Context base) {
         super(base);
         geofences = new LinkedList<>();
 
+        initNotificationChannel("Polly Geofence Channel", NotificationManager.IMPORTANCE_DEFAULT, "this is the channel for polly geofencing notifications");
+
         start();
+
+        addNewGeofence(new Area(50.0029, 9.2247, 3000));
+    }
+
+    private void initNotificationChannel(String name, int importance, String description) {
+        NotificationChannel channel = new NotificationChannel(CHANNEL_ID, name, importance);
+        channel.setDescription(description);
+
+        NotificationManager notificationManager = getSystemService(NotificationManager.class);
+        notificationManager.createNotificationChannel(channel);
     }
 
     public void addNewGeofence(Area area) {
@@ -67,7 +85,7 @@ public class Geofencing extends ContextWrapper {
 
 
 
-        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 10, locationListener);
+        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5000, 10, locationListener);
     }
 
     private void checkTransition(double latitude, double longitude) {
@@ -75,30 +93,42 @@ public class Geofencing extends ContextWrapper {
         for(GeofenceEntry entry : geofences) {
             Area area = entry.getArea();
             boolean inArea = entry.getInArea();
+            boolean newInArea = loc.inArea(area);
 
-            if(loc.inArea(area) && inArea == false)
+            entry.setInArea(newInArea);
+
+            if(newInArea && inArea == false)
                 transitionEnter(area);
 
-            else if(loc.inArea(area) && inArea == true)
+            else if(newInArea && inArea == true)
                 transitionDwell(area);
 
-            else if(!loc.inArea(area) && inArea == true)
+            else if(!newInArea && inArea == true)
                 transitionExit(area);
-
-            entry.setInArea(loc.inArea(area));
         }
     }
 
 
     private void transitionEnter(Area area) {
-
+        sendNotification("New Poll available!", "you entered the following area: " + area.getLatitude() + "" + area.getLongitude() + "" + area.getRadius());
     }
 
     private void transitionDwell(Area area) {
-
     }
 
     private void transitionExit(Area area) {
+    }
 
+
+
+    private void sendNotification(String title, String content) {
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, CHANNEL_ID)
+                .setSmallIcon(R.drawable.ic_logo)
+                .setContentTitle(title)
+                .setContentText(content)
+                .setPriority(NotificationCompat.PRIORITY_DEFAULT);
+
+        NotificationManagerCompat notificationManagerCompat = NotificationManagerCompat.from(this);
+        notificationManagerCompat.notify(0, builder.build());
     }
 }
