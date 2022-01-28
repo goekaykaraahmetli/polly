@@ -1,7 +1,6 @@
 package com.polly.visuals;
-import com.google.android.material.textfield.TextInputEditText;
-import com.polly.utils.Area;
 import com.polly.utils.QRCode;
+import com.polly.utils.SavingClass;
 import com.polly.utils.ShowPollPage;
 import com.polly.utils.poll.PollDescription;
 import com.polly.utils.poll.PollManager;
@@ -14,7 +13,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.provider.MediaStore;
-import android.text.Editable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,34 +22,26 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 
 import com.polly.R;
 
-import org.w3c.dom.Text;
-
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
-import java.util.concurrent.TimeUnit;
 
 public class CreatePollFragment extends Fragment {
     long testDiff;
     int optionCounter = 0;
-    int optionMax = 8;
+    int optionMax = 4;
     boolean start = true;
     boolean isSaved = true;
     public static String answer1;
@@ -114,9 +104,10 @@ public class CreatePollFragment extends Fragment {
             option2.setText(saving.getPollOptions().get(1));
             remove1.setVisibility(View.VISIBLE);
             remove2.setVisibility(View.VISIBLE);
-            if(optionCounter > optionMax){
-                optionCounter = 4;
-            }
+            if(saving.getDropDownMenu().toString().equals("POLLYROOM"))
+                if(optionCounter > optionMax){
+                    optionCounter = 4;
+                }
             for(int i = 2; i< optionCounter; i++){
                 EditText newOption = new EditText(getContext());
                 newOption.setHint("Option " + i);
@@ -333,9 +324,10 @@ public class CreatePollFragment extends Fragment {
         addOption.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(optionCounter >= optionMax) {
-                    return;
-                }
+                if(saving.getDropDownMenu().toString().equals("POLLYROOM"))
+                    if(optionCounter >= optionMax) {
+                        return;
+                    }
                 saving.setSaved(false);
                 isSaved = false;
                 System.out.println(saving.getDropDownMenu().toString());
@@ -362,9 +354,10 @@ public class CreatePollFragment extends Fragment {
                     remove.get(0).setVisibility(View.VISIBLE);
                     remove.get(1).setVisibility(View.VISIBLE);
                 }
-                if(optionCounter == optionMax){
-                    root.findViewById(R.id.addOption).setVisibility(View.INVISIBLE);
-                }
+                if(saving.getDropDownMenu().toString().equals("POLLYROOM"))
+                    if(optionCounter == optionMax){
+                        root.findViewById(R.id.addOption).setVisibility(View.INVISIBLE);
+                    }
 
                 delete.setOnClickListener(new View.OnClickListener() {
                     @Override

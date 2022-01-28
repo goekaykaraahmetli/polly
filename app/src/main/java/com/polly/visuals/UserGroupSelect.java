@@ -1,7 +1,6 @@
 package com.polly.visuals;
 
 
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -11,12 +10,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
-import android.widget.CheckBox;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.SearchView;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
@@ -24,17 +20,13 @@ import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.encoders.ObjectEncoder;
 import com.polly.R;
-import com.polly.config.Config;
-import com.polly.utils.command.user.GetUsernameCommand;
-import com.polly.utils.communicator.ResponseCommunicator;
+import com.polly.utils.SavingClass;
+import com.polly.utils.item.SearchListItemUser;
+import com.polly.utils.listadapter.ListAdapterUser;
 import com.polly.utils.user.UserManager;
-import com.polly.utils.wrapper.ErrorWrapper;
-import com.polly.utils.wrapper.Message;
 import com.polly.utils.wrapper.UserWrapper;
 
 import java.io.IOException;

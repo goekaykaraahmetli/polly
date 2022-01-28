@@ -1,14 +1,14 @@
-package com.polly.visuals;
+package com.polly.utils;
 
 import android.text.Editable;
 import android.widget.Button;
 import android.widget.EditText;
 
 import androidx.lifecycle.ViewModel;
-import androidx.recyclerview.widget.RecyclerView;
 
 import com.polly.utils.Area;
-import com.polly.utils.wrapper.PollResultsWrapper;
+import com.polly.utils.item.SearchListItem;
+import com.polly.utils.item.SearchListItemUser;
 
 import java.time.LocalDate;
 import java.time.LocalTime;

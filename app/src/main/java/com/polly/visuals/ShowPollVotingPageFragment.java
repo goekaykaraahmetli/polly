@@ -13,7 +13,6 @@ import android.os.CountDownTimer;
 import android.os.Looper;
 import android.provider.MediaStore;
 import android.provider.Settings;
-import android.text.Editable;
 import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -25,7 +24,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.github.mikephil.charting.components.Description;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
@@ -80,24 +78,23 @@ import com.polly.utils.Area;
 import com.polly.utils.Location;
 import com.polly.utils.Organizer;
 import com.polly.utils.QRCode;
+import com.polly.utils.SavingClass;
 import com.polly.utils.ShowPollPage;
 import com.polly.utils.command.poll.RegisterPollChangeListenerCommand;
 import com.polly.utils.command.poll.RemovePollChangeListenerCommand;
 import com.polly.utils.communicator.Communicator;
-import com.polly.utils.communicator.CommunicatorManager;
+import com.polly.utils.item.SearchListItem;
+import com.polly.utils.listadapter.ListAdapter;
 import com.polly.utils.poll.PollDescription;
 import com.polly.utils.poll.PollManager;
 import com.polly.utils.wrapper.Message;
 import com.polly.utils.wrapper.PollOptionsWrapper;
-import com.polly.utils.wrapper.PollResultsWrapper;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 public class ShowPollVotingPageFragment extends Fragment implements OnMapReadyCallback {
@@ -322,6 +319,7 @@ public class ShowPollVotingPageFragment extends Fragment implements OnMapReadyCa
                         @Override
                         public void run() {
                             updatePieChart(updatePoll);
+                            updateListView(updatePoll);
                         }
                     });
                 }
@@ -348,10 +346,10 @@ public class ShowPollVotingPageFragment extends Fragment implements OnMapReadyCa
         pieChart.setVisibility(View.INVISIBLE);
 
         pieChart.setData(pieData);
-        Description description = new Description();
+        /**Description description = new Description();
         description.setText(updatePoll.getBasicPollInformation().getDescription().getDescription());
         pieChart.setDescription(description);
-        pieChart.getDescription().setEnabled(!updatePoll.getBasicPollInformation().getDescription().getDescription().equals(""));
+        pieChart.getDescription().setEnabled(!updatePoll.getBasicPollInformation().getDescription().getDescription().equals(""));**/
         pieChart.setCenterText(updatePoll.getBasicPollInformation().getName());
 
         pieChart.setUsePercentValues(false);
@@ -369,6 +367,7 @@ public class ShowPollVotingPageFragment extends Fragment implements OnMapReadyCa
         mRecyclerView.setLayoutManager(mLayoutManager);
         mRecyclerView.setAdapter(mAdapter);
         listPollname.setText(updatePoll.getBasicPollInformation().getName());
+        listOptions = options;
     }
 
     public Date convertToDate(LocalDateTime data) {
