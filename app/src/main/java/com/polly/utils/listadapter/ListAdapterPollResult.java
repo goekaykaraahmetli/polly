@@ -65,8 +65,8 @@ public class ListAdapterPollResult extends RecyclerView.Adapter<ListAdapterPollR
         public TextView mProgressText;
         public ListViewHolder(@NonNull View itemView, OnItemClickListener listener) {
             super(itemView);
-            mImageView = itemView.findViewById(R.id.userImage);
-            mTextView1 = itemView.findViewById(R.id.userInstance);
+            mImageView = itemView.findViewById(R.id.PollresultImage);
+            mTextView1 = itemView.findViewById(R.id.pollResultInstance);
             mProgressBar = itemView.findViewById(R.id.progress_bar);
             mProgressText = itemView.findViewById(R.id.progress_bar_text);
 

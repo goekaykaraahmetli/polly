@@ -312,9 +312,8 @@ public class ShowPollResultsPageFragment extends Fragment implements OnMapReadyC
         pollResults.getPollResults().entrySet().stream().sorted(Map.Entry.comparingByValue(Comparator.reverseOrder())).forEachOrdered(x -> descendingOrder.put(x.getKey(), x.getValue()));
 
         for (Map.Entry<String, Integer> option : descendingOrder.entrySet()) {
-            options.add(new PollResultItem(R.drawable.ic_logo, option.getKey(), option.getValue()/sum, String.valueOf(option.getValue()/sum)));
+            options.add(new PollResultItem(R.drawable.ic_logo, option.getKey(), (option.getValue()/sum)*100, String.valueOf((option.getValue()/sum)*100)));
         }
-        Collections.sort(options, Collections.reverseOrder());
         mAdapter = new ListAdapterPollResult(options);
 
         mRecyclerView.setLayoutManager(mLayoutManager);

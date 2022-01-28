@@ -18,7 +18,7 @@
             android:id="@+id/PollresultImage"
             android:layout_width="50dp"
             android:layout_height="50dp"
-            android:padding="2dp"/>
+            android:padding="2dp" />
 
         <TextView
             android:id="@+id/pollResultInstance"
