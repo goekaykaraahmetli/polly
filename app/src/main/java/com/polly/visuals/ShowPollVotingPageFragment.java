@@ -74,6 +74,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.github.mikephil.charting.charts.PieChart;
 import com.polly.config.Config;
+import com.polly.utils.Area;
+import com.polly.utils.Location;
 import com.polly.utils.Organizer;
 import com.polly.utils.QRCode;
 import com.polly.utils.SavingClass;

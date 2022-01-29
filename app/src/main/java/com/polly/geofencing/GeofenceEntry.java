@@ -1,5 +1,7 @@
 package com.polly.geofencing;
 
+import com.polly.utils.Area;
+
 class GeofenceEntry {
     private Area area;
     private boolean inArea;

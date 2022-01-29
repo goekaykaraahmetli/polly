@@ -1,5 +1,7 @@
 package com.polly.utils.command.poll;
 
+import com.polly.utils.Location;
+
 public class VoteCommand {
 	private final long id;
 	private final String option;

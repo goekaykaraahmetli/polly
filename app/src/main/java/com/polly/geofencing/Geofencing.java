@@ -16,6 +16,7 @@ import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 
 import com.polly.R;
+import com.polly.utils.Area;
 import com.polly.utils.communicator.ResponseCommunicator;
 import com.polly.utils.wrapper.Message;
 

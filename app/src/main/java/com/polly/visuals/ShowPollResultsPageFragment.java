@@ -75,6 +75,8 @@ import com.karumi.dexter.listener.PermissionRequest;
 import com.karumi.dexter.listener.single.PermissionListener;
 import com.polly.R;
 import com.polly.config.Config;
+import com.polly.utils.Area;
+import com.polly.utils.Location;
 import com.polly.utils.Organizer;
 import com.polly.utils.QRCode;
 import com.polly.utils.SavingClass;
