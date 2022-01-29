@@ -6,7 +6,6 @@ import android.widget.EditText;
 
 import androidx.lifecycle.ViewModel;
 
-import com.polly.utils.Area;
 import com.polly.utils.item.SearchListItem;
 import com.polly.utils.item.SearchListItemUser;
 
