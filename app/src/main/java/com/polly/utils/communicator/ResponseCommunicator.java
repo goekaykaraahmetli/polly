@@ -55,7 +55,10 @@ public abstract class ResponseCommunicator extends Communicator{
         timer.schedule(checkIfGotResponse, 2000);
 
         responseIds.add(responseId);
-        Organizer.send(getCommunicationId(), receiver, responseId, data);
+        while(!Organizer.send(getCommunicationId(), receiver, responseId, data)){
+            // waiting till Organizer has successfully send
+            System.out.println("Organizer did not send successfully");
+        }
 
         while(true) {
             try {

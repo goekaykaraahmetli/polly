@@ -1,4 +1,4 @@
-package com.polly.visuals;
+package com.polly.utils;
 
 import android.text.InputFilter;
 import android.text.Spanned;

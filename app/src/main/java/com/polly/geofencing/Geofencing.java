@@ -9,6 +9,7 @@ import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.os.Looper;
 
 import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
@@ -17,19 +18,27 @@ import androidx.core.app.NotificationManagerCompat;
 
 import com.polly.R;
 import com.polly.utils.Area;
+import com.polly.utils.communication.SocketHandler;
+import com.polly.utils.communicator.ResponseCommunicator;
+import com.polly.utils.wrapper.Message;
 
 import java.util.LinkedList;
 import java.util.List;
 
 public class Geofencing extends ContextWrapper {
     private static final String CHANNEL_ID = "channel_gjkasFLjkgjaksf";
+    private ResponseCommunicator responseCommunicator;
     private List<GeofenceEntry> geofences;
 
     public Geofencing(Context base) {
         super(base);
         geofences = new LinkedList<>();
+        this.responseCommunicator = getResponseCommunicator();
+
 
         initNotificationChannel("Polly Geofence Channel", NotificationManager.IMPORTANCE_DEFAULT, "this is the channel for polly geofencing notifications");
+
+        sendNotification("test", "test");
 
         start();
 
@@ -66,6 +75,7 @@ public class Geofencing extends ContextWrapper {
         LocationListener locationListener = new LocationListener() {
             @Override
             public void onLocationChanged(@NonNull Location location) {
+                System.out.println("location changed-------------------------------------------------------------");
                 checkTransition(location.getLatitude(), location.getLongitude());
             }
         };
@@ -78,11 +88,9 @@ public class Geofencing extends ContextWrapper {
             //                                          int[] grantResults)
             // to handle the case where the user grants the permission. See the documentation
             // for ActivityCompat#requestPermissions for more details.
+
             return;
         }
-
-
-
 
 
         locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5000, 10, locationListener);
@@ -114,9 +122,11 @@ public class Geofencing extends ContextWrapper {
     }
 
     private void transitionDwell(Area area) {
+        sendNotification("Dwelling!", "you entered the following area: " + area.getLatitude() + "" + area.getLongitude() + "" + area.getRadius());
     }
 
     private void transitionExit(Area area) {
+        sendNotification("Exiting!", "you entered the following area: " + area.getLatitude() + "" + area.getLongitude() + "" + area.getRadius());
     }
 
 
@@ -130,5 +140,15 @@ public class Geofencing extends ContextWrapper {
 
         NotificationManagerCompat notificationManagerCompat = NotificationManagerCompat.from(this);
         notificationManagerCompat.notify(0, builder.build());
+    }
+
+    private ResponseCommunicator getResponseCommunicator(){
+        return new ResponseCommunicator() {
+            @Override
+            public void handleInput(Message message) {
+                System.out.println("AccountFragment received message from " + message.getSender() + " with responseId " + message.getResponseId());
+                System.out.println("from type: " + message.getDataType().getName());
+            }
+        };
     }
 }

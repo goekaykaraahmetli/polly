@@ -21,6 +21,7 @@
         android:supportsRtl="true"
         android:theme="@style/splashScreenTheme">
 
+
         <!-- TODO brauchen wir den Provider hier? -->
        <provider
            android:name="androidx.core.content.FileProvider"

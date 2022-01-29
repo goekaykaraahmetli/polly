@@ -26,6 +26,9 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.polly.R;
+import com.polly.utils.SavingClass;
+import com.polly.utils.item.SearchListItemUser;
+import com.polly.utils.listadapter.ListAdapterUser;
 import com.polly.utils.user.UserManager;
 import com.polly.utils.wrapper.UserWrapper;
 
@@ -55,7 +58,6 @@ public class AddNewUserChooser extends Fragment {
         super.onCreate(savedInstanceState);
         View root = inflater.inflate(R.layout.user_layout, container, false);
         setHasOptionsMenu(true);
-        SavingClass saving = new ViewModelProvider(getActivity()).get(SavingClass.class);
         exampleList = new ArrayList<>();
 
         try {

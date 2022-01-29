@@ -1,5 +1,8 @@
 package com.polly.utils;
 
+import android.app.IntentService;
+import android.content.Intent;
+
 import java.io.IOException;
 import java.security.KeyPair;
 import java.security.NoSuchAlgorithmException;
@@ -37,11 +40,16 @@ public class Organizer {
 			emptyMethode();
 		}
 
-		geofencing = new Geofencing(mainActivity);
-
 		if(FirebaseAuth.getInstance().getCurrentUser() != null){
 			LoginFragment.sendTokenToServer(true);
 		}
+
+		//new Thread(new Runnable() {
+		//	@Override
+		//	public void run() {
+		//		new Geofencing(mainActivity);
+		//	}
+		//}).start();
 	}
 
 	private static void createSocketHandler(int timeout){
@@ -131,5 +139,9 @@ public class Organizer {
 
 	public static Geofencing getGeofencing() {
 		return geofencing;
+	}
+
+	public static SocketHandler getSocketHandler() {
+		return socketHandler;
 	}
 }

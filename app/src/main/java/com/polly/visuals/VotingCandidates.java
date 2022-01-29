@@ -20,6 +20,9 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.polly.R;
+import com.polly.utils.SavingClass;
+import com.polly.utils.item.SearchListItemUser;
+import com.polly.utils.listadapter.ListAdapterUser;
 import com.polly.utils.user.UserManager;
 import com.polly.utils.wrapper.UserWrapper;
 
@@ -98,7 +101,7 @@ public class VotingCandidates extends Fragment {
             });
         }
 
-        root.findViewById(R.id.add_new_member_btn).setOnClickListener(new View.OnClickListener() {
+        root.findViewById(R.id.showSelected).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if(exampleList == null) return;
@@ -138,11 +141,11 @@ public class VotingCandidates extends Fragment {
                             selectedList.notifyItemChanged(position);
                         }
                     });
-                    Button showSelected = (Button) root.findViewById(R.id.add_new_member_btn);
+                    Button showSelected = (Button) root.findViewById(R.id.showSelected);
                     showSelected.setText("show all");
                     pressedSelected = true;
                 }else{
-                    Button showSelected = (Button) root.findViewById(R.id.add_new_member_btn);
+                    Button showSelected = (Button) root.findViewById(R.id.showSelected);
                     showSelected.setText("show selected");
                     mRecyclerView.setAdapter(mAdapter);
                     pressedSelected = false;
@@ -150,7 +153,7 @@ public class VotingCandidates extends Fragment {
 
             }
         });
-        root.findViewById(R.id.delete_user_btn).setOnClickListener(new View.OnClickListener() {
+        root.findViewById(R.id.saveAndBackVoting).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 List<String> canVoteList = new ArrayList<>();

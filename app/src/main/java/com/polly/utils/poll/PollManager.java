@@ -7,7 +7,7 @@ import com.polly.utils.command.GetMyPollsCommand;
 import com.polly.utils.command.GetParticipatedPollsCommand;
 import com.polly.utils.command.poll.EditPollDescriptionCommand;
 import com.polly.utils.command.poll.EditPollNameCommand;
-import com.polly.utils.command.poll.GetGeofencePollArea;
+import com.polly.utils.command.poll.GetGeofencePollAreaCommand;
 import com.polly.utils.command.poll.GetPollResultsCommand;
 import com.polly.utils.command.poll.IsMyPollCommand;
 import com.polly.utils.command.poll.VoteCommand;
@@ -46,7 +46,7 @@ public class PollManager {
     }
 
     public static Area getGeofencePollArea(long id) throws IOException {
-        Message response = communicator.sendWithResponse(Config.serverCommunicationId, new GetGeofencePollArea(id));
+        Message response = communicator.sendWithResponse(Config.serverCommunicationId, new GetGeofencePollAreaCommand(id));
         if(response.getDataType() == Area.class)
             return (Area) response.getData();
         if(response.getDataType() == ErrorWrapper.class)
