@@ -13,18 +13,17 @@ import android.os.CountDownTimer;
 import android.os.Looper;
 import android.provider.MediaStore;
 import android.provider.Settings;
-import android.text.Editable;
 import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.github.mikephil.charting.components.Description;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
@@ -65,10 +64,13 @@ import com.polly.R;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.widget.SwitchCompat;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.github.mikephil.charting.charts.PieChart;
 import com.polly.config.Config;
@@ -76,24 +78,23 @@ import com.polly.utils.Area;
 import com.polly.utils.Location;
 import com.polly.utils.Organizer;
 import com.polly.utils.QRCode;
+import com.polly.utils.SavingClass;
 import com.polly.utils.ShowPollPage;
 import com.polly.utils.command.poll.RegisterPollChangeListenerCommand;
 import com.polly.utils.command.poll.RemovePollChangeListenerCommand;
 import com.polly.utils.communicator.Communicator;
-import com.polly.utils.communicator.CommunicatorManager;
+import com.polly.utils.item.SearchListItem;
+import com.polly.utils.listadapter.ListAdapter;
 import com.polly.utils.poll.PollDescription;
 import com.polly.utils.poll.PollManager;
 import com.polly.utils.wrapper.Message;
 import com.polly.utils.wrapper.PollOptionsWrapper;
-import com.polly.utils.wrapper.PollResultsWrapper;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 public class ShowPollVotingPageFragment extends Fragment implements OnMapReadyCallback {
@@ -108,16 +109,20 @@ public class ShowPollVotingPageFragment extends Fragment implements OnMapReadyCa
     private CountDownTimer countDownTimer;
     boolean isExpired = false;
     private boolean isGeofencePoll;
-
+    private SwitchCompat toggleView;
     private GoogleMap googleMap;
     private boolean alertActive;
     private boolean locationPermissionGranted;
-
+    private RecyclerView mRecyclerView;
+    private ListAdapter mAdapter;
+    private RecyclerView.LayoutManager mLayoutManager;
+    private ArrayList<SearchListItem> listOptions;
     private LocationRequest locationRequest;
     private FusedLocationProviderClient fusedLocationProviderClient;
     Location usersLocation;
+    private TextView listPollname;
 
-    SavingClass saving;
+    private SavingClass saving;
 
     public static void open(long id) throws IOException {
         ShowPollVotingPageFragment.id = id;
@@ -150,6 +155,11 @@ public class ShowPollVotingPageFragment extends Fragment implements OnMapReadyCa
         pieChart.setVisibility(View.GONE);
         voteButton = (Button) root.findViewById(R.id.vote_button);
         voteButton.setVisibility(View.GONE);
+        toggleView = (SwitchCompat) root.findViewById(R.id.toggleView);
+        mLayoutManager = new LinearLayoutManager(getContext());
+        mRecyclerView = root.findViewById(R.id.PollOptionRecyclerView);
+        mRecyclerView.setHasFixedSize(true); //Performance
+        listPollname = (TextView) root.findViewById(R.id.listviewName);
 
         try {
             if (PollManager.isMyPoll(id)) {
@@ -194,12 +204,24 @@ public class ShowPollVotingPageFragment extends Fragment implements OnMapReadyCa
             createForGeofencePoll(root);
             updateUsersLocation();
         }
+        toggleView.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
+                if(isChecked){
+                    root.findViewById(R.id.toggleViewLayout).setVisibility(View.VISIBLE);
+                    pieChart.setVisibility(View.INVISIBLE);
+                }else{
+                    root.findViewById(R.id.toggleViewLayout).setVisibility(View.INVISIBLE);
+                    pieChart.setVisibility(View.VISIBLE);
+                }
 
+            }
+        });
         return root;
     }
-
     public void showPoll(View root) {
         updatePieChart(pollOptions);
+        updateListView(pollOptions);
         qrCode = (ImageView) root.findViewById(R.id.qrCodeImageView);
         qrCode.setImageBitmap(QRCode.QRCode("" + pollOptions.getBasicPollInformation().getId()));
         qrCode.setOnLongClickListener(new View.OnLongClickListener() {
@@ -228,6 +250,13 @@ public class ShowPollVotingPageFragment extends Fragment implements OnMapReadyCa
             @Override
             public void onNothingSelected() {
                 showVoteButton(null);
+            }
+        });
+        //TODO recyclerview onClickListener
+        mAdapter.setOnItemClickListener(new ListAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(int position) {
+                showVoteButton(listOptions.get(position).getmText1());
             }
         });
     }
@@ -290,6 +319,7 @@ public class ShowPollVotingPageFragment extends Fragment implements OnMapReadyCa
                         @Override
                         public void run() {
                             updatePieChart(updatePoll);
+                            updateListView(updatePoll);
                         }
                     });
                 }
@@ -316,15 +346,28 @@ public class ShowPollVotingPageFragment extends Fragment implements OnMapReadyCa
         pieChart.setVisibility(View.INVISIBLE);
 
         pieChart.setData(pieData);
-        Description description = new Description();
+        /**Description description = new Description();
         description.setText(updatePoll.getBasicPollInformation().getDescription().getDescription());
         pieChart.setDescription(description);
-        pieChart.getDescription().setEnabled(!updatePoll.getBasicPollInformation().getDescription().getDescription().equals(""));
+        pieChart.getDescription().setEnabled(!updatePoll.getBasicPollInformation().getDescription().getDescription().equals(""));**/
         pieChart.setCenterText(updatePoll.getBasicPollInformation().getName());
 
         pieChart.setUsePercentValues(false);
         pieChart.animate();
         pieChart.setVisibility(View.VISIBLE);
+    }
+    private void updateListView(PollOptionsWrapper updatePoll) {
+        pollOptions = updatePoll;
+        ArrayList<SearchListItem> options = new ArrayList<>();
+        for (String option : pollOptions.getPollOptions()) {
+            options.add(new SearchListItem(R.drawable.ic_logo, option));
+        }
+        mAdapter = new ListAdapter(options);
+
+        mRecyclerView.setLayoutManager(mLayoutManager);
+        mRecyclerView.setAdapter(mAdapter);
+        listPollname.setText(updatePoll.getBasicPollInformation().getName());
+        listOptions = options;
     }
 
     public Date convertToDate(LocalDateTime data) {

@@ -26,7 +26,6 @@ import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
-import androidx.navigation.Navigation;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
@@ -60,6 +59,7 @@ import com.polly.R;
 import com.polly.utils.Area;
 import com.polly.utils.Location;
 import com.polly.utils.Organizer;
+import com.polly.utils.SavingClass;
 
 public class ChooseAreaFragment extends Fragment implements OnMapReadyCallback {
     private boolean locationPermissionGranted;

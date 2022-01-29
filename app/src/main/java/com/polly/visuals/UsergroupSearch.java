@@ -20,8 +20,10 @@ import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.firebase.firestore.auth.User;
 import com.polly.R;
+import com.polly.utils.SavingClass;
+import com.polly.utils.item.SearchListItem;
+import com.polly.utils.listadapter.ListAdapter;
 import com.polly.utils.user.UserManager;
 import com.polly.utils.wrapper.UsergroupWrapper;
 
