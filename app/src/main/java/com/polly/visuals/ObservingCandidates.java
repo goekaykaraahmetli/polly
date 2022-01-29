@@ -1,6 +1,5 @@
 package com.polly.visuals;
 
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -10,12 +9,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
-import android.widget.CheckBox;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.SearchView;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
@@ -24,12 +20,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.polly.R;
-import com.polly.config.Config;
-import com.polly.utils.command.user.GetUsernameCommand;
-import com.polly.utils.communicator.ResponseCommunicator;
 import com.polly.utils.user.UserManager;
-import com.polly.utils.wrapper.ErrorWrapper;
-import com.polly.utils.wrapper.Message;
 import com.polly.utils.wrapper.UserWrapper;
 
 import java.io.IOException;
@@ -127,7 +118,7 @@ public class ObservingCandidates extends Fragment {
             });
         }
 
-        root.findViewById(R.id.showSelected).setOnClickListener(new View.OnClickListener() {
+        root.findViewById(R.id.add_new_member_btn).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if(exampleList == null) return;
@@ -167,11 +158,11 @@ public class ObservingCandidates extends Fragment {
                             selectedList.notifyItemChanged(position);
                         }
                     });
-                    Button showSelected = (Button) root.findViewById(R.id.showSelected);
+                    Button showSelected = (Button) root.findViewById(R.id.add_new_member_btn);
                     showSelected.setText("show all");
                     pressedSelected = true;
                 }else{
-                    Button showSelected = (Button) root.findViewById(R.id.showSelected);
+                    Button showSelected = (Button) root.findViewById(R.id.add_new_member_btn);
                     showSelected.setText("show selected");
                     mRecyclerView.setAdapter(mAdapter);
                     pressedSelected = false;
@@ -179,7 +170,7 @@ public class ObservingCandidates extends Fragment {
 
             }
         });
-        root.findViewById(R.id.saveAndBackVoting).setOnClickListener(new View.OnClickListener() {
+        root.findViewById(R.id.delete_user_btn).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 List<String> canSeeAndVoteList = new ArrayList<>();
