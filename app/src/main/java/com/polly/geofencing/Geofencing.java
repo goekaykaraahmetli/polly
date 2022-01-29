@@ -9,7 +9,6 @@ import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
-import android.os.Looper;
 
 import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
@@ -18,7 +17,6 @@ import androidx.core.app.NotificationManagerCompat;
 
 import com.polly.R;
 import com.polly.utils.Area;
-import com.polly.utils.communication.SocketHandler;
 import com.polly.utils.communicator.ResponseCommunicator;
 import com.polly.utils.wrapper.Message;
 

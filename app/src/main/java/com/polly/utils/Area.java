@@ -22,4 +22,8 @@ public class Area {
 	public double getRadius() {
 		return radius;
 	}
+	
+	public Location getCenter() {
+		return new Location(latitude, longitude);
+	}
 }
