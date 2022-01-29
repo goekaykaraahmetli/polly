@@ -27,7 +27,7 @@ import com.polly.utils.command.GetMyPollsCommand;
 import com.polly.utils.command.GetParticipatedPollsCommand;
 import com.polly.utils.command.poll.EditPollDescriptionCommand;
 import com.polly.utils.command.poll.EditPollNameCommand;
-import com.polly.utils.command.poll.GetGeofencePollArea;
+import com.polly.utils.command.poll.GetGeofencePollAreaCommand;
 import com.polly.utils.command.poll.GetPollOptionsCommand;
 import com.polly.utils.command.poll.GetPollResultsCommand;
 import com.polly.utils.command.poll.IsMyPollCommand;
@@ -208,7 +208,7 @@ public class DataStreamManager {
 			data = readGetUsernameCommand();
 		else if(dataType.equals(Location.class))
 			data = readLocation();
-		else if(dataType.equals(GetGeofencePollArea.class))
+		else if(dataType.equals(GetGeofencePollAreaCommand.class))
 			data = readGetGeofencePollArea();
 		else if(dataType.equals(EditPollDescriptionCommand.class))
 			data = readEditPollDescriptionCommand();
@@ -417,8 +417,8 @@ public class DataStreamManager {
 			writeGetUsernameCommand((GetUsernameCommand) data);
 		else if(dataType.equals(Location.class))
 			writeLocation((Location) data);
-		else if(dataType.equals(GetGeofencePollArea.class))
-			writeGetGeofencePollArea((GetGeofencePollArea) data);
+		else if(dataType.equals(GetGeofencePollAreaCommand.class))
+			writeGetGeofencePollArea((GetGeofencePollAreaCommand) data);
 		else if(dataType.equals(EditPollDescriptionCommand.class))
 			writeEditPollDescriptionCommand((EditPollDescriptionCommand) data);
 		else if(dataType.equals(EditPollNameCommand.class))
@@ -1082,12 +1082,12 @@ public class DataStreamManager {
 		return new Location(readDouble(), readDouble());
 	}
 	
-	private void writeGetGeofencePollArea(GetGeofencePollArea data) throws IOException {
+	private void writeGetGeofencePollArea(GetGeofencePollAreaCommand data) throws IOException {
 		writeLong(data.getId());
 	}
 	
-	private GetGeofencePollArea readGetGeofencePollArea() throws IOException {
-		return new GetGeofencePollArea(readLong());
+	private GetGeofencePollAreaCommand readGetGeofencePollArea() throws IOException {
+		return new GetGeofencePollAreaCommand(readLong());
 	}
 	
 	private void writeEditPollDescriptionCommand(EditPollDescriptionCommand data) throws IOException {
