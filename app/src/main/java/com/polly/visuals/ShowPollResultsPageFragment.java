@@ -94,6 +94,7 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.LinkedHashMap;
@@ -304,10 +305,13 @@ public class ShowPollResultsPageFragment extends Fragment implements OnMapReadyC
         int sum = pollResults.getPollResults().values().stream().mapToInt(Integer::intValue).sum();
         LinkedHashMap<String, Integer> descendingOrder = new LinkedHashMap<>();
 
-        pollResults.getPollResults().entrySet().stream().sorted(Map.Entry.comparingByValue(Comparator.reverseOrder())).forEachOrdered(x -> descendingOrder.put(x.getKey(), x.getValue()));
-
+        pollResults.getPollResults().entrySet().stream().sorted(Map.Entry.comparingByValue(Collections.reverseOrder())).forEachOrdered(x -> descendingOrder.put(x.getKey(), x.getValue()));
+        int i = 0;
+        int progress;
         for (Map.Entry<String, Integer> option : descendingOrder.entrySet()) {
-            options.add(new PollResultItem(R.drawable.ic_logo, option.getKey(), (option.getValue()/sum)*100, String.valueOf((option.getValue()/sum)*100)));
+            progress = (int) (((double) option.getValue()/ (double) sum) * 100);
+            options.add(new PollResultItem(R.drawable.ic_logo, option.getKey(), progress, String.valueOf(progress)));
+            i++;
         }
         mAdapter = new ListAdapterPollResult(options);
 

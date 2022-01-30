@@ -31,6 +31,8 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.polly.R;
 import com.polly.utils.Organizer;
+import com.polly.utils.item.SearchListItemUser;
+import com.polly.utils.listadapter.ListAdapterUser;
 import com.polly.utils.wrapper.UserWrapper;
 
 import java.util.ArrayList;
