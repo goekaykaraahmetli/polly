@@ -58,7 +58,7 @@ public class EnterpollFragment extends Fragment {
                     transaction1.addToBackStack(null);
                     transaction1.commit();*/
                     break;
-                case R.id.seachPoll:
+                case R.id.searchPoll:
                     Navigation.findNavController(getActivity(), R.id.nav_host_fragment).navigate(R.id.pollSearch);
                     break;
             }
