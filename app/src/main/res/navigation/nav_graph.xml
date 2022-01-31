@@ -149,4 +149,8 @@
         android:id="@+id/addNewUserChooser"
         android:name="com.polly.visuals.AddNewUserChooser"
         android:label="AddNewUserChooser" />
+    <fragment
+        android:id="@+id/pollSearch"
+        android:name="com.polly.visuals.PollSearch"
+        android:label="PollSearch" />
 </navigation>
