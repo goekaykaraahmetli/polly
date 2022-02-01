@@ -58,11 +58,18 @@
         <action
             android:id="@+id/action_signupFragment_to_loginFragment"
             app:destination="@id/loginFragment" />
+        <action
+            android:id="@+id/action_signupFragment_to_termsOfService"
+            app:destination="@id/termsOfService" />
     </fragment>
     <fragment
         android:id="@+id/termsOfService"
         android:name="com.polly.visuals.TermsOfService"
-        android:label="TermsOfService" />
+        android:label="TermsOfService" >
+        <action
+            android:id="@+id/action_termsOfService_to_signupFragment"
+            app:destination="@id/signupFragment" />
+    </fragment>
     <fragment
         android:id="@+id/polloptionFragment"
         android:name="com.polly.visuals.PolloptionFragment"
