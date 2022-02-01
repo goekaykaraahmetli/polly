@@ -5,7 +5,7 @@ public class FindPollCommand {
 	private final String creator;
 	private final boolean active;
 	private final boolean expired;
-	
+
 	public FindPollCommand(String name, String creator, boolean active, boolean expired) {
 		this.name = name;
 		this.creator = creator;
@@ -21,11 +21,11 @@ public class FindPollCommand {
 		return creator;
 	}
 
-	public boolean isActive() {
+	public boolean getActive() {
 		return active;
 	}
 
-	public boolean isExpired() {
+	public boolean getExpired() {
 		return expired;
 	}
 }

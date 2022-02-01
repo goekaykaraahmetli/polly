@@ -772,12 +772,13 @@ public class DataStreamManager {
 	private void writeBasicPollInformation(BasicPollInformation data) throws IOException {
 		writeLong(data.getId());
 		writeString(data.getName());
+		writeString(data.getCreator());
 		writePollDescription(data.getDescription());
 		writeLocalDateTime(data.getExpirationTime());
 	}
 	
 	private BasicPollInformation readBasicPollInformation() throws IOException {
-		return new BasicPollInformation(readLong(), readString(), readPollDescription(), readLocalDateTime());
+		return new BasicPollInformation(readLong(), readString(), readString(), readPollDescription(), readLocalDateTime());
 	}
 	
 	private void writeLocalDateTime(LocalDateTime data) throws IOException {
