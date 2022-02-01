@@ -12,6 +12,7 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
@@ -21,6 +22,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.polly.R;
 import com.polly.utils.Organizer;
 import com.polly.utils.communicator.ResponseCommunicator;
@@ -83,7 +85,21 @@ public class Chat_Room  extends Fragment {
         manageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Navigation.findNavController(getActivity(), R.id.nav_host_fragment).navigate(R.id.manageGroup);
+                FirebaseDatabase.getInstance().getReference().child(room_name).child("Users").child(user_name).addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        if(snapshot.getValue().equals("Admin"))
+                            Navigation.findNavController(getActivity(), R.id.nav_host_fragment).navigate(R.id.manageGroup);
+                        else
+                            Toast.makeText(getActivity(), "You are not a group admin", Toast.LENGTH_SHORT).show();
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+                });
+
             }
         });
 

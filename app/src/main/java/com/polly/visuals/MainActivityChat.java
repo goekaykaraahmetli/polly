@@ -25,6 +25,7 @@ import com.google.firebase.firestore.auth.User;
 import com.polly.R;
 import com.polly.config.Config;
 import com.polly.utils.command.user.GetUsernameCommand;
+import com.polly.utils.communication.DataStreamManager;
 import com.polly.utils.communicator.ResponseCommunicator;
 import com.polly.utils.wrapper.ErrorWrapper;
 import com.polly.utils.wrapper.Message;
@@ -37,34 +38,33 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 
 public class MainActivityChat extends Fragment {
 
-    public static final int RC_SIGN_IN=1;
-    private static final String ANONYMOUS = "";
-    private Button  add_room;
     private EditText room_name;
     private FirebaseAuth firebaseAuth;
     private FirebaseDatabase firebaseDatabase;
     private ListView listView;
     private ArrayAdapter<String> arrayAdapter;
     private ArrayList<String> list_of_rooms = new ArrayList<>();
-    private int c=0;
+    private int c = 0;
     private String name;
     private DatabaseReference root = FirebaseDatabase.getInstance().getReference().getRoot();
 
     private static ResponseCommunicator communicator = initialiseCommunicator();
-    private static ResponseCommunicator initialiseCommunicator(){
+
+    private static ResponseCommunicator initialiseCommunicator() {
         return new ResponseCommunicator() {
             @Override
             public void handleInput(Message message) {
                 System.out.println("AccountFragment received message from " + message.getSender() + " with responseId " + message.getResponseId());
                 System.out.println("from type: " + message.getDataType().getName());
 
-                for(Long l : communicator.responseIds){
+                for (Long l : communicator.responseIds) {
                     System.out.println(l);
                 }
 
@@ -80,48 +80,37 @@ public class MainActivityChat extends Fragment {
                              @Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         View view = inflater.inflate(R.layout.activity_main_chat, container, false);
-        firebaseAuth=FirebaseAuth.getInstance();
-        firebaseDatabase= FirebaseDatabase.getInstance();
+        firebaseAuth = FirebaseAuth.getInstance();
+        firebaseDatabase = FirebaseDatabase.getInstance();
         room_name = (EditText) view.findViewById(R.id.room_name_edittext);
         room_name.setText("");
         room_name.setVisibility(View.GONE);
         listView = (ListView) view.findViewById(R.id.listView);
         FloatingActionButton myFab = (FloatingActionButton) view.findViewById(R.id.fab);
-        /*
+
         try {
-            Message usernameMessage = communicator.sendWithResponse(Config.serverCommunicationId, new GetUsernameCommand());
-            if(usernameMessage.getDataType().equals(String.class)) {
+            Message usernameMessage = communicator.sendWithResponse(DataStreamManager.PARTNERS_DEFAULT_COMMUNICATION_ID, new GetUsernameCommand());
+            if (usernameMessage.getDataType().equals(String.class)) {
                 name = ((String) usernameMessage.getData());
                 UserGroupSelect.myUsername = name;
-            }
-            else if(usernameMessage.getDataType().equals(ErrorWrapper.class)){
+            } else if (usernameMessage.getDataType().equals(ErrorWrapper.class)) {
                 Toast.makeText(getActivity(), "Server communication failed", Toast.LENGTH_SHORT).show();
-            }
-            else{
+            } else {
                 Toast.makeText(getActivity(), "Something went wrong", Toast.LENGTH_SHORT).show();
             }
 
 
-        }
-        catch (IOException e){
+        } catch (IOException e) {
             Toast.makeText(getActivity(), "Something went wrong", Toast.LENGTH_SHORT).show();
         }
 
 
-*/
-
-
-        name = "MyUsername";
-        UserGroupSelect.myUsername = name;
-
-
         myFab.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                if (c==0) {
+                if (c == 0) {
                     room_name.setVisibility(View.VISIBLE);
-                    Toast.makeText(getActivity(),"Enter a room name", Toast.LENGTH_SHORT).show();
-                }
-                else if (!(room_name.getText().toString().equals(""))&&c==1) {
+                    Toast.makeText(getActivity(), "Enter a room name", Toast.LENGTH_SHORT).show();
+                } else if (!(room_name.getText().toString().equals("")) && c == 1) {
                     Map<String, Object> map = new HashMap<String, Object>();
                     map.put(room_name.getText().toString(), "");
                     UserGroupSelect.userGroupName = room_name.getText().toString();
@@ -129,17 +118,16 @@ public class MainActivityChat extends Fragment {
                     room_name.setText("");
                     room_name.setVisibility(View.GONE);
                     Navigation.findNavController(getActivity(), R.id.nav_host_fragment).navigate(R.id.userGroupSelect);
-                }
-                else{
-                    Toast.makeText(getActivity(),"Enter a valid room name", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(getActivity(), "Enter a valid room name", Toast.LENGTH_SHORT).show();
                     room_name.setVisibility(View.GONE);
                 }
-                c=(c+1)%2;
+                c = (c + 1) % 2;
             }
         });
 
 
-        arrayAdapter = new ArrayAdapter<String>(getContext(),android.R.layout.simple_list_item_1,list_of_rooms);
+        arrayAdapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_list_item_1, list_of_rooms);
 
         listView.setAdapter(arrayAdapter);
 
@@ -151,8 +139,8 @@ public class MainActivityChat extends Fragment {
                 Set<String> set = new HashSet<String>();
                 Iterator i = dataSnapshot.getChildren().iterator();
 
-                while (i.hasNext()){
-                    if(name==null)
+                while (i.hasNext()) {
+                    if (name == null)
                         Toast.makeText(getActivity(), "You are not signed in", Toast.LENGTH_SHORT).show();
                     else {
                         DataSnapshot next = (DataSnapshot) i.next();
@@ -173,45 +161,16 @@ public class MainActivityChat extends Fragment {
             }
         });
 
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+        listView.setOnItemClickListener((adapterView, view1, i, l) -> {
 
-                Chat_Room.room_name = ((TextView)view).getText().toString();
-                Chat_Room.user_name = name;
-                Navigation.findNavController(getActivity(), R.id.nav_host_fragment).navigate(R.id.chat_Room);
-            }
+            Chat_Room.room_name = ((TextView) view1).getText().toString();
+            Chat_Room.user_name = name;
+            Navigation.findNavController(getActivity(), R.id.nav_host_fragment).navigate(R.id.chat_Room);
         });
 
 
-
-    return view;
+        return view;
     }
-
-    /*private void request_user_name() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Enter name:");
-
-        final EditText input_field = new EditText(this);
-
-        builder.setView(input_field);
-        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                  name = input_field.getText().toString();
-            }
-        });
-
-        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                dialogInterface.cancel();
-                request_user_name();
-            }
-        });
-
-        builder.show();
-    }*/
 
 
 

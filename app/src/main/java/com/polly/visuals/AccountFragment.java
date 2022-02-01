@@ -28,10 +28,13 @@ import com.polly.R;
 import com.polly.config.Config;
 import com.polly.utils.command.user.GetMyUsergroupsCommand;
 import com.polly.utils.command.user.GetUsernameCommand;
+import com.polly.utils.command.user.LogoutCommand;
+import com.polly.utils.communication.DataStreamManager;
 import com.polly.utils.communicator.Communicator;
 import com.polly.utils.communicator.ResponseCommunicator;
 import com.polly.utils.user.UserManager;
 import com.polly.utils.wrapper.ErrorWrapper;
+import com.polly.utils.wrapper.LogoutAnswerWrapper;
 import com.polly.utils.wrapper.Message;
 
 import java.io.IOException;
@@ -82,14 +85,32 @@ public class AccountFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 if(mAuth.getCurrentUser() != null) {
-                    FirebaseAuth.getInstance().signOut();
-                    Toast.makeText(getActivity(), "You are now signed out", Toast.LENGTH_SHORT).show();
-                    LoginManager.getInstance().logOut();
-                    GoogleSignInOptions googleSignInOptions = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestIdToken(getString(R.string.default_web_client_id)).requestEmail().build();
-                    GoogleSignInClient googleSignInClient = GoogleSignIn.getClient(getActivity(), googleSignInOptions);
-                    googleSignInClient.signOut();
-                    Navigation.findNavController(getActivity(), R.id.nav_host_fragment).navigate(R.id.loginFragment);
+                    boolean serverLoggedOut=false;
+                    try {
+                        Message message = communicator.sendWithResponse(DataStreamManager.PARTNERS_DEFAULT_COMMUNICATION_ID, new LogoutCommand());
+                        if(message.getDataType().equals(LogoutAnswerWrapper.class)) {
+                            if (((LogoutAnswerWrapper) message.getData()).isSuccessful())
+                                serverLoggedOut = true;
+                        }
+                        else if(message.getDataType().equals(ErrorWrapper.class))
+                                Toast.makeText(getActivity(), ((ErrorWrapper) message.getData()).getMessage(), Toast.LENGTH_SHORT).show();
+                        else
+                                Toast.makeText(getActivity(), "Something went wrong", Toast.LENGTH_SHORT).show();
+                    }
+                    catch (IOException e){
 
+                    }
+                   if(serverLoggedOut) {
+                       FirebaseAuth.getInstance().signOut();
+                       Toast.makeText(getActivity(), "You are now signed out", Toast.LENGTH_SHORT).show();
+                       LoginManager.getInstance().logOut();
+                       GoogleSignInOptions googleSignInOptions = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestIdToken(getString(R.string.default_web_client_id)).requestEmail().build();
+                       GoogleSignInClient googleSignInClient = GoogleSignIn.getClient(getActivity(), googleSignInOptions);
+                       googleSignInClient.signOut();
+                       Navigation.findNavController(getActivity(), R.id.nav_host_fragment).navigate(R.id.loginFragment);
+                   }
+                   else
+                       Toast.makeText(getActivity(), "Could not log out from the server", Toast.LENGTH_SHORT).show();
                 }
             }
         });

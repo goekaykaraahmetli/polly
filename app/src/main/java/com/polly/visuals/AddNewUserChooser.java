@@ -71,6 +71,7 @@ public class AddNewUserChooser extends Fragment {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        /*
         exampleList.add(new SearchListItemUser(R.drawable.ic_usergroup, "User 1", false));
         exampleList.add(new SearchListItemUser(R.drawable.ic_usergroup, "User 2", false));
         exampleList.add(new SearchListItemUser(R.drawable.ic_usergroup, "User 3", false));
@@ -88,9 +89,9 @@ public class AddNewUserChooser extends Fragment {
         exampleList.add(new SearchListItemUser(R.drawable.ic_usergroup, "User 15", false));
         exampleList.add(new SearchListItemUser(R.drawable.ic_usergroup, "User 16", false));
         exampleList.add(new SearchListItemUser(R.drawable.ic_usergroup, "User 17", false));
-        exampleList.add(new SearchListItemUser(R.drawable.ic_usergroup, "Moritz Willimowski", false));
+        exampleList.add(new SearchListItemUser(R.drawable.ic_usergroup, "Moritz Willimowski", false));*/
 
-        DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference();
+        DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference().child(userGroupName).child("Users");
         rootRef.addListenerForSingleValueEvent(new ValueEventListener() {
 
             @Override
@@ -104,6 +105,39 @@ public class AddNewUserChooser extends Fragment {
                     }
 
                 }
+                mRecyclerView = root.findViewById(R.id.userRecyclerView);
+                mRecyclerView.setHasFixedSize(true); //Performance
+                mLayoutManager = new LinearLayoutManager(getContext());
+                if(exampleList != null){
+                    mAdapter = new ListAdapterUser(exampleList);
+
+                    mRecyclerView.setLayoutManager(mLayoutManager);
+                    mRecyclerView.setAdapter(mAdapter);
+
+
+                    mAdapter.setOnItemClickListener(new ListAdapterUser.OnItemClickListener() {
+
+                        @Override
+                        public void onItemClick(int position) {
+                            if(exampleList.get(position).isCheckbox()){
+                                exampleList.get(position).setCheckbox(false);
+                            }else {
+                                exampleList.get(position).setCheckbox(true);
+                            }
+                            mAdapter.notifyItemChanged(position);
+                        }
+
+                        @Override
+                        public void onChecked(int position) {
+                            if(exampleList.get(position).isCheckbox()){
+                                exampleList.get(position).setCheckbox(false);
+                            }else {
+                                exampleList.get(position).setCheckbox(true);
+                            }
+                            mAdapter.notifyItemChanged(position);
+                        }
+                    });
+                }
             }
 
             @Override
@@ -114,41 +148,9 @@ public class AddNewUserChooser extends Fragment {
 
 
 
-        mRecyclerView = root.findViewById(R.id.userRecyclerView);
-        mRecyclerView.setHasFixedSize(true); //Performance
-        mLayoutManager = new LinearLayoutManager(getContext());
-        if(exampleList != null){
-            mAdapter = new ListAdapterUser(exampleList);
-
-            mRecyclerView.setLayoutManager(mLayoutManager);
-            mRecyclerView.setAdapter(mAdapter);
 
 
-            mAdapter.setOnItemClickListener(new ListAdapterUser.OnItemClickListener() {
-
-                @Override
-                public void onItemClick(int position) {
-                    if(exampleList.get(position).isCheckbox()){
-                        exampleList.get(position).setCheckbox(false);
-                    }else {
-                        exampleList.get(position).setCheckbox(true);
-                    }
-                    mAdapter.notifyItemChanged(position);
-                }
-
-                @Override
-                public void onChecked(int position) {
-                    if(exampleList.get(position).isCheckbox()){
-                        exampleList.get(position).setCheckbox(false);
-                    }else {
-                        exampleList.get(position).setCheckbox(true);
-                    }
-                    mAdapter.notifyItemChanged(position);
-                }
-            });
-        }
-
-        root.findViewById(R.id.add_new_member_btn).setOnClickListener(new View.OnClickListener() {
+        root.findViewById(R.id.showSelected).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if(exampleList == null) return;
@@ -188,11 +190,11 @@ public class AddNewUserChooser extends Fragment {
                             selectedList.notifyItemChanged(position);
                         }
                     });
-                    Button showSelected = (Button) root.findViewById(R.id.add_new_member_btn);
+                    Button showSelected = (Button) root.findViewById(R.id.showSelected);
                     showSelected.setText("show all");
                     pressedSelected = true;
                 }else{
-                    Button showSelected = (Button) root.findViewById(R.id.add_new_member_btn);
+                    Button showSelected = (Button) root.findViewById(R.id.showSelected);
                     showSelected.setText("show selected");
                     mRecyclerView.setAdapter(mAdapter);
                     pressedSelected = false;
@@ -200,7 +202,7 @@ public class AddNewUserChooser extends Fragment {
 
             }
         });
-        root.findViewById(R.id.delete_user_btn).setOnClickListener(new View.OnClickListener() {
+        root.findViewById(R.id.saveAndBackVoting).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 HashMap<String, Object> canVoteList = new HashMap<>();
@@ -214,7 +216,7 @@ public class AddNewUserChooser extends Fragment {
                     FirebaseDatabase.getInstance().getReference(userGroupName).child("Users").updateChildren(canVoteList);
                 }
 
-                Navigation.findNavController(getActivity(), R.id.nav_host_fragment).navigate(R.id.mainActivityChat);
+                Navigation.findNavController(getActivity(), R.id.nav_host_fragment).navigate(R.id.chat_Room);
             }
         });
         return root;

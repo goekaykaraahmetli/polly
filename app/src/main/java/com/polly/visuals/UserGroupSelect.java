@@ -69,6 +69,7 @@ public class UserGroupSelect extends Fragment {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        /*
         exampleList.add(new SearchListItemUser(R.drawable.ic_usergroup, "User 1", false));
         exampleList.add(new SearchListItemUser(R.drawable.ic_usergroup, "User 2", false));
         exampleList.add(new SearchListItemUser(R.drawable.ic_usergroup, "User 3", false));
@@ -87,7 +88,7 @@ public class UserGroupSelect extends Fragment {
         exampleList.add(new SearchListItemUser(R.drawable.ic_usergroup, "User 16", false));
         exampleList.add(new SearchListItemUser(R.drawable.ic_usergroup, "User 17", false));
         exampleList.add(new SearchListItemUser(R.drawable.ic_usergroup, "Moritz Willimowski", false));
-
+*/
         if(list != null) {
             for(int i = 0; i< list.size(); i++) {
                 if(!list.get(i).getName().equals(username))
@@ -190,7 +191,7 @@ public class UserGroupSelect extends Fragment {
                     for(int i = 0; i < exampleList.size(); i++){
                         if(exampleList.get(i).isCheckbox()){
                             canVoteList.put(exampleList.get(i).getmText1(), "");
-                            canVoteList.put(myUsername, "");
+                            canVoteList.put(myUsername, "Admin");
                         }
                     }
                     //canVoteList.put(myUsername, "");

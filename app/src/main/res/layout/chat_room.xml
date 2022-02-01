@@ -2,7 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#333639">
+    android:background="#92A8D1">
 
     <Button
         android:id="@+id/btn_manage"
@@ -10,7 +10,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
-        android:text="Show Members" />
+        android:text="Manage Group" />
 
     <Button
         android:id="@+id/btn_send"

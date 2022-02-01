@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -20,7 +21,7 @@ public class TermsOfService extends Fragment {
                              @Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         View root = inflater.inflate(R.layout.termsofservice, container, false);
-        EditText terms = new EditText(getContext());
+        TextView terms = (TextView) root.findViewById(R.id.terms);
         terms.setText("Website Terms and Conditions of Use\n" +
                 "1. Terms\n" +
                 "By using this App, you are agreeing to be bound by these App Terms and Conditions of Use and agree that you are responsible for the agreement with any applicable local laws. If you disagree with any of these terms, you are prohibited from accessing this site. The materials contained in this Website are protected by copyright and trade mark law.\n" +
@@ -55,14 +56,6 @@ public class TermsOfService extends Fragment {
                 "\n" +
                 "9. Governing Law\n" +
                 "Any claim related to the Polly App shall be governed by the laws of de without regards to its conflict of law provisions.");
-        ((LinearLayout) root.findViewById(R.id.linear_layout_terms)).addView(terms);
-        Button goBack = root.findViewById(R.id.goback_terms);
-        goBack.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Navigation.findNavController(getActivity(), R.id.nav_host_fragment).navigate(R.id.signupFragment);
-            }
-        });
         return root;
     }
 }
