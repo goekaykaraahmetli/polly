@@ -6,6 +6,7 @@ import com.polly.config.Config;
 import com.polly.utils.command.user.FindUsersCommand;
 import com.polly.utils.command.user.GetMyUsergroupsCommand;
 import com.polly.utils.command.user.GetUsernameCommand;
+import com.polly.utils.communication.DataStreamManager;
 import com.polly.utils.communicator.ResponseCommunicator;
 import com.polly.utils.wrapper.ErrorWrapper;
 import com.polly.utils.wrapper.Message;
@@ -36,7 +37,7 @@ public class UserManager {
     }
 
     public static List<UsergroupWrapper> getMyUsergroups() throws IOException {
-        Message response = communicator.sendWithResponse(Config.serverCommunicationId, new GetMyUsergroupsCommand());
+        Message response = communicator.sendWithResponse(DataStreamManager.PARTNERS_DEFAULT_COMMUNICATION_ID, new GetMyUsergroupsCommand());
         if(response.getDataType() == UsergroupListWrapper.class)
             return ((UsergroupListWrapper) response.getData()).getUsergroupList();
         if(response.getDataType() == ErrorWrapper.class)
@@ -45,7 +46,7 @@ public class UserManager {
     }
 
     public static List<UserWrapper> findUsers(String prefix) throws IOException {
-        Message response = communicator.sendWithResponse(Config.serverCommunicationId, new FindUsersCommand(prefix));
+        Message response = communicator.sendWithResponse(DataStreamManager.PARTNERS_DEFAULT_COMMUNICATION_ID, new FindUsersCommand(prefix));
         if(response.getDataType() == UserListWrapper.class)
             return ((UserListWrapper) response.getData()).getUserList();
         if(response.getDataType() == ErrorWrapper.class)
@@ -54,7 +55,7 @@ public class UserManager {
     }
 
     public static String getMyUsername() throws IOException{
-        Message response = communicator.sendWithResponse(Config.serverCommunicationId, new GetUsernameCommand());
+        Message response = communicator.sendWithResponse(DataStreamManager.PARTNERS_DEFAULT_COMMUNICATION_ID, new GetUsernameCommand());
         if(response.getDataType().equals(String.class))
             return (String)response.getData();
         if(response.getDataType().equals(ErrorWrapper.class))

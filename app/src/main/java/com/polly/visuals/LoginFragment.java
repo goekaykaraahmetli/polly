@@ -52,6 +52,7 @@ import com.polly.utils.Organizer;
 import com.polly.utils.command.user.IsUsernameAvailableCommand;
 import com.polly.utils.command.user.LoginCommand;
 import com.polly.utils.command.user.RegisterCommand;
+import com.polly.utils.communication.DataStreamManager;
 import com.polly.utils.communicator.ResponseCommunicator;
 import com.polly.utils.wrapper.ErrorWrapper;
 import com.polly.utils.wrapper.LoginAnswerWrapper;
@@ -201,7 +202,7 @@ public class LoginFragment extends Fragment {
                             String idToken = task.getResult().getToken();
                             LoginCommand loginCommand = new LoginCommand(idToken);
                             try {
-                                Message messageResponse = communicator.sendWithResponse(Config.serverCommunicationId, loginCommand);
+                                Message messageResponse = communicator.sendWithResponse(DataStreamManager.PARTNERS_DEFAULT_COMMUNICATION_ID, loginCommand);
                                 if(messageResponse.getDataType() == LoginAnswerWrapper.class) {
                                     LoginAnswerWrapper loginAnswerWrapper = ((LoginAnswerWrapper) messageResponse.getData());
                                     if(!loginAnswerWrapper.isSuccessful()) {
@@ -246,11 +247,11 @@ public class LoginFragment extends Fragment {
                 else {
                     IsUsernameAvailableCommand com = new IsUsernameAvailableCommand(usernameInput.getText().toString());
                     try {
-                        Message booleanMessage = communicator.sendWithResponse(Config.serverCommunicationId, com);
+                        Message booleanMessage = communicator.sendWithResponse(DataStreamManager.PARTNERS_DEFAULT_COMMUNICATION_ID, com);
                         if (booleanMessage.getDataType() == Boolean.class) {
                             boolean isFree = (Boolean) booleanMessage.getData();
                             if (isFree) {
-                                Message message = communicator.sendWithResponse(Config.serverCommunicationId, new RegisterCommand(idToken, usernameInput.getText().toString()));
+                                Message message = communicator.sendWithResponse(DataStreamManager.PARTNERS_DEFAULT_COMMUNICATION_ID, new RegisterCommand(idToken, usernameInput.getText().toString()));
                                 if (message.getDataType() == LoginAnswerWrapper.class) {
                                     LoginAnswerWrapper answer = (LoginAnswerWrapper) message.getData();
 

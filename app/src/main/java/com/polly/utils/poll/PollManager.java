@@ -11,6 +11,7 @@ import com.polly.utils.command.poll.GetGeofencePollAreaCommand;
 import com.polly.utils.command.poll.GetPollResultsCommand;
 import com.polly.utils.command.poll.IsMyPollCommand;
 import com.polly.utils.command.poll.VoteCommand;
+import com.polly.utils.communication.DataStreamManager;
 import com.polly.utils.wrapper.ErrorWrapper;
 import com.polly.utils.wrapper.Message;
 import com.polly.utils.command.poll.GetPollOptionsCommand;
@@ -46,7 +47,7 @@ public class PollManager {
     }
 
     public static Area getGeofencePollArea(long id) throws IOException {
-        Message response = communicator.sendWithResponse(Config.serverCommunicationId, new GetGeofencePollAreaCommand(id));
+        Message response = communicator.sendWithResponse(DataStreamManager.PARTNERS_DEFAULT_COMMUNICATION_ID, new GetGeofencePollAreaCommand(id));
         if(response.getDataType() == Area.class)
             return (Area) response.getData();
         if(response.getDataType() == ErrorWrapper.class)
@@ -56,7 +57,7 @@ public class PollManager {
 
 
     public static long createPublicPoll(String name, PollDescription description, LocalDateTime expirationTime, List<String> options) throws IOException {
-        Message response = communicator.sendWithResponse(Config.serverCommunicationId, new CreatePublicPollCommand(name, description, expirationTime, options));
+        Message response = communicator.sendWithResponse(DataStreamManager.PARTNERS_DEFAULT_COMMUNICATION_ID, new CreatePublicPollCommand(name, description, expirationTime, options));
         if(response.getDataType() == Long.class)
             return (long) response.getData();
         if(response.getDataType() == ErrorWrapper.class)
@@ -65,7 +66,7 @@ public class PollManager {
     }
 
     public static long createGeofencePoll(String name, PollDescription description, LocalDateTime expirationTime, List<String> options, Area area) throws IOException {
-        Message response = communicator.sendWithResponse(Config.serverCommunicationId, new CreateGeofencePollCommand(name, description, expirationTime, options, area));
+        Message response = communicator.sendWithResponse(DataStreamManager.PARTNERS_DEFAULT_COMMUNICATION_ID, new CreateGeofencePollCommand(name, description, expirationTime, options, area));
         if(response.getDataType() == Long.class)
             return (long) response.getData();
         if(response.getDataType() == ErrorWrapper.class)
@@ -74,7 +75,7 @@ public class PollManager {
     }
 
     public static long createCustomPoll(String name, PollDescription description, LocalDateTime expirationTime, List<String> options, List<String> canSee, List<String> canSeeResults) throws IOException {
-        Message response = communicator.sendWithResponse(Config.serverCommunicationId, new CreateCustomPollCommand(name, description, expirationTime, options, canSee, canSeeResults));
+        Message response = communicator.sendWithResponse(DataStreamManager.PARTNERS_DEFAULT_COMMUNICATION_ID, new CreateCustomPollCommand(name, description, expirationTime, options, canSee, canSeeResults));
         if(response.getDataType() == Long.class)
             return (long) response.getData();
         if(response.getDataType() == ErrorWrapper.class)
@@ -83,7 +84,7 @@ public class PollManager {
     }
 
     public static long createPrivatePoll(String name, PollDescription description, LocalDateTime expirationTime, List<String> options, long usergroup) throws IOException {
-        Message response = communicator.sendWithResponse(Config.serverCommunicationId, new CreatePrivatePollCommand(name, description, expirationTime, options, usergroup));
+        Message response = communicator.sendWithResponse(DataStreamManager.PARTNERS_DEFAULT_COMMUNICATION_ID, new CreatePrivatePollCommand(name, description, expirationTime, options, usergroup));
         if(response.getDataType() == Long.class)
             return (long) response.getData();
         if(response.getDataType() == ErrorWrapper.class)
@@ -92,7 +93,7 @@ public class PollManager {
     }
 
     public static boolean vote(long id, String option) throws IOException {
-        Message response = communicator.sendWithResponse(Config.serverCommunicationId, new VoteCommand(id, option));
+        Message response = communicator.sendWithResponse(DataStreamManager.PARTNERS_DEFAULT_COMMUNICATION_ID, new VoteCommand(id, option));
         System.err.println("Got response for vote!");
         if(response.getDataType().equals(Boolean.class))
             return (boolean) response.getData();
@@ -102,7 +103,7 @@ public class PollManager {
     }
 
     public static boolean vote(long id, String option, Location location) throws IOException {
-        Message response = communicator.sendWithResponse(Config.serverCommunicationId, new VoteCommand(id, option, location));
+        Message response = communicator.sendWithResponse(DataStreamManager.PARTNERS_DEFAULT_COMMUNICATION_ID, new VoteCommand(id, option, location));
         System.err.println("Got response for vote!");
         if(response.getDataType().equals(Boolean.class))
             return (boolean) response.getData();
@@ -112,7 +113,7 @@ public class PollManager {
     }
 
     public static PollOptionsWrapper getPollOptions(long id) throws IOException {
-        Message response = communicator.sendWithResponse(Config.serverCommunicationId, new GetPollOptionsCommand(id));
+        Message response = communicator.sendWithResponse(DataStreamManager.PARTNERS_DEFAULT_COMMUNICATION_ID, new GetPollOptionsCommand(id));
         if(response.getDataType() == PollOptionsWrapper.class)
             return (PollOptionsWrapper) response.getData();
         if(response.getDataType() == ErrorWrapper.class)
@@ -121,7 +122,7 @@ public class PollManager {
     }
 
     public static PollResultsWrapper getPollResults(long id) throws IOException {
-        Message response = communicator.sendWithResponse(Config.serverCommunicationId, new GetPollResultsCommand(id));
+        Message response = communicator.sendWithResponse(DataStreamManager.PARTNERS_DEFAULT_COMMUNICATION_ID, new GetPollResultsCommand(id));
         if(response.getDataType() == PollResultsWrapper.class)
             return (PollResultsWrapper) response.getData();
         if(response.getDataType() == ErrorWrapper.class)
@@ -130,7 +131,7 @@ public class PollManager {
     }
 
     public static List<PollResultsWrapper> getMyPolls() throws IOException {
-        Message response = communicator.sendWithResponse(Config.serverCommunicationId, new GetMyPollsCommand());
+        Message response = communicator.sendWithResponse(DataStreamManager.PARTNERS_DEFAULT_COMMUNICATION_ID, new GetMyPollsCommand());
         if(response.getDataType() == PollListWrapper.class)
             return ((PollListWrapper) response.getData()).getList();
         if(response.getDataType() == ErrorWrapper.class)
@@ -139,7 +140,7 @@ public class PollManager {
     }
 
     public static List<PollResultsWrapper> getParticipatedPolls() throws IOException {
-        Message response = communicator.sendWithResponse(Config.serverCommunicationId, new GetParticipatedPollsCommand());
+        Message response = communicator.sendWithResponse(DataStreamManager.PARTNERS_DEFAULT_COMMUNICATION_ID, new GetParticipatedPollsCommand());
         if(response.getDataType() == PollListWrapper.class)
             return ((PollListWrapper) response.getData()).getList();
         if(response.getDataType() == ErrorWrapper.class)
@@ -148,7 +149,7 @@ public class PollManager {
     }
 
     public static boolean isMyPoll(long id) throws IOException {
-        Message response = communicator.sendWithResponse(Config.serverCommunicationId, new IsMyPollCommand(id));
+        Message response = communicator.sendWithResponse(DataStreamManager.PARTNERS_DEFAULT_COMMUNICATION_ID, new IsMyPollCommand(id));
         if(response.getDataType() == Boolean.class)
             return ((boolean) response.getData());
         if(response.getDataType() == ErrorWrapper.class)
@@ -157,7 +158,7 @@ public class PollManager {
     }
 
     public static boolean editPollName(long id, String name) throws IOException {
-        Message response = communicator.sendWithResponse(Config.serverCommunicationId, new EditPollNameCommand(id, name));
+        Message response = communicator.sendWithResponse(DataStreamManager.PARTNERS_DEFAULT_COMMUNICATION_ID, new EditPollNameCommand(id, name));
         if(response.getDataType() == Boolean.class)
             return ((boolean) response.getData());
         if(response.getDataType() == ErrorWrapper.class)
@@ -166,7 +167,7 @@ public class PollManager {
     }
 
     public static boolean editPollDescription(long id, PollDescription description) throws IOException {
-        Message response = communicator.sendWithResponse(Config.serverCommunicationId, new EditPollDescriptionCommand(id, description));
+        Message response = communicator.sendWithResponse(DataStreamManager.PARTNERS_DEFAULT_COMMUNICATION_ID, new EditPollDescriptionCommand(id, description));
         if(response.getDataType() == Boolean.class)
             return ((boolean) response.getData());
         if(response.getDataType() == ErrorWrapper.class)

@@ -20,18 +20,18 @@ public class SocketHandler {
 	private OutputHandler outputHandler;
 	private DataStreamManager dataStreamManager;
 
-	public SocketHandler(String ip, int port) throws IOException, FailedKeyGenerationException, InvalidKeySpecException, NoSuchAlgorithmException, FailedDecryptionException, FailedEncryptionException {
+	public SocketHandler(String ip, int port, long defaultCommunicationId) throws IOException, FailedKeyGenerationException, InvalidKeySpecException, NoSuchAlgorithmException, FailedDecryptionException, FailedEncryptionException {
 		connect(ip, port, 7500);
-		init();
+		init(defaultCommunicationId);
 	}
 
-	public SocketHandler(String ip, int port, int timeout) throws IOException, FailedKeyGenerationException, InvalidKeySpecException, NoSuchAlgorithmException, FailedDecryptionException, FailedEncryptionException {
+	public SocketHandler(String ip, int port, int timeout, long defaultCommunicationId) throws IOException, FailedKeyGenerationException, InvalidKeySpecException, NoSuchAlgorithmException, FailedDecryptionException, FailedEncryptionException {
 		connect(ip, port, timeout);
-		init();
+		init(defaultCommunicationId);
 	}
 
-	private void init() throws IOException, FailedKeyGenerationException, InvalidKeySpecException, NoSuchAlgorithmException, FailedEncryptionException, FailedDecryptionException {
-		dataStreamManager = new DataStreamManager(socket.getInputStream(), socket.getOutputStream());
+	private void init(long defaultCommunicationId) throws IOException, FailedKeyGenerationException, InvalidKeySpecException, NoSuchAlgorithmException, FailedEncryptionException, FailedDecryptionException {
+		dataStreamManager = new DataStreamManager(socket.getInputStream(), socket.getOutputStream(), defaultCommunicationId);
         inputHandler = new InputHandler(dataStreamManager);
         outputHandler = new OutputHandler(dataStreamManager);
 		inputHandler.start();

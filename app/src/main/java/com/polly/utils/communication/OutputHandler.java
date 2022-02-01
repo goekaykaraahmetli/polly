@@ -1,11 +1,10 @@
 package com.polly.utils.communication;
 
 import java.io.IOException;
-import java.net.SocketException;
+import java.util.List;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 
-import com.polly.utils.Organizer;
 import com.polly.utils.wrapper.Message;
 
 class OutputHandler extends DataStreamHandler{
@@ -22,7 +21,6 @@ class OutputHandler extends DataStreamHandler{
 			dataStreamManager.send(handleQueue.take());
 		} catch (IOException | InterruptedException e) {
 			// TODO Auto-generated catch block
-			Organizer.tryReconnectToServer();
 			e.printStackTrace();
 		}
 	}
@@ -33,5 +31,13 @@ class OutputHandler extends DataStreamHandler{
 
 	public <T> boolean send(long sender, long receiver, T data) {
 		return handleQueue.offer(new Message(sender, receiver, Message.getNextResponseId(), data.getClass(), data));
+	}
+	
+	public <T> boolean send(long sender, long receiver, long responseId, T data, List<Class<?>> generics) {
+		return handleQueue.offer(new Message(sender, receiver, responseId, data.getClass(), data, generics));
+	}
+	
+	public <T> boolean send(long sender, long receiver, T data, List<Class<?>> generics) {
+		return handleQueue.offer(new Message(sender, receiver, Message.getNextResponseId(), data.getClass(), data, generics));
 	}
 }

@@ -1,10 +1,10 @@
 package com.polly.utils.communicator;
 
+import com.polly.utils.Organizer;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.NoSuchElementException;
-
-import kotlin.random.Random;
 
 public class CommunicatorManager {
     private static long nextId = 0L;
@@ -35,6 +35,7 @@ public class CommunicatorManager {
     }
 
     public static void timedOut() {
+        Organizer.timedOut();
         for(Communicator communicator : communicators.values()) {
             if(communicator instanceof ResponseCommunicator) {
                 ResponseCommunicator responseCommunicator = (ResponseCommunicator) communicator;

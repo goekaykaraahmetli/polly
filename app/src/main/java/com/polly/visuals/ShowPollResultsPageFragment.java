@@ -82,6 +82,7 @@ import com.polly.utils.QRCode;
 import com.polly.utils.SavingClass;
 import com.polly.utils.command.poll.RegisterPollChangeListenerCommand;
 import com.polly.utils.command.poll.RemovePollChangeListenerCommand;
+import com.polly.utils.communication.DataStreamManager;
 import com.polly.utils.communicator.Communicator;
 import com.polly.utils.item.PollResultItem;
 import com.polly.utils.listadapter.ListAdapterPollResult;
@@ -138,7 +139,7 @@ public class ShowPollResultsPageFragment extends Fragment implements OnMapReadyC
         super.onDestroy();
         if (hasRunningPollChangeListener) {
             try {
-                communicator.send(Config.serverCommunicationId, new RemovePollChangeListenerCommand(id));
+                communicator.send(DataStreamManager.PARTNERS_DEFAULT_COMMUNICATION_ID, new RemovePollChangeListenerCommand(id));
                 hasRunningPollChangeListener = false;
             } catch (IOException e) {
                 e.printStackTrace();
@@ -232,7 +233,7 @@ public class ShowPollResultsPageFragment extends Fragment implements OnMapReadyC
             }
         });
         try {
-            communicator.send(Config.serverCommunicationId, new RegisterPollChangeListenerCommand(pollResults.getBasicPollInformation().getId(), true));
+            communicator.send(DataStreamManager.PARTNERS_DEFAULT_COMMUNICATION_ID, new RegisterPollChangeListenerCommand(pollResults.getBasicPollInformation().getId(), true));
             hasRunningPollChangeListener = true;
         } catch (IOException e) {
             e.printStackTrace();

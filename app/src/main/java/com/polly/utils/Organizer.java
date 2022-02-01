@@ -1,25 +1,20 @@
 package com.polly.utils;
 
-import android.app.IntentService;
-import android.content.Intent;
-
-import java.io.IOException;
-import java.security.KeyPair;
-import java.security.NoSuchAlgorithmException;
-import java.security.spec.InvalidKeySpecException;
-
 import com.google.firebase.auth.FirebaseAuth;
 import com.polly.config.Config;
 import com.polly.geofencing.Geofencing;
 import com.polly.utils.communication.SocketHandler;
-import com.polly.utils.communicator.CommunicatorManager;
-import com.polly.utils.communicator.DefaultCommunicator;
 import com.polly.utils.encryption.exceptions.FailedDecryptionException;
 import com.polly.utils.encryption.exceptions.FailedEncryptionException;
 import com.polly.utils.encryption.exceptions.FailedKeyGenerationException;
 import com.polly.utils.encryption.utils.CipherKeyGenerator;
 import com.polly.visuals.LoginFragment;
 import com.polly.visuals.MainActivity;
+
+import java.io.IOException;
+import java.security.KeyPair;
+import java.security.NoSuchAlgorithmException;
+import java.security.spec.InvalidKeySpecException;
 
 import javax.crypto.SecretKey;
 
@@ -28,6 +23,8 @@ public class Organizer {
 	private static boolean initialised = false;
 	private static MainActivity mainActivity;
 	private static Geofencing geofencing;
+
+	private static final long DEFAULT_COMMUNICATION_ID = 0L;
 
 	static {
 		createSocketHandler(7500);
@@ -55,7 +52,7 @@ public class Organizer {
 	private static void createSocketHandler(int timeout){
 		new Thread(() -> {
 			try {
-				socketHandler = new SocketHandler(Config.SERVER_IP_ADRESS, Config.SERVER_PORT, timeout);
+				socketHandler = new SocketHandler(Config.SERVER_IP_ADRESS, Config.SERVER_PORT, timeout, DEFAULT_COMMUNICATION_ID);
 			} catch (IOException e) {
 				e.printStackTrace();
 			} catch (FailedKeyGenerationException e) {
@@ -85,7 +82,6 @@ public class Organizer {
 			emptyMethode();
 		}
 		if(socketHandler != null){
-			CommunicatorManager.getDefaultCommunicator().connecting();
 			if(FirebaseAuth.getInstance().getCurrentUser() != null)
 				LoginFragment.sendTokenToServer(true);
 		}
@@ -131,6 +127,10 @@ public class Organizer {
 
 	public static void emptyMethode() {
 		// empty methode
+	}
+
+	public static void timedOut() {
+		socketHandler = null;
 	}
 
 	public static MainActivity getMainActivity() {
