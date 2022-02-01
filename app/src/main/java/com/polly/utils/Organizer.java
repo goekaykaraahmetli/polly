@@ -134,6 +134,10 @@ public class Organizer {
 		// empty methode
 	}
 
+	public static void timedOut() {
+		socketHandler = null;
+	}
+
 	public static MainActivity getMainActivity() {
 		return mainActivity;
 	}

@@ -1,5 +1,8 @@
 package com.polly.utils.communicator;
 
+import com.polly.config.Config;
+import com.polly.utils.Organizer;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.NoSuchElementException;
@@ -35,6 +38,7 @@ public class CommunicatorManager {
     }
 
     public static void timedOut() {
+        Organizer.timedOut();
         for(Communicator communicator : communicators.values()) {
             if(communicator instanceof ResponseCommunicator) {
                 ResponseCommunicator responseCommunicator = (ResponseCommunicator) communicator;
