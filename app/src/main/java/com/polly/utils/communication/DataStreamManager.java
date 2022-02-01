@@ -27,6 +27,7 @@ import com.polly.utils.command.GetMyPollsCommand;
 import com.polly.utils.command.GetParticipatedPollsCommand;
 import com.polly.utils.command.poll.EditPollDescriptionCommand;
 import com.polly.utils.command.poll.EditPollNameCommand;
+import com.polly.utils.command.poll.FindPollCommand;
 import com.polly.utils.command.poll.GetGeofencePollAreaCommand;
 import com.polly.utils.command.poll.GetPollOptionsCommand;
 import com.polly.utils.command.poll.GetPollResultsCommand;
@@ -229,6 +230,8 @@ public class DataStreamManager {
 			data = readLogoutAnswerWrapper();
 		else if(dataType.equals(PollOptionListWrapper.class))
 			data = readPollOptionListWrapper();
+		else if(dataType.equals(FindPollCommand.class))
+			data = readFindPollCommand();
 			
 			// default type:
 		else
@@ -448,6 +451,9 @@ public class DataStreamManager {
 			writeLogoutAnswerWrapper((LogoutAnswerWrapper) data);
 		else if(dataType.equals(PollOptionListWrapper.class))
 			writePollOptionListWrapper((PollOptionListWrapper) data);
+		else if(dataType.equals(FindPollCommand.class))
+			writeFindPollCommand((FindPollCommand) data);
+		
 		
 			// default type:
 		else
@@ -1177,5 +1183,16 @@ public class DataStreamManager {
 	
 	private LogoutAnswerWrapper readLogoutAnswerWrapper() throws IOException {
 		return new LogoutAnswerWrapper(readBoolean(), readString());
+	}
+	
+	private void writeFindPollCommand(FindPollCommand data) throws IOException {
+		writeString(data.getName());
+		writeString(data.getCreator());
+		writeBoolean(data.getActive());
+		writeBoolean(data.getExpired());
+	}
+	
+	private FindPollCommand readFindPollCommand() throws IOException {
+		return new FindPollCommand(readString(), readString(), readBoolean(), readBoolean());
 	}
 }
