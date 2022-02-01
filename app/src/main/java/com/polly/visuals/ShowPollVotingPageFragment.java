@@ -219,6 +219,7 @@ public class ShowPollVotingPageFragment extends Fragment implements OnMapReadyCa
         });
         return root;
     }
+
     public void showPoll(View root) {
         updatePieChart(pollOptions);
         updateListView(pollOptions);
@@ -257,6 +258,28 @@ public class ShowPollVotingPageFragment extends Fragment implements OnMapReadyCa
             @Override
             public void onItemClick(int position) {
                 showVoteButton(listOptions.get(position).getmText1());
+            }
+        });
+        pieChart.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View view) {
+                AlertDialog.Builder alert = new AlertDialog.Builder(getContext());
+                alert.setTitle("Polldescription");
+                alert.setMessage(pollOptions.getBasicPollInformation().getDescription().toString());
+                alert.setPositiveButton("OK", null);
+                alert.create().show();
+                return true;
+            }
+        });
+        mRecyclerView.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View view) {
+                AlertDialog.Builder alert = new AlertDialog.Builder(getContext());
+                alert.setTitle("Polldescription");
+                alert.setMessage(pollOptions.getBasicPollInformation().getDescription().toString());
+                alert.setPositiveButton("OK", null);
+                alert.create().show();
+                return true;
             }
         });
     }
@@ -329,7 +352,6 @@ public class ShowPollVotingPageFragment extends Fragment implements OnMapReadyCa
         return communicator;
     }
 
-
     private void updatePieChart(PollOptionsWrapper updatePoll) {
         pollOptions = updatePoll;
         ArrayList<PieEntry> options = new ArrayList<>();
@@ -356,6 +378,7 @@ public class ShowPollVotingPageFragment extends Fragment implements OnMapReadyCa
         pieChart.animate();
         pieChart.setVisibility(View.VISIBLE);
     }
+
     private void updateListView(PollOptionsWrapper updatePoll) {
         pollOptions = updatePoll;
         ArrayList<SearchListItem> options = new ArrayList<>();
@@ -616,7 +639,6 @@ public class ShowPollVotingPageFragment extends Fragment implements OnMapReadyCa
                 Toast.makeText(getContext(), "Something went wrong!", Toast.LENGTH_LONG).show();
         }
     }
-
 
     private void editPoll() {
         PollDescription newDescription = new PollDescription("");

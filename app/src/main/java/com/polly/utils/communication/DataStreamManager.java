@@ -43,6 +43,7 @@ import com.polly.utils.command.user.GetMyUsergroupsCommand;
 import com.polly.utils.command.user.GetUsernameCommand;
 import com.polly.utils.command.user.IsUsernameAvailableCommand;
 import com.polly.utils.command.user.LoginCommand;
+import com.polly.utils.command.user.LogoutCommand;
 import com.polly.utils.command.user.RegisterCommand;
 import com.polly.utils.encryption.ciphers.AESCipher;
 import com.polly.utils.encryption.ciphers.RSACipher;
@@ -216,6 +217,8 @@ public class DataStreamManager {
 			data = readEditPollNameCommand();
 		else if(dataType.equals(IsMyPollCommand.class))
 			data = readIsMyPollCommand();
+		else if(dataType.equals(LogoutCommand.class))
+			data = readLogoutCommand();
 		
 			
 			// default type:
@@ -425,6 +428,8 @@ public class DataStreamManager {
 			writeEditPollNameCommand((EditPollNameCommand) data);
 		else if(dataType.equals(IsMyPollCommand.class))
 			writeIsMyPollCommand((IsMyPollCommand) data);
+		else if(dataType.equals(LogoutCommand.class))
+			writeLogoutCommand((LogoutCommand) data);
 		
 		
 			// default type:
@@ -1114,5 +1119,13 @@ public class DataStreamManager {
 	
 	private IsMyPollCommand readIsMyPollCommand() throws IOException {
 		return new IsMyPollCommand(readLong());
+	}
+	
+	private void writeLogoutCommand(LogoutCommand data) throws IOException {
+		// nothing to do
+	}
+	
+	private LogoutCommand readLogoutCommand() throws IOException {
+		return new LogoutCommand();
 	}
 }
