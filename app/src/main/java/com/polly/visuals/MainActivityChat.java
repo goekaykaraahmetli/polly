@@ -87,7 +87,7 @@ public class MainActivityChat extends Fragment {
         room_name.setVisibility(View.GONE);
         listView = (ListView) view.findViewById(R.id.listView);
         FloatingActionButton myFab = (FloatingActionButton) view.findViewById(R.id.fab);
-
+        /*
         try {
             Message usernameMessage = communicator.sendWithResponse(Config.serverCommunicationId, new GetUsernameCommand());
             if(usernameMessage.getDataType().equals(String.class)) {
@@ -108,6 +108,11 @@ public class MainActivityChat extends Fragment {
         }
 
 
+*/
+
+
+        name = "MyUsername";
+        UserGroupSelect.myUsername = name;
 
 
         myFab.setOnClickListener(new View.OnClickListener() {
@@ -148,7 +153,7 @@ public class MainActivityChat extends Fragment {
 
                 while (i.hasNext()){
                     if(name==null)
-                        Toast.makeText(getActivity(), "You are not signed in", Toast.LENGTH_SHORT);
+                        Toast.makeText(getActivity(), "You are not signed in", Toast.LENGTH_SHORT).show();
                     else {
                         DataSnapshot next = (DataSnapshot) i.next();
                         if (next.child("Users").hasChild(name))
@@ -172,10 +177,9 @@ public class MainActivityChat extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
 
-                Intent intent = new Intent(getActivity(),Chat_Room.class);
-                intent.putExtra("room_name",((TextView)view).getText().toString() );
-                intent.putExtra("user_name",name);
-                startActivity(intent);
+                Chat_Room.room_name = ((TextView)view).getText().toString();
+                Chat_Room.user_name = name;
+                Navigation.findNavController(getActivity(), R.id.nav_host_fragment).navigate(R.id.chat_Room);
             }
         });
 

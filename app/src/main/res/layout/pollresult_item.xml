@@ -31,15 +31,14 @@
             android:textStyle="bold"
             android:layout_toEndOf="@+id/PollresultImage"/>
 
-        <ProgressBar
+        <com.google.android.material.progressindicator.CircularProgressIndicator
             android:id="@+id/progress_bar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
             android:layout_marginEnd="5dp"
-            android:indeterminateOnly="false"
-            android:progressDrawable="@drawable/circle"
-            tools:progress="72" />
+            app:trackColor="@color/green"
+            tools:progress="60"/>
 
         <TextView
             android:id="@+id/progress_bar_text"
@@ -51,6 +50,6 @@
             android:layout_alignBottom="@+id/progress_bar"
             android:gravity="center"
             android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-            tools:text="60%"/>
+            tools:text="60%" />
     </RelativeLayout>
 </com.google.android.material.card.MaterialCardView>

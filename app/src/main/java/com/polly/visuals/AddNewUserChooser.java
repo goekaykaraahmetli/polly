@@ -1,6 +1,6 @@
 package com.polly.visuals;
 
-import android.content.DialogInterface;
+
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -20,28 +20,36 @@ import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.polly.R;
 import com.polly.utils.SavingClass;
 import com.polly.utils.item.SearchListItemUser;
 import com.polly.utils.listadapter.ListAdapterUser;
 import com.polly.utils.user.UserManager;
-import com.polly.utils.wrapper.ErrorWrapper;
-import com.polly.utils.wrapper.Message;
 import com.polly.utils.wrapper.UserWrapper;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
-public class ObservingCandidates extends Fragment {
+public class AddNewUserChooser extends Fragment {
+    public static String userGroupName;
+    private DatabaseReference root = FirebaseDatabase.getInstance().getReference().getRoot();
     private RecyclerView mRecyclerView;
     private ListAdapterUser mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
     private boolean pressedSelected = false;
-    ArrayList<SearchListItemUser> exampleList = new ArrayList<>();
+    ArrayList<SearchListItemUser> exampleList;
     List<UserWrapper> list;
     public static String username;
 
+
+    public static String myUsername;
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater,
@@ -50,7 +58,7 @@ public class ObservingCandidates extends Fragment {
         super.onCreate(savedInstanceState);
         View root = inflater.inflate(R.layout.user_layout, container, false);
         setHasOptionsMenu(true);
-        SavingClass saving = new ViewModelProvider(getActivity()).get(SavingClass.class);
+        exampleList = new ArrayList<>();
 
         try {
             username = UserManager.getMyUsername();
@@ -63,33 +71,49 @@ public class ObservingCandidates extends Fragment {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        exampleList.add(new SearchListItemUser(R.drawable.ic_usergroup, "User 1", false));
+        exampleList.add(new SearchListItemUser(R.drawable.ic_usergroup, "User 2", false));
+        exampleList.add(new SearchListItemUser(R.drawable.ic_usergroup, "User 3", false));
+        exampleList.add(new SearchListItemUser(R.drawable.ic_usergroup, "User 4", false));
+        exampleList.add(new SearchListItemUser(R.drawable.ic_usergroup, "User 5", false));
+        exampleList.add(new SearchListItemUser(R.drawable.ic_usergroup, "User 6", false));
+        exampleList.add(new SearchListItemUser(R.drawable.ic_usergroup, "User 7", false));
+        exampleList.add(new SearchListItemUser(R.drawable.ic_usergroup, "User 8", false));
+        exampleList.add(new SearchListItemUser(R.drawable.ic_usergroup, "User 9", false));
+        exampleList.add(new SearchListItemUser(R.drawable.ic_usergroup, "User 10", false));
+        exampleList.add(new SearchListItemUser(R.drawable.ic_usergroup, "User 11", false));
+        exampleList.add(new SearchListItemUser(R.drawable.ic_usergroup, "User 12", false));
+        exampleList.add(new SearchListItemUser(R.drawable.ic_usergroup, "User 13", false));
+        exampleList.add(new SearchListItemUser(R.drawable.ic_usergroup, "User 14", false));
+        exampleList.add(new SearchListItemUser(R.drawable.ic_usergroup, "User 15", false));
+        exampleList.add(new SearchListItemUser(R.drawable.ic_usergroup, "User 16", false));
+        exampleList.add(new SearchListItemUser(R.drawable.ic_usergroup, "User 17", false));
+        exampleList.add(new SearchListItemUser(R.drawable.ic_usergroup, "Moritz Willimowski", false));
 
-        if(saving.getUserArrayObserving() == null && list != null) {
-            for(int i = 0; i< list.size(); i++) {
-                if(!list.get(i).equals(username))
-                    exampleList.add(new SearchListItemUser(R.drawable.ic_usergroup, list.get(i).getName(), false));
+        DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference();
+        rootRef.addListenerForSingleValueEvent(new ValueEventListener() {
+
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if(list != null) {
+                    for(int i = 0; i< list.size(); i++) {
+                        if(!list.get(i).getName().equals(username)) {
+                            if(!snapshot.hasChild(list.get(i).getName()))
+                                exampleList.add(new SearchListItemUser(R.drawable.ic_usergroup, list.get(i).getName(), false));
+                        }
+                    }
+
+                }
             }
-           /* exampleList.add(new SearchListItemUser(R.drawable.ic_usergroup, "User 1", false));
-            exampleList.add(new SearchListItemUser(R.drawable.ic_usergroup, "User 2", false));
-            exampleList.add(new SearchListItemUser(R.drawable.ic_usergroup, "User 3", false));
-            exampleList.add(new SearchListItemUser(R.drawable.ic_usergroup, "User 4", false));
-            exampleList.add(new SearchListItemUser(R.drawable.ic_usergroup, "User 5", false));
-            exampleList.add(new SearchListItemUser(R.drawable.ic_usergroup, "User 6", false));
-            exampleList.add(new SearchListItemUser(R.drawable.ic_usergroup, "User 7", false));
-            exampleList.add(new SearchListItemUser(R.drawable.ic_usergroup, "User 8", false));
-            exampleList.add(new SearchListItemUser(R.drawable.ic_usergroup, "User 9", false));
-            exampleList.add(new SearchListItemUser(R.drawable.ic_usergroup, "User 10", false));
-            exampleList.add(new SearchListItemUser(R.drawable.ic_usergroup, "User 11", false));
-            exampleList.add(new SearchListItemUser(R.drawable.ic_usergroup, "User 12", false));
-            exampleList.add(new SearchListItemUser(R.drawable.ic_usergroup, "User 13", false));
-            exampleList.add(new SearchListItemUser(R.drawable.ic_usergroup, "User 14", false));
-            exampleList.add(new SearchListItemUser(R.drawable.ic_usergroup, "User 15", false));
-            exampleList.add(new SearchListItemUser(R.drawable.ic_usergroup, "User 16", false));
-            exampleList.add(new SearchListItemUser(R.drawable.ic_usergroup, "User 17", false));
-            exampleList.add(new SearchListItemUser(R.drawable.ic_usergroup, "User 18", false));*/
-        }else{
-            exampleList = saving.getUserArrayObserving();
-        }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+
+
         mRecyclerView = root.findViewById(R.id.userRecyclerView);
         mRecyclerView.setHasFixedSize(true); //Performance
         mLayoutManager = new LinearLayoutManager(getContext());
@@ -124,7 +148,7 @@ public class ObservingCandidates extends Fragment {
             });
         }
 
-        root.findViewById(R.id.showSelected).setOnClickListener(new View.OnClickListener() {
+        root.findViewById(R.id.add_new_member_btn).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if(exampleList == null) return;
@@ -164,11 +188,11 @@ public class ObservingCandidates extends Fragment {
                             selectedList.notifyItemChanged(position);
                         }
                     });
-                    Button showSelected = (Button) root.findViewById(R.id.showSelected);
+                    Button showSelected = (Button) root.findViewById(R.id.add_new_member_btn);
                     showSelected.setText("show all");
                     pressedSelected = true;
                 }else{
-                    Button showSelected = (Button) root.findViewById(R.id.showSelected);
+                    Button showSelected = (Button) root.findViewById(R.id.add_new_member_btn);
                     showSelected.setText("show selected");
                     mRecyclerView.setAdapter(mAdapter);
                     pressedSelected = false;
@@ -176,21 +200,21 @@ public class ObservingCandidates extends Fragment {
 
             }
         });
-        root.findViewById(R.id.saveAndBackVoting).setOnClickListener(new View.OnClickListener() {
+        root.findViewById(R.id.delete_user_btn).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                List<String> canSeeAndVoteList = new ArrayList<>();
-                if(exampleList != null){
+                HashMap<String, Object> canVoteList = new HashMap<>();
+                if (exampleList != null){
                     for(int i = 0; i < exampleList.size(); i++){
                         if(exampleList.get(i).isCheckbox()){
-                            canSeeAndVoteList.add(exampleList.get(i).getmText1());
+                            canVoteList.put(exampleList.get(i).getmText1(), "");
                         }
                     }
-                    saving.setCanSeeAndVoteList(canSeeAndVoteList);
-                    saving.setUserArrayObserving(exampleList);
+                    //canVoteList.put(myUsername, "");
+                    FirebaseDatabase.getInstance().getReference(userGroupName).child("Users").updateChildren(canVoteList);
                 }
 
-                Navigation.findNavController(getActivity(), R.id.nav_host_fragment).navigate(R.id.polloptionFragment);
+                Navigation.findNavController(getActivity(), R.id.nav_host_fragment).navigate(R.id.mainActivityChat);
             }
         });
         return root;

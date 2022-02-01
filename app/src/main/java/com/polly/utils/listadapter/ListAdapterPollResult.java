@@ -49,7 +49,7 @@ public class ListAdapterPollResult extends RecyclerView.Adapter<ListAdapterPollR
         holder.mImageView.setImageResource(currentItem.getmImageResource());
         holder.mTextView1.setText(currentItem.getmText1());
         holder.mProgressBar.setProgress(currentItem.getProgress());
-        holder.mProgressText.setText(currentItem.getProgressText());
+        holder.mProgressText.setText(currentItem.getProgressText() + "%");
     }
 
     @Override
@@ -58,10 +58,9 @@ public class ListAdapterPollResult extends RecyclerView.Adapter<ListAdapterPollR
     }
 
     public static class ListViewHolder extends RecyclerView.ViewHolder{
-
         public ImageView mImageView;
         public TextView mTextView1;
-        public ProgressBar mProgressBar;
+        public com.google.android.material.progressindicator.CircularProgressIndicator mProgressBar;
         public TextView mProgressText;
         public ListViewHolder(@NonNull View itemView, OnItemClickListener listener) {
             super(itemView);

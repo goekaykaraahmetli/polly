@@ -137,4 +137,20 @@
         android:name="com.polly.visuals.MainActivityChat"
         android:label="activity_main23"
         tools:layout="@layout/activity_main_chat" />
+    <fragment
+        android:id="@+id/chat_Room"
+        android:name="com.polly.visuals.Chat_Room"
+        android:label="Chat_Room" />
+    <fragment
+        android:id="@+id/manageGroup"
+        android:name="com.polly.visuals.ManageGroup"
+        android:label="ManageGroup" />
+    <fragment
+        android:id="@+id/addNewUserChooser"
+        android:name="com.polly.visuals.AddNewUserChooser"
+        android:label="AddNewUserChooser" />
+    <fragment
+        android:id="@+id/pollSearch"
+        android:name="com.polly.visuals.PollSearch"
+        android:label="PollSearch" />
 </navigation>

@@ -1,5 +1,6 @@
 package com.polly.visuals;
 
+import android.media.Image;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -26,8 +27,10 @@ public class EnterpollFragment extends Fragment {
 
         ImageButton codeScannerButton = (ImageButton) root.findViewById(R.id.codeScannerButton);
         ImageButton enterViaCodeButton = (ImageButton) root.findViewById(R.id.enterViaCodeButton);
+        ImageButton searchPoll = (ImageButton) root.findViewById(R.id.searchPoll);
         enterViaCodeButton.setOnClickListener(mListener);
         codeScannerButton.setOnClickListener(mListener);
+        searchPoll.setOnClickListener(mListener);
 
          return root;
 
@@ -54,6 +57,9 @@ public class EnterpollFragment extends Fragment {
                     transaction1.replace(R.id.fragment_container, enterViaCodeFragment);
                     transaction1.addToBackStack(null);
                     transaction1.commit();*/
+                    break;
+                case R.id.searchPoll:
+                    Navigation.findNavController(getActivity(), R.id.nav_host_fragment).navigate(R.id.pollSearch);
                     break;
             }
         }

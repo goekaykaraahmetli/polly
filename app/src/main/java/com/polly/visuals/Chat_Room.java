@@ -1,13 +1,10 @@
 package com.polly.visuals;
 
-import android.graphics.PorterDuff;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 
-import android.util.TypedValue;
-import android.view.Gravity;
-import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -16,11 +13,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-import androidx.core.graphics.drawable.DrawableCompat;
+import androidx.fragment.app.Fragment;
+import androidx.navigation.Navigation;
 
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -36,7 +31,7 @@ import java.util.Iterator;
 import java.util.Map;
 
 
-public class Chat_Room  extends AppCompatActivity {
+public class Chat_Room  extends Fragment {
 
     private static ResponseCommunicator communicator = initialiseCommunicator();
     private static ResponseCommunicator initialiseCommunicator(){
@@ -58,35 +53,46 @@ public class Chat_Room  extends AppCompatActivity {
     private EditText input_msg;
     private LinearLayout linearLayout;
 
-    private String user_name,room_name;
+    public static String user_name,room_name;
     private DatabaseReference root ;
     private String temp_key;
 
+    private String chat_msg,chat_user_name;
+
+
+
+    @Nullable
     @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
-        setTheme(R.style.Theme_Polly);
+    public View onCreateView(LayoutInflater inflater,
+                             @Nullable ViewGroup container,
+                             @Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.chat_room);
-        btn_send_msg = (Button) findViewById(R.id.btn_send);
-        input_msg = (EditText) findViewById(R.id.msg_input);
-        linearLayout = (LinearLayout) findViewById(R.id.linearLayoutChat);
+        View view = inflater.inflate(R.layout.chat_room, container, false);
 
-        user_name = getIntent().getExtras().get("user_name").toString();
-        room_name = getIntent().getExtras().get("room_name").toString();
-        setTitle(" Room: "+room_name);
+        btn_send_msg = (Button) view.findViewById(R.id.btn_send);
+        input_msg = (EditText) view.findViewById(R.id.msg_input);
+        linearLayout = (LinearLayout) view.findViewById(R.id.linearLayoutChat);
 
-        Button manageButton = findViewById(R.id.btn_manage);
+
+
+        ManageGroup.currentRoom = room_name;
+        ManageGroup.myUsername = user_name;
+        getActivity().setTitle(" Room: "+room_name);
+
+        Button manageButton = view.findViewById(R.id.btn_manage);
         manageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                Navigation.findNavController(getActivity(), R.id.nav_host_fragment).navigate(R.id.manageGroup);
             }
         });
 
         root = FirebaseDatabase.getInstance().getReference().child(room_name).child("Messages");
+
+
         btn_send_msg.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
+            public void onClick(View v) {
 
                 Map<String,Object> map = new HashMap<String, Object>();
                 temp_key = root.push().getKey();
@@ -99,9 +105,9 @@ public class Chat_Room  extends AppCompatActivity {
                 if(input_msg.getText().toString().equals(""))
                     Toast.makeText(Organizer.getMainActivity(), "Please enter something", Toast.LENGTH_SHORT).show();
                 else{
-                message_root.updateChildren(map2);
-                input_msg.setText("");}
-                ScrollView scrollView = findViewById(R.id.scrollView);
+                    message_root.updateChildren(map2);
+                    input_msg.setText("");}
+                ScrollView scrollView = view.findViewById(R.id.scrollViewChatRoom);
                 scrollView.postDelayed(new Runnable() {
                     @Override
                     public void run() {
@@ -115,14 +121,42 @@ public class Chat_Room  extends AppCompatActivity {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
 
-                append_chat_conversation(dataSnapshot);
+                Iterator i = dataSnapshot.getChildren().iterator();
+                while (i.hasNext()){
+                    chat_msg = (String) ((DataSnapshot)i.next()).getValue();
+                    chat_user_name = (String) ((DataSnapshot)i.next()).getValue();
+                    TextView msg = new TextView(Organizer.getMainActivity());
+                    msg.setText(chat_user_name +" : "+chat_msg);
+                    if(chat_user_name.equals(user_name)) {
+                        msg.setBackground(Organizer.getMainActivity().getDrawable(R.drawable.send_green));
+                    }
+                    else
+                        msg.setBackground(Organizer.getMainActivity().getDrawable(R.drawable.receive));
+                    linearLayout.addView(msg);
+                }
+                ScrollView scrollView = view.findViewById(R.id.scrollViewChatRoom);
+                scrollView.fullScroll(View.FOCUS_DOWN);
 
             }
 
             @Override
             public void onChildChanged(DataSnapshot dataSnapshot, String s) {
 
-                append_chat_conversation(dataSnapshot);
+                Iterator i = dataSnapshot.getChildren().iterator();
+                while (i.hasNext()){
+                    chat_msg = (String) ((DataSnapshot)i.next()).getValue();
+                    chat_user_name = (String) ((DataSnapshot)i.next()).getValue();
+                    TextView msg = new TextView(getContext());
+                    msg.setText(chat_user_name +" : "+chat_msg);
+                    if(chat_user_name.equals(user_name)) {
+                        msg.setBackground(getActivity().getDrawable(R.drawable.send_green));
+                    }
+                    else
+                        msg.setBackground(getActivity().getDrawable(R.drawable.receive));
+                    linearLayout.addView(msg);
+                }
+                ScrollView scrollView = view.findViewById(R.id.scrollViewChatRoom);
+                scrollView.fullScroll(View.FOCUS_DOWN);
 
             }
 
@@ -142,33 +176,35 @@ public class Chat_Room  extends AppCompatActivity {
             }
         });
 
-        ScrollView scrollView = findViewById(R.id.scrollView);
+        ScrollView scrollView = view.findViewById(R.id.scrollViewChatRoom);
         scrollView.postDelayed(new Runnable() {
             @Override
             public void run() {
                 scrollView.fullScroll(View.FOCUS_DOWN);
             }
         }, 100);
+
+        return view;
     }
 
-    private String chat_msg,chat_user_name;
 
-    private void append_chat_conversation(DataSnapshot dataSnapshot) {
+
+    private void append_chat_conversation(DataSnapshot dataSnapshot, View view) {
 
         Iterator i = dataSnapshot.getChildren().iterator();
         while (i.hasNext()){
             chat_msg = (String) ((DataSnapshot)i.next()).getValue();
             chat_user_name = (String) ((DataSnapshot)i.next()).getValue();
-            TextView msg = new TextView(this);
+            TextView msg = new TextView(view.getContext());
             msg.setText(chat_user_name +" : "+chat_msg);
             if(chat_user_name.equals(user_name)) {
-                msg.setBackground(getDrawable(R.drawable.send_green));
+                msg.setBackground(getActivity().getDrawable(R.drawable.send_green));
             }
             else
-                msg.setBackground(getDrawable(R.drawable.receive));
+                msg.setBackground(getActivity().getDrawable(R.drawable.receive));
             linearLayout.addView(msg);
         }
-        ScrollView scrollView = findViewById(R.id.scrollView);
+        ScrollView scrollView = view.findViewById(R.id.scrollViewChatRoom);
         scrollView.fullScroll(View.FOCUS_DOWN);
     }
 }
