@@ -1,25 +1,20 @@
 package com.polly.utils;
 
-import android.app.IntentService;
-import android.content.Intent;
-
-import java.io.IOException;
-import java.security.KeyPair;
-import java.security.NoSuchAlgorithmException;
-import java.security.spec.InvalidKeySpecException;
-
 import com.google.firebase.auth.FirebaseAuth;
 import com.polly.config.Config;
 import com.polly.geofencing.Geofencing;
 import com.polly.utils.communication.SocketHandler;
-import com.polly.utils.communicator.CommunicatorManager;
-import com.polly.utils.communicator.DefaultCommunicator;
 import com.polly.utils.encryption.exceptions.FailedDecryptionException;
 import com.polly.utils.encryption.exceptions.FailedEncryptionException;
 import com.polly.utils.encryption.exceptions.FailedKeyGenerationException;
 import com.polly.utils.encryption.utils.CipherKeyGenerator;
 import com.polly.visuals.LoginFragment;
 import com.polly.visuals.MainActivity;
+
+import java.io.IOException;
+import java.security.KeyPair;
+import java.security.NoSuchAlgorithmException;
+import java.security.spec.InvalidKeySpecException;
 
 import javax.crypto.SecretKey;
 
