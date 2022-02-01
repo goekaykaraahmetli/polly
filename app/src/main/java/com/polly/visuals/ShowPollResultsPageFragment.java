@@ -238,6 +238,28 @@ public class ShowPollResultsPageFragment extends Fragment implements OnMapReadyC
             e.printStackTrace();
             Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
         }
+        pieChart.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View view) {
+                AlertDialog.Builder alert = new AlertDialog.Builder(getContext());
+                alert.setTitle("Polldescription");
+                alert.setMessage(pollResults.getBasicPollInformation().getDescription().toString());
+                alert.setPositiveButton("OK", null);
+                alert.create().show();
+                return true;
+            }
+        });
+        mRecyclerView.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View view) {
+                AlertDialog.Builder alert = new AlertDialog.Builder(getContext());
+                alert.setTitle("Polldescription");
+                alert.setMessage(pollResults.getBasicPollInformation().getDescription().toString());
+                alert.setPositiveButton("OK", null);
+                alert.create().show();
+                return true;
+            }
+        });
     }
 
     private Communicator initialiseCommunicator() {
@@ -262,7 +284,6 @@ public class ShowPollResultsPageFragment extends Fragment implements OnMapReadyC
         communicator.start();
         return communicator;
     }
-
 
     private void updatePieChart(PollResultsWrapper updatePoll) {
         createNotificationChannel();

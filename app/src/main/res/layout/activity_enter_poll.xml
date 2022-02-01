@@ -28,9 +28,8 @@
 
     <ImageButton
         android:id="@+id/searchPoll"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@mipmap/ic_searchpoll_foreground"
+        android:layout_width="0dp"
+        android:layout_height="150dp"
         app:layout_constraintBottom_toTopOf="@+id/enterViaCodeButton"
         app:layout_constraintEnd_toEndOf="@id/guideline12"
         app:layout_constraintHorizontal_bias="0.495"
