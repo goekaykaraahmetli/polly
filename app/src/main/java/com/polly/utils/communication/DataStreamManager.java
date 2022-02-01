@@ -79,17 +79,21 @@ public class DataStreamManager {
 	private SecretKey secretKeyComPartner;
 	private SecretKey secretKey;
 	private KeyPair keyPair;
+	private long partnersDefaultCommunicationId;
+	public static final long PARTNERS_DEFAULT_COMMUNICATION_ID = -1;
+	
 	private static final String CHARSET = "UTF-16";
 	private static final int SECRET_KEY_LENGTH = 256;
 	private static final int RSA_KEY_LENGTH = 2048;
 
-	public DataStreamManager(InputStream input, OutputStream output) throws FailedKeyGenerationException, IOException, InvalidKeySpecException, NoSuchAlgorithmException, FailedDecryptionException, FailedEncryptionException {
+	public DataStreamManager(InputStream input, OutputStream output, long defaultCommunicationId) throws FailedKeyGenerationException, IOException, InvalidKeySpecException, NoSuchAlgorithmException, FailedDecryptionException, FailedEncryptionException {
 		this.input = new DataInputStream(input);
 		this.output = new DataOutputStream(output);
 		this.secretKey = generateSecretKey();
 		this.keyPair = generateKeyPair();
 		this.publicKeyComPartner = exchangePublicKeys();
 		this.secretKeyComPartner = exchangeSecretKeys();
+		this.partnersDefaultCommunicationId = exchangeDefaultCommunicationIds(defaultCommunicationId);
 	}
 
 	public Message receive() throws IOException, ClassNotFoundException{
@@ -321,7 +325,12 @@ public class DataStreamManager {
 		Object data = message.getData();
 		List<Class<?>> generics = message.getGenerics();
 		writeLong(message.getSender());
-		writeLong(message.getReceiver());
+		
+		long receiver = message.getReceiver();
+		if(receiver == PARTNERS_DEFAULT_COMMUNICATION_ID)
+			receiver = partnersDefaultCommunicationId;
+		writeLong(receiver);
+		
 		writeLong(message.getResponseId());
 		writeString(message.getDataType().getName());
 
@@ -583,6 +592,11 @@ public class DataStreamManager {
 		}
 
 		return readSecretKeyComPartner();
+	}
+	
+	private long exchangeDefaultCommunicationIds(long defaultCommunicationId) throws IOException {
+		writeLong(defaultCommunicationId);
+		return readLong();
 	}
 
 	private SecretKey readSecretKeyComPartner() throws IOException, FailedDecryptionException {

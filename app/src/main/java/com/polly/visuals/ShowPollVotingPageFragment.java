@@ -82,6 +82,7 @@ import com.polly.utils.SavingClass;
 import com.polly.utils.ShowPollPage;
 import com.polly.utils.command.poll.RegisterPollChangeListenerCommand;
 import com.polly.utils.command.poll.RemovePollChangeListenerCommand;
+import com.polly.utils.communication.DataStreamManager;
 import com.polly.utils.communicator.Communicator;
 import com.polly.utils.item.SearchListItem;
 import com.polly.utils.listadapter.ListAdapter;
@@ -135,7 +136,7 @@ public class ShowPollVotingPageFragment extends Fragment implements OnMapReadyCa
         super.onDestroy();
         if (hasRunningPollChangeListener) {
             try {
-                communicator.send(Config.serverCommunicationId, new RemovePollChangeListenerCommand(id));
+                communicator.send(DataStreamManager.PARTNERS_DEFAULT_COMMUNICATION_ID, new RemovePollChangeListenerCommand(id));
                 hasRunningPollChangeListener = false;
             } catch (IOException e) {
                 e.printStackTrace();
@@ -234,7 +235,7 @@ public class ShowPollVotingPageFragment extends Fragment implements OnMapReadyCa
             }
         });
         try {
-            communicator.send(Config.serverCommunicationId, new RegisterPollChangeListenerCommand(pollOptions.getBasicPollInformation().getId(), false));
+            communicator.send(DataStreamManager.PARTNERS_DEFAULT_COMMUNICATION_ID, new RegisterPollChangeListenerCommand(pollOptions.getBasicPollInformation().getId(), false));
             hasRunningPollChangeListener = true;
         } catch (IOException e) {
             e.printStackTrace();
@@ -308,7 +309,7 @@ public class ShowPollVotingPageFragment extends Fragment implements OnMapReadyCa
 
                         // show poll-results:
                         if (voteSuccessful) {
-                            communicator.send(Config.serverCommunicationId, new RemovePollChangeListenerCommand(id));
+                            communicator.send(DataStreamManager.PARTNERS_DEFAULT_COMMUNICATION_ID, new RemovePollChangeListenerCommand(id));
                             ShowPollPage.showPollResultsPage(id);
                         } else {
                             Toast.makeText(getContext(), "voting for Poll failed. Please try again!", Toast.LENGTH_SHORT).show();

@@ -5,8 +5,6 @@ public class Config {
 	public static final int SERVER_PORT = 1337;
 	public static final int DATA_STREAM_MANAGER_REFRESH_DELAY = 20;
 
-	public static long serverCommunicationId;
-
 	private Config() {
 		super();
 	}
