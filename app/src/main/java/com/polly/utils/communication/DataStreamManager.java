@@ -57,6 +57,7 @@ import com.polly.utils.usergroup.UsergroupDescription;
 import com.polly.utils.wrapper.ErrorWrapper;
 import com.polly.utils.wrapper.ListWrapper;
 import com.polly.utils.wrapper.LoginAnswerWrapper;
+import com.polly.utils.wrapper.LogoutAnswerWrapper;
 import com.polly.utils.wrapper.MapWrapper;
 import com.polly.utils.wrapper.Message;
 import com.polly.utils.wrapper.PollListWrapper;
@@ -219,7 +220,8 @@ public class DataStreamManager {
 			data = readIsMyPollCommand();
 		else if(dataType.equals(LogoutCommand.class))
 			data = readLogoutCommand();
-		
+		else if(dataType.equals(LogoutAnswerWrapper.class))
+			data = readLogoutAnswerWrapper();
 			
 			// default type:
 		else
@@ -430,6 +432,8 @@ public class DataStreamManager {
 			writeIsMyPollCommand((IsMyPollCommand) data);
 		else if(dataType.equals(LogoutCommand.class))
 			writeLogoutCommand((LogoutCommand) data);
+		else if(dataType.equals(LogoutAnswerWrapper.class))
+			writeLogoutAnswerWrapper((LogoutAnswerWrapper) data);
 		
 		
 			// default type:
@@ -1127,5 +1131,14 @@ public class DataStreamManager {
 	
 	private LogoutCommand readLogoutCommand() throws IOException {
 		return new LogoutCommand();
+	}
+	
+	private void writeLogoutAnswerWrapper(LogoutAnswerWrapper data) throws IOException {
+		writeBoolean(data.isSuccessful());
+		writeString(data.getMessage());
+	}
+	
+	private LogoutAnswerWrapper readLogoutAnswerWrapper() throws IOException {
+		return new LogoutAnswerWrapper(readBoolean(), readString());
 	}
 }
