@@ -37,6 +37,7 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
@@ -87,7 +88,7 @@ public class MainActivityChat extends Fragment {
         room_name.setVisibility(View.GONE);
         listView = (ListView) view.findViewById(R.id.listView);
         FloatingActionButton myFab = (FloatingActionButton) view.findViewById(R.id.fab);
-        /*
+
         try {
             Message usernameMessage = communicator.sendWithResponse(Config.serverCommunicationId, new GetUsernameCommand());
             if(usernameMessage.getDataType().equals(String.class)) {
@@ -108,11 +109,9 @@ public class MainActivityChat extends Fragment {
         }
 
 
-*/
 
 
-        name = "MyUsername";
-        UserGroupSelect.myUsername = name;
+
 
 
         myFab.setOnClickListener(new View.OnClickListener() {

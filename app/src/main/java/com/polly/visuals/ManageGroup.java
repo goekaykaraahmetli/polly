@@ -31,6 +31,8 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.polly.R;
 import com.polly.utils.Organizer;
+import com.polly.utils.item.SearchListItemUser;
+import com.polly.utils.listadapter.ListAdapterUser;
 import com.polly.utils.wrapper.UserWrapper;
 
 import java.util.ArrayList;
@@ -190,6 +192,21 @@ public class ManageGroup extends Fragment {
 
                 }
 
+                Navigation.findNavController(getActivity(), R.id.nav_host_fragment).navigate(R.id.chat_Room);
+            }
+        });
+
+        root.findViewById(R.id.make_admin_btn).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (exampleList != null){
+                    for(int i = 0; i < exampleList.size(); i++){
+                        if(exampleList.get(i).isCheckbox()){
+                            FirebaseDatabase.getInstance().getReference(currentRoom).child("Users").child(exampleList.get(i).getmText1()).setValue("Admin");
+                        }
+                    }
+
+                }
                 Navigation.findNavController(getActivity(), R.id.nav_host_fragment).navigate(R.id.chat_Room);
             }
         });
