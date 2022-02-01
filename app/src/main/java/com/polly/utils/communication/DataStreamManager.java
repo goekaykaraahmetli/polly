@@ -61,6 +61,7 @@ import com.polly.utils.wrapper.LogoutAnswerWrapper;
 import com.polly.utils.wrapper.MapWrapper;
 import com.polly.utils.wrapper.Message;
 import com.polly.utils.wrapper.PollListWrapper;
+import com.polly.utils.wrapper.PollOptionListWrapper;
 import com.polly.utils.wrapper.PollOptionsWrapper;
 import com.polly.utils.wrapper.PollResultsWrapper;
 import com.polly.utils.wrapper.UserListWrapper;
@@ -226,6 +227,8 @@ public class DataStreamManager {
 			data = readLogoutCommand();
 		else if(dataType.equals(LogoutAnswerWrapper.class))
 			data = readLogoutAnswerWrapper();
+		else if(dataType.equals(PollOptionListWrapper.class))
+			data = readPollOptionListWrapper();
 			
 			// default type:
 		else
@@ -443,7 +446,8 @@ public class DataStreamManager {
 			writeLogoutCommand((LogoutCommand) data);
 		else if(dataType.equals(LogoutAnswerWrapper.class))
 			writeLogoutAnswerWrapper((LogoutAnswerWrapper) data);
-		
+		else if(dataType.equals(PollOptionListWrapper.class))
+			writePollOptionListWrapper((PollOptionListWrapper) data);
 		
 			// default type:
 		else
@@ -876,6 +880,24 @@ public class DataStreamManager {
 		return new PollResultsWrapper(map, readBasicPollInformation());
 	}
 	
+	private void writePollOptionListWrapper(PollOptionListWrapper data) throws IOException {
+		writeInteger(data.getList().size());
+		
+		for(PollOptionsWrapper wrapper : data.getList()) {
+			writePollOptionsWrapper(wrapper);
+		}
+	}
+	
+	private PollOptionListWrapper readPollOptionListWrapper() throws IOException {
+		List<PollOptionsWrapper> list = new LinkedList<>();
+		int length = readInteger();
+		
+		for(int i = 0;i<length;i++) {
+			list.add(readPollOptionsWrapper());
+		}
+		return new PollOptionListWrapper(list);
+	}
+	
 	private void writePollListWrapper(PollListWrapper data) throws IOException {
 		writeInteger(data.getList().size());
 		
@@ -885,7 +907,7 @@ public class DataStreamManager {
 	}
 	
 	private PollListWrapper readPollListWrapper() throws IOException {
-		List<PollResultsWrapper> list = new ArrayList<>();
+		List<PollResultsWrapper> list = new LinkedList<>();
 		int length = readInteger();
 		
 		for(int i = 0;i<length;i++) {
