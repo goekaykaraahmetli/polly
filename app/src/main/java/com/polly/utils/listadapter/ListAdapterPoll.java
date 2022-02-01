@@ -56,6 +56,7 @@ public class ListAdapterPoll extends RecyclerView.Adapter<ListAdapterPoll.ListVi
             notifyDataSetChanged();
         }
     };
+
     public interface OnItemClickListener{
         void onItemClick(int position);
     }
@@ -100,7 +101,7 @@ public class ListAdapterPoll extends RecyclerView.Adapter<ListAdapterPoll.ListVi
             super(itemView);
             mid = itemView.findViewById(R.id.PollID);
             mPollName = itemView.findViewById(R.id.PollInstance);
-            mPollName = itemView.findViewById(R.id.creatorName);
+            mCreator = itemView.findViewById(R.id.creatorName);
 
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override

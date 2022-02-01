@@ -3,12 +3,19 @@ package com.polly.visuals;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
 import android.widget.LinearLayout;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.widget.SearchView;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.components.Description;
@@ -19,6 +26,7 @@ import com.github.mikephil.charting.utils.ColorTemplate;
 import com.polly.R;
 import com.polly.utils.ShowPollPage;
 import com.polly.utils.exceptions.CanNotSeePollResultsException;
+import com.polly.utils.listadapter.ListAdapterPoll;
 import com.polly.utils.poll.PollManager;
 import com.polly.utils.wrapper.PollResultsWrapper;
 
@@ -28,6 +36,10 @@ import java.util.List;
 import java.util.Map;
 
 public class RecentFragment extends Fragment {
+    private RecyclerView mRecyclerView;
+    private ListAdapterPoll mAdapter;
+    private RecyclerView.LayoutManager mLayoutManager;
+    //private List<PollWrapper> pollItems;
 
     @Nullable
     @Override
@@ -127,5 +139,28 @@ public class RecentFragment extends Fragment {
         pieChart.setMinimumWidth(600);
         pieChart.setCenterTextSize(17f);
         return pieChart;
+    }
+    @Override
+    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.testmenu, menu);
+
+        MenuItem searchItem = menu.findItem(R.id.searchMenu);
+        SearchView searchView = (SearchView) searchItem.getActionView();
+
+        searchView.setImeOptions(EditorInfo.IME_ACTION_DONE);
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                if(mAdapter == null)return false;
+                mAdapter.getFilter().filter(newText);
+                return false;
+            }
+        });
     }
 }

@@ -1,17 +1,17 @@
 package com.polly.utils.item;
 
 public class PollItem {
-    private int id;
+    private long id;
     private String pollname;
     private String creator;
 
-    public PollItem(int id, String pollname, String creator){
+    public PollItem(long id, String pollname, String creator){
         this.id = id;
         this.pollname = pollname;
         this.creator = creator;
     }
 
-    public int getId() {
+    public long getId() {
         return id;
 
     }

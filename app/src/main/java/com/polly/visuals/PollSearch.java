@@ -9,11 +9,14 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
+import android.widget.CompoundButton;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.SearchView;
+import androidx.appcompat.widget.SwitchCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
@@ -22,9 +25,20 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.polly.R;
 import com.polly.utils.SavingClass;
+import com.polly.utils.ShowPollPage;
+import com.polly.utils.command.poll.FindPollCommand;
+import com.polly.utils.communication.DataStreamManager;
+import com.polly.utils.communicator.ResponseCommunicator;
+import com.polly.utils.item.PollItem;
 import com.polly.utils.item.SearchListItem;
 import com.polly.utils.listadapter.ListAdapter;
+import com.polly.utils.listadapter.ListAdapterPoll;
 import com.polly.utils.user.UserManager;
+import com.polly.utils.wrapper.ErrorWrapper;
+import com.polly.utils.wrapper.Message;
+import com.polly.utils.wrapper.PollOptionListWrapper;
+import com.polly.utils.command.poll.FindPollCommand;
+import com.polly.utils.wrapper.PollOptionsWrapper;
 import com.polly.utils.wrapper.UsergroupWrapper;
 
 import java.io.IOException;
@@ -33,9 +47,22 @@ import java.util.List;
 
 public class PollSearch extends Fragment {
     private RecyclerView mRecyclerView;
-    private ListAdapter mAdapter;
+    private ListAdapterPoll mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
-    private List<UsergroupWrapper> usergroups;
+    private List<PollOptionsWrapper> pollItems;
+    private static ResponseCommunicator communicator = initialiseCommunicator();
+
+    private static ResponseCommunicator initialiseCommunicator(){
+        return new ResponseCommunicator() {
+            @Override
+            public void handleInput(Message message) {
+                System.out.println("PollSearchFragment received message from " + message.getSender() + " with responseId " + message.getResponseId());
+                System.out.println("from type: " + message.getDataType().getName());
+
+            }
+        };
+    }
+
 
     @Nullable
     @Override
@@ -43,64 +70,50 @@ public class PollSearch extends Fragment {
                              @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        View root = inflater.inflate(R.layout.usergroup_layout, container, false);
+        View root = inflater.inflate(R.layout.poll_layout, container, false);
         setHasOptionsMenu(true);
         SavingClass saving = new ViewModelProvider(getActivity()).get(SavingClass.class);
         try {
-            usergroups = UserManager.getMyUsergroups();
+            Message message = communicator.sendWithResponse(DataStreamManager.PARTNERS_DEFAULT_COMMUNICATION_ID, new FindPollCommand("", "", true, true));
+            if(message.getDataType().equals(PollOptionListWrapper.class)){
+                pollItems = ((PollOptionListWrapper) message.getData()).getList();
+            }else if(message.getDataType().equals(ErrorWrapper.class)){
+                Toast.makeText(getActivity(), ((ErrorWrapper) message.getData()).getMessage(), Toast.LENGTH_SHORT).show();
+            }else{
+                Toast.makeText(getActivity(), "Something went wrong", Toast.LENGTH_SHORT).show();
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }
 
-
-        ArrayList<SearchListItem> exampleList = new ArrayList<>();
-        if(usergroups != null){
-            for(int i = 0; i< usergroups.size() ; i ++){
-                exampleList.add(new SearchListItem(R.drawable.ic_usergroup, usergroups.get(0).getName()));
+        ArrayList<PollItem> exampleList = new ArrayList<>();
+        if(pollItems != null){
+            for(int i = 0; i< pollItems.size() ; i ++){
+                System.out.println(pollItems.get(i).getBasicPollInformation().getName());
+                exampleList.add(new PollItem(pollItems.get(i).getBasicPollInformation().getId(), pollItems.get(i).getBasicPollInformation().getName(), pollItems.get(i).getBasicPollInformation().getCreator()));
             }
         }
 
-/**        exampleList.add(new SearchListItem(R.drawable.ic_usergroup, "Usergroup 1"));
- exampleList.add(new SearchListItem(R.drawable.ic_usergroup, "Usergroup 2"));
- exampleList.add(new SearchListItem(R.drawable.ic_usergroup, "Usergroup 3"));
- exampleList.add(new SearchListItem(R.drawable.ic_usergroup, "Usergroup 4"));
- exampleList.add(new SearchListItem(R.drawable.ic_usergroup, "Usergroup 5"));
- exampleList.add(new SearchListItem(R.drawable.ic_usergroup, "Usergroup 6"));
- exampleList.add(new SearchListItem(R.drawable.ic_usergroup, "Usergroup 7"));
- exampleList.add(new SearchListItem(R.drawable.ic_usergroup, "Usergroup 8"));
- exampleList.add(new SearchListItem(R.drawable.ic_usergroup, "Usergroup 9"));
- exampleList.add(new SearchListItem(R.drawable.ic_usergroup, "Usergroup 10"));
- exampleList.add(new SearchListItem(R.drawable.ic_usergroup, "Usergroup 11"));
- exampleList.add(new SearchListItem(R.drawable.ic_usergroup, "Usergroup 12"));
- exampleList.add(new SearchListItem(R.drawable.ic_usergroup, "Usergroup 13"));
- exampleList.add(new SearchListItem(R.drawable.ic_usergroup, "Usergroup 14"));
- exampleList.add(new SearchListItem(R.drawable.ic_usergroup, "Usergroup 15"));
- exampleList.add(new SearchListItem(R.drawable.ic_usergroup, "Usergroup 16"));
- exampleList.add(new SearchListItem(R.drawable.ic_usergroup, "Usergroup 17"));
- exampleList.add(new SearchListItem(R.drawable.ic_usergroup, "Usergroup 18")); **/
 
-
-        mRecyclerView = root.findViewById(R.id.usergroupRecyclerView);
+        mRecyclerView = root.findViewById(R.id.PollRecyclerView);
         mRecyclerView.setHasFixedSize(true); //Performance
         mLayoutManager = new LinearLayoutManager(getContext());
-        mAdapter = new ListAdapter(exampleList);
+        mAdapter = new ListAdapterPoll(exampleList);
 
         mRecyclerView.setLayoutManager(mLayoutManager);
         mRecyclerView.setAdapter(mAdapter);
 
 
-        mAdapter.setOnItemClickListener(new ListAdapter.OnItemClickListener() {
+        mAdapter.setOnItemClickListener(new ListAdapterPoll.OnItemClickListener() {
             @Override
             public void onItemClick(int position) {
                 AlertDialog.Builder alert = new AlertDialog.Builder(getContext());
-                alert.setTitle("Confirm Usergroup");
-                alert.setMessage("Choose " + exampleList.get(position).getmText1() + "?");
+                alert.setTitle("Go to Poll");
+                alert.setMessage("Choose " + exampleList.get(position).getPollname() + "?");
                 alert.setPositiveButton("YES", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        saving.setUserGroupId(usergroups.get(position).getId());
-                        saving.setUsergroupName(exampleList.get(position).getmText1());
-                        Navigation.findNavController(getActivity(), R.id.nav_host_fragment).navigate(R.id.polloptionFragment);
+                        ShowPollPage.enterPoll(getContext(), exampleList.get(position).getId());
                     }
                 });
                 alert.setNegativeButton("NO", new DialogInterface.OnClickListener() {
@@ -112,6 +125,80 @@ public class PollSearch extends Fragment {
                 alert.create().show();
             }
         });
+
+        ((SwitchCompat) root.findViewById(R.id.isActivePoll)).setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
+                if(isChecked){
+                    try {
+                        SwitchCompat isExpired = root.findViewById(R.id.isExpiredPoll);
+                        Message message = communicator.sendWithResponse(DataStreamManager.PARTNERS_DEFAULT_COMMUNICATION_ID, new FindPollCommand("", "", true, isExpired.isChecked()));
+                        if(message.getDataType().equals(PollOptionListWrapper.class)){
+                            pollItems = ((PollOptionListWrapper) message.getData()).getList();
+                            mAdapter.notifyDataSetChanged();
+                        }else if(message.getDataType().equals(ErrorWrapper.class)){
+                            Toast.makeText(getActivity(), ((ErrorWrapper) message.getData()).getMessage(), Toast.LENGTH_SHORT).show();
+                        }else{
+                            Toast.makeText(getActivity(), "Something went wrong", Toast.LENGTH_SHORT).show();
+                        }
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }else{
+                    try {
+                        SwitchCompat isExpired = root.findViewById(R.id.isExpiredPoll);
+                        Message message = communicator.sendWithResponse(DataStreamManager.PARTNERS_DEFAULT_COMMUNICATION_ID, new FindPollCommand("", "", false, isExpired.isChecked()));
+                        if(message.getDataType().equals(PollOptionListWrapper.class)){
+                            pollItems = ((PollOptionListWrapper) message.getData()).getList();
+                            mAdapter.notifyDataSetChanged();
+                        }else if(message.getDataType().equals(ErrorWrapper.class)){
+                            Toast.makeText(getActivity(), ((ErrorWrapper) message.getData()).getMessage(), Toast.LENGTH_SHORT).show();
+                        }else{
+                            Toast.makeText(getActivity(), "Something went wrong", Toast.LENGTH_SHORT).show();
+                        }
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        });
+
+        ((SwitchCompat) root.findViewById(R.id.isExpiredPoll)).setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
+                if(isChecked){
+                    try {
+                        SwitchCompat isActive = root.findViewById(R.id.isActivePoll);
+                        Message message = communicator.sendWithResponse(DataStreamManager.PARTNERS_DEFAULT_COMMUNICATION_ID, new FindPollCommand("", "", isActive.isChecked(), true));
+                        if(message.getDataType().equals(PollOptionListWrapper.class)){
+                            pollItems = ((PollOptionListWrapper) message.getData()).getList();
+                            mAdapter.notifyDataSetChanged();
+                        }else if(message.getDataType().equals(ErrorWrapper.class)){
+                            Toast.makeText(getActivity(), ((ErrorWrapper) message.getData()).getMessage(), Toast.LENGTH_SHORT).show();
+                        }else{
+                            Toast.makeText(getActivity(), "Something went wrong", Toast.LENGTH_SHORT).show();
+                        }
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }else{
+                    try {
+                        SwitchCompat isActive = root.findViewById(R.id.isActivePoll);
+                        Message message = communicator.sendWithResponse(DataStreamManager.PARTNERS_DEFAULT_COMMUNICATION_ID, new FindPollCommand("", "", isActive.isChecked(), false));
+                        if(message.getDataType().equals(PollOptionListWrapper.class)){
+                            pollItems = ((PollOptionListWrapper) message.getData()).getList();
+                            mAdapter.notifyDataSetChanged();
+                        }else if(message.getDataType().equals(ErrorWrapper.class)){
+                            Toast.makeText(getActivity(), ((ErrorWrapper) message.getData()).getMessage(), Toast.LENGTH_SHORT).show();
+                        }else{
+                            Toast.makeText(getActivity(), "Something went wrong", Toast.LENGTH_SHORT).show();
+                        }
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        });
         return root;
     }
 
@@ -121,9 +208,8 @@ public class PollSearch extends Fragment {
         super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.testmenu, menu);
 
-        MenuItem searchItem = menu.findItem(R.id.searchMenu);
-        SearchView searchView = (SearchView) searchItem.getActionView();
-
+        MenuItem menuItem = menu.findItem(R.id.searchMenu);
+        SearchView searchView = (SearchView) menuItem.getActionView();
         searchView.setImeOptions(EditorInfo.IME_ACTION_DONE);
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
