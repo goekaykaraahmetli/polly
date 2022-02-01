@@ -242,9 +242,10 @@ public class LoginFragment extends Fragment {
         alert.setPositiveButton("Enter", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                if (usernameInput.getText().toString() == "")
+                if (usernameInput.getText().toString().equals("")) {
                     Toast.makeText(Organizer.getMainActivity(), "Please enter at least one character", Toast.LENGTH_SHORT).show();
-                else {
+                    chooseUsernameAlert(idToken);
+                } else {
                     IsUsernameAvailableCommand com = new IsUsernameAvailableCommand(usernameInput.getText().toString());
                     try {
                         Message booleanMessage = communicator.sendWithResponse(DataStreamManager.PARTNERS_DEFAULT_COMMUNICATION_ID, com);
@@ -257,12 +258,16 @@ public class LoginFragment extends Fragment {
 
                                     if (answer.isSuccessful())
                                         Navigation.findNavController(Organizer.getMainActivity(), R.id.nav_host_fragment).navigate(R.id.accountFragment);
-                                    else
+                                    else {
                                         Toast.makeText(Organizer.getMainActivity(), "Something went wrong, please try again", Toast.LENGTH_SHORT).show();
+                                        chooseUsernameAlert(idToken);
+                                    }
                                 } else if (message.getDataType() == ErrorWrapper.class) {
                                     Toast.makeText(Organizer.getMainActivity(), ((ErrorWrapper) message.getData()).getMessage(), Toast.LENGTH_SHORT).show();
+                                    chooseUsernameAlert(idToken);
                                 } else {
                                     Toast.makeText(Organizer.getMainActivity(), "Something went wrong, please try again", Toast.LENGTH_SHORT).show();
+                                    chooseUsernameAlert(idToken);
                                 }
                             } else {
                                 Toast.makeText(Organizer.getMainActivity(), "This username already exists", Toast.LENGTH_SHORT).show();
@@ -270,17 +275,18 @@ public class LoginFragment extends Fragment {
                             }
                         } else if (booleanMessage.getDataType() == ErrorWrapper.class) {
                             Toast.makeText(Organizer.getMainActivity(), ((ErrorWrapper) booleanMessage.getData()).getMessage(), Toast.LENGTH_SHORT).show();
+                            chooseUsernameAlert(idToken);
                         } else {
                             Toast.makeText(Organizer.getMainActivity(), "Something went wrong, please try again", Toast.LENGTH_SHORT).show();
+                            chooseUsernameAlert(idToken);
                         }
-
-
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
                 }
             }
         });
+        alert.setCancelable(false);
         alert.show();
     }
 
