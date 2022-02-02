@@ -149,4 +149,8 @@
         android:id="@+id/pollSearch"
         android:name="com.polly.visuals.PollSearch"
         android:label="PollSearch" />
+    <fragment
+        android:id="@+id/createPollUsergroup"
+        android:name="com.polly.visuals.CreatePollUsergroup"
+        android:label="CreatePollUsergroup" />
 </navigation>
