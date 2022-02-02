@@ -21,6 +21,7 @@ import java.util.Map.Entry;
 import java.util.TreeMap;
 
 import com.polly.config.Config;
+import com.polly.geofencing.GeofenceEntry;
 import com.polly.utils.Area;
 import com.polly.utils.Location;
 import com.polly.utils.command.GetMyPollsCommand;
@@ -50,7 +51,6 @@ import com.polly.utils.encryption.exceptions.FailedDecryptionException;
 import com.polly.utils.encryption.exceptions.FailedEncryptionException;
 import com.polly.utils.encryption.exceptions.FailedKeyGenerationException;
 import com.polly.utils.encryption.utils.CipherKeyGenerator;
-import com.polly.utils.geofencing.GeofenceEntry;
 import com.polly.utils.poll.BasicPollInformation;
 import com.polly.utils.poll.PollDescription;
 import com.polly.utils.wrapper.ErrorWrapper;

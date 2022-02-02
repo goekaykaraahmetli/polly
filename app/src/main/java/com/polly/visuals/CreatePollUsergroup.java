@@ -100,7 +100,6 @@ public class CreatePollUsergroup extends Fragment {
 
         TextInputLayout datePicker = (TextInputLayout) root.findViewById(R.id.DateLayout);
         TextInputLayout geofence = (TextInputLayout) root.findViewById(R.id.geofencingLayout);
-        TextInputLayout userGroup = (TextInputLayout) root.findViewById(R.id.usergroupLayout);
         TextInputLayout votingCandidates = (TextInputLayout) root.findViewById(R.id.votingCandidatesLayout);
         TextInputLayout oberserveCandidates = (TextInputLayout) root.findViewById(R.id.observingCandidatesLayout);
         TextInputLayout pollyRoom = (TextInputLayout) root.findViewById(R.id.PollRoomLayout);
@@ -110,7 +109,6 @@ public class CreatePollUsergroup extends Fragment {
         dropDownMenu.setVisibility(View.INVISIBLE);
         root.findViewById(R.id.VisibiltyLayout).setVisibility(View.INVISIBLE);
         geofence.setVisibility(View.GONE);
-        userGroup.setVisibility(View.GONE);
         votingCandidates.setVisibility(View.GONE);
         oberserveCandidates.setVisibility(View.GONE);
         pollyRoom.setVisibility(View.GONE);
@@ -190,7 +188,7 @@ public class CreatePollUsergroup extends Fragment {
 
 
                 DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference().child(userGroupName);
-                rootRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                rootRef.addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
 
@@ -198,13 +196,12 @@ public class CreatePollUsergroup extends Fragment {
                         List<String> canVoteList = new ArrayList<>();
                         while (iter.hasNext()) {
                             canVoteList.add((String) ((DataSnapshot) iter.next()).getValue());
-
                         }
 
 
 
                         saving.setCanVoteList(canVoteList);
-                        //saving.setUserArrayVoting(exampleList);
+                        saving.setCanSeeAndVoteList(canVoteList);
 
 
                     }
