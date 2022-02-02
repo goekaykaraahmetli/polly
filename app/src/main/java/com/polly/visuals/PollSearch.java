@@ -19,7 +19,6 @@ import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.SwitchCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -30,16 +29,11 @@ import com.polly.utils.command.poll.FindPollCommand;
 import com.polly.utils.communication.DataStreamManager;
 import com.polly.utils.communicator.ResponseCommunicator;
 import com.polly.utils.item.PollItem;
-import com.polly.utils.item.SearchListItem;
-import com.polly.utils.listadapter.ListAdapter;
 import com.polly.utils.listadapter.ListAdapterPoll;
-import com.polly.utils.user.UserManager;
 import com.polly.utils.wrapper.ErrorWrapper;
 import com.polly.utils.wrapper.Message;
 import com.polly.utils.wrapper.PollOptionListWrapper;
-import com.polly.utils.command.poll.FindPollCommand;
 import com.polly.utils.wrapper.PollOptionsWrapper;
-import com.polly.utils.wrapper.UsergroupWrapper;
 
 import java.io.IOException;
 import java.util.ArrayList;

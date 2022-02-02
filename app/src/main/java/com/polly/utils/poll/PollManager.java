@@ -20,7 +20,6 @@ import com.polly.utils.wrapper.PollOptionsWrapper;
 import com.polly.utils.wrapper.PollResultsWrapper;
 import com.polly.utils.command.poll.create.CreateCustomPollCommand;
 import com.polly.utils.command.poll.create.CreateGeofencePollCommand;
-import com.polly.utils.command.poll.create.CreatePrivatePollCommand;
 import com.polly.utils.command.poll.create.CreatePublicPollCommand;
 import com.polly.utils.communicator.ResponseCommunicator;
 
@@ -76,15 +75,6 @@ public class PollManager {
 
     public static long createCustomPoll(String name, PollDescription description, LocalDateTime expirationTime, List<String> options, List<String> canSee, List<String> canSeeResults) throws IOException {
         Message response = communicator.sendWithResponse(DataStreamManager.PARTNERS_DEFAULT_COMMUNICATION_ID, new CreateCustomPollCommand(name, description, expirationTime, options, canSee, canSeeResults));
-        if(response.getDataType() == Long.class)
-            return (long) response.getData();
-        if(response.getDataType() == ErrorWrapper.class)
-            throw new IOException(((ErrorWrapper) response.getData()).getMessage());
-        throw new IOException("Something went wrong!");
-    }
-
-    public static long createPrivatePoll(String name, PollDescription description, LocalDateTime expirationTime, List<String> options, long usergroup) throws IOException {
-        Message response = communicator.sendWithResponse(DataStreamManager.PARTNERS_DEFAULT_COMMUNICATION_ID, new CreatePrivatePollCommand(name, description, expirationTime, options, usergroup));
         if(response.getDataType() == Long.class)
             return (long) response.getData();
         if(response.getDataType() == ErrorWrapper.class)

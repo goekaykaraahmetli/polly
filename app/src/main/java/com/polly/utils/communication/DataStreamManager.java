@@ -37,10 +37,8 @@ import com.polly.utils.command.poll.RemovePollChangeListenerCommand;
 import com.polly.utils.command.poll.VoteCommand;
 import com.polly.utils.command.poll.create.CreateCustomPollCommand;
 import com.polly.utils.command.poll.create.CreateGeofencePollCommand;
-import com.polly.utils.command.poll.create.CreatePrivatePollCommand;
 import com.polly.utils.command.poll.create.CreatePublicPollCommand;
 import com.polly.utils.command.user.FindUsersCommand;
-import com.polly.utils.command.user.GetMyUsergroupsCommand;
 import com.polly.utils.command.user.GetUsernameCommand;
 import com.polly.utils.command.user.IsUsernameAvailableCommand;
 import com.polly.utils.command.user.LoginCommand;
@@ -54,7 +52,6 @@ import com.polly.utils.encryption.exceptions.FailedKeyGenerationException;
 import com.polly.utils.encryption.utils.CipherKeyGenerator;
 import com.polly.utils.poll.BasicPollInformation;
 import com.polly.utils.poll.PollDescription;
-import com.polly.utils.usergroup.UsergroupDescription;
 import com.polly.utils.wrapper.ErrorWrapper;
 import com.polly.utils.wrapper.ListWrapper;
 import com.polly.utils.wrapper.LoginAnswerWrapper;
@@ -67,8 +64,6 @@ import com.polly.utils.wrapper.PollOptionsWrapper;
 import com.polly.utils.wrapper.PollResultsWrapper;
 import com.polly.utils.wrapper.UserListWrapper;
 import com.polly.utils.wrapper.UserWrapper;
-import com.polly.utils.wrapper.UsergroupListWrapper;
-import com.polly.utils.wrapper.UsergroupWrapper;
 
 import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
@@ -162,16 +157,12 @@ public class DataStreamManager {
 			data = readIsUsernameAvailableCommand();
 		else if(dataType.equals(LoginCommand.class))
 			data = readLoginCommand();
-		else if(dataType.equals(GetMyUsergroupsCommand.class))
-			data = readGetMyUsergroupsCommand();
 		else if(dataType.equals(RegisterCommand.class))
 			data = readRegisterCommand();
 		else if(dataType.equals(GetMyPollsCommand.class))
 			data = readGetMyPollsCommand();
 		else if(dataType.equals(GetParticipatedPollsCommand.class))
 			data = readGetParticipatedPollsCommand();
-		else if(dataType.equals(UsergroupDescription.class))
-			data = readUsergroupDescription();
 		else if(dataType.equals(PollDescription.class))
 			data = readPollDescription();
 		else if(dataType.equals(ErrorWrapper.class))
@@ -200,16 +191,10 @@ public class DataStreamManager {
 			data = readPollResultsWrapper();
 		else if(dataType.equals(PollListWrapper.class))
 			data = readPollListWrapper();
-		else if(dataType.equals(UsergroupWrapper.class))
-			data = readUsergroupWrapper();
-		else if(dataType.equals(UsergroupListWrapper.class))
-			data = readUsergroupListWrapper();
 		else if(dataType.equals(CreatePublicPollCommand.class))
 			data = readCreatePublicPollCommand();
 		else if(dataType.equals(CreateGeofencePollCommand.class))
 			data = readCreateGeofencePollCommand();
-		else if(dataType.equals(CreatePrivatePollCommand.class))
-			data = readCreatePrivatePollCommand();
 		else if(dataType.equals(CreateCustomPollCommand.class))
 			data = readCreateCustomPollCommand();
 		else if(dataType.equals(GetUsernameCommand.class))
@@ -383,16 +368,12 @@ public class DataStreamManager {
 			writeIsUsernameAvailableCommand((IsUsernameAvailableCommand) data);
 		else if(dataType.equals(LoginCommand.class))
 			writeLoginCommand((LoginCommand) data);
-		else if(dataType.equals(GetMyUsergroupsCommand.class))
-			writeGetMyUsergroupsCommand((GetMyUsergroupsCommand) data);
 		else if(dataType.equals(RegisterCommand.class))
 			writeRegisterCommand((RegisterCommand) data);
 		else if(dataType.equals(GetMyPollsCommand.class))
 			writeGetMyPollsCommand((GetMyPollsCommand) data);
 		else if(dataType.equals(GetParticipatedPollsCommand.class))
 			writeGetParticipatedPollsCommand((GetParticipatedPollsCommand) data);
-		else if(dataType.equals(UsergroupDescription.class))
-			writeUsergroupDescription((UsergroupDescription) data);
 		else if(dataType.equals(PollDescription.class))
 			writePollDescription((PollDescription) data);
 		else if(dataType.equals(ErrorWrapper.class))
@@ -421,18 +402,11 @@ public class DataStreamManager {
 			writePollResultsWrapper((PollResultsWrapper) data);
 		else if(dataType.equals(PollListWrapper.class))
 			writePollListWrapper((PollListWrapper) data);
-		else if(dataType.equals(UsergroupWrapper.class))
-			writeUsergroupWrapper((UsergroupWrapper) data);
-		else if(dataType.equals(UsergroupListWrapper.class))
-			writeUsergroupListWrapper((UsergroupListWrapper) data);
+
 		else if(dataType.equals(CreatePublicPollCommand.class))
 			writeCreatePublicPollCommand((CreatePublicPollCommand) data);
 		else if(dataType.equals(CreateGeofencePollCommand.class))
 			writeCreateGeofencePollCommand((CreateGeofencePollCommand) data);
-		else if(dataType.equals(CreatePrivatePollCommand.class))
-			writeCreatePrivatePollCommand((CreatePrivatePollCommand) data);
-		else if(dataType.equals(CreateCustomPollCommand.class))
-			writeCreateCustomPollCommand((CreateCustomPollCommand) data);
 		else if(dataType.equals(GetUsernameCommand.class))
 			writeGetUsernameCommand((GetUsernameCommand) data);
 		else if(dataType.equals(Location.class))
@@ -695,14 +669,6 @@ public class DataStreamManager {
 		return new LoginCommand(readString());
 	}
 	
-	private void writeGetMyUsergroupsCommand(GetMyUsergroupsCommand data) throws IOException {
-		// nothing to do
-	}
-	
-	private GetMyUsergroupsCommand readGetMyUsergroupsCommand() throws IOException {
-		return new GetMyUsergroupsCommand();
-	}
-	
 	private void writeRegisterCommand(RegisterCommand data) throws IOException {
 		writeString(data.getIdToken());
 		writeString(data.getName());
@@ -726,14 +692,6 @@ public class DataStreamManager {
 	
 	private GetParticipatedPollsCommand readGetParticipatedPollsCommand() throws IOException {
 		return new GetParticipatedPollsCommand();
-	}
-	
-	private void writeUsergroupDescription(UsergroupDescription data) throws IOException {
-		writeString(data.getDescription());
-	}
-	
-	private UsergroupDescription readUsergroupDescription() throws IOException {
-		return new UsergroupDescription(readString());
 	}
 	
 	private void writePollDescription(PollDescription data) throws IOException {
@@ -921,79 +879,7 @@ public class DataStreamManager {
 		}
 		return new PollListWrapper(list);
 	}
-	
-	private void writeUsergroupWrapper(UsergroupWrapper data) throws IOException {
-		writeLong(data.getId());
-		writeString(data.getName());
-		
-		// write members
-		writeInteger(data.getMembers().size());
-		for(UserWrapper wrapper : data.getMembers()) {
-			writeUserWrapper(wrapper);
-		}
-		
-		// write admins
-		writeInteger(data.getAdmins().size());
-		for(UserWrapper wrapper : data.getAdmins()) {
-			writeUserWrapper(wrapper);
-		}
-		
-		// write description
-		writeUsergroupDescription(data.getDescription());
-		
-		// write polls
-		writeInteger(data.getPolls().size());
-		for(BasicPollInformation basicInfo : data.getPolls()) {
-			writeBasicPollInformation(basicInfo);
-		}
-		
-	}
-	
-	private UsergroupWrapper readUsergroupWrapper() throws IOException {
-		long id = readLong();
-		String name = readString();
-		
-		List<UserWrapper> members = new ArrayList<>();
-		int membersLength = readInteger();
-		for(int i = 0;i<membersLength;i++) {
-			members.add(readUserWrapper());
-		}
-		
-		List<UserWrapper> admins = new ArrayList<>();
-		int adminsLength = readInteger();
-		for(int i = 0;i<adminsLength;i++) {
-			admins.add(readUserWrapper());
-		}
-		
-		UsergroupDescription description = readUsergroupDescription();
-		
-		List<BasicPollInformation> polls = new ArrayList<>();
-		int pollInfolength = readInteger();
-		for(int i = 0;i<pollInfolength;i++) {
-			polls.add(readBasicPollInformation());
-		}
-		
-		return new UsergroupWrapper(id, name, members, admins, description, polls);
-	}
-	
-	private void writeUsergroupListWrapper(UsergroupListWrapper data) throws IOException {
-		writeInteger(data.getUsergroupList().size());
-		
-		for(UsergroupWrapper wrapper : data.getUsergroupList()) {
-			writeUsergroupWrapper(wrapper);
-		}
-	}
-	
-	private UsergroupListWrapper readUsergroupListWrapper() throws IOException {
-		List<UsergroupWrapper> list = new ArrayList<>();
-		
-		int length = readInteger();
-		
-		for(int i = 0;i<length;i++) {
-			list.add(readUsergroupWrapper());
-		}
-		return new UsergroupListWrapper(list);
-	}
+
 	
 	private void writeCreatePublicPollCommand(CreatePublicPollCommand data) throws IOException {
 		writeString(data.getName());
@@ -1044,33 +930,8 @@ public class DataStreamManager {
 		}
 		return new CreateGeofencePollCommand(name, description, expirationTime, options, readArea());
 	}
-	
-	private void writeCreatePrivatePollCommand(CreatePrivatePollCommand data) throws IOException {
-		writeString(data.getName());
-		writePollDescription(data.getDescription());
-		writeLocalDateTime(data.getExpirationTime());
-		// write options
-		writeInteger(data.getOptions().size());
-		for(String option : data.getOptions()) {
-			writeString(option);
-		}
-		
-		writeLong(data.getUsergroup());
-	}
-	
-	private CreatePrivatePollCommand readCreatePrivatePollCommand() throws IOException {
-		String name = readString();
-		PollDescription description = readPollDescription();
-		LocalDateTime expirationTime = readLocalDateTime();
-		List<String> options = new ArrayList<>();
-		
-		int length = readInteger();
-		for(int i = 0;i<length;i++) {
-			options.add(readString());
-		}
-		return new CreatePrivatePollCommand(name, description, expirationTime, options, readLong());
-	}
-	
+
+
 	private void writeCreateCustomPollCommand(CreateCustomPollCommand data) throws IOException {
 		writeString(data.getName());
 		writePollDescription(data.getDescription());

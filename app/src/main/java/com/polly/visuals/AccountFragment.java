@@ -26,7 +26,6 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.polly.R;
 import com.polly.config.Config;
-import com.polly.utils.command.user.GetMyUsergroupsCommand;
 import com.polly.utils.command.user.GetUsernameCommand;
 import com.polly.utils.command.user.LogoutCommand;
 import com.polly.utils.communication.DataStreamManager;

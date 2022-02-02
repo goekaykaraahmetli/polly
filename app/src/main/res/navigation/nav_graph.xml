@@ -78,9 +78,6 @@
             android:id="@+id/action_polloptionFragment_to_createPollFragment"
             app:destination="@id/createPollFragment" />
         <action
-            android:id="@+id/action_polloptionFragment_to_usergroupSearch"
-            app:destination="@id/usergroupSearch" />
-        <action
             android:id="@+id/action_polloptionFragment_to_votingCandidates2"
             app:destination="@id/votingCandidates2" />
         <action
@@ -89,14 +86,6 @@
         <action
             android:id="@+id/action_polloptionFragment_to_observingCandidates2"
             app:destination="@id/observingCandidates2" />
-    </fragment>
-    <fragment
-        android:id="@+id/usergroupSearch"
-        android:name="com.polly.visuals.UsergroupSearch"
-        android:label="UsergroupSearch" >
-        <action
-            android:id="@+id/action_usergroupSearch_to_polloptionFragment"
-            app:destination="@id/polloptionFragment" />
     </fragment>
     <fragment
         android:id="@+id/votingCandidates2"
