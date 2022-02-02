@@ -50,9 +50,11 @@ import com.polly.utils.encryption.exceptions.FailedDecryptionException;
 import com.polly.utils.encryption.exceptions.FailedEncryptionException;
 import com.polly.utils.encryption.exceptions.FailedKeyGenerationException;
 import com.polly.utils.encryption.utils.CipherKeyGenerator;
+import com.polly.utils.geofencing.GeofenceEntry;
 import com.polly.utils.poll.BasicPollInformation;
 import com.polly.utils.poll.PollDescription;
 import com.polly.utils.wrapper.ErrorWrapper;
+import com.polly.utils.wrapper.GeofenceEntryListWrapper;
 import com.polly.utils.wrapper.ListWrapper;
 import com.polly.utils.wrapper.LoginAnswerWrapper;
 import com.polly.utils.wrapper.LogoutAnswerWrapper;
@@ -217,6 +219,10 @@ public class DataStreamManager {
 			data = readPollOptionListWrapper();
 		else if(dataType.equals(FindPollCommand.class))
 			data = readFindPollCommand();
+		else if(dataType.equals(GeofenceEntry.class))
+			data = readGeofenceEntry();
+		else if(dataType.equals(GeofenceEntryListWrapper.class))
+			data = readGeofenceEntryListWrapper();
 			
 			// default type:
 		else
@@ -402,11 +408,12 @@ public class DataStreamManager {
 			writePollResultsWrapper((PollResultsWrapper) data);
 		else if(dataType.equals(PollListWrapper.class))
 			writePollListWrapper((PollListWrapper) data);
-
 		else if(dataType.equals(CreatePublicPollCommand.class))
 			writeCreatePublicPollCommand((CreatePublicPollCommand) data);
 		else if(dataType.equals(CreateGeofencePollCommand.class))
 			writeCreateGeofencePollCommand((CreateGeofencePollCommand) data);
+		else if(dataType.equals(CreateCustomPollCommand.class))
+			writeCreateCustomPollCommand((CreateCustomPollCommand) data);
 		else if(dataType.equals(GetUsernameCommand.class))
 			writeGetUsernameCommand((GetUsernameCommand) data);
 		else if(dataType.equals(Location.class))
@@ -427,6 +434,10 @@ public class DataStreamManager {
 			writePollOptionListWrapper((PollOptionListWrapper) data);
 		else if(dataType.equals(FindPollCommand.class))
 			writeFindPollCommand((FindPollCommand) data);
+		else if(dataType.equals(GeofenceEntry.class))
+				writeGeofenceEntry((GeofenceEntry) data);
+		else if(dataType.equals(GeofenceEntryListWrapper.class))
+			writeGeofenceEntryListWrapper((GeofenceEntryListWrapper) data);
 		
 		
 			// default type:
@@ -879,7 +890,6 @@ public class DataStreamManager {
 		}
 		return new PollListWrapper(list);
 	}
-
 	
 	private void writeCreatePublicPollCommand(CreatePublicPollCommand data) throws IOException {
 		writeString(data.getName());
@@ -930,8 +940,7 @@ public class DataStreamManager {
 		}
 		return new CreateGeofencePollCommand(name, description, expirationTime, options, readArea());
 	}
-
-
+	
 	private void writeCreateCustomPollCommand(CreateCustomPollCommand data) throws IOException {
 		writeString(data.getName());
 		writePollDescription(data.getDescription());
@@ -1055,5 +1064,31 @@ public class DataStreamManager {
 	
 	private FindPollCommand readFindPollCommand() throws IOException {
 		return new FindPollCommand(readString(), readString(), readBoolean(), readBoolean());
+	}
+	
+	private void writeGeofenceEntry(GeofenceEntry data) throws IOException {
+		writeArea(data.getArea());
+		writeLong(data.getId());
+	}
+	
+	private GeofenceEntry readGeofenceEntry() throws IOException {
+		return new GeofenceEntry(readArea(), readLong());
+	}
+	
+	private void writeGeofenceEntryListWrapper(GeofenceEntryListWrapper data) throws IOException {
+		writeInteger(data.getGeofenceEntries().size());
+		
+		for(GeofenceEntry e : data.getGeofenceEntries()) {
+			writeGeofenceEntry(e);
+		}
+	}
+	
+	private GeofenceEntryListWrapper readGeofenceEntryListWrapper() throws IOException {
+		int length = readInteger();
+		List<GeofenceEntry> entries = new LinkedList<>();
+		for(int i = 0;i<length;i++) {
+			entries.add(readGeofenceEntry());
+		}
+		return new GeofenceEntryListWrapper(entries);
 	}
 }
