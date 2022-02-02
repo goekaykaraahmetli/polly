@@ -64,5 +64,10 @@
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyAr3m25DMPGbrlktLf5xWydw30geUs-Okc" />
+        <service
+            android:name=".utils.geofencing.Geofencing2"
+            android:process=":geofencing"
+            android:label="Geofencing" >
+        </service>
     </application>
 </manifest>

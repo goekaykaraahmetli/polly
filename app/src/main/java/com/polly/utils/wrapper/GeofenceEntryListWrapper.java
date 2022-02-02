@@ -1,6 +1,6 @@
 package com.polly.utils.wrapper;
 
-import com.polly.geofencing.GeofenceEntry;
+import com.polly.utils.geofencing.GeofenceEntry;
 
 import java.util.List;
 
