@@ -17,9 +17,12 @@ import androidx.core.app.NotificationManagerCompat;
 
 import com.polly.R;
 import com.polly.utils.Area;
+import com.polly.utils.Organizer;
 import com.polly.utils.communicator.ResponseCommunicator;
+import com.polly.utils.wrapper.GeofenceEntryListWrapper;
 import com.polly.utils.wrapper.Message;
 
+import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -35,12 +38,9 @@ public class Geofencing extends ContextWrapper {
 
 
         initNotificationChannel("Polly Geofence Channel", NotificationManager.IMPORTANCE_DEFAULT, "this is the channel for polly geofencing notifications");
-
-        sendNotification("test", "test");
-
         start();
 
-        addNewGeofence(new Area(50.0029, 9.2247, 3000));
+        addNewGeofence(new Area(50.0029, 9.2247, 3000), 1);
     }
 
     private void initNotificationChannel(String name, int importance, String description) {
@@ -51,8 +51,8 @@ public class Geofencing extends ContextWrapper {
         notificationManager.createNotificationChannel(channel);
     }
 
-    public void addNewGeofence(Area area) {
-        geofences.add(new GeofenceEntry(area));
+    public void addNewGeofence(Area area, long id) {
+        geofences.add(new GeofenceEntry(area, id));
     }
 
     public void removeGeofence(Area area) {
@@ -74,7 +74,12 @@ public class Geofencing extends ContextWrapper {
             @Override
             public void onLocationChanged(@NonNull Location location) {
                 System.out.println("location changed-------------------------------------------------------------");
-                checkTransition(location.getLatitude(), location.getLongitude());
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        checkTransition(location.getLatitude(), location.getLongitude());
+                    }
+                }).start();
             }
         };
 
@@ -104,27 +109,27 @@ public class Geofencing extends ContextWrapper {
             entry.setInArea(newInArea);
 
             if(newInArea && inArea == false)
-                transitionEnter(area);
+                transitionEnter(entry);
 
             else if(newInArea && inArea == true)
-                transitionDwell(area);
+                transitionDwell(entry);
 
             else if(!newInArea && inArea == true)
-                transitionExit(area);
+                transitionExit(entry);
         }
     }
 
 
-    private void transitionEnter(Area area) {
-        sendNotification("New Poll available!", "you entered the following area: " + area.getLatitude() + "" + area.getLongitude() + "" + area.getRadius());
+    private void transitionEnter(GeofenceEntry entry) {
+        sendNotification("New Poll " + entry.getId() + "available!", "you entered the following area: " + entry.getArea().getLatitude() + "" + entry.getArea().getLongitude() + "" + entry.getArea().getRadius());
     }
 
-    private void transitionDwell(Area area) {
-        sendNotification("Dwelling!", "you entered the following area: " + area.getLatitude() + "" + area.getLongitude() + "" + area.getRadius());
+    private void transitionDwell(GeofenceEntry entry) {
+        sendNotification("Dwelling! " + entry.getId(), "you entered the following area: " + entry.getArea().getLatitude() + "" + entry.getArea().getLongitude() + "" + entry.getArea().getRadius());
     }
 
-    private void transitionExit(Area area) {
-        sendNotification("Exiting!", "you entered the following area: " + area.getLatitude() + "" + area.getLongitude() + "" + area.getRadius());
+    private void transitionExit(GeofenceEntry entry) {
+        sendNotification("Exiting! " + entry.getId(), "you entered the following area: " + entry.getArea().getLatitude() + "" + entry.getArea().getLongitude() + "" + entry.getArea().getRadius());
     }
 
 
@@ -146,6 +151,9 @@ public class Geofencing extends ContextWrapper {
             public void handleInput(Message message) {
                 System.out.println("AccountFragment received message from " + message.getSender() + " with responseId " + message.getResponseId());
                 System.out.println("from type: " + message.getDataType().getName());
+
+                if(message.getDataType() == GeofenceEntryListWrapper.class)
+                    geofences = ((GeofenceEntryListWrapper) message.getData()).getGeofenceEntries();
             }
         };
     }

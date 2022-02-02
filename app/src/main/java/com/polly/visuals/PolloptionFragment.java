@@ -91,7 +91,6 @@ public class PolloptionFragment extends Fragment {
 
         TextInputLayout datePicker = (TextInputLayout) root.findViewById(R.id.DateLayout);
         TextInputLayout geofence = (TextInputLayout) root.findViewById(R.id.geofencingLayout);
-        TextInputLayout userGroup = (TextInputLayout) root.findViewById(R.id.usergroupLayout);
         TextInputLayout votingCandidates = (TextInputLayout) root.findViewById(R.id.votingCandidatesLayout);
         TextInputLayout oberserveCandidates = (TextInputLayout) root.findViewById(R.id.observingCandidatesLayout);
         TextInputLayout pollyRoom = (TextInputLayout) root.findViewById(R.id.PollRoomLayout);
@@ -106,16 +105,6 @@ public class PolloptionFragment extends Fragment {
                 if (dropDownMenu.getText().toString().equals("GEOFENCE")) {
                     //createPollBtn.setText("CREATE POLL");
                     geofence.setVisibility(View.VISIBLE);
-                    userGroup.setVisibility(View.GONE);
-                    votingCandidates.setVisibility(View.GONE);
-                    oberserveCandidates.setVisibility(View.GONE);
-                    pollyRoom.setVisibility(View.GONE);
-                    pollyRoomInfo.setVisibility(View.GONE);
-                    datePicker.setVisibility(View.VISIBLE);
-                } else if (dropDownMenu.getText().toString().equals("PRIVATE")) {
-                    // createPollBtn.setText("CREATE POLL");
-                    geofence.setVisibility(View.GONE);
-                    userGroup.setVisibility(View.VISIBLE);
                     votingCandidates.setVisibility(View.GONE);
                     oberserveCandidates.setVisibility(View.GONE);
                     pollyRoom.setVisibility(View.GONE);
@@ -124,7 +113,6 @@ public class PolloptionFragment extends Fragment {
                 } else if (dropDownMenu.getText().toString().equals("CUSTOM")) {
                     //createPollBtn.setText("CREATE POLL");
                     geofence.setVisibility(View.GONE);
-                    userGroup.setVisibility(View.GONE);
                     votingCandidates.setVisibility(View.VISIBLE);
                     oberserveCandidates.setVisibility(View.VISIBLE);
                     pollyRoom.setVisibility(View.GONE);
@@ -133,7 +121,6 @@ public class PolloptionFragment extends Fragment {
                 } else if (dropDownMenu.getText().toString().equals("PUBLIC")) {
                     //createPollBtn.setText("CREATE POLL");
                     geofence.setVisibility(View.GONE);
-                    userGroup.setVisibility(View.GONE);
                     votingCandidates.setVisibility(View.GONE);
                     oberserveCandidates.setVisibility(View.GONE);
                     pollyRoom.setVisibility(View.GONE);
@@ -142,7 +129,6 @@ public class PolloptionFragment extends Fragment {
                 } else if (dropDownMenu.getText().toString().equals("POLLYROOM")) {
                     //createPollBtn.setText("SCAN ROOM");
                     geofence.setVisibility(View.GONE);
-                    userGroup.setVisibility(View.GONE);
                     votingCandidates.setVisibility(View.GONE);
                     oberserveCandidates.setVisibility(View.GONE);
                     pollyRoomInfo.setVisibility(View.VISIBLE);
@@ -157,18 +143,6 @@ public class PolloptionFragment extends Fragment {
             if (dropDownMenu.getText().toString().equals("GEOFENCE")) {
                 //createPollBtn.setText("CREATE POLL");
                 geofence.setVisibility(View.VISIBLE);
-                userGroup.setVisibility(View.GONE);
-                votingCandidates.setVisibility(View.GONE);
-                oberserveCandidates.setVisibility(View.GONE);
-                pollyRoom.setVisibility(View.GONE);
-                pollyRoomInfo.setVisibility(View.GONE);
-                datePicker.setVisibility(View.VISIBLE);
-            } else if (dropDownMenu.getText().toString().equals("PRIVATE")) {
-                //createPollBtn.setText("CREATE POLL");
-                geofence.setVisibility(View.GONE);
-                userGroup.setVisibility(View.VISIBLE);
-                AutoCompleteTextView usergroupText = (AutoCompleteTextView) root.findViewById(R.id.usergroupNumber);
-                usergroupText.setText(saving.getUsergroupName());
                 votingCandidates.setVisibility(View.GONE);
                 oberserveCandidates.setVisibility(View.GONE);
                 pollyRoom.setVisibility(View.GONE);
@@ -177,7 +151,6 @@ public class PolloptionFragment extends Fragment {
             } else if (dropDownMenu.getText().toString().equals("CUSTOM")) {
                 //createPollBtn.setText("CREATE POLL");
                 geofence.setVisibility(View.GONE);
-                userGroup.setVisibility(View.GONE);
                 votingCandidates.setVisibility(View.VISIBLE);
                 oberserveCandidates.setVisibility(View.VISIBLE);
                 AutoCompleteTextView votingCandidatesList = (AutoCompleteTextView) root.findViewById(R.id.votingCandidates);
@@ -206,7 +179,6 @@ public class PolloptionFragment extends Fragment {
             } else if (dropDownMenu.getText().toString().equals("POLLYROOM")) {
                 //createPollBtn.setText("SCAN ROOM");
                 geofence.setVisibility(View.GONE);
-                userGroup.setVisibility(View.GONE);
                 votingCandidates.setVisibility(View.GONE);
                 oberserveCandidates.setVisibility(View.GONE);
                 pollyRoomInfo.setVisibility(View.VISIBLE);
@@ -249,18 +221,6 @@ public class PolloptionFragment extends Fragment {
                     }
                 }, year, month, day);
                 datePickerDialog.show();
-            }
-        });
-
-        root.findViewById(R.id.usergroupNumber).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                saving.setDescription(description.getText());
-                saving.setPollname(Pollname.getText());
-                saving.setCalendarText(test.getText());
-                saving.setDropDownMenu(dropDownMenu.getText());
-                System.out.println(dropDownMenu.getText());
-                Navigation.findNavController(getActivity(), R.id.nav_host_fragment).navigate(R.id.usergroupSearch);
             }
         });
         EditText tmp = root.findViewById(R.id.PollyRoomNumber);

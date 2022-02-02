@@ -223,9 +223,6 @@ public class CreatePollFragment extends Fragment {
                             case "PUBLIC":
                                 id = PollManager.createPublicPoll(saving.getPollname().toString(), new PollDescription(saving.getDescription().toString()), localDateTime, pollOptions);
                                 break;
-                            case "PRIVATE":
-                                id = PollManager.createPrivatePoll(saving.getPollname().toString(), new PollDescription(saving.getDescription().toString()), localDateTime, pollOptions, saving.getUserGroupId());
-                                break;
                             case "CUSTOM":
                                 id = PollManager.createCustomPoll(saving.getPollname().toString(), new PollDescription(saving.getDescription().toString()), localDateTime, pollOptions, saving.getCanVoteList(), saving.getCanSeeAndVoteList());
                                 break;

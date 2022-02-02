@@ -4,7 +4,6 @@
 
     <string-array name="visibility">
         <item>PUBLIC</item>
-        <item>PRIVATE</item>
         <item>CUSTOM</item>
         <item>GEOFENCE</item>
         <item>POLLYROOM</item>
