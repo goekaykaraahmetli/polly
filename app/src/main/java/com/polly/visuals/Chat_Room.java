@@ -62,6 +62,11 @@ public class Chat_Room  extends Fragment {
     private String chat_msg,chat_user_name;
 
 
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        getActivity().setTitle("Polly");
+    }
 
     @Nullable
     @Override
@@ -79,6 +84,7 @@ public class Chat_Room  extends Fragment {
 
         ManageGroup.currentRoom = room_name;
         ManageGroup.myUsername = user_name;
+        CreatePollUsergroup.userGroupName = room_name;
         getActivity().setTitle(" Room: "+room_name);
 
         Button manageButton = view.findViewById(R.id.btn_manage);
@@ -100,6 +106,13 @@ public class Chat_Room  extends Fragment {
                     }
                 });
 
+            }
+        });
+
+        view.findViewById(R.id.add_group).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Navigation.findNavController(getActivity(), R.id.nav_host_fragment).navigate(R.id.createPollUsergroup);
             }
         });
 
