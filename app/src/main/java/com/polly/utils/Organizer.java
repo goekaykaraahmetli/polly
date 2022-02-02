@@ -41,12 +41,7 @@ public class Organizer {
 			LoginFragment.sendTokenToServer(true);
 		}
 
-		//new Thread(new Runnable() {
-		//	@Override
-		//	public void run() {
-		//		new Geofencing(mainActivity);
-		//	}
-		//}).start();
+		new Geofencing(mainActivity);
 	}
 
 	private static void createSocketHandler(int timeout){
