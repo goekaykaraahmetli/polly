@@ -258,10 +258,12 @@ public class ShowPollVotingPageFragment extends Fragment implements OnMapReadyCa
             }
         });
         //TODO recyclerview onClickListener
+
         mAdapter.setOnItemClickListener(new ListAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(int position) {
                 showVoteButton(listOptions.get(position).getmText1());
+                System.out.println("HAHAHAHAHAHAHAHAAH");
             }
         });
         pieChart.setOnLongClickListener(new View.OnLongClickListener() {
@@ -389,7 +391,7 @@ public class ShowPollVotingPageFragment extends Fragment implements OnMapReadyCa
         for (String option : pollOptions.getPollOptions()) {
             options.add(new SearchListItem(R.drawable.ic_logo, option));
         }
-        mAdapter = new ListAdapter(options);
+        mAdapter = new ListAdapter(options, getContext());
 
         mRecyclerView.setLayoutManager(mLayoutManager);
         mRecyclerView.setAdapter(mAdapter);
@@ -398,7 +400,7 @@ public class ShowPollVotingPageFragment extends Fragment implements OnMapReadyCa
     }
 
     public Date convertToDate(LocalDateTime data) {
-        return Date.from(data.atZone(ZoneId.systemDefault()).toInstant());
+        return Date.from(data.atZone(ZoneId.of("Europe/Berlin")).toInstant());
     }
 
     public static long getDifferenceInMS(Date date1, Date date2) {
@@ -645,6 +647,26 @@ public class ShowPollVotingPageFragment extends Fragment implements OnMapReadyCa
     }
 
     private void editPoll() {
+        AlertDialog.Builder alert = new AlertDialog.Builder(getContext());
+        alert.setTitle("Delete Poll");
+        alert.setMessage("Do you want to delete your Poll?");
+        alert.setPositiveButton("YES", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+
+
+            }
+        });
+        alert.setNegativeButton("NO", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                editPollName();
+            }
+        });
+        alert.create().show();
+    }
+
+    private void editPollName(){
         PollDescription newDescription = new PollDescription("");
         AlertDialog.Builder alert = new AlertDialog.Builder(getContext());
         alert.setTitle("Edit your Pollname");
@@ -657,13 +679,17 @@ public class ShowPollVotingPageFragment extends Fragment implements OnMapReadyCa
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 String newName = newPollname.getText().toString();
-                try {
-                    PollManager.editPollName(id, newName);
-                } catch (IOException e) {
-                    if (e.getMessage() != null)
-                        Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_LONG).show();
-                    else
-                        Toast.makeText(getContext(), "Something went wrong!", Toast.LENGTH_LONG).show();
+                if(!newName.isEmpty()){
+                    try {
+                        PollManager.editPollName(id, newName);
+                    } catch (IOException e) {
+                        if (e.getMessage() != null)
+                            Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_LONG).show();
+                        else
+                            Toast.makeText(getContext(), "Something went wrong!", Toast.LENGTH_LONG).show();
+                    }
+                }else{
+                    Toast.makeText(getContext(), "No changes to Pollname were made", Toast.LENGTH_LONG).show();
                 }
                 editPollDescription();
             }
@@ -675,7 +701,6 @@ public class ShowPollVotingPageFragment extends Fragment implements OnMapReadyCa
             }
         });
         alert.create().show();
-
 
     }
 
