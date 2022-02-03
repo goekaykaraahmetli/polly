@@ -21,11 +21,11 @@ import java.util.Map.Entry;
 import java.util.TreeMap;
 
 import com.polly.config.Config;
-import com.polly.utils.geofencing.GeofenceEntry;
 import com.polly.utils.Area;
 import com.polly.utils.Location;
 import com.polly.utils.command.GetMyPollsCommand;
 import com.polly.utils.command.GetParticipatedPollsCommand;
+import com.polly.utils.command.poll.DeletePollCommand;
 import com.polly.utils.command.poll.EditPollDescriptionCommand;
 import com.polly.utils.command.poll.EditPollNameCommand;
 import com.polly.utils.command.poll.FindPollCommand;
@@ -51,6 +51,7 @@ import com.polly.utils.encryption.exceptions.FailedDecryptionException;
 import com.polly.utils.encryption.exceptions.FailedEncryptionException;
 import com.polly.utils.encryption.exceptions.FailedKeyGenerationException;
 import com.polly.utils.encryption.utils.CipherKeyGenerator;
+import com.polly.utils.geofencing.GeofenceEntry;
 import com.polly.utils.poll.BasicPollInformation;
 import com.polly.utils.poll.PollDescription;
 import com.polly.utils.wrapper.ErrorWrapper;
@@ -223,6 +224,8 @@ public class DataStreamManager {
 			data = readGeofenceEntry();
 		else if(dataType.equals(GeofenceEntryListWrapper.class))
 			data = readGeofenceEntryListWrapper();
+		else if(dataType.equals(DeletePollCommand.class))
+			data = readDeletePollCommand();
 			
 			// default type:
 		else
@@ -438,6 +441,8 @@ public class DataStreamManager {
 				writeGeofenceEntry((GeofenceEntry) data);
 		else if(dataType.equals(GeofenceEntryListWrapper.class))
 			writeGeofenceEntryListWrapper((GeofenceEntryListWrapper) data);
+		else if(dataType.equals(DeletePollCommand.class))
+			writeDeletePollCommand((DeletePollCommand) data);
 		
 		
 			// default type:
@@ -1090,5 +1095,13 @@ public class DataStreamManager {
 			entries.add(readGeofenceEntry());
 		}
 		return new GeofenceEntryListWrapper(entries);
+	}
+	
+	private void writeDeletePollCommand(DeletePollCommand data) throws IOException {
+		writeLong(data.getId());
+	}
+	
+	private DeletePollCommand readDeletePollCommand() throws IOException {
+		return new DeletePollCommand(readLong());
 	}
 }
