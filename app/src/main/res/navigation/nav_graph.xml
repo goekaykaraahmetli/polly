@@ -153,4 +153,8 @@
         android:id="@+id/createPollUsergroup"
         android:name="com.polly.visuals.CreatePollUsergroup"
         android:label="CreatePollUsergroup" />
+    <fragment
+        android:id="@+id/scanQRFragment"
+        android:name="com.polly.visuals.ScanQRFragment"
+        android:label="ScanQRFragment" />
 </navigation>
