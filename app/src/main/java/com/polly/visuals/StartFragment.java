@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -26,7 +27,13 @@ public class StartFragment extends Fragment {
             public void onClick(View v) {
             }
         });
-
+        Button quickvote = (Button) root.findViewById(R.id.quickvote);
+        quickvote.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Navigation.findNavController(getActivity(), R.id.nav_host_fragment).navigate(R.id.scanQRFragment);
+            }
+        });
         return root;
     }
 }

@@ -92,13 +92,18 @@ public class PolloptionFragment extends Fragment implements OnMapReadyCallback {
     public static int numberOfParticipants;
     LocalTime localTime;
     LocalDate localDate;
+    private SavingClass saving;
+    private EditText Pollname;
+    private TextInputEditText description;
+    private AutoCompleteTextView test;
+    private AutoCompleteTextView dropDownMenu;
 
     @Override
     public void onResume() {
         super.onResume();
         String[] visibilities = getResources().getStringArray(R.array.visibility);
         ArrayAdapter<String> arrayAdapter = new ArrayAdapter(getContext(), R.layout.dropdown_item, visibilities);
-        AutoCompleteTextView dropDownMenu = (AutoCompleteTextView) getView().findViewById(R.id.autoCompleteTextView);
+        dropDownMenu = (AutoCompleteTextView) getView().findViewById(R.id.autoCompleteTextView);
         dropDownMenu.setAdapter(arrayAdapter);
     }
 
@@ -121,7 +126,7 @@ public class PolloptionFragment extends Fragment implements OnMapReadyCallback {
         super.onCreate(savedInstanceState);
         View root = inflater.inflate(R.layout.activity_polloptions, container, false);
         ConstraintLayout mapLayout = (ConstraintLayout) root.findViewById(R.id.mapLayoutPollOptionFragment);
-        SavingClass saving = new ViewModelProvider(getActivity()).get(SavingClass.class);
+        saving = new ViewModelProvider(getActivity()).get(SavingClass.class);
         Calendar calendar = Calendar.getInstance();
         int year = calendar.get(Calendar.YEAR);
         int month = calendar.get(Calendar.MONTH);
@@ -131,7 +136,7 @@ public class PolloptionFragment extends Fragment implements OnMapReadyCallback {
         if (saving.getNumberOfParticipants() != 0) {
             ((EditText) root.findViewById(R.id.PollyRoomNumber)).setText(String.valueOf(saving.getNumberOfParticipants()));
         }
-        AutoCompleteTextView test = (AutoCompleteTextView) root.findViewById(R.id.DatePicker);
+        test = (AutoCompleteTextView) root.findViewById(R.id.DatePicker);
         AutoCompleteTextView dropDownMenu = (AutoCompleteTextView) root.findViewById(R.id.autoCompleteTextView);
 
         TextInputLayout datePicker = (TextInputLayout) root.findViewById(R.id.DateLayout);
@@ -233,8 +238,8 @@ public class PolloptionFragment extends Fragment implements OnMapReadyCallback {
             }
         }
 
-        EditText Pollname = (EditText) root.findViewById(R.id.Name);
-        TextInputEditText description = (TextInputEditText) root.findViewById(R.id.description);
+        Pollname = (EditText) root.findViewById(R.id.Name);
+        description = (TextInputEditText) root.findViewById(R.id.description);
         Pollname.setText(saving.getPollname());
         description.setText(saving.getDescription());
         if (saving.getCalendarText() != null)
@@ -292,16 +297,6 @@ public class PolloptionFragment extends Fragment implements OnMapReadyCallback {
                 saving.setDropDownMenu(dropDownMenu.getText());
                 System.out.println(dropDownMenu.getText());
                 Navigation.findNavController(getActivity(), R.id.nav_host_fragment).navigate(R.id.observingCandidates2);
-            }
-        });
-        mapLayout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                saving.setPollname(Pollname.getText());
-                saving.setCalendarText(test.getText());
-                saving.setDescription(description.getText());
-                saving.setDropDownMenu(dropDownMenu.getText());
-                Navigation.findNavController(getActivity(), R.id.nav_host_fragment).navigate(R.id.chooseAreaFragment);
             }
         });
         root.findViewById(R.id.continueBtn).setOnClickListener(new View.OnClickListener() {
@@ -404,22 +399,25 @@ public class PolloptionFragment extends Fragment implements OnMapReadyCallback {
         return false;
     }
 
-    private void initMap(GoogleMap googleMap, LatLng center, double radius) {
-        googleMap.getUiSettings().setZoomControlsEnabled(true);
-        googleMap.getUiSettings().setCompassEnabled(true);
-        googleMap.getUiSettings().setMyLocationButtonEnabled(true);
-
-        if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            Toast.makeText(getContext(), "Please grant permission to use your locaiton!", Toast.LENGTH_SHORT).show();
-            return;
-        }
-        googleMap.setMyLocationEnabled(true);
-
+    private void initMap(GoogleMap googleMap, Area area) {
+        googleMap.getUiSettings().setAllGesturesEnabled(false);
+        googleMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
+            @Override
+            public void onMapClick(@NonNull LatLng latLng) {
+                saving.setPollname(Pollname.getText());
+                saving.setCalendarText(test.getText());
+                saving.setDescription(description.getText());
+                saving.setDropDownMenu(dropDownMenu.getText());
+                Navigation.findNavController(getActivity(), R.id.nav_host_fragment).navigate(R.id.chooseAreaFragment);
+            }
+        });
         googleMap.clear();
-
+        if( area == null)
+            return;
+        LatLng center = new LatLng(area.getLatitude(), area.getLongitude());
         CircleOptions circle = new CircleOptions();
         circle.center(center);
-        circle.radius(radius);
+        circle.radius(area.getRadius());
         circle.strokeColor(Color.argb(255, 100, 255, 255));
         circle.fillColor(Color.argb(100, 100, 255, 255));
 
@@ -446,9 +444,7 @@ public class PolloptionFragment extends Fragment implements OnMapReadyCallback {
     public void onMapReady(@NonNull GoogleMap googleMap) {
         SavingClass saving = new ViewModelProvider(getActivity()).get(SavingClass.class);
         Area area = saving.getArea();
-        if(area == null)
-            return;
 
-        initMap(googleMap, new LatLng(area.getLatitude(), area.getLongitude()), area.getRadius());
+        initMap(googleMap, area);
     }
 }
