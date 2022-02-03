@@ -23,17 +23,14 @@ import com.polly.R;
 import com.polly.utils.Organizer;
 import com.polly.utils.SavingClass;
 import com.polly.utils.geofencing.Geofencing;
-import com.polly.utils.geofencing.Geofencing2;
 import com.polly.utils.geofencing.Restarter;
-
-import java.io.IOException;
 
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     protected DrawerLayout drawerLayout;
     private ActionBarDrawerToggle actionBarDrawerToggle;
     Intent geofencingIntent;
-    private Geofencing2 geofencingService;
+    private Geofencing geofencingService;
 
 
     @Override
@@ -55,11 +52,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         new Organizer(this);
 
-        geofencingService = new Geofencing2();
-        geofencingIntent = new Intent(this, geofencingService.getClass());
-        if(!isMyServiceRunning(geofencingService.getClass()))
-            startService(geofencingIntent);
-
+        startGeofencing();
     }
     private boolean isMyServiceRunning(Class<?> serviceClass) {
         ActivityManager manager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
@@ -113,5 +106,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         actionBarDrawerToggle.onOptionsItemSelected(item);
         return super.onOptionsItemSelected(item);
+    }
+
+    private void startGeofencing() {
+        geofencingService = new Geofencing();
+        geofencingIntent = new Intent(this, geofencingService.getClass());
+        if(!isMyServiceRunning(geofencingService.getClass()))
+            startService(geofencingIntent);
     }
 }

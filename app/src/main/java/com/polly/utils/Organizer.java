@@ -2,7 +2,6 @@ package com.polly.utils;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.polly.config.Config;
-import com.polly.utils.geofencing.Geofencing;
 import com.polly.utils.communication.SocketHandler;
 import com.polly.utils.encryption.exceptions.FailedDecryptionException;
 import com.polly.utils.encryption.exceptions.FailedEncryptionException;
@@ -22,7 +21,6 @@ public class Organizer {
 	private static SocketHandler socketHandler;
 	private static boolean initialised = false;
 	private static MainActivity mainActivity;
-	private static Geofencing geofencing;
 
 	private static final long DEFAULT_COMMUNICATION_ID = 0L;
 
@@ -130,11 +128,8 @@ public class Organizer {
 		return mainActivity;
 	}
 
-	public static Geofencing getGeofencing() {
-		return geofencing;
-	}
-
 	public static SocketHandler getSocketHandler() {
 		return socketHandler;
 	}
+
 }

@@ -14,9 +14,9 @@ public class Restarter extends BroadcastReceiver {
         Toast.makeText(context, "Service restarted", Toast.LENGTH_SHORT).show();
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            context.startForegroundService(new Intent(context, Geofencing2.class));
+            context.startForegroundService(new Intent(context, Geofencing.class));
         } else {
-            context.startService(new Intent(context, Geofencing2.class));
+            context.startService(new Intent(context, Geofencing.class));
         }
     }
 }

@@ -23,6 +23,7 @@ import java.util.TreeMap;
 import com.polly.config.Config;
 import com.polly.utils.Area;
 import com.polly.utils.Location;
+import com.polly.utils.command.GetGeofencesCommand;
 import com.polly.utils.command.GetMyPollsCommand;
 import com.polly.utils.command.GetParticipatedPollsCommand;
 import com.polly.utils.command.poll.DeletePollCommand;
@@ -226,6 +227,8 @@ public class DataStreamManager {
 			data = readGeofenceEntryListWrapper();
 		else if(dataType.equals(DeletePollCommand.class))
 			data = readDeletePollCommand();
+		else if(dataType.equals(GetGeofencesCommand.class))
+			data = readGetGeofencesCommand();
 			
 			// default type:
 		else
@@ -443,6 +446,8 @@ public class DataStreamManager {
 			writeGeofenceEntryListWrapper((GeofenceEntryListWrapper) data);
 		else if(dataType.equals(DeletePollCommand.class))
 			writeDeletePollCommand((DeletePollCommand) data);
+		else if(dataType.equals(GetGeofencesCommand.class))
+			writeGetGeofencesCommand((GetGeofencesCommand) data);
 		
 		
 			// default type:
@@ -1103,5 +1108,13 @@ public class DataStreamManager {
 	
 	private DeletePollCommand readDeletePollCommand() throws IOException {
 		return new DeletePollCommand(readLong());
+	}
+	
+	private void writeGetGeofencesCommand(GetGeofencesCommand data) throws IOException {
+		writeLocation(data.getLocation());
+	}
+	
+	private GetGeofencesCommand readGetGeofencesCommand() throws IOException {
+		return new GetGeofencesCommand(readLocation());
 	}
 }
