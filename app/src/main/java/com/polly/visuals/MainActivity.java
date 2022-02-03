@@ -1,5 +1,6 @@
 package com.polly.visuals;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.widget.Toast;
@@ -18,6 +19,8 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.polly.R;
 import com.polly.utils.Organizer;
 import com.polly.utils.SavingClass;
+import com.polly.utils.geofencing.Geofencing;
+import com.polly.utils.geofencing.Geofencing2;
 
 import java.io.IOException;
 
@@ -45,6 +48,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
 
         new Organizer(this);
+
+        //new Geofencing(this);
+
+        //startService(new Intent(this, Geofencing2.class));
     }
 
 

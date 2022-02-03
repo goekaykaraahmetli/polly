@@ -1,4 +1,4 @@
-package com.polly.geofencing;
+package com.polly.utils.geofencing;
 
 import android.Manifest;
 import android.app.NotificationChannel;
@@ -9,6 +9,8 @@ import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.os.HandlerThread;
+import android.os.Looper;
 
 import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
@@ -17,12 +19,10 @@ import androidx.core.app.NotificationManagerCompat;
 
 import com.polly.R;
 import com.polly.utils.Area;
-import com.polly.utils.Organizer;
 import com.polly.utils.communicator.ResponseCommunicator;
 import com.polly.utils.wrapper.GeofenceEntryListWrapper;
 import com.polly.utils.wrapper.Message;
 
-import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -33,12 +33,30 @@ public class Geofencing extends ContextWrapper {
 
     public Geofencing(Context base) {
         super(base);
+
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+
+            return;
+        }
+
         geofences = new LinkedList<>();
         this.responseCommunicator = getResponseCommunicator();
 
 
         initNotificationChannel("Polly Geofence Channel", NotificationManager.IMPORTANCE_DEFAULT, "this is the channel for polly geofencing notifications");
-        start();
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                start();
+            }
+        }).start();
 
         addNewGeofence(new Area(50.0029, 9.2247, 3000), 1);
     }
@@ -68,21 +86,6 @@ public class Geofencing extends ContextWrapper {
 
 
     private void start() {
-        LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-
-        LocationListener locationListener = new LocationListener() {
-            @Override
-            public void onLocationChanged(@NonNull Location location) {
-                System.out.println("location changed-------------------------------------------------------------");
-                new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        checkTransition(location.getLatitude(), location.getLongitude());
-                    }
-                }).start();
-            }
-        };
-
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             // TODO: Consider calling
             //    ActivityCompat#requestPermissions
@@ -95,8 +98,23 @@ public class Geofencing extends ContextWrapper {
             return;
         }
 
+        HandlerThread handlerThread = new HandlerThread("GeofencingThread");
+        handlerThread.start();
 
-        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5000, 10, locationListener);
+
+
+        LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+
+        LocationListener locationListener = new LocationListener() {
+            @Override
+            public void onLocationChanged(@NonNull Location location) {
+                System.out.println("location changed-------------------------------------------------------------");
+                checkTransition(location.getLatitude(), location.getLongitude());
+            }
+        };
+
+
+        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5000, 10, locationListener, handlerThread.getLooper());
     }
 
     private void checkTransition(double latitude, double longitude) {

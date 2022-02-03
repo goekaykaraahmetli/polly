@@ -22,10 +22,12 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="10dp"
         android:text="Expiration Date: "
-        app:layout_constraintBottom_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/pieChart"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/qrCodeImageView"
-        app:layout_constraintVertical_bias="0.462"/>
+        app:layout_constraintTop_toBottomOf="@+id/qrCodeImageView">
+
+    </TextView>
+
 
     <Button
         android:id="@+id/vote_button"

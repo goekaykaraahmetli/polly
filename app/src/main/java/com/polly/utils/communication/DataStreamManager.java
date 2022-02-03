@@ -21,7 +21,7 @@ import java.util.Map.Entry;
 import java.util.TreeMap;
 
 import com.polly.config.Config;
-import com.polly.geofencing.GeofenceEntry;
+import com.polly.utils.geofencing.GeofenceEntry;
 import com.polly.utils.Area;
 import com.polly.utils.Location;
 import com.polly.utils.command.GetMyPollsCommand;

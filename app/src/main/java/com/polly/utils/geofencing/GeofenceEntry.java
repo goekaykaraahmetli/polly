@@ -1,4 +1,4 @@
-package com.polly.geofencing;
+package com.polly.utils.geofencing;
 
 import com.polly.utils.Area;
 
