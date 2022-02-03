@@ -26,6 +26,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.polly.R;
 import com.polly.config.Config;
+import com.polly.utils.Organizer;
 import com.polly.utils.command.user.GetUsernameCommand;
 import com.polly.utils.command.user.LogoutCommand;
 import com.polly.utils.communication.DataStreamManager;
@@ -88,8 +89,11 @@ public class AccountFragment extends Fragment {
                     try {
                         Message message = communicator.sendWithResponse(DataStreamManager.PARTNERS_DEFAULT_COMMUNICATION_ID, new LogoutCommand());
                         if(message.getDataType().equals(LogoutAnswerWrapper.class)) {
-                            if (((LogoutAnswerWrapper) message.getData()).isSuccessful())
+                            if (((LogoutAnswerWrapper) message.getData()).isSuccessful()) {
                                 serverLoggedOut = true;
+                                Organizer.getMainActivity().stopGeofencing();
+                                Organizer.setLoggedIn(false);
+                            }
                         }
                         else if(message.getDataType().equals(ErrorWrapper.class))
                                 Toast.makeText(getActivity(), ((ErrorWrapper) message.getData()).getMessage(), Toast.LENGTH_SHORT).show();

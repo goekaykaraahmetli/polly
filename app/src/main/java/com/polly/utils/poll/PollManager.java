@@ -5,6 +5,7 @@ import com.polly.utils.Area;
 import com.polly.utils.Location;
 import com.polly.utils.command.GetMyPollsCommand;
 import com.polly.utils.command.GetParticipatedPollsCommand;
+import com.polly.utils.command.poll.DeletePollCommand;
 import com.polly.utils.command.poll.EditPollDescriptionCommand;
 import com.polly.utils.command.poll.EditPollNameCommand;
 import com.polly.utils.command.poll.GetGeofencePollAreaCommand;
@@ -84,7 +85,6 @@ public class PollManager {
 
     public static boolean vote(long id, String option) throws IOException {
         Message response = communicator.sendWithResponse(DataStreamManager.PARTNERS_DEFAULT_COMMUNICATION_ID, new VoteCommand(id, option));
-        System.err.println("Got response for vote!");
         if(response.getDataType().equals(Boolean.class))
             return (boolean) response.getData();
         if(response.getDataType() == ErrorWrapper.class)
@@ -94,7 +94,15 @@ public class PollManager {
 
     public static boolean vote(long id, String option, Location location) throws IOException {
         Message response = communicator.sendWithResponse(DataStreamManager.PARTNERS_DEFAULT_COMMUNICATION_ID, new VoteCommand(id, option, location));
-        System.err.println("Got response for vote!");
+        if(response.getDataType().equals(Boolean.class))
+            return (boolean) response.getData();
+        if(response.getDataType() == ErrorWrapper.class)
+            throw new IOException(((ErrorWrapper) response.getData()).getMessage());
+        throw new IOException("Something went wrong!");
+    }
+
+    public static boolean delete(long id) throws IOException {
+        Message response = communicator.sendWithResponse(DataStreamManager.PARTNERS_DEFAULT_COMMUNICATION_ID, new DeletePollCommand(id));
         if(response.getDataType().equals(Boolean.class))
             return (boolean) response.getData();
         if(response.getDataType() == ErrorWrapper.class)
