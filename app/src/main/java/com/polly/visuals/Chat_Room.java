@@ -162,7 +162,7 @@ public class Chat_Room extends Fragment {
                         String pollname = (String) next.getValue();
                         System.out.println(id);
                         TextView textView = new TextView(getContext());
-                        textView.setText(name + " created the Poll: "+ pollname + " with ID: " + id + " \nClick To Vote");
+                        textView.setText(name + " created the Poll: " + pollname + " with ID: " + id + " \nClick To Vote");
                         textView.setBackground(Organizer.getMainActivity().getDrawable(R.drawable.back));
                         textView.setOnClickListener(new View.OnClickListener() {
                             @Override
@@ -171,7 +171,6 @@ public class Chat_Room extends Fragment {
                             }
                         });
                         textView.setGravity(Gravity.CENTER);
-
 
                         linearLayout.addView(textView);
 

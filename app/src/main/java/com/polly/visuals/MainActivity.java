@@ -24,7 +24,6 @@ import com.polly.utils.Organizer;
 import com.polly.utils.SavingClass;
 import com.polly.utils.geofencing.Geofencing;
 import com.polly.utils.geofencing.Geofencing2;
-import com.polly.utils.geofencing.Geofencing3;
 import com.polly.utils.geofencing.Restarter;
 
 import java.io.IOException;
