@@ -71,10 +71,15 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     @Override
     protected void onDestroy() {
-        Intent broadcastIntent = new Intent();
-        broadcastIntent.setAction("restartservice");
-        broadcastIntent.setClass(this, Restarter.class);
-        this.sendBroadcast(broadcastIntent);
+        if(!isMyServiceRunning(geofencingService.getClass())) {
+            Intent broadcastIntent = new Intent();
+            broadcastIntent.setAction("restartservice");
+            broadcastIntent.setClass(this, Restarter.class);
+            this.sendBroadcast(broadcastIntent);
+        }
+
+
+
         super.onDestroy();
     }
 
@@ -121,10 +126,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             //                                          int[] grantResults)
             // to handle the case where the user grants the permission. See the documentation
             // for ActivityCompat#requestPermissions for more details.
-            requestPermissions(new String[]{Manifest.permission.CAMERA}, LOCATION_ACCESS_REQUEST_CODE);
+            System.out.println("permission missing");
+            requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, LOCATION_ACCESS_REQUEST_CODE);
+
             return;
         }
 
+        Restarter.start();
         geofencingService = new Geofencing();
         geofencingIntent = new Intent(this, geofencingService.getClass());
         if(!isMyServiceRunning(geofencingService.getClass())) {
@@ -135,6 +143,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public void stopGeofencing() {
         System.out.println("stopping geofencing");
 
+        Restarter.stop();
         stopService(geofencingIntent);
     }
 

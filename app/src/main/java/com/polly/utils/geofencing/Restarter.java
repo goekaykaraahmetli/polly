@@ -8,9 +8,15 @@ import android.util.Log;
 import android.widget.Toast;
 
 public class Restarter extends BroadcastReceiver {
+    private static boolean running;
+
     @Override
     public void onReceive(Context context, Intent intent) {
-        /*Log.i("Broadcast Listened", "Service tried to stop");
+        if(!running)
+            return;
+
+
+        Log.i("Broadcast Listened", "Service tried to stop");
         Toast.makeText(context, "Service restarted", Toast.LENGTH_SHORT).show();
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -18,6 +24,13 @@ public class Restarter extends BroadcastReceiver {
         } else {
             context.startService(new Intent(context, Geofencing.class));
         }
-        */
+    }
+
+    public static void stop() {
+        running = false;
+    }
+
+    public static void start() {
+        running = true;
     }
 }
