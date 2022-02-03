@@ -653,8 +653,12 @@ public class ShowPollVotingPageFragment extends Fragment implements OnMapReadyCa
         alert.setPositiveButton("YES", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-
-
+                try {
+                    PollManager.delete(id);
+                    Navigation.findNavController(Organizer.getMainActivity(), R.id.nav_host_fragment).navigate(R.id.startFragment);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
         });
         alert.setNegativeButton("NO", new DialogInterface.OnClickListener() {
