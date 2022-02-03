@@ -1,5 +1,6 @@
 package com.polly.utils.listadapter;
 
+import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,6 +10,7 @@ import android.widget.Filterable;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.material.card.MaterialCardView;
 import com.polly.R;
 import com.polly.utils.Organizer;
 import com.polly.utils.command.poll.FindPollCommand;
@@ -108,6 +110,7 @@ public class ListAdapterPoll extends RecyclerView.Adapter<ListAdapterPoll.ListVi
         holder.mid.setText("POLL ID: " + currentItem.getId());
         holder.mPollName.setText(currentItem.getPollname());
         holder.mCreator.setText("Creator: " + currentItem.getCreator());
+
     }
 
     @Override
@@ -120,6 +123,7 @@ public class ListAdapterPoll extends RecyclerView.Adapter<ListAdapterPoll.ListVi
         public TextView mid;
         public TextView mPollName;
         public TextView mCreator;
+
         public ListViewHolder(@NonNull View itemView, OnItemClickListener listener) {
             super(itemView);
             mid = itemView.findViewById(R.id.PollID);

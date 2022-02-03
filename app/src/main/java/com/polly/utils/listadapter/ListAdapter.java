@@ -1,5 +1,8 @@
 package com.polly.utils.listadapter;
 
+import android.annotation.SuppressLint;
+import android.content.Context;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -7,6 +10,8 @@ import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.google.android.material.card.MaterialCardView;
 import com.polly.R;
 import com.polly.utils.item.SearchListItem;
 
@@ -20,6 +25,8 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ListViewHolder
     private List<SearchListItem> mExampleList;
     private List<SearchListItem> exampleListFull;
     private OnItemClickListener mListener;
+    private Context context;
+    private int selectedPos = RecyclerView.NO_POSITION;
 
     @Override
     public Filter getFilter() {
@@ -71,9 +78,10 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ListViewHolder
         return evh;
     }
 
-    public ListAdapter(ArrayList<SearchListItem> exampleList){
+    public ListAdapter(ArrayList<SearchListItem> exampleList, Context context){
         this.mExampleList = exampleList;
         exampleListFull = new ArrayList<>(exampleList);
+        this.context = context;
     }
 
     @Override
@@ -82,6 +90,8 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ListViewHolder
 
         holder.mImageView.setImageResource(currentItem.getmImageResource());
         holder.mTextView1.setText(currentItem.getmText1());
+
+        holder.itemView.setSelected(selectedPos == position);
     }
 
     @Override
@@ -89,15 +99,17 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ListViewHolder
         return mExampleList.size();
     }
 
-    public static class ListViewHolder extends RecyclerView.ViewHolder{
+    public class ListViewHolder extends RecyclerView.ViewHolder{
 
         public ImageView mImageView;
         public TextView mTextView1;
+        public MaterialCardView mcardView;
+
         public ListViewHolder(@NonNull View itemView, OnItemClickListener listener) {
             super(itemView);
             mImageView = itemView.findViewById(R.id.imageView);
             mTextView1 = itemView.findViewById(R.id.usergroupInstance);
-
+            mcardView = itemView.findViewById(R.id.listViewCard);
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -107,8 +119,12 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ListViewHolder
                             listener.onItemClick(getAdapterPosition());
                         }
                     }
+                    notifyItemChanged(selectedPos);
+                    selectedPos = getLayoutPosition();
+                    notifyItemChanged(selectedPos);
                 }
             });
+
         }
     }
 
