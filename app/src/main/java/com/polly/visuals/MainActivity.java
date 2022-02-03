@@ -1,7 +1,10 @@
 package com.polly.visuals;
 
+import android.app.ActivityManager;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 import android.widget.Toast;
 
@@ -21,6 +24,8 @@ import com.polly.utils.Organizer;
 import com.polly.utils.SavingClass;
 import com.polly.utils.geofencing.Geofencing;
 import com.polly.utils.geofencing.Geofencing2;
+import com.polly.utils.geofencing.Geofencing3;
+import com.polly.utils.geofencing.Restarter;
 
 import java.io.IOException;
 
@@ -28,6 +33,8 @@ import java.io.IOException;
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     protected DrawerLayout drawerLayout;
     private ActionBarDrawerToggle actionBarDrawerToggle;
+    Intent geofencingIntent;
+    private Geofencing2 geofencingService;
 
 
     @Override
@@ -49,13 +56,32 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         new Organizer(this);
 
-        //new Geofencing(this);
+        geofencingService = new Geofencing2();
+        geofencingIntent = new Intent(this, geofencingService.getClass());
+        if(!isMyServiceRunning(geofencingService.getClass()))
+            startService(geofencingIntent);
 
-        //startService(new Intent(this, Geofencing2.class));
+    }
+    private boolean isMyServiceRunning(Class<?> serviceClass) {
+        ActivityManager manager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
+        for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
+            if (serviceClass.getName().equals(service.service.getClassName())) {
+                Log.i ("Service status", "Running");
+                return true;
+            }
+        }
+        Log.i ("Service status", "Not running");
+        return false;
     }
 
-
-
+    @Override
+    protected void onDestroy() {
+        Intent broadcastIntent = new Intent();
+        broadcastIntent.setAction("restartservice");
+        broadcastIntent.setClass(this, Restarter.class);
+        this.sendBroadcast(broadcastIntent);
+        super.onDestroy();
+    }
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
