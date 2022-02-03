@@ -586,8 +586,31 @@ public class ShowPollResultsPageFragment extends Fragment implements OnMapReadyC
             Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_LONG).show();
         }
     }
+    private void editPoll(){
+        AlertDialog.Builder alert = new AlertDialog.Builder(getContext());
+        alert.setTitle("Delete Poll");
+        alert.setMessage("Do you want to delete your Poll?");
+        alert.setPositiveButton("YES", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                try {
+                    PollManager.delete(id);
+                    Navigation.findNavController(Organizer.getMainActivity(), R.id.nav_host_fragment).navigate(R.id.startFragment);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+        alert.setNegativeButton("NO", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                editPollName();
+            }
+        });
+        alert.create().show();
+    }
 
-    private void editPoll() {
+    private void editPollName() {
         PollDescription newDescription = new PollDescription("");
         AlertDialog.Builder alert = new AlertDialog.Builder(getContext());
         alert.setTitle("Edit your Pollname");
