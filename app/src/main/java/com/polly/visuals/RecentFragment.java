@@ -32,6 +32,8 @@ import com.polly.utils.wrapper.PollResultsWrapper;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -64,6 +66,9 @@ public class RecentFragment extends Fragment {
             System.err.println("Fehler");
             e.printStackTrace();
         }
+
+        Collections.reverse(participatedPolls);
+        Collections.reverse(myPolls);
 
         /**try {
             // get participatedPolls
