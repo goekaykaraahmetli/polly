@@ -323,7 +323,8 @@ public class ShowPollResultsPageFragment extends Fragment implements OnMapReadyC
 
         pieChart.setUsePercentValues(true);
         pieChart.animate();
-        pieChart.setVisibility(View.VISIBLE);
+        if(!toggleView.isChecked())
+            pieChart.setVisibility(View.VISIBLE);
     }
 
     private void updateListView(PollResultsWrapper updatePoll) {
