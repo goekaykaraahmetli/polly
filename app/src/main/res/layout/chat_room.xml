@@ -6,10 +6,14 @@
 
     <Button
         android:id="@+id/btn_manage"
-        android:layout_width="412dp"
+        android:layout_width="311dp"
         android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
+        android:layout_alignParentStart="true"
         android:layout_alignParentRight="true"
+        android:layout_marginStart="13dp"
+        android:layout_marginEnd="13dp"
+        android:layout_marginRight="86dp"
+        android:layout_toStartOf="@+id/add_group"
         android:text="Manage Group" />
 
     <Button
@@ -55,4 +59,12 @@
 
 
     </ScrollView>
+
+    <Button
+        android:id="@+id/add_group"
+        android:layout_width="66dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_marginEnd="8dp"
+        android:text="+" />
 </RelativeLayout>
