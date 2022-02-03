@@ -16,7 +16,9 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
+import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.card.MaterialCardView;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -25,15 +27,20 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.polly.R;
 import com.polly.utils.Organizer;
+import com.polly.utils.command.poll.GetPollOptionsCommand;
 import com.polly.utils.communicator.ResponseCommunicator;
+import com.polly.utils.item.PollItem;
+import com.polly.utils.listadapter.ListAdapterPoll;
+import com.polly.utils.poll.PollManager;
 import com.polly.utils.wrapper.Message;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
 
-public class Chat_Room  extends Fragment {
+public class Chat_Room extends Fragment {
 
     private static ResponseCommunicator communicator = initialiseCommunicator();
     private static ResponseCommunicator initialiseCommunicator(){
@@ -85,6 +92,7 @@ public class Chat_Room  extends Fragment {
         ManageGroup.currentRoom = room_name;
         ManageGroup.myUsername = user_name;
         CreatePollUsergroup.userGroupName = room_name;
+        CreatePollFragment.currRoomName = room_name;
         getActivity().setTitle(" Room: "+room_name);
 
         Button manageButton = view.findViewById(R.id.btn_manage);
@@ -152,6 +160,18 @@ public class Chat_Room  extends Fragment {
 
                 Iterator i = dataSnapshot.getChildren().iterator();
                 while (i.hasNext()){
+
+                    System.out.println((String) ((DataSnapshot)i.next()).getKey());
+/*
+                    if(((String) ((DataSnapshot)i.next()).getValue()).equals("")) {
+                        long id = Long.parseLong(((DataSnapshot)i.next()).getKey());
+                        TextView textView = new TextView(getContext());
+                        textView.setText("Someone created a poll with ID: " + id);
+
+                    }
+
+
+
                     chat_msg = (String) ((DataSnapshot)i.next()).getValue();
                     chat_user_name = (String) ((DataSnapshot)i.next()).getValue();
                     TextView msg = new TextView(Organizer.getMainActivity());
@@ -161,7 +181,7 @@ public class Chat_Room  extends Fragment {
                     }
                     else
                         msg.setBackground(Organizer.getMainActivity().getDrawable(R.drawable.receive));
-                    linearLayout.addView(msg);
+                    linearLayout.addView(msg);*/
                 }
                 ScrollView scrollView = view.findViewById(R.id.scrollViewChatRoom);
                 scrollView.fullScroll(View.FOCUS_DOWN);
@@ -215,6 +235,7 @@ public class Chat_Room  extends Fragment {
 
         return view;
     }
+
 
 
 

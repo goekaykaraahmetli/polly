@@ -40,6 +40,7 @@ public class SavingClass extends ViewModel {
     private Area area;
     private String editedPollname;
     private String editedPolldescription;
+    private Boolean isGroupPoll;
 
     public void setEditedPolldescription(String setEditedPolldescription) {
         this.editedPolldescription = setEditedPolldescription;
@@ -48,6 +49,10 @@ public class SavingClass extends ViewModel {
     public String getEditedPolldescription() {
         return editedPolldescription;
     }
+
+    public Boolean getIsGroupPoll() {return isGroupPoll;}
+
+    public void setIsGroupPoll(Boolean bool) {isGroupPoll = bool;}
 
     public String getEditedPollname() {
         return editedPollname;

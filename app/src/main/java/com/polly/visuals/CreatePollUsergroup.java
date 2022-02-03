@@ -215,7 +215,7 @@ public class CreatePollUsergroup extends Fragment {
 
 
 
-
+                saving.setIsGroupPoll(true);
                 Navigation.findNavController(getActivity(), R.id.nav_host_fragment).navigate(R.id.createPollFragment);
             }
         });

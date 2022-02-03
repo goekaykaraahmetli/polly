@@ -1,4 +1,5 @@
 package com.polly.visuals;
+import com.google.firebase.database.FirebaseDatabase;
 import com.polly.utils.QRCode;
 import com.polly.utils.SavingClass;
 import com.polly.utils.ShowPollPage;
@@ -48,6 +49,7 @@ public class CreatePollFragment extends Fragment {
     public static String answer2;
     public static String answer3;
     public static String answer4;
+    public static String currRoomName;
     public static int numberOfParticipants;
     public static String name;
     public static String description;
@@ -224,7 +226,10 @@ public class CreatePollFragment extends Fragment {
                                 id = PollManager.createPublicPoll(saving.getPollname().toString(), new PollDescription(saving.getDescription().toString()), localDateTime, pollOptions);
                                 break;
                             case "CUSTOM":
-                                id = PollManager.createCustomPoll(saving.getPollname().toString(), new PollDescription(saving.getDescription().toString()), localDateTime, pollOptions, saving.getCanVoteList(), saving.getCanSeeAndVoteList());
+                                    id = PollManager.createCustomPoll(saving.getPollname().toString(), new PollDescription(saving.getDescription().toString()), localDateTime, pollOptions, saving.getCanVoteList(), saving.getCanSeeAndVoteList());
+                                if(!(saving.getIsGroupPoll() == null)){
+                                    FirebaseDatabase.getInstance().getReference().child(currRoomName).child("Messages").child("" + id).setValue("");
+                                }
                                 break;
                             case "GEOFENCE":
                                     //TODO
