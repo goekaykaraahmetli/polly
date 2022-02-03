@@ -22,6 +22,7 @@ import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
@@ -29,6 +30,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
@@ -118,6 +120,7 @@ public class PolloptionFragment extends Fragment implements OnMapReadyCallback {
                              @Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         View root = inflater.inflate(R.layout.activity_polloptions, container, false);
+        ConstraintLayout mapLayout = (ConstraintLayout) root.findViewById(R.id.mapLayoutPollOptionFragment);
         SavingClass saving = new ViewModelProvider(getActivity()).get(SavingClass.class);
         Calendar calendar = Calendar.getInstance();
         int year = calendar.get(Calendar.YEAR);
@@ -128,20 +131,15 @@ public class PolloptionFragment extends Fragment implements OnMapReadyCallback {
         if (saving.getNumberOfParticipants() != 0) {
             ((EditText) root.findViewById(R.id.PollyRoomNumber)).setText(String.valueOf(saving.getNumberOfParticipants()));
         }
-        if (saving.getArea() != null) {
-            ((AutoCompleteTextView) root.findViewById(R.id.geofencing)).setText(saving.getArea().toString());
-        }
         AutoCompleteTextView test = (AutoCompleteTextView) root.findViewById(R.id.DatePicker);
         AutoCompleteTextView dropDownMenu = (AutoCompleteTextView) root.findViewById(R.id.autoCompleteTextView);
 
         TextInputLayout datePicker = (TextInputLayout) root.findViewById(R.id.DateLayout);
-        TextInputLayout geofence = (TextInputLayout) root.findViewById(R.id.geofencingLayout);
         TextInputLayout votingCandidates = (TextInputLayout) root.findViewById(R.id.votingCandidatesLayout);
         TextInputLayout oberserveCandidates = (TextInputLayout) root.findViewById(R.id.observingCandidatesLayout);
         TextInputLayout pollyRoom = (TextInputLayout) root.findViewById(R.id.PollRoomLayout);
         TextView pollyRoomInfo = (TextView) root.findViewById(R.id.PollyRoomInfo);
         //Button createPollBtn = (Button) root.findViewById(R.id.CreatePollOnMenu);
-        AutoCompleteTextView geofenceBtn = (AutoCompleteTextView) root.findViewById(R.id.geofencing);
 
         dropDownMenu.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -149,37 +147,38 @@ public class PolloptionFragment extends Fragment implements OnMapReadyCallback {
 
                 if (dropDownMenu.getText().toString().equals("GEOFENCE")) {
                     //createPollBtn.setText("CREATE POLL");
-                    geofence.setVisibility(View.VISIBLE);
                     votingCandidates.setVisibility(View.GONE);
                     oberserveCandidates.setVisibility(View.GONE);
                     pollyRoom.setVisibility(View.GONE);
                     pollyRoomInfo.setVisibility(View.GONE);
                     datePicker.setVisibility(View.VISIBLE);
+                    mapLayout.setVisibility(View.VISIBLE);
+                    createForGeofencePoll(root);
                 } else if (dropDownMenu.getText().toString().equals("CUSTOM")) {
                     //createPollBtn.setText("CREATE POLL");
-                    geofence.setVisibility(View.GONE);
                     votingCandidates.setVisibility(View.VISIBLE);
                     oberserveCandidates.setVisibility(View.VISIBLE);
                     pollyRoom.setVisibility(View.GONE);
                     pollyRoomInfo.setVisibility(View.GONE);
                     datePicker.setVisibility(View.VISIBLE);
+                    mapLayout.setVisibility(View.GONE);
                 } else if (dropDownMenu.getText().toString().equals("PUBLIC")) {
                     //createPollBtn.setText("CREATE POLL");
-                    geofence.setVisibility(View.GONE);
                     votingCandidates.setVisibility(View.GONE);
                     oberserveCandidates.setVisibility(View.GONE);
                     pollyRoom.setVisibility(View.GONE);
                     pollyRoomInfo.setVisibility(View.GONE);
                     datePicker.setVisibility(View.VISIBLE);
+                    mapLayout.setVisibility(View.GONE);
                 } else if (dropDownMenu.getText().toString().equals("POLLYROOM")) {
                     //createPollBtn.setText("SCAN ROOM");
-                    geofence.setVisibility(View.GONE);
                     votingCandidates.setVisibility(View.GONE);
                     oberserveCandidates.setVisibility(View.GONE);
                     pollyRoomInfo.setVisibility(View.VISIBLE);
                     pollyRoom.setVisibility(View.VISIBLE);
                     saving.setCalendarText(null);
                     datePicker.setVisibility(View.GONE);
+                    mapLayout.setVisibility(View.GONE);
                 }
             }
         });
@@ -187,15 +186,15 @@ public class PolloptionFragment extends Fragment implements OnMapReadyCallback {
             dropDownMenu.setText(saving.getDropDownMenu().toString());
             if (dropDownMenu.getText().toString().equals("GEOFENCE")) {
                 //createPollBtn.setText("CREATE POLL");
-                geofence.setVisibility(View.VISIBLE);
                 votingCandidates.setVisibility(View.GONE);
                 oberserveCandidates.setVisibility(View.GONE);
                 pollyRoom.setVisibility(View.GONE);
                 pollyRoomInfo.setVisibility(View.GONE);
                 datePicker.setVisibility(View.VISIBLE);
+                mapLayout.setVisibility(View.VISIBLE);
+                createForGeofencePoll(root);
             } else if (dropDownMenu.getText().toString().equals("CUSTOM")) {
                 //createPollBtn.setText("CREATE POLL");
-                geofence.setVisibility(View.GONE);
                 votingCandidates.setVisibility(View.VISIBLE);
                 oberserveCandidates.setVisibility(View.VISIBLE);
                 AutoCompleteTextView votingCandidatesList = (AutoCompleteTextView) root.findViewById(R.id.votingCandidates);
@@ -221,15 +220,16 @@ public class PolloptionFragment extends Fragment implements OnMapReadyCallback {
                         observingCandidatesList.setText(saving.getCanSeeAndVoteList().get(0) + "," + saving.getCanSeeAndVoteList().get(1) + ", ...");
                     }
                 }
+                mapLayout.setVisibility(View.GONE);
             } else if (dropDownMenu.getText().toString().equals("POLLYROOM")) {
                 //createPollBtn.setText("SCAN ROOM");
-                geofence.setVisibility(View.GONE);
                 votingCandidates.setVisibility(View.GONE);
                 oberserveCandidates.setVisibility(View.GONE);
                 pollyRoomInfo.setVisibility(View.VISIBLE);
                 pollyRoom.setVisibility(View.VISIBLE);
                 saving.setCalendarText(null);
                 datePicker.setVisibility(View.GONE);
+                mapLayout.setVisibility(View.GONE);
             }
         }
 
@@ -294,7 +294,7 @@ public class PolloptionFragment extends Fragment implements OnMapReadyCallback {
                 Navigation.findNavController(getActivity(), R.id.nav_host_fragment).navigate(R.id.observingCandidates2);
             }
         });
-        geofenceBtn.setOnClickListener(new View.OnClickListener() {
+        mapLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 saving.setPollname(Pollname.getText());
@@ -376,24 +376,6 @@ public class PolloptionFragment extends Fragment implements OnMapReadyCallback {
         return diffYears > 0;
     }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     private void createForGeofencePoll(View view) {
         if (!checkGooglePlayServices()) {
             Toast.makeText(getContext(), "No Google Play Services Available!", Toast.LENGTH_SHORT).show();
@@ -401,7 +383,7 @@ public class PolloptionFragment extends Fragment implements OnMapReadyCallback {
         }
 
 
-        SupportMapFragment supportMapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.fragmentMapShowPoll);
+        SupportMapFragment supportMapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.activityPollOptionsMap);
         supportMapFragment.getMapAsync(this);
     }
 
