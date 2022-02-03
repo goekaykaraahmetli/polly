@@ -5,6 +5,7 @@ import android.app.ActivityManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
@@ -22,6 +23,12 @@ import androidx.navigation.Navigation;
 
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
+import com.karumi.dexter.Dexter;
+import com.karumi.dexter.PermissionToken;
+import com.karumi.dexter.listener.PermissionDeniedResponse;
+import com.karumi.dexter.listener.PermissionGrantedResponse;
+import com.karumi.dexter.listener.PermissionRequest;
+import com.karumi.dexter.listener.single.PermissionListener;
 import com.polly.R;
 import com.polly.utils.Organizer;
 import com.polly.utils.SavingClass;
@@ -31,11 +38,12 @@ import com.polly.utils.geofencing.Restarter;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     private static final int LOCATION_ACCESS_REQUEST_CODE = 1243436;
+    private static final int MY_PERMISSIONS_REQUEST_BACKGROUND_LOCATION = 99;
+    private static final int MY_PERMISSIONS_REQUEST_LOCATION = 66;
 
     protected DrawerLayout drawerLayout;
     private ActionBarDrawerToggle actionBarDrawerToggle;
     Intent geofencingIntent;
-    private Geofencing geofencingService;
 
 
     @Override
@@ -71,14 +79,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     @Override
     protected void onDestroy() {
-        if(!isMyServiceRunning(geofencingService.getClass())) {
+        if(!isMyServiceRunning(Geofencing.class)) {
             Intent broadcastIntent = new Intent();
             broadcastIntent.setAction("restartservice");
             broadcastIntent.setClass(this, Restarter.class);
             this.sendBroadcast(broadcastIntent);
         }
-
-
 
         super.onDestroy();
     }
@@ -127,15 +133,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             // to handle the case where the user grants the permission. See the documentation
             // for ActivityCompat#requestPermissions for more details.
             System.out.println("permission missing");
-            requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, LOCATION_ACCESS_REQUEST_CODE);
-
+            //requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, LOCATION_ACCESS_REQUEST_CODE);
+            requestBackgroundPermission();
             return;
         }
 
         Restarter.start();
-        geofencingService = new Geofencing();
-        geofencingIntent = new Intent(this, geofencingService.getClass());
-        if(!isMyServiceRunning(geofencingService.getClass())) {
+        geofencingIntent = new Intent(this, Geofencing.class);
+        if(!isMyServiceRunning(Geofencing.class)) {
             startService(geofencingIntent);
         }
     }
@@ -156,6 +161,19 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_BACKGROUND_LOCATION) == PackageManager.PERMISSION_GRANTED) {
                 startGeofencing();
             }
+        } else if(requestCode == MY_PERMISSIONS_REQUEST_LOCATION) {
+            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+                requestPermissions(new String[]{Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION,
+                        Manifest.permission.ACCESS_BACKGROUND_LOCATION}, MY_PERMISSIONS_REQUEST_BACKGROUND_LOCATION);
+            }
+        } else if(requestCode == MY_PERMISSIONS_REQUEST_BACKGROUND_LOCATION) {
+            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_BACKGROUND_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+                startGeofencing();
+            }
         }
+    }
+
+    private void requestBackgroundPermission() {
+        requestPermissions(new String[]{Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION}, MY_PERMISSIONS_REQUEST_LOCATION);
     }
 }
