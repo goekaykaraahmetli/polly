@@ -5,57 +5,80 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Filter;
 import android.widget.Filterable;
-import android.widget.ImageView;
+
 import android.widget.TextView;
+import android.widget.Toast;
+
 import com.polly.R;
+import com.polly.utils.Organizer;
+import com.polly.utils.command.poll.FindPollCommand;
+import com.polly.utils.communication.DataStreamManager;
+import com.polly.utils.communicator.ResponseCommunicator;
 import com.polly.utils.item.PollItem;
-import com.polly.utils.item.SearchListItem;
+import com.polly.utils.wrapper.ErrorWrapper;
+import com.polly.utils.wrapper.Message;
+import com.polly.utils.wrapper.PollOptionListWrapper;
+import com.polly.utils.wrapper.PollOptionsWrapper;
+import com.polly.visuals.MainActivity;
+
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ListAdapterPoll extends RecyclerView.Adapter<ListAdapterPoll.ListViewHolder> implements Filterable {
+public class ListAdapterPoll extends RecyclerView.Adapter<ListAdapterPoll.ListViewHolder>{
     private List<PollItem> mExampleList;
     private List<PollItem> exampleListFull;
     private OnItemClickListener mListener;
+    private static ResponseCommunicator communicator = initialiseCommunicator();
 
-    @Override
-    public Filter getFilter() {
-        return exampleFilter;
+    private static ResponseCommunicator initialiseCommunicator(){
+        return new ResponseCommunicator() {
+            @Override
+            public void handleInput(Message message) {
+                System.out.println("PollSearchFragment received message from " + message.getSender() + " with responseId " + message.getResponseId());
+                System.out.println("from type: " + message.getDataType().getName());
+
+            }
+        };
     }
-    private Filter exampleFilter = new Filter() {
-        @Override
-        protected FilterResults performFiltering(CharSequence charSequence) {
+        public List<PollItem> performFiltering(CharSequence charSequence, boolean isActive, boolean isExpired) {
             List<PollItem> filteredList = new ArrayList<>();
+            List<PollOptionsWrapper> pollItems = null;
 
             if(charSequence == null || charSequence.length() == 0){
                 filteredList.addAll(exampleListFull);
             }else{
-                String filterPattern = charSequence.toString().toLowerCase().trim();
+                String filterPattern = charSequence.toString().toLowerCase();
 
-                for(PollItem item : exampleListFull){
-                    if(item.getPollname().toLowerCase().contains(filterPattern)){
-                        filteredList.add(item);
+                try {
+                    Message message = communicator.sendWithResponse(DataStreamManager.PARTNERS_DEFAULT_COMMUNICATION_ID, new FindPollCommand(filterPattern, "", isActive, isExpired));
+                    if(message.getDataType().equals(PollOptionListWrapper.class)){
+                        pollItems = ((PollOptionListWrapper) message.getData()).getList();
+                        for(PollOptionsWrapper pollOption: pollItems){
+                            PollItem pollItem = new PollItem(pollOption.getBasicPollInformation().getId(), pollOption.getBasicPollInformation().getName(), pollOption.getBasicPollInformation().getCreator());
+                            filteredList.add(pollItem);
+                        }
+                    }else if(message.getDataType().equals(ErrorWrapper.class)){
+                        Toast.makeText(Organizer.getMainActivity(), ((ErrorWrapper) message.getData()).getMessage(), Toast.LENGTH_SHORT).show();
+                    }else{
+                        Toast.makeText(Organizer.getMainActivity(), "Something went wrong", Toast.LENGTH_SHORT).show();
                     }
+                } catch (IOException e) {
+                    e.printStackTrace();
                 }
-
             }
-            FilterResults results = new FilterResults();
-            results.values = filteredList;
 
-            return results;
-        }
-
-        @Override
-        protected void publishResults(CharSequence charSequence, FilterResults filterResults) {
             mExampleList.clear();
-            mExampleList.addAll((List) filterResults.values);
+            mExampleList.addAll((List) filteredList);
             notifyDataSetChanged();
+
+            return mExampleList;
         }
-    };
+
 
     public interface OnItemClickListener{
         void onItemClick(int position);

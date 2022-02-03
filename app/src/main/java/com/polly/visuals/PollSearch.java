@@ -45,6 +45,8 @@ public class PollSearch extends Fragment {
     private RecyclerView.LayoutManager mLayoutManager;
     private List<PollOptionsWrapper> pollItems;
     private static ResponseCommunicator communicator = initialiseCommunicator();
+    boolean isActive = true;
+    boolean isExpired = false;
 
     private static ResponseCommunicator initialiseCommunicator(){
         return new ResponseCommunicator() {
@@ -83,7 +85,6 @@ public class PollSearch extends Fragment {
         ArrayList<PollItem> exampleList = new ArrayList<>();
         if(pollItems != null){
             for(int i = 0; i< pollItems.size() ; i ++){
-                System.out.println(pollItems.get(i).getBasicPollInformation().getName());
                 exampleList.add(new PollItem(pollItems.get(i).getBasicPollInformation().getId(), pollItems.get(i).getBasicPollInformation().getName(), pollItems.get(i).getBasicPollInformation().getCreator()));
             }
         }
@@ -102,8 +103,8 @@ public class PollSearch extends Fragment {
             @Override
             public void onItemClick(int position) {
                 AlertDialog.Builder alert = new AlertDialog.Builder(getContext());
-                alert.setTitle("Go to Poll");
-                alert.setMessage("Choose " + exampleList.get(position).getPollname() + "?");
+                alert.setTitle("Vote for Poll");
+                alert.setMessage("Do you want to participate in " + exampleList.get(position).getPollname() + "?");
                 alert.setPositiveButton("YES", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
@@ -129,7 +130,12 @@ public class PollSearch extends Fragment {
                         Message message = communicator.sendWithResponse(DataStreamManager.PARTNERS_DEFAULT_COMMUNICATION_ID, new FindPollCommand("", "", true, isExpired.isChecked()));
                         if(message.getDataType().equals(PollOptionListWrapper.class)){
                             pollItems = ((PollOptionListWrapper) message.getData()).getList();
+                            exampleList.clear();
+                            for(int i = 0; i < pollItems.size(); i++) {
+                                exampleList.add(new PollItem(pollItems.get(i).getBasicPollInformation().getId(), pollItems.get(i).getBasicPollInformation().getName(), pollItems.get(i).getBasicPollInformation().getCreator()));
+                            }
                             mAdapter.notifyDataSetChanged();
+                            isActive = true;
                         }else if(message.getDataType().equals(ErrorWrapper.class)){
                             Toast.makeText(getActivity(), ((ErrorWrapper) message.getData()).getMessage(), Toast.LENGTH_SHORT).show();
                         }else{
@@ -144,7 +150,12 @@ public class PollSearch extends Fragment {
                         Message message = communicator.sendWithResponse(DataStreamManager.PARTNERS_DEFAULT_COMMUNICATION_ID, new FindPollCommand("", "", false, isExpired.isChecked()));
                         if(message.getDataType().equals(PollOptionListWrapper.class)){
                             pollItems = ((PollOptionListWrapper) message.getData()).getList();
+                            exampleList.clear();
+                            for(int i = 0; i < pollItems.size(); i++) {
+                                exampleList.add(new PollItem(pollItems.get(i).getBasicPollInformation().getId(), pollItems.get(i).getBasicPollInformation().getName(), pollItems.get(i).getBasicPollInformation().getCreator()));
+                            }
                             mAdapter.notifyDataSetChanged();
+                            isActive = false;
                         }else if(message.getDataType().equals(ErrorWrapper.class)){
                             Toast.makeText(getActivity(), ((ErrorWrapper) message.getData()).getMessage(), Toast.LENGTH_SHORT).show();
                         }else{
@@ -166,7 +177,12 @@ public class PollSearch extends Fragment {
                         Message message = communicator.sendWithResponse(DataStreamManager.PARTNERS_DEFAULT_COMMUNICATION_ID, new FindPollCommand("", "", isActive.isChecked(), true));
                         if(message.getDataType().equals(PollOptionListWrapper.class)){
                             pollItems = ((PollOptionListWrapper) message.getData()).getList();
+                            exampleList.clear();
+                            for(int i = 0; i < pollItems.size(); i++) {
+                                exampleList.add(new PollItem(pollItems.get(i).getBasicPollInformation().getId(), pollItems.get(i).getBasicPollInformation().getName(), pollItems.get(i).getBasicPollInformation().getCreator()));
+                            }
                             mAdapter.notifyDataSetChanged();
+                            isExpired = true;
                         }else if(message.getDataType().equals(ErrorWrapper.class)){
                             Toast.makeText(getActivity(), ((ErrorWrapper) message.getData()).getMessage(), Toast.LENGTH_SHORT).show();
                         }else{
@@ -181,7 +197,12 @@ public class PollSearch extends Fragment {
                         Message message = communicator.sendWithResponse(DataStreamManager.PARTNERS_DEFAULT_COMMUNICATION_ID, new FindPollCommand("", "", isActive.isChecked(), false));
                         if(message.getDataType().equals(PollOptionListWrapper.class)){
                             pollItems = ((PollOptionListWrapper) message.getData()).getList();
+                            exampleList.clear();
+                            for(int i = 0; i < pollItems.size(); i++) {
+                                exampleList.add(new PollItem(pollItems.get(i).getBasicPollInformation().getId(), pollItems.get(i).getBasicPollInformation().getName(), pollItems.get(i).getBasicPollInformation().getCreator()));
+                            }
                             mAdapter.notifyDataSetChanged();
+                            isExpired = false;
                         }else if(message.getDataType().equals(ErrorWrapper.class)){
                             Toast.makeText(getActivity(), ((ErrorWrapper) message.getData()).getMessage(), Toast.LENGTH_SHORT).show();
                         }else{
@@ -214,7 +235,7 @@ public class PollSearch extends Fragment {
             @Override
             public boolean onQueryTextChange(String newText) {
                 if(mAdapter == null)return false;
-                mAdapter.getFilter().filter(newText);
+                mAdapter.performFiltering(newText, isActive, isExpired);
                 return false;
             }
         });

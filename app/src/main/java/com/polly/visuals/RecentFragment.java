@@ -158,7 +158,7 @@ public class RecentFragment extends Fragment {
             @Override
             public boolean onQueryTextChange(String newText) {
                 if(mAdapter == null)return false;
-                mAdapter.getFilter().filter(newText);
+                //mAdapter.getFilter().filter(newText);
                 return false;
             }
         });
