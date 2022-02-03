@@ -69,5 +69,9 @@
             android:process=":geofencing"
             android:label="Geofencing" >
         </service>
+        <service
+            android:name=".utils.geofencing.MyLocationService"
+            android:permission="android.permission.ACCESS_BACKGROUND_LOCATION"
+            />
     </application>
 </manifest>
