@@ -49,10 +49,10 @@ public class ListAdapterPoll extends RecyclerView.Adapter<ListAdapterPoll.ListVi
             List<PollItem> filteredList = new ArrayList<>();
             List<PollOptionsWrapper> pollItems = null;
 
-            if(charSequence == null || charSequence.length() == 0){
+            if(charSequence == null){
                 filteredList.addAll(exampleListFull);
             }else{
-                String filterPattern = charSequence.toString().toLowerCase();
+                String filterPattern = charSequence.toString();
 
                 try {
                     Message message = communicator.sendWithResponse(DataStreamManager.PARTNERS_DEFAULT_COMMUNICATION_ID, new FindPollCommand(filterPattern, "", isActive, isExpired));
