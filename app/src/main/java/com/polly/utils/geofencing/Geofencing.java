@@ -48,6 +48,7 @@ public class Geofencing extends Service {
     private static final long MINIMUM_TIME_BETWEEN_UPDATES = 10;
     private static final int GEOFENCE_UPDATE_DELAY = 10;
     protected LocationManager locationManager;
+    private LocationListener locationListener;
     private ResponseCommunicator communicator;
     private List<GeofenceEntry> geofences;
     Timer timer;
@@ -117,11 +118,9 @@ public class Geofencing extends Service {
         HandlerThread handlerThread = new HandlerThread("GeofencingThread");
         handlerThread.start();
 
-        LocationListener locationListener = new LocationListener() {
+        locationListener = new LocationListener() {
             @Override
             public void onLocationChanged(@NonNull Location location) {
-                System.out.println("location changed AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
-
                 if(!Organizer.isLoggedIn())
                     return;
 
@@ -137,8 +136,6 @@ public class Geofencing extends Service {
                                     requestingGeofences = true;
                                 }
                             }, GEOFENCE_UPDATE_DELAY * 1000);
-
-                            System.out.println("received geofences--------------------------------------------");
                         }
                     } catch (IOException e) {
                         e.printStackTrace();
@@ -179,7 +176,10 @@ public class Geofencing extends Service {
     public void onDestroy() {
         super.onDestroy();
 
-
+        timer.cancel();
+        timer = null;
+        locationManager.removeUpdates(locationListener);
+        communicator = null;
 
         Intent broadcastIntent = new Intent();
         broadcastIntent.setAction("restartservice");
