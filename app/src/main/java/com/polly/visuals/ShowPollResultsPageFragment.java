@@ -161,6 +161,11 @@ public class ShowPollResultsPageFragment extends Fragment implements OnMapReadyC
         mRecyclerView = root.findViewById(R.id.PollOptionRecyclerView);
         mRecyclerView.setHasFixedSize(true); //Performance
         listPollname = (TextView) root.findViewById(R.id.listviewName);
+        toggleView.setChecked(ShowPollVotingPageFragment.toggled);
+        if(toggleView.isChecked()){
+            root.findViewById(R.id.toggleViewLayout).setVisibility(View.VISIBLE);
+            pieChart.setVisibility(View.INVISIBLE);
+        }
 
         try {
             if (PollManager.isMyPoll(id)) {

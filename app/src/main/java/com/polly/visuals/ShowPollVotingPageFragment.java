@@ -122,6 +122,7 @@ public class ShowPollVotingPageFragment extends Fragment implements OnMapReadyCa
     private FusedLocationProviderClient fusedLocationProviderClient;
     Location usersLocation;
     private TextView listPollname;
+    public static boolean toggled = false;
 
     private SavingClass saving;
 
@@ -211,9 +212,11 @@ public class ShowPollVotingPageFragment extends Fragment implements OnMapReadyCa
                 if(isChecked){
                     root.findViewById(R.id.toggleViewLayout).setVisibility(View.VISIBLE);
                     pieChart.setVisibility(View.INVISIBLE);
+                    toggled = true;
                 }else{
                     root.findViewById(R.id.toggleViewLayout).setVisibility(View.INVISIBLE);
                     pieChart.setVisibility(View.VISIBLE);
+                    toggled = false;
                 }
 
             }
