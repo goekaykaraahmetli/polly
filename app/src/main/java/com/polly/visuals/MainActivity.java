@@ -30,6 +30,8 @@ import com.polly.utils.geofencing.Restarter;
 
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+    private static final int LOCATION_ACCESS_REQUEST_CODE = 1243436;
+
     protected DrawerLayout drawerLayout;
     private ActionBarDrawerToggle actionBarDrawerToggle;
     Intent geofencingIntent;
@@ -119,6 +121,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             //                                          int[] grantResults)
             // to handle the case where the user grants the permission. See the documentation
             // for ActivityCompat#requestPermissions for more details.
+            requestPermissions(new String[]{Manifest.permission.CAMERA}, LOCATION_ACCESS_REQUEST_CODE);
             return;
         }
 
@@ -133,5 +136,17 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         System.out.println("stopping geofencing");
 
         stopService(geofencingIntent);
+    }
+
+
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == LOCATION_ACCESS_REQUEST_CODE) {
+            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_BACKGROUND_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+                startGeofencing();
+            }
+        }
     }
 }
