@@ -195,7 +195,7 @@ public class CreatePollUsergroup extends Fragment {
                         Iterator iter = snapshot.child("Users").getChildren().iterator();
                         List<String> canVoteList = new ArrayList<>();
                         while (iter.hasNext()) {
-                            canVoteList.add((String) ((DataSnapshot) iter.next()).getValue());
+                            canVoteList.add((String) ((DataSnapshot) iter.next()).getKey());
                         }
 
 

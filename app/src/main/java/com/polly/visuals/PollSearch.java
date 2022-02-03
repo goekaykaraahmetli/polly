@@ -105,22 +105,7 @@ public class PollSearch extends Fragment {
         mAdapter.setOnItemClickListener(new ListAdapterPoll.OnItemClickListener() {
             @Override
             public void onItemClick(int position) {
-                AlertDialog.Builder alert = new AlertDialog.Builder(getContext());
-                alert.setTitle("Vote for Poll");
-                alert.setMessage("Do you want to participate in " + exampleList.get(position).getPollname() + "?");
-                alert.setPositiveButton("YES", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        ShowPollPage.enterPoll(getContext(), exampleList.get(position).getId());
-                    }
-                });
-                alert.setNegativeButton("NO", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-
-                    }
-                });
-                alert.create().show();
+                ShowPollPage.enterPoll(getContext(), exampleList.get(position).getId());
             }
         });
 

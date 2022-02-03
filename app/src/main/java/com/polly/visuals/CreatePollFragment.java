@@ -1,4 +1,6 @@
 package com.polly.visuals;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.polly.utils.QRCode;
 import com.polly.utils.SavingClass;
@@ -228,7 +230,17 @@ public class CreatePollFragment extends Fragment {
                             case "CUSTOM":
                                     id = PollManager.createCustomPoll(saving.getPollname().toString(), new PollDescription(saving.getDescription().toString()), localDateTime, pollOptions, saving.getCanVoteList(), saving.getCanSeeAndVoteList());
                                 if(!(saving.getIsGroupPoll() == null)){
-                                    FirebaseDatabase.getInstance().getReference().child(currRoomName).child("Messages").child("" + id).setValue("");
+
+                                    Map<String,Object> map1 = new HashMap<String, Object>();
+                                    String temp_key = FirebaseDatabase.getInstance().getReference().child(currRoomName).child("Messages").push().getKey();
+                                    FirebaseDatabase.getInstance().getReference().child(currRoomName).child("Messages").updateChildren(map1);
+
+                                    DatabaseReference message_root = FirebaseDatabase.getInstance().getReference().child(currRoomName).child("Messages").child(temp_key);
+                                    Map<String,Object> map2 = new HashMap<String, Object>();
+                                    map2.put("id",id);
+                                    map2.put("name", FirebaseAuth.getInstance().getCurrentUser().getDisplayName());
+                                    map2.put("pollname",saving.getPollname().toString() );
+                                    message_root.updateChildren(map2);
                                 }
                                 break;
                             case "GEOFENCE":
