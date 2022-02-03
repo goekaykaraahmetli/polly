@@ -25,6 +25,7 @@ import androidx.core.app.NotificationManagerCompat;
 
 import com.polly.R;
 import com.polly.utils.Area;
+import com.polly.utils.Organizer;
 import com.polly.utils.command.GetGeofencesCommand;
 import com.polly.utils.communication.DataStreamManager;
 import com.polly.utils.communicator.ResponseCommunicator;
@@ -45,7 +46,7 @@ public class Geofencing extends Service {
     private static final String CHANNEL_ID = "channel_gjkasFLjkgjaksfajslfghasf";
     private static final long MINIMUM_DISTANCE_CHANGE_FOR_UPDATES = 0;
     private static final long MINIMUM_TIME_BETWEEN_UPDATES = 10;
-    private static final int GEOFENCE_UPDATE_DELAY = 600;
+    private static final int GEOFENCE_UPDATE_DELAY = 10;
     protected LocationManager locationManager;
     private ResponseCommunicator communicator;
     private List<GeofenceEntry> geofences;
@@ -119,6 +120,11 @@ public class Geofencing extends Service {
         LocationListener locationListener = new LocationListener() {
             @Override
             public void onLocationChanged(@NonNull Location location) {
+                System.out.println("location changed AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
+
+                if(!Organizer.isLoggedIn())
+                    return;
+
                 if(requestingGeofences) {
                     try {
                         Message message = communicator.sendWithResponse(DataStreamManager.PARTNERS_DEFAULT_COMMUNICATION_ID, new GetGeofencesCommand(new com.polly.utils.Location(location.getLatitude(), location.getLongitude())));
@@ -167,9 +173,14 @@ public class Geofencing extends Service {
         return returnVal;
     }
 
+
+
     @Override
     public void onDestroy() {
         super.onDestroy();
+
+
+
         Intent broadcastIntent = new Intent();
         broadcastIntent.setAction("restartservice");
         broadcastIntent.setClass(this, Restarter.class);

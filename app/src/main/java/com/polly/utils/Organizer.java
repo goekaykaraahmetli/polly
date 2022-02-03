@@ -23,6 +23,7 @@ public class Organizer {
 	private static MainActivity mainActivity;
 
 	private static final long DEFAULT_COMMUNICATION_ID = 0L;
+	private static boolean loggedIn;
 
 	static {
 		createSocketHandler(7500);
@@ -132,4 +133,11 @@ public class Organizer {
 		return socketHandler;
 	}
 
+	public static boolean isLoggedIn() {
+		return loggedIn;
+	}
+
+	public static void setLoggedIn(boolean loggedIn) {
+		Organizer.loggedIn = loggedIn;
+	}
 }
