@@ -259,19 +259,28 @@ public class ShowPollResultsPageFragment extends Fragment implements OnMapReadyC
         pieChart.setOnChartValueSelectedListener(new OnChartValueSelectedListener() {
             @Override
             public void onValueSelected(Entry e, Highlight h) {
-
+                PieEntry entry = (PieEntry) e;
+                String selectedOption = entry.getLabel();
+                int sum = pollResults.getPollResults().values().stream().mapToInt(Integer::intValue).sum();
+                int numberOfVotes = pollResults.getPollResults().get(selectedOption);
+                Toast.makeText(getContext(), numberOfVotes + "/" + sum + " have voted for this poll", Toast.LENGTH_SHORT).show();
             }
 
             @Override
             public void onNothingSelected() {
-                System.out.println("On Nothing selected");
+
             }
         });
+
         pieChart.setOnChartGestureListener(this);
+
         mRecyclerView.addOnItemTouchListener(new RecyclerItemClickListener(getContext(), mRecyclerView, new RecyclerItemClickListener.OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
-                //TODO show number of participants who voted for this option
+                PollResultItem selectedItem = listOptions.get(position);
+                int sum = pollResults.getPollResults().values().stream().mapToInt(Integer::intValue).sum();
+                int numberOfVotes = pollResults.getPollResults().get(selectedItem.getmText1());
+                Toast.makeText(getContext(), numberOfVotes + "/" + sum + " have voted for this poll", Toast.LENGTH_SHORT).show();
             }
 
             @Override

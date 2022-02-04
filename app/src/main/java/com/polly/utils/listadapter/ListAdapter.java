@@ -25,8 +25,6 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ListViewHolder
     private List<SearchListItem> mExampleList;
     private List<SearchListItem> exampleListFull;
     private OnItemClickListener mListener;
-    private Context context;
-    private int selectedPos = RecyclerView.NO_POSITION;
 
     @Override
     public Filter getFilter() {
@@ -78,10 +76,9 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ListViewHolder
         return evh;
     }
 
-    public ListAdapter(ArrayList<SearchListItem> exampleList, Context context){
+    public ListAdapter(ArrayList<SearchListItem> exampleList){
         this.mExampleList = exampleList;
         exampleListFull = new ArrayList<>(exampleList);
-        this.context = context;
     }
 
     @Override
@@ -91,7 +88,6 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ListViewHolder
         holder.mImageView.setImageResource(currentItem.getmImageResource());
         holder.mTextView1.setText(currentItem.getmText1());
 
-        holder.itemView.setSelected(selectedPos == position);
     }
 
     @Override
@@ -119,9 +115,6 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ListViewHolder
                             listener.onItemClick(getAdapterPosition());
                         }
                     }
-                    notifyItemChanged(selectedPos);
-                    selectedPos = getLayoutPosition();
-                    notifyItemChanged(selectedPos);
                 }
             });
 

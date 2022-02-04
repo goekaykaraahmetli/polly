@@ -89,6 +89,7 @@ import com.polly.utils.command.poll.RegisterPollChangeListenerCommand;
 import com.polly.utils.command.poll.RemovePollChangeListenerCommand;
 import com.polly.utils.communication.DataStreamManager;
 import com.polly.utils.communicator.Communicator;
+import com.polly.utils.item.PollResultItem;
 import com.polly.utils.item.SearchListItem;
 import com.polly.utils.listadapter.ListAdapter;
 import com.polly.utils.poll.PollDescription;
@@ -264,12 +265,33 @@ public class ShowPollVotingPageFragment extends Fragment implements OnMapReadyCa
         });
         //TODO recyclerview onClickListener
 
-        mAdapter.setOnItemClickListener(new ListAdapter.OnItemClickListener() {
+      /*  mAdapter.setOnItemClickListener(new ListAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(int position) {
                 showVoteButton(listOptions.get(position).getmText1());
             }
-        });
+        });*/
+        mRecyclerView.addOnItemTouchListener(new RecyclerItemClickListener(getContext(), mRecyclerView, new RecyclerItemClickListener.OnItemClickListener() {
+            View lastView = null;
+            @Override
+            public void onItemClick(View view, int position) {
+                showVoteButton(listOptions.get(position).getmText1());
+                if(lastView != null){
+                    lastView.setSelected(false);
+                }
+                lastView = view;
+                view.setSelected(true);
+            }
+
+            @Override
+            public void onLongItemClick(View view, int position) {
+                AlertDialog.Builder alert = new AlertDialog.Builder(getContext());
+                alert.setTitle("Polldescription");
+                alert.setMessage(pollOptions.getBasicPollInformation().getDescription().getDescription());
+                alert.setPositiveButton("OK", null);
+                alert.create().show();
+            }
+        }));
         pieChart.setOnChartGestureListener(this);
         pieChart.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -384,7 +406,7 @@ public class ShowPollVotingPageFragment extends Fragment implements OnMapReadyCa
         for (String option : pollOptions.getPollOptions()) {
             options.add(new SearchListItem(R.drawable.ic_logo, option));
         }
-        mAdapter = new ListAdapter(options, getContext());
+        mAdapter = new ListAdapter(options);
 
         mRecyclerView.setLayoutManager(mLayoutManager);
         mRecyclerView.setAdapter(mAdapter);
