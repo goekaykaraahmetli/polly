@@ -148,8 +148,6 @@ public class Geofencing extends Service {
                     }
                 }
 
-
-
                 if(!readyForNewLocation)
                     return;
 

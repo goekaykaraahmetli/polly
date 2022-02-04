@@ -259,9 +259,11 @@ public class LoginFragment extends Fragment {
                                 if (message.getDataType() == LoginAnswerWrapper.class) {
                                     LoginAnswerWrapper answer = (LoginAnswerWrapper) message.getData();
 
-                                    if (answer.isSuccessful())
+                                    if (answer.isSuccessful()) {
+                                        Organizer.getMainActivity().startGeofencing();
+                                        Organizer.setLoggedIn(true);
                                         Navigation.findNavController(Organizer.getMainActivity(), R.id.nav_host_fragment).navigate(R.id.accountFragment);
-                                    else {
+                                    } else {
                                         Toast.makeText(Organizer.getMainActivity(), "Something went wrong, please try again", Toast.LENGTH_SHORT).show();
                                         chooseUsernameAlert(idToken);
                                     }

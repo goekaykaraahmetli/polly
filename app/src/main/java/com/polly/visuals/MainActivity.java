@@ -139,6 +139,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
 
         Restarter.start();
+
         geofencingIntent = new Intent(this, Geofencing.class);
         if(!isMyServiceRunning(Geofencing.class)) {
             startService(geofencingIntent);
