@@ -1,5 +1,6 @@
 package com.polly.visuals;
 
+import android.app.ActionBar;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -10,6 +11,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.widget.LinearLayout;
+import android.widget.Toast;
+import android.widget.Toolbar;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -24,10 +27,18 @@ import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
 import com.github.mikephil.charting.utils.ColorTemplate;
 import com.polly.R;
+import com.polly.utils.Organizer;
 import com.polly.utils.ShowPollPage;
+import com.polly.utils.command.poll.FindPollCommand;
+import com.polly.utils.communication.DataStreamManager;
 import com.polly.utils.exceptions.CanNotSeePollResultsException;
+import com.polly.utils.item.PollItem;
 import com.polly.utils.listadapter.ListAdapterPoll;
 import com.polly.utils.poll.PollManager;
+import com.polly.utils.wrapper.ErrorWrapper;
+import com.polly.utils.wrapper.Message;
+import com.polly.utils.wrapper.PollOptionListWrapper;
+import com.polly.utils.wrapper.PollOptionsWrapper;
 import com.polly.utils.wrapper.PollResultsWrapper;
 
 import java.io.IOException;
@@ -39,27 +50,33 @@ import java.util.Map;
 
 public class RecentFragment extends Fragment {
     private RecyclerView mRecyclerView;
-    private ListAdapterPoll mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
     //private List<PollWrapper> pollItems;
+    private List<PollResultsWrapper> participatedPolls;
+    private List<PollResultsWrapper> myPolls;
+    private LinearLayout layoutMyPolls;
+    private LinearLayout layoutParticipatedPolls;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater,
                              @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
         View root = inflater.inflate(R.layout.fragment_recent, container, false);
-        LinearLayout layoutParticipatedPolls = root.findViewById(R.id.scrollLinearLayoutParticipatedPolls);
-        LinearLayout layoutMyPolls = root.findViewById(R.id.scrollLinearLayoutMyPolls);
+        layoutParticipatedPolls = root.findViewById(R.id.scrollLinearLayoutParticipatedPolls);
+        layoutMyPolls = root.findViewById(R.id.scrollLinearLayoutMyPolls);
+        setHasOptionsMenu(true);
 
-        List<PollResultsWrapper> participatedPolls = new ArrayList<>();
+
+        participatedPolls = new ArrayList<>();
         try {
             participatedPolls = PollManager.getParticipatedPolls();
         } catch (IOException e) {
             System.err.println("Fehler");
             e.printStackTrace();
         }
-        List<PollResultsWrapper> myPolls = new ArrayList<>();
+        myPolls = new ArrayList<>();
         try {
             myPolls = PollManager.getMyPolls();
         } catch (IOException e) {
@@ -70,17 +87,6 @@ public class RecentFragment extends Fragment {
         Collections.reverse(participatedPolls);
         Collections.reverse(myPolls);
 
-        /**try {
-            // get participatedPolls
-            // or
-            // get myPolls
-         } catch (InterruptedException | IllegalArgumentException e) {
-         Toast.makeText(getContext(), "unable to fetch your participated polls!", Toast.LENGTH_SHORT).show();
-         e.printStackTrace();
-         } catch (IOException e){
-         Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
-         e.printStackTrace();
-         }*/
 
         addPieChartsToLayout(layoutParticipatedPolls, participatedPolls);
         addPieChartsToLayout(layoutMyPolls, myPolls);
@@ -101,6 +107,7 @@ public class RecentFragment extends Fragment {
                 return true;
             });
             layout.addView(pieChart);
+
         }
     }
 
@@ -145,8 +152,11 @@ public class RecentFragment extends Fragment {
         pieChart.setCenterTextSize(10f);
         return pieChart;
     }
-    @Override
+
+
+   @Override
     public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
+        System.out.println("HALLOHALLO");
         super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.testmenu, menu);
 
@@ -162,10 +172,47 @@ public class RecentFragment extends Fragment {
 
             @Override
             public boolean onQueryTextChange(String newText) {
-                if(mAdapter == null)return false;
-                //mAdapter.getFilter().filter(newText);
+                performFilteringMyPolls(newText);
+                performFilteringParticipatedPolls(newText);
                 return false;
             }
         });
+    }
+
+    public List<PollResultsWrapper> performFilteringMyPolls(CharSequence charSequence) {
+        List<PollResultsWrapper> filteredList = new ArrayList<>();
+
+        if(charSequence == null){
+            filteredList.addAll(myPolls);
+        }else{
+            String filterPattern = charSequence.toString();
+
+            for(PollResultsWrapper pollOption: myPolls){
+                if(pollOption.getBasicPollInformation().getName().contains(filterPattern)){
+                    filteredList.add(pollOption);
+                }
+            }
+        }
+        ((LinearLayout) layoutMyPolls).removeAllViews();
+        addPieChartsToLayout(layoutMyPolls, filteredList);
+        return filteredList;
+    }
+    public List<PollResultsWrapper> performFilteringParticipatedPolls(CharSequence charSequence) {
+        List<PollResultsWrapper> filteredList = new ArrayList<>();
+
+        if(charSequence == null){
+            filteredList.addAll(participatedPolls);
+        }else{
+            String filterPattern = charSequence.toString();
+
+            for(PollResultsWrapper pollOption: participatedPolls){
+                if(pollOption.getBasicPollInformation().getName().contains(filterPattern)){
+                    filteredList.add(pollOption);
+                }
+            }
+        }
+        ((LinearLayout) layoutParticipatedPolls).removeAllViews();
+        addPieChartsToLayout(layoutParticipatedPolls, filteredList);
+        return filteredList;
     }
 }

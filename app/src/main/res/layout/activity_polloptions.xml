@@ -120,29 +120,29 @@
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/votingCandidatesLayout"
-            android:visibility="gone"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Voting Candidates"
+            android:visibility="gone"
             app:startIconDrawable="@drawable/ic_votinguser">
 
             <AutoCompleteTextView
                 android:id="@+id/votingCandidates"
                 android:layout_width="match_parent"
-                android:focusable="false"
                 android:layout_height="wrap_content"
+                android:focusable="false"
                 android:inputType="none"
                 android:textSize="14sp" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/observingCandidatesLayout"
-            android:visibility="gone"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Observing Candidates"
+            android:visibility="gone"
             app:startIconDrawable="@drawable/ic_observinguser">
 
             <AutoCompleteTextView
@@ -155,43 +155,42 @@
         </com.google.android.material.textfield.TextInputLayout>
 
 
-        <com.google.android.material.textfield.TextInputLayout
-            android:visibility="gone"
-            android:id="@+id/geofencingLayout"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/mapLayoutPollOptionFragment"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Radius"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/optionLayout"
-            app:startIconDrawable="@drawable/ic_geofence">
+            android:layout_height="match_parent"
+            android:visibility="gone">
 
-            <AutoCompleteTextView
-                android:id="@+id/geofencing"
+            <fragment
+                android:id="@+id/activityPollOptionsMap"
+                class="com.google.android.gms.maps.SupportMapFragment"
                 android:layout_width="match_parent"
-                android:focusable="false"
-                android:layout_height="wrap_content"
-                android:inputType="none"
-                android:textSize="14sp"/>
-        </com.google.android.material.textfield.TextInputLayout>
+                android:layout_height="match_parent"
+                android:visibility="visible"
+                android:clickable="true"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
 
         <TextView
             android:id="@+id/PollyRoomInfo"
-            android:visibility="gone"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Pollyroom is an innovative feature that allows you to vote in a group without the participants needing the Polly app, an internet connection or even a device of any kind. Just send the QR-Codes below to your computer, print them and let your participents vote."
-            android:textSize="12dp">
-        </TextView>
+            android:textSize="12dp"
+            android:visibility="gone"></TextView>
+
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/PollRoomLayout"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="match_parent"
-            android:visibility="gone"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
             android:hint="Number of Participants"
+            android:visibility="gone"
             app:endIconMode="clear_text"
             app:layout_constraintEnd_toEndOf="@id/guideline48"
             app:layout_constraintStart_toStartOf="@+id/guideline49"
@@ -202,8 +201,8 @@
                 android:id="@+id/PollyRoomNumber"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text=""
                 android:maxLength="2"
+                android:text=""
                 android:textSize="14sp" />
         </com.google.android.material.textfield.TextInputLayout>
 

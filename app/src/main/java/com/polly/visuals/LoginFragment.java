@@ -213,10 +213,13 @@ public class LoginFragment extends Fragment {
                                     }
                                     else if(!starting){
                                         Toast.makeText(Organizer.getMainActivity(), "Logged in successfully", Toast.LENGTH_SHORT).show();
+                                        Organizer.getMainActivity().startGeofencing();
+                                        Organizer.setLoggedIn(true);
                                         Navigation.findNavController(Organizer.getMainActivity(), R.id.nav_host_fragment).navigate(R.id.accountFragment);
                                     }
                                     else{
-
+                                        Organizer.getMainActivity().startGeofencing();
+                                        Organizer.setLoggedIn(true);
                                     }
                                 } else if(messageResponse.getDataType() == ErrorWrapper.class)
                                     Toast.makeText(Organizer.getMainActivity(), ((ErrorWrapper) messageResponse.getData()).getMessage(), Toast.LENGTH_SHORT).show();
@@ -256,9 +259,11 @@ public class LoginFragment extends Fragment {
                                 if (message.getDataType() == LoginAnswerWrapper.class) {
                                     LoginAnswerWrapper answer = (LoginAnswerWrapper) message.getData();
 
-                                    if (answer.isSuccessful())
+                                    if (answer.isSuccessful()) {
+                                        Organizer.getMainActivity().startGeofencing();
+                                        Organizer.setLoggedIn(true);
                                         Navigation.findNavController(Organizer.getMainActivity(), R.id.nav_host_fragment).navigate(R.id.accountFragment);
-                                    else {
+                                    } else {
                                         Toast.makeText(Organizer.getMainActivity(), "Something went wrong, please try again", Toast.LENGTH_SHORT).show();
                                         chooseUsernameAlert(idToken);
                                     }

@@ -1,91 +1,118 @@
 package com.polly.utils.geofencing;
 
 import android.Manifest;
+import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
+import android.app.Service;
 import android.content.Context;
-import android.content.ContextWrapper;
+import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.os.Build;
 import android.os.HandlerThread;
-import android.os.Looper;
+import android.os.IBinder;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.core.app.ActivityCompat;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 
 import com.polly.R;
 import com.polly.utils.Area;
+import com.polly.utils.Organizer;
+import com.polly.utils.command.GetGeofencesCommand;
+import com.polly.utils.command.NotificationCommand;
+import com.polly.utils.command.RegisterNotificationListenerCommand;
+import com.polly.utils.command.RemoveNotificationListenerCommand;
+import com.polly.utils.communication.DataStreamManager;
 import com.polly.utils.communicator.ResponseCommunicator;
+import com.polly.utils.poll.PollManager;
+import com.polly.utils.wrapper.ErrorWrapper;
 import com.polly.utils.wrapper.GeofenceEntryListWrapper;
 import com.polly.utils.wrapper.Message;
 
+import java.io.IOException;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
-public class Geofencing extends ContextWrapper {
-    private static final String CHANNEL_ID = "channel_gjkasFLjkgjaksf";
-    private ResponseCommunicator responseCommunicator;
+public class Geofencing extends Service {
+    private static final String CHANNEL_ID = "channel_gjkasFLjkgjaksfajslfghasf";
+    private static final long MINIMUM_DISTANCE_CHANGE_FOR_UPDATES = 0;
+    private static final long MINIMUM_TIME_BETWEEN_UPDATES = 10;
+    private static final int GEOFENCE_UPDATE_DELAY = 600;
+    protected LocationManager locationManager;
+    private LocationListener locationListener;
+    private ResponseCommunicator communicator;
     private List<GeofenceEntry> geofences;
+    Timer timer;
+    boolean readyForNewLocation;
+    boolean requestingGeofences;
 
-    public Geofencing(Context base) {
-        super(base);
 
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            // TODO: Consider calling
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
+    @Nullable
+    @Override
+    public IBinder onBind(Intent intent) {
+        return null;
+    }
 
-            return;
-        }
-
+    @Override
+    public void onCreate() {
+        super.onCreate();
         geofences = new LinkedList<>();
-        this.responseCommunicator = getResponseCommunicator();
+        this.communicator = getResponseCommunicator();
 
+        timer = new Timer();
+        readyForNewLocation = true;
 
         initNotificationChannel("Polly Geofence Channel", NotificationManager.IMPORTANCE_DEFAULT, "this is the channel for polly geofencing notifications");
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                start();
-            }
-        }).start();
 
-        addNewGeofence(new Area(50.0029, 9.2247, 3000), 1);
+        requestingGeofences = true;
+
+        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.O)
+            startGeofenceForeground();
+        else
+            startForeground(1, new Notification());
     }
+    @RequiresApi(Build.VERSION_CODES.O)
+    private void startGeofenceForeground(){
+        String NOTIFICATION_CHANNEL_ID = "example.permanence";
+        String channelName = "Background Service";
+        NotificationChannel chan = new NotificationChannel(NOTIFICATION_CHANNEL_ID, channelName, NotificationManager.IMPORTANCE_NONE);
+        chan.setLightColor(Color.BLUE);
+        chan.setLockscreenVisibility(Notification.VISIBILITY_PRIVATE);
 
-    private void initNotificationChannel(String name, int importance, String description) {
-        NotificationChannel channel = new NotificationChannel(CHANNEL_ID, name, importance);
-        channel.setDescription(description);
+        NotificationManager manager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        assert manager != null;
+        manager.createNotificationChannel(chan);
 
-        NotificationManager notificationManager = getSystemService(NotificationManager.class);
-        notificationManager.createNotificationChannel(channel);
+        NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this, NOTIFICATION_CHANNEL_ID);
+        Notification notification = notificationBuilder.setOngoing(true)
+                .setContentTitle("App is running in background")
+                .setPriority(NotificationManager.IMPORTANCE_MIN)
+                .setCategory(Notification.CATEGORY_SERVICE)
+                .build();
+        startForeground(2, notification);
     }
+    @Override
+    public int onStartCommand(Intent intent, int flags, int startId) {
+        int returnVal = super.onStartCommand(intent, flags, startId);
 
-    public void addNewGeofence(Area area, long id) {
-        geofences.add(new GeofenceEntry(area, id));
-    }
-
-    public void removeGeofence(Area area) {
-        List<GeofenceEntry> toRemove = new LinkedList<>();
-
-        for(GeofenceEntry entry : geofences) {
-            if(entry.getArea().equals(area))
-                toRemove.add(entry);
+        try {
+            communicator.send(DataStreamManager.PARTNERS_DEFAULT_COMMUNICATION_ID, new RegisterNotificationListenerCommand());
+        } catch (IOException e) {
+            e.printStackTrace();
         }
 
-        geofences.removeAll(toRemove);
-    }
-
-
-    private void start() {
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             // TODO: Consider calling
             //    ActivityCompat#requestPermissions
@@ -94,27 +121,80 @@ public class Geofencing extends ContextWrapper {
             //                                          int[] grantResults)
             // to handle the case where the user grants the permission. See the documentation
             // for ActivityCompat#requestPermissions for more details.
-
-            return;
+            return returnVal;
         }
 
         HandlerThread handlerThread = new HandlerThread("GeofencingThread");
         handlerThread.start();
 
-
-
-        LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-
-        LocationListener locationListener = new LocationListener() {
+        locationListener = new LocationListener() {
             @Override
             public void onLocationChanged(@NonNull Location location) {
-                System.out.println("location changed-------------------------------------------------------------");
+                if(requestingGeofences) {
+                    try {
+                        Message message = communicator.sendWithResponse(DataStreamManager.PARTNERS_DEFAULT_COMMUNICATION_ID, new GetGeofencesCommand(new com.polly.utils.Location(location.getLatitude(), location.getLongitude())));
+                        if(message.getDataType() == GeofenceEntryListWrapper.class) {
+                            updateGeofences(((GeofenceEntryListWrapper) message.getData()).getGeofenceEntries());
+                            requestingGeofences = false;
+                            timer.schedule(new TimerTask() {
+                                @Override
+                                public void run() {
+                                    requestingGeofences = true;
+                                }
+                            }, GEOFENCE_UPDATE_DELAY * 1000);
+                        }
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+
+                if(!readyForNewLocation)
+                    return;
+
+                readyForNewLocation = false;
+
+                timer.schedule(new TimerTask() {
+                    @Override
+                    public void run() {
+                        readyForNewLocation = true;
+                    }
+                }, 10000);
                 checkTransition(location.getLatitude(), location.getLongitude());
             }
         };
 
+        locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 
-        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5000, 10, locationListener, handlerThread.getLooper());
+        locationManager.requestLocationUpdates(
+                LocationManager.GPS_PROVIDER,
+                MINIMUM_TIME_BETWEEN_UPDATES,
+                MINIMUM_DISTANCE_CHANGE_FOR_UPDATES,
+                locationListener, handlerThread.getLooper());
+
+        return returnVal;
+    }
+
+
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+
+        try {
+            communicator.send(DataStreamManager.PARTNERS_DEFAULT_COMMUNICATION_ID, new RemoveNotificationListenerCommand());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        timer.cancel();
+        timer = null;
+        locationManager.removeUpdates(locationListener);
+        communicator = null;
+
+        Intent broadcastIntent = new Intent();
+        broadcastIntent.setAction("restartservice");
+        broadcastIntent.setClass(this, Restarter.class);
+        this.sendBroadcast(broadcastIntent);
     }
 
     private void checkTransition(double latitude, double longitude) {
@@ -139,18 +219,35 @@ public class Geofencing extends ContextWrapper {
 
 
     private void transitionEnter(GeofenceEntry entry) {
-        sendNotification("New Poll " + entry.getId() + "available!", "you entered the following area: " + entry.getArea().getLatitude() + "" + entry.getArea().getLongitude() + "" + entry.getArea().getRadius());
+        try {
+            LocalDateTime expirationTime = PollManager.getPollOptions(entry.getId()).getBasicPollInformation().getExpirationTime();
+
+            if (expirationTime.isBefore(LocalDateTime.now(ZoneId.of("Europe/Berlin")))) {
+                removeGeofence(entry);
+                return;
+            }
+
+            sendEnteredGeofenceNotification(entry.getId(), entry.getArea());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     private void transitionDwell(GeofenceEntry entry) {
-        sendNotification("Dwelling! " + entry.getId(), "you entered the following area: " + entry.getArea().getLatitude() + "" + entry.getArea().getLongitude() + "" + entry.getArea().getRadius());
+        //sendNotification("Dwelling! " + entry.getId(), "you entered the following area: " + entry.getArea().getLatitude() + "" + entry.getArea().getLongitude() + "" + entry.getArea().getRadius());
     }
 
     private void transitionExit(GeofenceEntry entry) {
-        sendNotification("Exiting! " + entry.getId(), "you entered the following area: " + entry.getArea().getLatitude() + "" + entry.getArea().getLongitude() + "" + entry.getArea().getRadius());
+        //sendNotification("Exiting! " + entry.getId(), "you entered the following area: " + entry.getArea().getLatitude() + "" + entry.getArea().getLongitude() + "" + entry.getArea().getRadius());
     }
 
+    private void sendEnteredGeofenceNotification(long id, Area area) {
+        sendNotification("New Poll " + id + "available!", "you entered the following area: " + area.getLatitude() + "" + area.getLongitude() + "" + area.getRadius());
+    }
 
+    private void sendNewCustomPollNotification(long id) {
+        sendNotification("New Poll", "Id = " + id);
+    }
 
     private void sendNotification(String title, String content) {
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this, CHANNEL_ID)
@@ -170,9 +267,45 @@ public class Geofencing extends ContextWrapper {
                 System.out.println("AccountFragment received message from " + message.getSender() + " with responseId " + message.getResponseId());
                 System.out.println("from type: " + message.getDataType().getName());
 
-                if(message.getDataType() == GeofenceEntryListWrapper.class)
-                    geofences = ((GeofenceEntryListWrapper) message.getData()).getGeofenceEntries();
+                if(message.getDataType().equals(NotificationCommand.class)) {
+                    NotificationCommand command = (NotificationCommand) message.getData();
+                    sendNewCustomPollNotification(command.getId());
+                }
             }
         };
+    }
+
+    private void initNotificationChannel(String name, int importance, String description) {
+        NotificationChannel channel = new NotificationChannel(CHANNEL_ID, name, importance);
+        channel.setDescription(description);
+
+        NotificationManager notificationManager = getSystemService(NotificationManager.class);
+        notificationManager.createNotificationChannel(channel);
+    }
+
+    public void removeGeofence(GeofenceEntry entry) {
+        geofences.remove(entry);
+    }
+
+    private void updateGeofences(List<GeofenceEntry> geofenceEntries) {
+        List<GeofenceEntry> newGeofenceEntries = new LinkedList<>();
+        List<GeofenceEntry> oldGeofenceEntries = new LinkedList<>();
+
+        for(GeofenceEntry newEntry : geofenceEntries) {
+            GeofenceEntry isInList = null;
+            for(GeofenceEntry oldEntry : geofences) {
+                if(newEntry.getId() == oldEntry.getId())
+                    isInList = oldEntry;
+            }
+
+            if(isInList == null) {
+                newGeofenceEntries.add(newEntry);
+            } else {
+                oldGeofenceEntries.add(isInList);
+            }
+        }
+
+        geofences.removeAll(oldGeofenceEntries);
+        geofences.addAll(newGeofenceEntries);
     }
 }

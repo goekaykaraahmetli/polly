@@ -92,23 +92,17 @@ public class CreatePollUsergroup extends Fragment {
         if (saving.getNumberOfParticipants() != 0) {
             ((EditText) root.findViewById(R.id.PollyRoomNumber)).setText(String.valueOf(saving.getNumberOfParticipants()));
         }
-        if (saving.getArea() != null) {
-            ((AutoCompleteTextView) root.findViewById(R.id.geofencing)).setText(saving.getArea().toString());
-        }
         AutoCompleteTextView test = (AutoCompleteTextView) root.findViewById(R.id.DatePicker);
         AutoCompleteTextView dropDownMenu = (AutoCompleteTextView) root.findViewById(R.id.autoCompleteTextView);
 
         TextInputLayout datePicker = (TextInputLayout) root.findViewById(R.id.DateLayout);
-        TextInputLayout geofence = (TextInputLayout) root.findViewById(R.id.geofencingLayout);
         TextInputLayout votingCandidates = (TextInputLayout) root.findViewById(R.id.votingCandidatesLayout);
         TextInputLayout oberserveCandidates = (TextInputLayout) root.findViewById(R.id.observingCandidatesLayout);
         TextInputLayout pollyRoom = (TextInputLayout) root.findViewById(R.id.PollRoomLayout);
         TextView pollyRoomInfo = (TextView) root.findViewById(R.id.PollyRoomInfo);
         //Button createPollBtn = (Button) root.findViewById(R.id.CreatePollOnMenu);
-        AutoCompleteTextView geofenceBtn = (AutoCompleteTextView) root.findViewById(R.id.geofencing);
         dropDownMenu.setVisibility(View.INVISIBLE);
         root.findViewById(R.id.VisibiltyLayout).setVisibility(View.INVISIBLE);
-        geofence.setVisibility(View.GONE);
         votingCandidates.setVisibility(View.GONE);
         oberserveCandidates.setVisibility(View.GONE);
         pollyRoom.setVisibility(View.GONE);

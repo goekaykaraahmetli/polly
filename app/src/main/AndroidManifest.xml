@@ -66,14 +66,9 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyAr3m25DMPGbrlktLf5xWydw30geUs-Okc" />
         <service
-            android:name=".utils.geofencing.Geofencing2"
+            android:name=".utils.geofencing.Geofencing"
             android:enabled="true">
         </service>
-        <service
-            android:name=".utils.geofencing.MyLocationService"
-            android:permission="android.permission.ACCESS_BACKGROUND_LOCATION"
-            android:enabled="true"
-            />
         <receiver android:name=".utils.geofencing.Restarter" android:enabled="true" android:exported="true">
             <intent-filter>
                 <action android:name="restartservice"/>

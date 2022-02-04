@@ -15,6 +15,7 @@ import android.provider.MediaStore;
 import android.provider.Settings;
 import android.text.InputType;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -29,8 +30,11 @@ import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
 import com.github.mikephil.charting.highlight.Highlight;
+import com.github.mikephil.charting.listener.ChartTouchListener;
+import com.github.mikephil.charting.listener.OnChartGestureListener;
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 import com.github.mikephil.charting.utils.ColorTemplate;
+import com.github.mikephil.charting.utils.MPPointF;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.common.api.ApiException;
@@ -78,12 +82,14 @@ import com.polly.utils.Area;
 import com.polly.utils.Location;
 import com.polly.utils.Organizer;
 import com.polly.utils.QRCode;
+import com.polly.utils.RecyclerItemClickListener;
 import com.polly.utils.SavingClass;
 import com.polly.utils.ShowPollPage;
 import com.polly.utils.command.poll.RegisterPollChangeListenerCommand;
 import com.polly.utils.command.poll.RemovePollChangeListenerCommand;
 import com.polly.utils.communication.DataStreamManager;
 import com.polly.utils.communicator.Communicator;
+import com.polly.utils.item.PollResultItem;
 import com.polly.utils.item.SearchListItem;
 import com.polly.utils.listadapter.ListAdapter;
 import com.polly.utils.poll.PollDescription;
@@ -98,7 +104,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
-public class ShowPollVotingPageFragment extends Fragment implements OnMapReadyCallback {
+public class ShowPollVotingPageFragment extends Fragment implements OnMapReadyCallback, OnChartGestureListener {
     private PieChart pieChart;
     private ImageView qrCode;
     static PollOptionsWrapper pollOptions;
@@ -258,32 +264,43 @@ public class ShowPollVotingPageFragment extends Fragment implements OnMapReadyCa
             }
         });
         //TODO recyclerview onClickListener
-        mAdapter.setOnItemClickListener(new ListAdapter.OnItemClickListener() {
+
+      /*  mAdapter.setOnItemClickListener(new ListAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(int position) {
                 showVoteButton(listOptions.get(position).getmText1());
             }
-        });
-        pieChart.setOnLongClickListener(new View.OnLongClickListener() {
+        });*/
+        mRecyclerView.addOnItemTouchListener(new RecyclerItemClickListener(getContext(), mRecyclerView, new RecyclerItemClickListener.OnItemClickListener() {
+            View lastView = null;
             @Override
-            public boolean onLongClick(View view) {
-                AlertDialog.Builder alert = new AlertDialog.Builder(getContext());
-                alert.setTitle("Polldescription");
-                alert.setMessage(pollOptions.getBasicPollInformation().getDescription().toString());
-                alert.setPositiveButton("OK", null);
-                alert.create().show();
-                return true;
+            public void onItemClick(View view, int position) {
+                showVoteButton(listOptions.get(position).getmText1());
+                if(lastView != null){
+                    lastView.setSelected(false);
+                }
+                lastView = view;
+                view.setSelected(true);
             }
-        });
-        mRecyclerView.setOnLongClickListener(new View.OnLongClickListener() {
+
             @Override
-            public boolean onLongClick(View view) {
+            public void onLongItemClick(View view, int position) {
+                AlertDialog.Builder alert = new AlertDialog.Builder(getContext());
+                alert.setTitle("Polldescription");
+                alert.setMessage(pollOptions.getBasicPollInformation().getDescription().getDescription());
+                alert.setPositiveButton("OK", null);
+                alert.create().show();
+            }
+        }));
+        pieChart.setOnChartGestureListener(this);
+        pieChart.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
                 AlertDialog.Builder alert = new AlertDialog.Builder(getContext());
                 alert.setTitle("Polldescription");
                 alert.setMessage(pollOptions.getBasicPollInformation().getDescription().toString());
                 alert.setPositiveButton("OK", null);
                 alert.create().show();
-                return true;
             }
         });
     }
@@ -398,7 +415,7 @@ public class ShowPollVotingPageFragment extends Fragment implements OnMapReadyCa
     }
 
     public Date convertToDate(LocalDateTime data) {
-        return Date.from(data.atZone(ZoneId.systemDefault()).toInstant());
+        return Date.from(data.atZone(ZoneId.of("Europe/Berlin")).toInstant());
     }
 
     public static long getDifferenceInMS(Date date1, Date date2) {
@@ -645,6 +662,30 @@ public class ShowPollVotingPageFragment extends Fragment implements OnMapReadyCa
     }
 
     private void editPoll() {
+        AlertDialog.Builder alert = new AlertDialog.Builder(getContext());
+        alert.setTitle("Delete Poll");
+        alert.setMessage("Do you want to delete your Poll?");
+        alert.setPositiveButton("YES", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                try {
+                    PollManager.delete(id);
+                    Navigation.findNavController(Organizer.getMainActivity(), R.id.nav_host_fragment).navigate(R.id.startFragment);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+        alert.setNegativeButton("NO", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                editPollName();
+            }
+        });
+        alert.create().show();
+    }
+
+    private void editPollName(){
         PollDescription newDescription = new PollDescription("");
         AlertDialog.Builder alert = new AlertDialog.Builder(getContext());
         alert.setTitle("Edit your Pollname");
@@ -657,13 +698,17 @@ public class ShowPollVotingPageFragment extends Fragment implements OnMapReadyCa
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 String newName = newPollname.getText().toString();
-                try {
-                    PollManager.editPollName(id, newName);
-                } catch (IOException e) {
-                    if (e.getMessage() != null)
-                        Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_LONG).show();
-                    else
-                        Toast.makeText(getContext(), "Something went wrong!", Toast.LENGTH_LONG).show();
+                if(!newName.isEmpty()){
+                    try {
+                        PollManager.editPollName(id, newName);
+                    } catch (IOException e) {
+                        if (e.getMessage() != null)
+                            Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_LONG).show();
+                        else
+                            Toast.makeText(getContext(), "Something went wrong!", Toast.LENGTH_LONG).show();
+                    }
+                }else{
+                    Toast.makeText(getContext(), "No changes to Pollname were made", Toast.LENGTH_LONG).show();
                 }
                 editPollDescription();
             }
@@ -675,7 +720,6 @@ public class ShowPollVotingPageFragment extends Fragment implements OnMapReadyCa
             }
         });
         alert.create().show();
-
 
     }
 
@@ -710,4 +754,47 @@ public class ShowPollVotingPageFragment extends Fragment implements OnMapReadyCa
         alert.create().show();
     }
 
+    @Override
+    public void onChartGestureStart(MotionEvent me, ChartTouchListener.ChartGesture lastPerformedGesture) {
+
+    }
+
+    @Override
+    public void onChartGestureEnd(MotionEvent me, ChartTouchListener.ChartGesture lastPerformedGesture) {
+
+    }
+
+    @Override
+    public void onChartLongPressed(MotionEvent me) {
+        AlertDialog.Builder alert = new AlertDialog.Builder(getContext());
+        alert.setTitle("Polldescription");
+        alert.setMessage(pollOptions.getBasicPollInformation().getDescription().getDescription());
+        alert.setPositiveButton("OK", null);
+        alert.create().show();
+    }
+
+    @Override
+    public void onChartDoubleTapped(MotionEvent me) {
+
+    }
+
+    @Override
+    public void onChartSingleTapped(MotionEvent me) {
+
+    }
+
+    @Override
+    public void onChartFling(MotionEvent me1, MotionEvent me2, float velocityX, float velocityY) {
+
+    }
+
+    @Override
+    public void onChartScale(MotionEvent me, float scaleX, float scaleY) {
+
+    }
+
+    @Override
+    public void onChartTranslate(MotionEvent me, float dX, float dY) {
+
+    }
 }
