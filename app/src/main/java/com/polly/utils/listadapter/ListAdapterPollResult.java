@@ -23,7 +23,6 @@ public class ListAdapterPollResult extends RecyclerView.Adapter<ListAdapterPollR
 
     public interface OnItemClickListener{
         void onItemClick(int position);
-        void onChecked(int position);
     }
 
     public void setOnItemClickListener(OnItemClickListener listener){
@@ -50,6 +49,7 @@ public class ListAdapterPollResult extends RecyclerView.Adapter<ListAdapterPollR
         holder.mTextView1.setText(currentItem.getmText1());
         holder.mProgressBar.setProgress(currentItem.getProgress());
         holder.mProgressText.setText(currentItem.getProgressText() + "%");
+        holder.itemView.setLongClickable(true);
     }
 
     @Override
@@ -82,6 +82,7 @@ public class ListAdapterPollResult extends RecyclerView.Adapter<ListAdapterPollR
                 }
             });
         }
+
     }
 
 }

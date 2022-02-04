@@ -15,6 +15,7 @@ import android.provider.MediaStore;
 import android.provider.Settings;
 import android.text.InputType;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -29,8 +30,11 @@ import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
 import com.github.mikephil.charting.highlight.Highlight;
+import com.github.mikephil.charting.listener.ChartTouchListener;
+import com.github.mikephil.charting.listener.OnChartGestureListener;
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 import com.github.mikephil.charting.utils.ColorTemplate;
+import com.github.mikephil.charting.utils.MPPointF;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.common.api.ApiException;
@@ -78,6 +82,7 @@ import com.polly.utils.Area;
 import com.polly.utils.Location;
 import com.polly.utils.Organizer;
 import com.polly.utils.QRCode;
+import com.polly.utils.RecyclerItemClickListener;
 import com.polly.utils.SavingClass;
 import com.polly.utils.ShowPollPage;
 import com.polly.utils.command.poll.RegisterPollChangeListenerCommand;
@@ -98,7 +103,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
-public class ShowPollVotingPageFragment extends Fragment implements OnMapReadyCallback {
+public class ShowPollVotingPageFragment extends Fragment implements OnMapReadyCallback, OnChartGestureListener {
     private PieChart pieChart;
     private ImageView qrCode;
     static PollOptionsWrapper pollOptions;
@@ -263,29 +268,17 @@ public class ShowPollVotingPageFragment extends Fragment implements OnMapReadyCa
             @Override
             public void onItemClick(int position) {
                 showVoteButton(listOptions.get(position).getmText1());
-                System.out.println("HAHAHAHAHAHAHAHAAH");
             }
         });
-        pieChart.setOnLongClickListener(new View.OnLongClickListener() {
+        pieChart.setOnChartGestureListener(this);
+        pieChart.setOnClickListener(new View.OnClickListener() {
             @Override
-            public boolean onLongClick(View view) {
+            public void onClick(View v) {
                 AlertDialog.Builder alert = new AlertDialog.Builder(getContext());
                 alert.setTitle("Polldescription");
                 alert.setMessage(pollOptions.getBasicPollInformation().getDescription().toString());
                 alert.setPositiveButton("OK", null);
                 alert.create().show();
-                return true;
-            }
-        });
-        mRecyclerView.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View view) {
-                AlertDialog.Builder alert = new AlertDialog.Builder(getContext());
-                alert.setTitle("Polldescription");
-                alert.setMessage(pollOptions.getBasicPollInformation().getDescription().toString());
-                alert.setPositiveButton("OK", null);
-                alert.create().show();
-                return true;
             }
         });
     }
@@ -739,4 +732,47 @@ public class ShowPollVotingPageFragment extends Fragment implements OnMapReadyCa
         alert.create().show();
     }
 
+    @Override
+    public void onChartGestureStart(MotionEvent me, ChartTouchListener.ChartGesture lastPerformedGesture) {
+
+    }
+
+    @Override
+    public void onChartGestureEnd(MotionEvent me, ChartTouchListener.ChartGesture lastPerformedGesture) {
+
+    }
+
+    @Override
+    public void onChartLongPressed(MotionEvent me) {
+        AlertDialog.Builder alert = new AlertDialog.Builder(getContext());
+        alert.setTitle("Polldescription");
+        alert.setMessage(pollOptions.getBasicPollInformation().getDescription().getDescription());
+        alert.setPositiveButton("OK", null);
+        alert.create().show();
+    }
+
+    @Override
+    public void onChartDoubleTapped(MotionEvent me) {
+
+    }
+
+    @Override
+    public void onChartSingleTapped(MotionEvent me) {
+
+    }
+
+    @Override
+    public void onChartFling(MotionEvent me1, MotionEvent me2, float velocityX, float velocityY) {
+
+    }
+
+    @Override
+    public void onChartScale(MotionEvent me, float scaleX, float scaleY) {
+
+    }
+
+    @Override
+    public void onChartTranslate(MotionEvent me, float dX, float dY) {
+
+    }
 }

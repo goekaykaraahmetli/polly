@@ -18,6 +18,7 @@ import android.provider.MediaStore;
 import android.provider.Settings;
 import android.text.InputType;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -41,9 +42,14 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.github.mikephil.charting.charts.PieChart;
+import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
+import com.github.mikephil.charting.highlight.Highlight;
+import com.github.mikephil.charting.listener.ChartTouchListener;
+import com.github.mikephil.charting.listener.OnChartGestureListener;
+import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 import com.github.mikephil.charting.utils.ColorTemplate;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
@@ -79,6 +85,7 @@ import com.polly.utils.Area;
 import com.polly.utils.Location;
 import com.polly.utils.Organizer;
 import com.polly.utils.QRCode;
+import com.polly.utils.RecyclerItemClickListener;
 import com.polly.utils.SavingClass;
 import com.polly.utils.command.poll.RegisterPollChangeListenerCommand;
 import com.polly.utils.command.poll.RemovePollChangeListenerCommand;
@@ -102,7 +109,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
-public class ShowPollResultsPageFragment extends Fragment implements OnMapReadyCallback {
+public class ShowPollResultsPageFragment extends Fragment implements OnMapReadyCallback, OnChartGestureListener {
     private PieChart pieChart;
     private ImageView qrCode;
     static PollResultsWrapper pollResults;
@@ -162,6 +169,10 @@ public class ShowPollResultsPageFragment extends Fragment implements OnMapReadyC
         mRecyclerView.setHasFixedSize(true); //Performance
         listPollname = (TextView) root.findViewById(R.id.listviewName);
         toggleView.setChecked(ShowPollVotingPageFragment.toggled);
+
+        registerForContextMenu(pieChart);
+        registerForContextMenu(mRecyclerView);
+
         if(toggleView.isChecked()){
             root.findViewById(R.id.toggleViewLayout).setVisibility(View.VISIBLE);
             pieChart.setVisibility(View.INVISIBLE);
@@ -244,28 +255,35 @@ public class ShowPollResultsPageFragment extends Fragment implements OnMapReadyC
             e.printStackTrace();
             Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
         }
-        pieChart.setOnLongClickListener(new View.OnLongClickListener() {
+        pieChart.setClickable(false);
+        pieChart.setOnChartValueSelectedListener(new OnChartValueSelectedListener() {
             @Override
-            public boolean onLongClick(View view) {
-                AlertDialog.Builder alert = new AlertDialog.Builder(getContext());
-                alert.setTitle("Polldescription");
-                alert.setMessage(pollResults.getBasicPollInformation().getDescription().toString());
-                alert.setPositiveButton("OK", null);
-                alert.create().show();
-                return true;
+            public void onValueSelected(Entry e, Highlight h) {
+
+            }
+
+            @Override
+            public void onNothingSelected() {
+                System.out.println("On Nothing selected");
             }
         });
-        mRecyclerView.setOnLongClickListener(new View.OnLongClickListener() {
+        pieChart.setOnChartGestureListener(this);
+        mRecyclerView.addOnItemTouchListener(new RecyclerItemClickListener(getContext(), mRecyclerView, new RecyclerItemClickListener.OnItemClickListener() {
             @Override
-            public boolean onLongClick(View view) {
+            public void onItemClick(View view, int position) {
+                //TODO show number of participants who voted for this option
+            }
+
+            @Override
+            public void onLongItemClick(View view, int position) {
                 AlertDialog.Builder alert = new AlertDialog.Builder(getContext());
                 alert.setTitle("Polldescription");
-                alert.setMessage(pollResults.getBasicPollInformation().getDescription().toString());
+                alert.setMessage(pollResults.getBasicPollInformation().getDescription().getDescription());
                 alert.setPositiveButton("OK", null);
                 alert.create().show();
-                return true;
             }
-        });
+        }));
+
     }
 
     private Communicator initialiseCommunicator() {
@@ -674,5 +692,49 @@ public class ShowPollResultsPageFragment extends Fragment implements OnMapReadyC
             }
         });
         alert.create().show();
+    }
+
+    @Override
+    public void onChartGestureStart(MotionEvent me, ChartTouchListener.ChartGesture lastPerformedGesture) {
+
+    }
+
+    @Override
+    public void onChartGestureEnd(MotionEvent me, ChartTouchListener.ChartGesture lastPerformedGesture) {
+
+    }
+
+    @Override
+    public void onChartLongPressed(MotionEvent me) {
+        AlertDialog.Builder alert = new AlertDialog.Builder(getContext());
+        alert.setTitle("Polldescription");
+        alert.setMessage(pollResults.getBasicPollInformation().getDescription().getDescription());
+        alert.setPositiveButton("OK", null);
+        alert.create().show();
+    }
+
+    @Override
+    public void onChartDoubleTapped(MotionEvent me) {
+
+    }
+
+    @Override
+    public void onChartSingleTapped(MotionEvent me) {
+
+    }
+
+    @Override
+    public void onChartFling(MotionEvent me1, MotionEvent me2, float velocityX, float velocityY) {
+
+    }
+
+    @Override
+    public void onChartScale(MotionEvent me, float scaleX, float scaleY) {
+
+    }
+
+    @Override
+    public void onChartTranslate(MotionEvent me, float dX, float dY) {
+
     }
 }
