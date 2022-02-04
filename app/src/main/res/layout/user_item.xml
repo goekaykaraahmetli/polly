@@ -19,16 +19,23 @@
             android:layout_height="50dp"
             android:padding="2dp"/>
 
-        <TextView
-            android:id="@+id/userInstance"
+        <RelativeLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:text="Line 1"
-            android:textColor="@color/black"
-            android:textSize="20sp"
-            android:textStyle="bold"
-            android:layout_toEndOf="@+id/userImage"/>
+            android:layout_toEndOf="@id/userImage"
+            android:layout_toStartOf="@id/userCheckbox">
+
+            <TextView
+                android:id="@+id/userInstance"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:text="Line 1"
+                android:textColor="@color/black"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+        </RelativeLayout>
+
 
         <CheckBox
             android:id="@+id/userCheckbox"
