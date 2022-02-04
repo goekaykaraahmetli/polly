@@ -82,12 +82,6 @@ public class Geofencing extends Service {
             startGeofenceForeground();
         else
             startForeground(1, new Notification());
-
-        try {
-            communicator.send(DataStreamManager.PARTNERS_DEFAULT_COMMUNICATION_ID, new RegisterNotificationListenerCommand());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
     }
     @RequiresApi(Build.VERSION_CODES.O)
     private void startGeofenceForeground(){
@@ -112,6 +106,12 @@ public class Geofencing extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         int returnVal = super.onStartCommand(intent, flags, startId);
+
+        try {
+            communicator.send(DataStreamManager.PARTNERS_DEFAULT_COMMUNICATION_ID, new RegisterNotificationListenerCommand());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             // TODO: Consider calling
