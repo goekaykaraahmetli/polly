@@ -66,27 +66,9 @@ public class ObservingCandidates extends Fragment {
 
         if(saving.getUserArrayObserving() == null && list != null) {
             for(int i = 0; i< list.size(); i++) {
-                if(!list.get(i).equals(username))
+                if(!list.get(i).getName().equals(username))
                     exampleList.add(new SearchListItemUser(R.drawable.ic_usergroup, list.get(i).getName(), false));
             }
-           /* exampleList.add(new SearchListItemUser(R.drawable.ic_usergroup, "User 1", false));
-            exampleList.add(new SearchListItemUser(R.drawable.ic_usergroup, "User 2", false));
-            exampleList.add(new SearchListItemUser(R.drawable.ic_usergroup, "User 3", false));
-            exampleList.add(new SearchListItemUser(R.drawable.ic_usergroup, "User 4", false));
-            exampleList.add(new SearchListItemUser(R.drawable.ic_usergroup, "User 5", false));
-            exampleList.add(new SearchListItemUser(R.drawable.ic_usergroup, "User 6", false));
-            exampleList.add(new SearchListItemUser(R.drawable.ic_usergroup, "User 7", false));
-            exampleList.add(new SearchListItemUser(R.drawable.ic_usergroup, "User 8", false));
-            exampleList.add(new SearchListItemUser(R.drawable.ic_usergroup, "User 9", false));
-            exampleList.add(new SearchListItemUser(R.drawable.ic_usergroup, "User 10", false));
-            exampleList.add(new SearchListItemUser(R.drawable.ic_usergroup, "User 11", false));
-            exampleList.add(new SearchListItemUser(R.drawable.ic_usergroup, "User 12", false));
-            exampleList.add(new SearchListItemUser(R.drawable.ic_usergroup, "User 13", false));
-            exampleList.add(new SearchListItemUser(R.drawable.ic_usergroup, "User 14", false));
-            exampleList.add(new SearchListItemUser(R.drawable.ic_usergroup, "User 15", false));
-            exampleList.add(new SearchListItemUser(R.drawable.ic_usergroup, "User 16", false));
-            exampleList.add(new SearchListItemUser(R.drawable.ic_usergroup, "User 17", false));
-            exampleList.add(new SearchListItemUser(R.drawable.ic_usergroup, "User 18", false));*/
         }else{
             exampleList = saving.getUserArrayObserving();
         }
