@@ -227,8 +227,7 @@ public class Geofencing extends Service {
                 return;
             }
 
-
-            sendNotification("New Poll " + entry.getId() + "available!", "you entered the following area: " + entry.getArea().getLatitude() + "" + entry.getArea().getLongitude() + "" + entry.getArea().getRadius());
+            sendEnteredGeofenceNotification(entry.getId(), entry.getArea());
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -240,6 +239,14 @@ public class Geofencing extends Service {
 
     private void transitionExit(GeofenceEntry entry) {
         //sendNotification("Exiting! " + entry.getId(), "you entered the following area: " + entry.getArea().getLatitude() + "" + entry.getArea().getLongitude() + "" + entry.getArea().getRadius());
+    }
+
+    private void sendEnteredGeofenceNotification(long id, Area area) {
+        sendNotification("New Poll " + id + "available!", "you entered the following area: " + area.getLatitude() + "" + area.getLongitude() + "" + area.getRadius());
+    }
+
+    private void sendNewCustomPollNotification(long id) {
+        sendNotification("New Poll", "Id = " + id);
     }
 
     private void sendNotification(String title, String content) {
@@ -262,7 +269,7 @@ public class Geofencing extends Service {
 
                 if(message.getDataType().equals(NotificationCommand.class)) {
                     NotificationCommand command = (NotificationCommand) message.getData();
-                    sendNotification("New Poll", "Id = " + command.getId());
+                    sendNewCustomPollNotification(command.getId());
                 }
             }
         };
