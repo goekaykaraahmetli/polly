@@ -27,6 +27,9 @@ import com.polly.R;
 import com.polly.utils.Area;
 import com.polly.utils.Organizer;
 import com.polly.utils.command.GetGeofencesCommand;
+import com.polly.utils.command.NotificationCommand;
+import com.polly.utils.command.RegisterNotificationListenerCommand;
+import com.polly.utils.command.RemoveNotificationListenerCommand;
 import com.polly.utils.communication.DataStreamManager;
 import com.polly.utils.communicator.ResponseCommunicator;
 import com.polly.utils.poll.PollManager;
@@ -79,6 +82,12 @@ public class Geofencing extends Service {
             startGeofenceForeground();
         else
             startForeground(1, new Notification());
+
+        try {
+            communicator.send(DataStreamManager.PARTNERS_DEFAULT_COMMUNICATION_ID, new RegisterNotificationListenerCommand());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
     @RequiresApi(Build.VERSION_CODES.O)
     private void startGeofenceForeground(){
@@ -121,9 +130,6 @@ public class Geofencing extends Service {
         locationListener = new LocationListener() {
             @Override
             public void onLocationChanged(@NonNull Location location) {
-                if(!Organizer.isLoggedIn())
-                    return;
-
                 if(requestingGeofences) {
                     try {
                         Message message = communicator.sendWithResponse(DataStreamManager.PARTNERS_DEFAULT_COMMUNICATION_ID, new GetGeofencesCommand(new com.polly.utils.Location(location.getLatitude(), location.getLongitude())));
@@ -175,6 +181,12 @@ public class Geofencing extends Service {
     @Override
     public void onDestroy() {
         super.onDestroy();
+
+        try {
+            communicator.send(DataStreamManager.PARTNERS_DEFAULT_COMMUNICATION_ID, new RemoveNotificationListenerCommand());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
         timer.cancel();
         timer = null;
@@ -249,6 +261,11 @@ public class Geofencing extends Service {
             public void handleInput(Message message) {
                 System.out.println("AccountFragment received message from " + message.getSender() + " with responseId " + message.getResponseId());
                 System.out.println("from type: " + message.getDataType().getName());
+
+                if(message.getDataType().equals(NotificationCommand.class)) {
+                    NotificationCommand command = (NotificationCommand) message.getData();
+                    sendNotification("New Poll", "Id = " + command.getId());
+                }
             }
         };
     }

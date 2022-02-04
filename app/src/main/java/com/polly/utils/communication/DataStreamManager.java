@@ -26,6 +26,9 @@ import com.polly.utils.Location;
 import com.polly.utils.command.GetGeofencesCommand;
 import com.polly.utils.command.GetMyPollsCommand;
 import com.polly.utils.command.GetParticipatedPollsCommand;
+import com.polly.utils.command.NotificationCommand;
+import com.polly.utils.command.RegisterNotificationListenerCommand;
+import com.polly.utils.command.RemoveNotificationListenerCommand;
 import com.polly.utils.command.poll.DeletePollCommand;
 import com.polly.utils.command.poll.EditPollDescriptionCommand;
 import com.polly.utils.command.poll.EditPollNameCommand;
@@ -229,6 +232,12 @@ public class DataStreamManager {
 			data = readDeletePollCommand();
 		else if(dataType.equals(GetGeofencesCommand.class))
 			data = readGetGeofencesCommand();
+		else if(dataType.equals(RegisterNotificationListenerCommand.class))
+			data = readRegisterNotificationListenerCommand();
+		else if(dataType.equals(RemoveNotificationListenerCommand.class))
+			data = readRemoveNotificationListenerCommand();
+		else if(dataType.equals(NotificationCommand.class))
+			data = readNotificationCommand();
 			
 			// default type:
 		else
@@ -448,6 +457,12 @@ public class DataStreamManager {
 			writeDeletePollCommand((DeletePollCommand) data);
 		else if(dataType.equals(GetGeofencesCommand.class))
 			writeGetGeofencesCommand((GetGeofencesCommand) data);
+		else if(dataType.equals(RegisterNotificationListenerCommand.class))
+			writeRegisterNotificationListenerCommand((RegisterNotificationListenerCommand) data);
+		else if(dataType.equals(RemoveNotificationListenerCommand.class))
+			writeRemoveNotificationListenerCommand((RemoveNotificationListenerCommand) data);
+		else if(dataType.equals(NotificationCommand.class))
+			writeNotificationCommand((NotificationCommand) data);
 		
 		
 			// default type:
@@ -1116,5 +1131,29 @@ public class DataStreamManager {
 	
 	private GetGeofencesCommand readGetGeofencesCommand() throws IOException {
 		return new GetGeofencesCommand(readLocation());
+	}
+	
+	private void writeRegisterNotificationListenerCommand(RegisterNotificationListenerCommand data) throws IOException {
+		// nothing to do here
+	}
+	
+	private RegisterNotificationListenerCommand readRegisterNotificationListenerCommand() throws IOException {
+		return new RegisterNotificationListenerCommand();
+	}
+	
+	private void writeRemoveNotificationListenerCommand(RemoveNotificationListenerCommand data) throws IOException {
+		// nothing to do here
+	}
+	
+	private RemoveNotificationListenerCommand readRemoveNotificationListenerCommand() throws IOException {
+		return new RemoveNotificationListenerCommand();
+	}
+	
+	private void writeNotificationCommand(NotificationCommand data) throws IOException {
+		writeLong(data.getId());
+	}
+	
+	private NotificationCommand readNotificationCommand() throws IOException {
+		return new NotificationCommand(readLong());
 	}
 }
