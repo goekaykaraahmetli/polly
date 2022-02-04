@@ -148,6 +148,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public void stopGeofencing() {
         System.out.println("stopping geofencing");
 
+        if(!isMyServiceRunning(Geofencing.class)) {
+            return;
+        }
+
         Restarter.stop();
         stopService(geofencingIntent);
     }
