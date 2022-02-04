@@ -49,7 +49,7 @@ public class Geofencing extends Service {
     private static final String CHANNEL_ID = "channel_gjkasFLjkgjaksfajslfghasf";
     private static final long MINIMUM_DISTANCE_CHANGE_FOR_UPDATES = 0;
     private static final long MINIMUM_TIME_BETWEEN_UPDATES = 10;
-    private static final int GEOFENCE_UPDATE_DELAY = 10;
+    private static final int GEOFENCE_UPDATE_DELAY = 600;
     protected LocationManager locationManager;
     private LocationListener locationListener;
     private ResponseCommunicator communicator;
