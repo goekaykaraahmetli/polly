@@ -339,6 +339,12 @@ public class PolloptionFragment extends Fragment implements OnMapReadyCallback {
                             return;
                         }
                         break;
+                    case "CUSTOM":
+                        if(saving.getCanVoteList() == null || saving.getCanSeeAndVoteList() == null){
+                            Toast.makeText(getActivity(), "Please choose Participant to vote", Toast.LENGTH_SHORT).show();
+                            return;
+                        }
+                        break;
                 }
                 saving.setDescription(description.getText());
                 saving.setPollname(Pollname.getText());

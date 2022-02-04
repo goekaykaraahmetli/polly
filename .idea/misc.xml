@@ -64,10 +64,12 @@
         <entry key="..\:/polly/app/src/main/res/layout/fragment_sign_up.xml" value="0.20885416666666667" />
         <entry key="..\:/polly/app/src/main/res/layout/fragment_start.xml" value="0.18085106382978725" />
         <entry key="..\:/polly/app/src/main/res/layout/poll_item.xml" value="0.3351449275362319" />
+        <entry key="..\:/polly/app/src/main/res/layout/poll_layout.xml" value="0.3428442028985507" />
         <entry key="..\:/polly/app/src/main/res/layout/selector.xml" value="0.3351449275362319" />
         <entry key="..\:/polly/app/src/main/res/layout/user_item.xml" value="0.17046605876393112" />
         <entry key="..\:/polly/app/src/main/res/layout/user_layout.xml" value="0.24320652173913043" />
         <entry key="..\:/polly/app/src/main/res/layout/usergroup_item.xml" value="0.3351449275362319" />
+        <entry key="..\:/polly/app/src/main/res/menu/testmenu.xml" value="0.3625" />
         <entry key="app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.2526041666666667" />
         <entry key="app/src/main/res/drawable/edittextbackground.xml" value="0.34102564102564104" />
         <entry key="app/src/main/res/drawable/ic_account.xml" value="0.2526041666666667" />
