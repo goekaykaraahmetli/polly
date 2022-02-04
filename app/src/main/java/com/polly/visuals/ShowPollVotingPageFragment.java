@@ -140,7 +140,6 @@ public class ShowPollVotingPageFragment extends Fragment implements OnMapReadyCa
 
     @Override
     public void onDestroy() {
-        super.onDestroy();
         if (hasRunningPollChangeListener) {
             try {
                 communicator.send(DataStreamManager.PARTNERS_DEFAULT_COMMUNICATION_ID, new RemovePollChangeListenerCommand(id));
@@ -151,6 +150,8 @@ public class ShowPollVotingPageFragment extends Fragment implements OnMapReadyCa
             }
         }
         id = null;
+
+        super.onDestroy();
     }
 
     @Nullable
