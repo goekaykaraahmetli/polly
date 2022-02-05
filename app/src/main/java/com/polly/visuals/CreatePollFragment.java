@@ -101,13 +101,22 @@ public class CreatePollFragment extends Fragment {
             map.put(1, option2);
             remove.put(0, remove1);
             remove.put(1, remove2);
-        if(saving.getOptionCounter()>=2){
+
+
+        if(saving.getOptionCounter() == 2){
+            optionCounter = saving.getOptionCounter();
+            start = saving.isStart();
+            option1.setText(saving.getPollOptions().get(0));
+            option2.setText(saving.getPollOptions().get(1));
+        }
+        if(saving.getOptionCounter()>=3) {
             optionCounter = saving.getOptionCounter();
             start = saving.isStart();
             option1.setText(saving.getPollOptions().get(0));
             option2.setText(saving.getPollOptions().get(1));
             remove1.setVisibility(View.VISIBLE);
             remove2.setVisibility(View.VISIBLE);
+        }
             if(saving.getDropDownMenu().toString().equals("POLLYROOM"))
                 if(optionCounter > optionMax){
                     optionCounter = 4;
@@ -158,7 +167,6 @@ public class CreatePollFragment extends Fragment {
                     }
                 });
             }
-        }
 
 
         root.findViewById(R.id.goBack).setOnClickListener(new View.OnClickListener() {
