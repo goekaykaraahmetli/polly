@@ -38,7 +38,7 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ListViewHolder
             if(charSequence == null || charSequence.length() == 0){
                 filteredList.addAll(exampleListFull);
             }else{
-                String filterPattern = charSequence.toString().toLowerCase().trim();
+                String filterPattern = charSequence.toString();
 
                 for(SearchListItem item : exampleListFull){
                     if(item.getmText1().toLowerCase().contains(filterPattern)){

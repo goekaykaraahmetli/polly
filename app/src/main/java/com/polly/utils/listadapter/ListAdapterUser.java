@@ -38,7 +38,7 @@ public class ListAdapterUser extends RecyclerView.Adapter<ListAdapterUser.ListVi
             if(charSequence == null || charSequence.length() == 0){
                 filteredList.addAll(exampleListFull);
             }else{
-                String filterPattern = charSequence.toString().toLowerCase().trim();
+                String filterPattern = charSequence.toString();
 
                 try {
                     for(UserWrapper item : UserManager.findUsers(filterPattern)){
