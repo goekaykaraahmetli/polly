@@ -50,6 +50,7 @@ public class Geofencing extends Service {
     private static final long MINIMUM_DISTANCE_CHANGE_FOR_UPDATES = 0;
     private static final long MINIMUM_TIME_BETWEEN_UPDATES = 10;
     private static final int GEOFENCE_UPDATE_DELAY = 600;
+    private static final int LOCATION_UPDATE_DELAY = 10;
     protected LocationManager locationManager;
     private LocationListener locationListener;
     private ResponseCommunicator communicator;
@@ -107,12 +108,6 @@ public class Geofencing extends Service {
     public int onStartCommand(Intent intent, int flags, int startId) {
         int returnVal = super.onStartCommand(intent, flags, startId);
 
-        try {
-            communicator.send(DataStreamManager.PARTNERS_DEFAULT_COMMUNICATION_ID, new RegisterNotificationListenerCommand());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             // TODO: Consider calling
             //    ActivityCompat#requestPermissions
@@ -122,6 +117,12 @@ public class Geofencing extends Service {
             // to handle the case where the user grants the permission. See the documentation
             // for ActivityCompat#requestPermissions for more details.
             return returnVal;
+        }
+
+        try {
+            communicator.send(DataStreamManager.PARTNERS_DEFAULT_COMMUNICATION_ID, new RegisterNotificationListenerCommand());
+        } catch (IOException e) {
+            e.printStackTrace();
         }
 
         HandlerThread handlerThread = new HandlerThread("GeofencingThread");
@@ -158,7 +159,7 @@ public class Geofencing extends Service {
                     public void run() {
                         readyForNewLocation = true;
                     }
-                }, 10000);
+                }, LOCATION_UPDATE_DELAY * 1000);
                 checkTransition(location.getLatitude(), location.getLongitude());
             }
         };
@@ -167,6 +168,11 @@ public class Geofencing extends Service {
 
         locationManager.requestLocationUpdates(
                 LocationManager.GPS_PROVIDER,
+                MINIMUM_TIME_BETWEEN_UPDATES,
+                MINIMUM_DISTANCE_CHANGE_FOR_UPDATES,
+                locationListener, handlerThread.getLooper());
+        locationManager.requestLocationUpdates(
+                LocationManager.FUSED_PROVIDER,
                 MINIMUM_TIME_BETWEEN_UPDATES,
                 MINIMUM_DISTANCE_CHANGE_FOR_UPDATES,
                 locationListener, handlerThread.getLooper());
